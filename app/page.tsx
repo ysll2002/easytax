@@ -2,137 +2,228 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)] bg-white text-gray-900">
-      
-      {/* Header / Nav */}
+    <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
+
+      {/* Header */}
       <header className="w-full max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-        <div className="text-2xl font-bold tracking-tight text-blue-600 flex items-center gap-2">
-          <span>🇬🇧</span> EasyTax
+        <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#C4622D', letterSpacing: '-0.01em' }}>
+          EasyTax
         </div>
-        <nav className="hidden md:flex gap-6 text-sm font-medium text-gray-600">
-          <Link href="#features" className="hover:text-blue-600">How it Works</Link>
-          <Link href="#pricing" className="hover:text-blue-600">Pricing</Link>
-          <Link href="#faq" className="hover:text-blue-600">FAQ</Link>
+        <nav className="hidden md:flex gap-8 text-sm font-medium" style={{ color: '#9A8F83' }}>
+          <Link href="#features" style={{ color: '#9A8F83' }} className="hover:text-[#1C1208] transition-colors">How it Works</Link>
+          <Link href="#pricing" style={{ color: '#9A8F83' }} className="hover:text-[#1C1208] transition-colors">Pricing</Link>
+          <Link href="#faq" style={{ color: '#9A8F83' }} className="hover:text-[#1C1208] transition-colors">FAQ</Link>
         </nav>
-        <div className="flex gap-4">
-            <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-blue-600 py-2">Log in</Link>
-            <Link href="/onboarding" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+        <div className="flex gap-4 items-center">
+          <Link href="/login" className="text-sm font-medium transition-colors" style={{ color: '#9A8F83' }}>Log in</Link>
+          <Link href="/onboarding" className="text-sm font-medium px-5 py-2.5 rounded-full transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
             Get Started
-            </Link>
+          </Link>
         </div>
       </header>
 
-      {/* Hero Section */}
       <main className="flex-grow">
-        <section className="relative pt-20 pb-32 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center px-3 py-1 rounded-full border border-blue-100 bg-blue-50 text-blue-600 text-xs font-medium mb-6">
-              🚀 Launching for 2025/26 Tax Year
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 max-w-4xl mx-auto leading-tight">
-              Self Assessment, <span className="text-blue-600">sorted.</span><br/>
-              <span className="text-gray-400 font-medium text-4xl md:text-6xl block mt-2">Without the headache.</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              The simplest way for UK freelancers and contractors to file tax returns. 
-              Connect your bank, categorize expenses, and file directly to HMRC in minutes.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto w-full">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="w-full px-5 py-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-              />
-              <Link href="/onboarding" className="w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-center">
-                Get Started
-              </Link>
-            </div>
-            <p className="mt-4 text-sm text-gray-500">
-              Join 600+ freelancers on the list. No spam, ever.
-            </p>
-          </div>
-        </section>
 
-        {/* Social Proof / Trust */}
-        <section className="border-y border-gray-100 bg-gray-50 py-10">
-            <div className="max-w-7xl mx-auto px-6 text-center">
-                <p className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">Built for modern work</p>
-                <div className="flex flex-wrap justify-center gap-12 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                    {/* Placeholders for logos */}
-                    <span className="text-xl font-bold text-gray-400">Freelancers</span>
-                    <span className="text-xl font-bold text-gray-400">Contractors</span>
-                    <span className="text-xl font-bold text-gray-400">Sole Traders</span>
-                    <span className="text-xl font-bold text-gray-400">HMRC Compliant</span>
-                </div>
-            </div>
-        </section>
+        {/* Hero */}
+        <section className="relative pt-16 pb-28 overflow-hidden">
+          {/* Decorative background shapes */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4622D 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8 pointer-events-none" style={{ background: 'radial-gradient(circle, #C9963D 0%, transparent 70%)', transform: 'translate(-40%, 40%)' }} />
 
-        {/* Features Grid */}
-        <section id="features" className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Everything you need to file confidently</h2>
-              <p className="text-gray-600 text-lg">Replace your spreadsheet with something smarter.</p>
+            <div className="max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                Launching for 2025/26 Tax Year
+              </div>
+
+              <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
+                Self Assessment,
+                <br />
+                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
+              </h1>
+
+              <p className="text-xl leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '520px' }}>
+                The simplest way for UK freelancers and contractors to file tax returns.
+                Connect your bank, categorize expenses, file to HMRC in minutes.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 max-w-md">
+                <input
+                  type="email"
+                  placeholder="your@email.com"
+                  className="flex-1 px-5 py-3.5 rounded-full text-sm focus:outline-none"
+                  style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#FDFCF8', color: '#1C1208' }}
+                />
+                <Link href="/onboarding" className="px-7 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
+                  Get Early Access
+                </Link>
+              </div>
+              <p className="mt-4 text-xs" style={{ color: '#9A8F83' }}>
+                Join 600+ freelancers on the waitlist. No spam, ever.
+              </p>
             </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {/* Feature 1 */}
-              <div className="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:border-blue-100 transition-colors">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-2xl mb-6">🏦</div>
-                <h3 className="text-xl font-bold mb-3">Bank Connections</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Securely connect your business bank account. We automatically pull in transactions so you don't miss a single expense.
+          </div>
+        </section>
+
+        {/* Trust bar */}
+        <section style={{ borderTop: '1px solid #DDD5C8', borderBottom: '1px solid #DDD5C8', backgroundColor: '#F0EBE1', padding: '2.5rem 0' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <p className="text-xs font-semibold uppercase tracking-widest text-center mb-6" style={{ color: '#9A8F83' }}>Built for modern work</p>
+            <div className="flex flex-wrap justify-center gap-12">
+              {['Freelancers', 'Contractors', 'Sole Traders', 'HMRC Compliant'].map((label) => (
+                <span key={label} className="text-base font-semibold" style={{ color: '#C5BAB0', fontFamily: 'var(--font-display), Playfair Display, Georgia, serif' }}>
+                  {label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section id="features" className="py-28" style={{ backgroundColor: '#FDFCF8' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="mb-20">
+              <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
+                Everything you need<br />
+                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>to file confidently.</em>
+              </h2>
+              <p style={{ color: '#9A8F83', fontSize: '1.1rem' }}>Replace your spreadsheet with something smarter.</p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  icon: '🏦',
+                  title: 'Bank Connections',
+                  body: "Securely connect your business bank account. We automatically pull in transactions so you don't miss a single expense.",
+                  accent: '#C4622D',
+                  bg: '#F5E4D8',
+                },
+                {
+                  icon: '🤖',
+                  title: 'Smart Categorisation',
+                  body: '"Is a coffee meeting deductible?" Our AI categorises transactions and flags potential tax savings instantly.',
+                  accent: '#6B8E6E',
+                  bg: '#E2EDE2',
+                },
+                {
+                  icon: '📤',
+                  title: 'Direct Filing',
+                  body: 'Connect your Government Gateway ID once. Review your return, hit submit, and get your HMRC confirmation instantly.',
+                  accent: '#C9963D',
+                  bg: '#F5EDDC',
+                },
+              ].map((f) => (
+                <div key={f.title} className="p-8 rounded-2xl transition-all" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-6" style={{ backgroundColor: f.bg }}>
+                    {f.icon}
+                  </div>
+                  <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
+                    {f.title}
+                  </h3>
+                  <p style={{ color: '#4A4035', lineHeight: 1.7, fontSize: '0.95rem' }}>{f.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Steps */}
+        <section id="pricing" className="py-28" style={{ backgroundColor: '#F0EBE1' }}>
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div>
+                <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1.5rem' }}>
+                  File in five minutes,<br />
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>not five hours.</em>
+                </h2>
+                <p style={{ color: '#4A4035', lineHeight: 1.8, marginBottom: '2rem' }}>
+                  We built EasyTax for people who'd rather spend time on their craft than wrestling with HMRC forms. One flat fee. No surprises.
                 </p>
+                <div className="inline-flex items-end gap-2 mb-2">
+                  <span style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '3.5rem', fontWeight: 700, color: '#1C1208', lineHeight: 1 }}>£20</span>
+                  <span style={{ color: '#9A8F83', marginBottom: '0.5rem' }}>+ VAT per return</span>
+                </div>
+                <p style={{ color: '#9A8F83', fontSize: '0.875rem', marginBottom: '2rem' }}>Founder pricing — locked in for life.</p>
+                <Link href="/onboarding" className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                  Start Filing →
+                </Link>
               </div>
 
-              {/* Feature 2 */}
-              <div className="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:border-blue-100 transition-colors">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-2xl mb-6">🤖</div>
-                <h3 className="text-xl font-bold mb-3">Smart Categorization</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  "Is a coffee meeting deductible?" Our AI helper categorizes transactions and flags potential tax savings instantly.
-                </p>
-              </div>
-
-              {/* Feature 3 */}
-              <div className="p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:border-blue-100 transition-colors">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-2xl mb-6">📤</div>
-                <h3 className="text-xl font-bold mb-3">Direct Filing</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Connect your Government Gateway ID once. Review your return, hit submit, and get your HMRC confirmation instantly.
-                </p>
+              <div className="space-y-4">
+                {[
+                  { n: '01', title: 'Connect HMRC Gateway', desc: 'Securely link your Government Gateway ID. We fetch your income records automatically.' },
+                  { n: '02', title: 'Review Your Expenses', desc: 'Our AI categorises transactions. You simply approve or reject in seconds.' },
+                  { n: '03', title: 'File & Pay', desc: 'Review your completed return, pay the £20 fee, and we submit directly to HMRC.' },
+                ].map((step) => (
+                  <div key={step.n} className="flex gap-5 p-5 rounded-xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
+                    <span style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#DDD5C8', flexShrink: 0, lineHeight: 1 }}>
+                      {step.n}
+                    </span>
+                    <div>
+                      <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{step.title}</p>
+                      <p className="text-sm" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Pricing / CTA */}
-        <section className="py-24 bg-blue-600 text-white text-center">
-            <div className="max-w-4xl mx-auto px-6">
-                <h2 className="text-3xl md:text-5xl font-bold mb-6">Stop dreading January 31st.</h2>
-                <p className="text-blue-100 text-xl mb-10 max-w-2xl mx-auto">
-                    Get early access to EasyTax and lock in our founder pricing for life.
-                </p>
-                <div className="bg-white/10 p-1 rounded-2xl inline-block backdrop-blur-sm">
-                    <Link href="/onboarding" className="inline-block bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
-                        Get Early Access
-                    </Link>
-                </div>
+        {/* FAQ */}
+        <section id="faq" className="py-28" style={{ backgroundColor: '#FDFCF8' }}>
+          <div className="max-w-3xl mx-auto px-6">
+            <h2 className="text-center mb-16" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208' }}>
+              Questions, <em style={{ color: '#C4622D', fontStyle: 'italic' }}>answered.</em>
+            </h2>
+            <div className="space-y-0" style={{ borderTop: '1px solid #DDD5C8' }}>
+              {[
+                { q: 'Is EasyTax FCA regulated?', a: 'EasyTax is a tax filing tool, not a financial adviser. We file your return based on the data you provide. For complex tax situations, we recommend consulting an accountant.' },
+                { q: 'Is my HMRC data safe?', a: 'Your credentials are never stored. We use them to fetch your records via a secure, encrypted connection and discard them immediately after.' },
+                { q: 'What if I have multiple income sources?', a: 'EasyTax supports PAYE income, self-employment income, rental income, and more — all in one return.' },
+                { q: 'What\'s the filing deadline?', a: 'The deadline for online Self Assessment returns is 31 January each year for the previous tax year. EasyTax helps you file well before the rush.' },
+              ].map((item) => (
+                <details key={item.q} className="group py-6" style={{ borderBottom: '1px solid #DDD5C8' }}>
+                  <summary className="flex justify-between items-center cursor-pointer list-none font-semibold" style={{ color: '#1C1208' }}>
+                    {item.q}
+                    <span style={{ color: '#C4622D', fontSize: '1.25rem', lineHeight: 1 }}>+</span>
+                  </summary>
+                  <p className="mt-4 text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.a}</p>
+                </details>
+              ))}
             </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-28" style={{ backgroundColor: '#1C1208' }}>
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.1, marginBottom: '1.5rem' }}>
+              Stop dreading<br />
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>January 31st.</em>
+            </h2>
+            <p style={{ color: '#9A8F83', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
+              Get early access and lock in founder pricing for life.
+            </p>
+            <Link href="/onboarding" className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+              Get Early Access
+            </Link>
+          </div>
         </section>
 
       </main>
 
-      <footer className="border-t border-gray-100 py-12 bg-gray-50">
+      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-gray-400 text-sm">
-            &copy; {new Date().getFullYear()} EasyTax Ltd. Built in London 🇬🇧
+          <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', color: '#4A4035' }}>
+            EasyTax Ltd. Built in London.
           </div>
-          <div className="flex gap-6 text-sm text-gray-500">
-            <Link href="/privacy" className="hover:text-blue-600">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-blue-600">Terms of Service</Link>
-            <Link href="#" className="hover:text-blue-600">Twitter</Link>
+          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
+            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">Terms</Link>
+            <Link href="#" className="hover:text-[#C4622D] transition-colors">Twitter</Link>
           </div>
         </div>
       </footer>

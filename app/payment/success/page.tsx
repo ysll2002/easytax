@@ -3,32 +3,54 @@ import Link from 'next/link';
 
 export default function Success() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg border border-green-100 text-center">
-        
-        <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
-          <svg className="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div className="flex flex-col items-center justify-center min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
+      <div className="w-full max-w-md text-center">
+
+        {/* Icon */}
+        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-8" style={{ backgroundColor: '#E2EDE2' }}>
+          <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="#6B8E6E">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
 
-        <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Payment Successful!</h2>
-        
-        <div className="bg-green-50 p-4 rounded-lg mb-6 text-left">
-          <h3 className="font-bold text-green-800 mb-2">Next Steps:</h3>
-          <ul className="list-disc list-inside text-sm text-green-700 space-y-2">
-            <li>Your Self Assessment has been queued for submission.</li>
-            <li>We will email you the official HMRC receipt within 24 hours.</li>
-            <li>A copy of your return is available in your dashboard.</li>
+        <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
+          Return filed.
+        </h1>
+        <p style={{ color: '#9A8F83', marginBottom: '2rem' }}>
+          Your Self Assessment has been submitted to HMRC.
+        </p>
+
+        {/* Next steps */}
+        <div className="p-6 rounded-2xl text-left mb-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+          <p className="text-sm font-semibold mb-3" style={{ color: '#1C1208' }}>What happens next</p>
+          <ul className="space-y-2">
+            {[
+              'Your return has been queued for HMRC submission.',
+              'You\'ll receive the official HMRC confirmation by email within 24 hours.',
+              'A copy of your return is available in your dashboard.',
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2.5 text-sm" style={{ color: '#4A4035' }}>
+                <span className="mt-0.5 w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#E2EDE2' }}>
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="#6B8E6E">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                {item}
+              </li>
+            ))}
           </ul>
         </div>
 
-        <p className="text-gray-500 text-sm mb-8">
-          Order #TAX-2026-8842 • {new Date().toLocaleDateString()}
+        <p className="text-xs mb-8" style={{ color: '#9A8F83' }}>
+          Order #TAX-2026-8842 &nbsp;·&nbsp; {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
 
-        <Link href="/dashboard" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
-          Return to Dashboard
+        <Link
+          href="/dashboard"
+          className="inline-block w-full py-3.5 rounded-xl font-medium text-sm text-center transition-all"
+          style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}
+        >
+          Return to Dashboard →
         </Link>
       </div>
     </div>

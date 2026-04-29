@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Onboarding() {
   const router = useRouter();
@@ -12,84 +13,88 @@ export default function Onboarding() {
   const handleConnect = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!gatewayId || !password) return;
-
     setLoading(true);
     setStatusText('Verifying credentials...');
-    
-    // Simulation of API calls
     setTimeout(() => setStatusText('Connecting to HMRC securely...'), 1000);
     setTimeout(() => setStatusText('Fetching income records (P60, P45)...'), 2500);
     setTimeout(() => setStatusText('Calculating expenses...'), 4000);
-    
-    setTimeout(() => {
-      router.push('/actions');
-    }, 5500);
+    setTimeout(() => { router.push('/actions'); }, 5500);
   };
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-        <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
-        <h2 className="text-xl font-semibold text-gray-800">Please wait</h2>
-        <p className="text-gray-600 mt-2">{statusText}</p>
+      <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#FDFCF8' }}>
+        <div className="w-14 h-14 rounded-full border-4 border-t-transparent animate-spin mb-6" style={{ borderColor: '#DDD5C8', borderTopColor: '#C4622D' }} />
+        <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+          Please wait
+        </h2>
+        <p style={{ color: '#9A8F83' }}>{statusText}</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Link HMRC Gateway
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            We use your Government Gateway ID to fetch your tax records securely.
+    <div className="flex flex-col items-center justify-center min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
+      <div className="w-full max-w-md">
+        <div className="text-center mb-10">
+          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#C4622D', display: 'inline-block', marginBottom: '2rem' }}>
+            EasyTax
+          </Link>
+          <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
+            Link your HMRC Gateway
+          </h1>
+          <p style={{ color: '#9A8F83', fontSize: '0.95rem', lineHeight: 1.6 }}>
+            We use your Government Gateway ID to fetch your tax records securely. Your credentials are never stored.
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleConnect}>
-          <div className="rounded-md shadow-sm -space-y-px">
+
+        <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+          <form onSubmit={handleConnect} className="space-y-5">
             <div>
-              <label htmlFor="gateway-id" className="sr-only">Gateway User ID</label>
+              <label htmlFor="gateway-id" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
+                Gateway User ID
+              </label>
               <input
                 id="gateway-id"
-                name="gateway-id"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Gateway User ID (e.g. 1234567890)"
+                placeholder="e.g. 1234567890"
                 value={gatewayId}
                 onChange={(e) => setGatewayId(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
+                style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#FDFCF8', color: '#1C1208' }}
               />
             </div>
+
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
+                Password
+              </label>
               <input
                 id="password"
-                name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                placeholder="Your HMRC password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl text-sm focus:outline-none transition-all"
+                style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#FDFCF8', color: '#1C1208' }}
               />
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-full py-3.5 rounded-xl font-medium text-sm transition-all"
+              style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}
             >
-              Connect & Fetch Data
+              Connect &amp; Fetch Data →
             </button>
-          </div>
-          
-          <div className="text-xs text-center text-gray-500 mt-4">
-            <p>Your data is encrypted and never stored permanently.</p>
-          </div>
-        </form>
+          </form>
+
+          <p className="text-center text-xs mt-6" style={{ color: '#9A8F83' }}>
+            Your data is encrypted and never stored permanently.
+          </p>
+        </div>
       </div>
     </div>
   );

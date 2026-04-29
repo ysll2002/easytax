@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+
+  --color-cream: #FDFCF8;
+  --color-cream-dark: #F0EBE1;
+  --color-ink: #1C1208;
+  --color-ink-light: #4A4035;
+  --color-terra: #C4622D;
+  --color-terra-light: #E8895A;
+  --color-terra-pale: #F5E4D8;
+  --color-sage: #6B8E6E;
+  --color-sage-pale: #E2EDE2;
+  --color-gold: #C9963D;
+  --color-muted: #9A8F83;
+  --color-border: #DDD5C8;
+  --color-border-dark: #C5BAB0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #FDFCF8;
+  color: #1C1208;
+  font-family: var(--font-body), 'DM Sans', system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), 'Playfair Display', Georgia, serif;
+}
+
+.font-display {
+  font-family: var(--font-display), 'Playfair Display', Georgia, serif;
+}
+
+.font-body {
+  font-family: var(--font-body), 'DM Sans', system-ui, sans-serif;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
