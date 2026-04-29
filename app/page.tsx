@@ -16,7 +16,7 @@ export default function Home() {
         </nav>
         <div className="flex gap-4">
             <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-blue-600 py-2">Log in</Link>
-            <Link href="#waitlist" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+            <Link href="/onboarding" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
             Get Started
             </Link>
         </div>
@@ -44,9 +44,9 @@ export default function Home() {
                 placeholder="Enter your email" 
                 className="w-full px-5 py-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
               />
-              <button className="w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                Join Waitlist
-              </button>
+              <Link href="/onboarding" className="w-full sm:w-auto bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-center">
+                Get Started
+              </Link>
             </div>
             <p className="mt-4 text-sm text-gray-500">
               Join 600+ freelancers on the list. No spam, ever.
@@ -115,9 +115,9 @@ export default function Home() {
                     Get early access to EasyTax and lock in our founder pricing for life.
                 </p>
                 <div className="bg-white/10 p-1 rounded-2xl inline-block backdrop-blur-sm">
-                    <button className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
+                    <Link href="/onboarding" className="inline-block bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors shadow-lg">
                         Get Early Access
-                    </button>
+                    </Link>
                 </div>
             </div>
         </section>
@@ -130,8 +130,8 @@ export default function Home() {
             &copy; {new Date().getFullYear()} EasyTax Ltd. Built in London 🇬🇧
           </div>
           <div className="flex gap-6 text-sm text-gray-500">
-            <Link href="#" className="hover:text-blue-600">Privacy Policy</Link>
-            <Link href="#" className="hover:text-blue-600">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-blue-600">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-blue-600">Terms of Service</Link>
             <Link href="#" className="hover:text-blue-600">Twitter</Link>
           </div>
         </div>

@@ -38,8 +38,8 @@ const MOCK_ACTIONS: ActionItem[] = [
     title: 'Connect Business Bank Account',
     description: 'Link your Monzo/Starling account to automate expense tracking.',
     cta: 'Connect Bank',
-    ctaLink: '#',
-    completed: false, // Changed to false to show the button
+    ctaLink: '#', // Handled via onClick
+    completed: false, 
   }
 ];
 
@@ -47,11 +47,11 @@ export default function Actions() {
   const router = useRouter();
   const [actions, setActions] = useState<ActionItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [connectingId, setConnectingId] = useState<string | null>(null);
 
   // Simulate fetching data from HMRC API
   useEffect(() => {
     const fetchActions = async () => {
-      // In a real app, this would call /api/hmrc/obligations
       setTimeout(() => {
         setActions(MOCK_ACTIONS);
         setLoading(false);
@@ -59,6 +59,17 @@ export default function Actions() {
     };
     fetchActions();
   }, []);
+
+  const handleConnect = async (id: string) => {
+    setConnectingId(id);
+    // Simulate API call to bank provider (Plaid/TrueLayer)
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setActions(prev => prev.map(action => 
+      action.id === id ? { ...action, completed: true, title: 'Bank Account Connected', description: 'Monzo Business account linked successfully.' } : action
+    ));
+    setConnectingId(null);
+  };
 
   if (loading) {
     return (
@@ -115,15 +126,36 @@ export default function Actions() {
                     </p>
                     
                     {!action.completed && (
-                      <Link 
-                        href={action.ctaLink}
-                        className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                          action.type === 'urgent' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' : 
-                          'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
-                        }`}
-                      >
-                        {action.cta} &rarr;
-                      </Link>
+                      action.ctaLink === '#' ? (
+                        <button
+                          onClick={() => handleConnect(action.id)}
+                          disabled={connectingId === action.id}
+                          className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 
+                            ${connectingId === action.id ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'}`}
+                        >
+                          {connectingId === action.id ? (
+                            <span className="flex items-center gap-2">
+                              <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Connecting...
+                            </span>
+                          ) : (
+                            <>{action.cta} &rarr;</>
+                          )}
+                        </button>
+                      ) : (
+                        <Link 
+                          href={action.ctaLink}
+                          className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                            action.type === 'urgent' ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' : 
+                            'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
+                          }`}
+                        >
+                          {action.cta} &rarr;
+                        </Link>
+                      )
                     )}
                   </div>
                   

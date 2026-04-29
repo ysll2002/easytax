@@ -4,6 +4,8 @@
 - **Date:** 2026-03-05
 - **Stack:** Next.js (App Router), Tailwind CSS, TypeScript.
 - **Goal:** File HMRC tax returns in 5 minutes.
+- **Domain:** [https://easytax.vip](https://easytax.vip)
+- **Repo:** [github.com/linli-clawd/hmrc-tax-assistant](https://github.com/linli-clawd/hmrc-tax-assistant)
 
 ## Features (Status)
 1. **Landing Page:** High conversion, trust signals. (Done)
@@ -16,3 +18,4 @@
 ## Commands
 - `npm run dev`: Start local server.
 - `npm run build`: Production build.
+- `vercel deploy --prod`: Deploy to Vercel.
