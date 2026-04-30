@@ -16,8 +16,8 @@ export default function Home() {
         </nav>
         <div className="flex gap-4 items-center">
           <Link href="/login" className="text-sm font-medium transition-colors" style={{ color: '#9A8F83' }}>Log in</Link>
-          <Link href="/onboarding" className="text-sm font-medium px-5 py-2.5 rounded-full transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-            Get Started
+          <Link href="/register" className="text-sm font-medium px-5 py-2.5 rounded-full transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+            Register
           </Link>
         </div>
       </header>
