@@ -18,7 +18,7 @@ export default function Onboarding() {
     setTimeout(() => setStatusText('Connecting to HMRC securely...'), 1000);
     setTimeout(() => setStatusText('Fetching income records (P60, P45)...'), 2500);
     setTimeout(() => setStatusText('Calculating expenses...'), 4000);
-    setTimeout(() => { router.push('/actions'); }, 5500);
+    setTimeout(() => { router.push('/dashboard'); }, 5500);
   };
 
   if (loading) {
