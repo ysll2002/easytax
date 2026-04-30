@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
@@ -35,12 +36,11 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
+    <div className="flex flex-col min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
+      <SiteHeader />
+      <div className="flex flex-col items-center justify-center flex-1 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
-          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#C4622D', display: 'inline-block', marginBottom: '2rem' }}>
-            EasyTax
-          </Link>
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
             Create your account
           </h1>
@@ -105,6 +105,7 @@ export default function Register() {
             <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>Log in</Link>
           </p>
         </div>
+      </div>
       </div>
     </div>
   );
