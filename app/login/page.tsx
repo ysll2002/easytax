@@ -150,8 +150,8 @@ export default function Login() {
 
           <p className="text-center text-sm mt-6" style={{ color: '#9A8F83' }}>
             Don&apos;t have an account?{' '}
-            <Link href="/onboarding" style={{ color: '#C4622D', fontWeight: 600 }}>
-              Get started
+            <Link href="/register" style={{ color: '#C4622D', fontWeight: 600 }}>
+              Create account
             </Link>
           </p>
         </div>
