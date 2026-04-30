@@ -73,5 +73,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.profileId = token.profileId as string;
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      if (url.includes('/actions')) return `${baseUrl}/dashboard`;
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (url.startsWith(baseUrl)) return url;
+      return `${baseUrl}/dashboard`;
+    },
   },
 });
