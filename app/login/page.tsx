@@ -11,17 +11,27 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    await signIn('google', { callbackUrl: '/actions' });
+    await signIn('google', { callbackUrl: '/dashboard' });
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-    router.push('/actions');
+    const result = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+    if (result?.error) {
+      setError('Invalid email or password');
+      setLoading(false);
+    } else {
+      router.push('/dashboard');
+    }
   };
 
   const inputStyle = {
@@ -124,6 +134,8 @@ export default function Login() {
                 style={inputStyle}
               />
             </div>
+
+            {error && <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
 
             <button
               type="submit"
