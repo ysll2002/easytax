@@ -1,128 +1,230 @@
-import { auth } from '@/auth';
-import { supabase } from '@/lib/supabase';
+'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { type Obligation } from '@/lib/hmrc';
 
-export default async function TasksPage() {
-  const session = await auth();
-  const profileId = session!.user.profileId;
+type CalcState = { id: string | null; incomeTax?: number; class4Nic?: number; totalDue?: number };
 
-  const [{ data: hmrc }, { data: bank }] = await Promise.all([
-    supabase.from('hmrc_connections').select('*').eq('user_id', profileId).single(),
-    supabase.from('bank_connections').select('*').eq('user_id', profileId).single(),
-  ]);
+function currentTaxYear() {
+  const now = new Date();
+  const year = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
+  return `${year}-${String(year + 1).slice(2)}`;
+}
 
-  if (!hmrc || !bank) {
+function quarterLabel(start: string, end: string) {
+  const s = new Date(start);
+  const e = new Date(end);
+  const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  return `${fmt(s)} – ${fmt(e)}`;
+}
+
+export default function TasksPage() {
+  const [obligations, setObligations] = useState<Obligation[]>([]);
+  const [loading, setLoading]         = useState(true);
+  const [error, setError]             = useState('');
+  const [calc, setCalc]               = useState<CalcState>({ id: null });
+  const [calcLoading, setCalcLoading] = useState(false);
+  const [declaring, setDeclaring]     = useState(false);
+  const [declared, setDeclared]       = useState(false);
+
+  const taxYear = currentTaxYear();
+
+  useEffect(() => {
+    fetch('/api/hmrc/obligations')
+      .then(r => r.json())
+      .then(d => {
+        if (d.error) setError(d.error);
+        else setObligations(d.obligations ?? []);
+      })
+      .catch(() => setError('Could not reach HMRC'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const quarterlyObs = obligations.filter(o => o.periodKey !== '#001');
+  const finalObs     = obligations.find(o => o.periodKey === '#001');
+  const allFulfilled = quarterlyObs.length > 0 && quarterlyObs.every(o => o.status === 'Fulfilled');
+
+  async function handleCalculate() {
+    setCalcLoading(true);
+    try {
+      const r = await fetch('/api/hmrc/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taxYear }),
+      });
+      const d = await r.json();
+      if (d.error) { setError(d.error); return; }
+
+      // Poll for result
+      for (let i = 0; i < 6; i++) {
+        await new Promise(res => setTimeout(res, 2000));
+        const r2 = await fetch(`/api/hmrc/calculate?taxYear=${taxYear}&calculationId=${d.calculationId}`);
+        const d2 = await r2.json();
+        if (d2.calculation) {
+          const c = d2.calculation.taxCalculation;
+          setCalc({
+            id:        d.calculationId,
+            incomeTax: c?.incomeTax?.totalIncomeTaxDue,
+            class4Nic: c?.nics?.class4Nics?.totalAmount,
+            totalDue:  c?.totalIncomeTaxAndNicsDue,
+          });
+          break;
+        }
+      }
+    } finally {
+      setCalcLoading(false);
+    }
+  }
+
+  async function handleFinalDeclaration() {
+    if (!confirm('This will submit your final Self Assessment to HMRC. Are you sure?')) return;
+    setDeclaring(true);
+    try {
+      const r = await fetch('/api/hmrc/final-declaration', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taxYear }),
+      });
+      const d = await r.json();
+      if (d.error) setError(d.error);
+      else setDeclared(true);
+    } finally {
+      setDeclaring(false);
+    }
+  }
+
+  if (loading) {
     return (
-      <div className="p-8 max-w-xl">
-        <p style={{ color: '#9A8F83' }}>Please connect HMRC and your bank first.</p>
-        <Link href="/dashboard/tax" style={{ color: '#C4622D', fontWeight: 600 }}>← Go back</Link>
+      <div className="p-8 max-w-3xl">
+        <div style={{ color: '#9A8F83', fontSize: '0.9rem' }}>Loading HMRC obligations…</div>
       </div>
     );
   }
-
-  // Fetch obligations from HMRC
-  let obligations: { periodStartDate: string; periodEndDate: string; due: string; status: string }[] = [];
-  try {
-    const apiBase = 'https://test-api.service.hmrc.gov.uk';
-    // For sandbox, we use a test NINO
-    const nino = hmrc.nino ?? 'AA000003D';
-    const res = await fetch(`${apiBase}/individuals/self-assessment/obligations/details/${nino}`, {
-      headers: {
-        Authorization: `Bearer ${hmrc.access_token}`,
-        Accept: 'application/vnd.hmrc.1.0+json',
-      },
-    });
-    if (res.ok) {
-      const data = await res.json();
-      obligations = data.obligations?.flatMap((o: { obligationDetails: unknown[] }) => o.obligationDetails) ?? [];
-    }
-  } catch { /* use mock if HMRC unreachable */ }
-
-  // Fallback mock obligations for sandbox demo
-  if (obligations.length === 0) {
-    obligations = [
-      { periodStartDate: '2024-04-06', periodEndDate: '2025-04-05', due: '2026-01-31', status: 'Open' },
-    ];
-  }
-
-  // Fetch transactions from TrueLayer
-  let transactions: { transaction_id: string; timestamp: string; description: string; amount: number; currency: string }[] = [];
-  try {
-    const dataBase = process.env.TRUELAYER_DATA_URL ?? 'https://api.truelayer-sandbox.com/data/v1';
-    const txRes = await fetch(`${dataBase}/accounts/${bank.account_id}/transactions`, {
-      headers: { Authorization: `Bearer ${bank.access_token}` },
-    });
-    if (txRes.ok) {
-      const { results } = await txRes.json();
-      transactions = (results ?? []).slice(0, 20);
-    }
-  } catch { /* non-blocking */ }
 
   return (
     <div className="p-8 max-w-3xl">
       <Link href="/dashboard/tax" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
 
-      <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-        Your Tax Tasks
+      <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
+        Tax Filing {taxYear}
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>Based on your HMRC obligations and bank transactions.</p>
+      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>Making Tax Digital — quarterly updates + final declaration.</p>
 
-      {/* HMRC Obligations */}
-      <section className="mb-8">
-        <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
-          HMRC Obligations
-        </h2>
-        <div className="space-y-3">
-          {obligations.map((ob, i) => (
-            <div key={i} className="flex items-center justify-between p-5 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8', borderLeft: `4px solid ${ob.status === 'Open' ? '#C4622D' : '#6B8E6E'}` }}>
-              <div>
-                <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>
-                  Self Assessment {ob.periodStartDate?.slice(0, 4)}/{ob.periodEndDate?.slice(0, 4)}
-                </p>
-                <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>
-                  Period: {ob.periodStartDate} → {ob.periodEndDate}
-                </p>
-              </div>
-              <div className="text-right">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ backgroundColor: ob.status === 'Open' ? '#F5E4D8' : '#E2EDE2', color: ob.status === 'Open' ? '#C4622D' : '#6B8E6E' }}>
-                  {ob.status}
-                </span>
-                <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>Due {ob.due}</p>
-              </div>
-            </div>
-          ))}
+      {error && (
+        <div className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>
+          {error}
         </div>
-      </section>
+      )}
 
-      {/* Transactions */}
-      <section>
-        <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
-          Recent Transactions — {bank.account_name}
+      {/* Quarterly Updates */}
+      <section className="mb-8">
+        <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
+          Quarterly Updates
         </h2>
-        {transactions.length === 0 ? (
-          <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>No transactions available.</p>
+
+        {quarterlyObs.length === 0 ? (
+          <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>No quarterly obligations found for this tax year.</p>
         ) : (
-          <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #DDD5C8' }}>
-            {transactions.map((tx, i) => (
-              <div key={tx.transaction_id ?? i} className="flex items-center justify-between px-5 py-4" style={{ backgroundColor: '#FDFCF8', borderTop: i > 0 ? '1px solid #DDD5C8' : 'none' }}>
-                <div>
-                  <p className="text-sm font-medium" style={{ color: '#1C1208' }}>{tx.description}</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>{tx.timestamp?.slice(0, 10)}</p>
+          <div className="space-y-3">
+            {quarterlyObs.map((ob) => {
+              const done = ob.status === 'Fulfilled';
+              const overdue = !done && new Date(ob.dueDate) < new Date();
+              return (
+                <div key={ob.periodKey} className="flex items-center justify-between p-5 rounded-2xl"
+                  style={{ backgroundColor: done ? '#F0EBE1' : '#FDFCF8', border: `1px solid ${done ? '#C4622D40' : '#DDD5C8'}`, borderLeft: `4px solid ${done ? '#C4622D' : overdue ? '#EF4444' : '#DDD5C8'}` }}>
+                  <div>
+                    <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>
+                      {quarterLabel(ob.periodStartDate, ob.periodEndDate)}
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>
+                      Due {new Date(ob.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-full"
+                      style={{ backgroundColor: done ? '#F5E4D8' : overdue ? '#FEE2E2' : '#F0F0EB', color: done ? '#C4622D' : overdue ? '#991B1B' : '#9A8F83' }}>
+                      {done ? 'Submitted' : overdue ? 'Overdue' : 'Open'}
+                    </span>
+                    {!done && (
+                      <Link href={`/dashboard/tax/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`}
+                        className="text-xs font-medium px-3 py-1.5 rounded-full"
+                        style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+                        Submit →
+                      </Link>
+                    )}
+                  </div>
                 </div>
-                <p className="font-semibold text-sm" style={{ color: tx.amount < 0 ? '#C4622D' : '#6B8E6E' }}>
-                  {tx.amount < 0 ? '−' : '+'}£{Math.abs(tx.amount).toFixed(2)}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>
 
-      <div className="mt-8">
-        <Link href="/payment" className="inline-block px-8 py-3.5 rounded-full font-medium text-sm" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-          File & Pay Now →
-        </Link>
-      </div>
+      {/* Tax Estimate */}
+      {allFulfilled && (
+        <section className="mb-8 p-6 rounded-2xl" style={{ border: '1px solid #DDD5C8', backgroundColor: '#FDFCF8' }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
+            Tax Estimate
+          </h2>
+
+          {calc.id ? (
+            <div className="space-y-2 text-sm">
+              {calc.incomeTax !== undefined && (
+                <div className="flex justify-between" style={{ color: '#4A4035' }}>
+                  <span>Income Tax</span>
+                  <span className="font-semibold">£{calc.incomeTax.toFixed(2)}</span>
+                </div>
+              )}
+              {calc.class4Nic !== undefined && (
+                <div className="flex justify-between" style={{ color: '#4A4035' }}>
+                  <span>Class 4 NIC (6%)</span>
+                  <span className="font-semibold">£{calc.class4Nic.toFixed(2)}</span>
+                </div>
+              )}
+              {calc.totalDue !== undefined && (
+                <div className="flex justify-between pt-2 border-t" style={{ color: '#1C1208', borderColor: '#DDD5C8' }}>
+                  <span className="font-bold">Total Due</span>
+                  <span className="font-bold text-lg" style={{ color: '#C4622D' }}>£{calc.totalDue.toFixed(2)}</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button onClick={handleCalculate} disabled={calcLoading}
+              className="text-sm font-medium px-5 py-2.5 rounded-full"
+              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: calcLoading ? 0.6 : 1, cursor: calcLoading ? 'wait' : 'pointer' }}>
+              {calcLoading ? 'Calculating…' : 'Calculate My Tax'}
+            </button>
+          )}
+        </section>
+      )}
+
+      {/* Final Declaration */}
+      {allFulfilled && (
+        <section className="p-6 rounded-2xl" style={{ border: '1px solid #C4622D40', backgroundColor: '#FFF9F5' }}>
+          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+            Final Declaration
+          </h2>
+          <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
+            Confirm your full-year figures and submit your Self Assessment to HMRC.
+            {finalObs && ` Due: ${new Date(finalObs.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`}
+          </p>
+
+          {declared ? (
+            <div className="text-sm font-semibold" style={{ color: '#6B8E6E' }}>
+              ✓ Final Declaration submitted successfully
+            </div>
+          ) : (
+            <button onClick={handleFinalDeclaration} disabled={declaring || !calc.id}
+              className="text-sm font-medium px-6 py-3 rounded-full"
+              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: (declaring || !calc.id) ? 0.5 : 1, cursor: (declaring || !calc.id) ? 'not-allowed' : 'pointer' }}>
+              {declaring ? 'Submitting…' : 'Submit Final Declaration →'}
+            </button>
+          )}
+          {!calc.id && (
+            <p className="text-xs mt-2" style={{ color: '#9A8F83' }}>Calculate your tax estimate first.</p>
+          )}
+        </section>
+      )}
     </div>
   );
 }

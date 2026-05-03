@@ -1,6 +1,7 @@
 import { auth, signOut } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import DeviceDataCollector from '@/components/DeviceDataCollector';
 
 const nav = [
   { href: '/dashboard/tax',      label: 'Tax Filing',  icon: '📄' },
@@ -62,6 +63,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Main content */}
       <main style={{ flex: 1, overflow: 'auto' }}>
+        <DeviceDataCollector />
         {children}
       </main>
     </div>

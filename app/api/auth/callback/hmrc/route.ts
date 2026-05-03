@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
+import { getBusinessDetails } from '@/lib/hmrc';
+
+const BASE = process.env.HMRC_ENV === 'production'
+  ? 'https://api.service.hmrc.gov.uk'
+  : 'https://test-api.service.hmrc.gov.uk';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -11,8 +16,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard/tax/hmrc?error=access_denied', req.url));
   }
 
-  // Exchange code for token
-  const tokenRes = await fetch('https://test-api.service.hmrc.gov.uk/oauth/token', {
+  const tokenRes = await fetch(`${BASE}/oauth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
@@ -30,36 +34,33 @@ export async function GET(req: NextRequest) {
 
   const tokens = await tokenRes.json();
 
-  // Fetch Self Assessment obligations to get NINO / UTR
-  let nino: string | null = null;
-  let utr:  string | null = null;
-
-  try {
-    const meRes = await fetch('https://test-api.service.hmrc.gov.uk/oauth/token/verify', {
-      headers: { Authorization: `Bearer ${tokens.access_token}` },
-    });
-    if (meRes.ok) {
-      const me = await meRes.json();
-      nino = me.nino ?? null;
-    }
-  } catch { /* non-blocking */ }
-
   const session = await auth();
   if (!session) return NextResponse.redirect(new URL('/login', req.url));
 
   const profileId = session.user.profileId;
 
+  // In sandbox, NINO comes from the test user; in production the user enters it during onboarding
+  const nino = process.env.HMRC_ENV !== 'production' ? 'AA000003D' : null;
+
+  // Fetch the self-employment businessId from HMRC
+  let businessId: string | null = null;
+  try {
+    const businesses = await getBusinessDetails(nino ?? 'AA000003D', tokens.access_token);
+    const selfEmp = businesses.find(b => b.typeOfBusiness === 'self-employment');
+    businessId = selfEmp?.businessId ?? null;
+  } catch { /* non-blocking — store token, fetch businessId later */ }
+
   await supabase.from('hmrc_connections').upsert({
-    user_id:       profileId,
-    access_token:  tokens.access_token,
-    refresh_token: tokens.refresh_token ?? null,
+    user_id:          profileId,
+    access_token:     tokens.access_token,
+    refresh_token:    tokens.refresh_token ?? null,
     token_expires_at: tokens.expires_in
       ? new Date(Date.now() + tokens.expires_in * 1000).toISOString()
       : null,
     nino,
-    utr,
+    business_id:  businessId,
     connected_at: new Date().toISOString(),
   }, { onConflict: 'user_id' });
 
-  return NextResponse.redirect(new URL('/dashboard/tax/tasks', req.url));
+  return NextResponse.redirect(new URL('/dashboard/tax', req.url));
 }
