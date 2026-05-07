@@ -40,7 +40,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           ))}
         </nav>
 
-        {/* User + sign out */}
+        {/* User + log out */}
         <div style={{ padding: '0 1.5rem', borderTop: '1px solid #2E2418', paddingTop: '1.25rem', marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
             {user.image ? (
@@ -57,7 +57,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </div>
           <form action={async () => { 'use server'; await signOut({ redirectTo: '/' }); }}>
             <button type="submit" style={{ width: '100%', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #2E2418', color: '#4A4035', fontSize: '0.8rem', backgroundColor: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
-              Sign out
+              Log out
             </button>
           </form>
         </div>
