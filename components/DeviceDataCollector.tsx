@@ -39,10 +39,30 @@ export default function DeviceDataCollector() {
       document.cookie = `${COOKIE_KEY}=${encodeURIComponent(payload)};path=/;max-age=3600;SameSite=Strict`;
     };
 
-    // Fetch the real client IP and port from our server-side endpoint
+    // Use WebRTC STUN to discover the NAT-mapped public port
+    const getPublicPort = (): Promise<string> => new Promise(resolve => {
+      try {
+        const pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+        pc.createDataChannel('');
+        let done = false;
+        const finish = (port: string) => { if (!done) { done = true; pc.close(); resolve(port); } };
+        pc.onicecandidate = e => {
+          if (!e.candidate) { finish(''); return; }
+          const parts = e.candidate.candidate.split(' ');
+          // srflx = server reflexive = NAT external IP:port
+          if (parts[7] === 'srflx') finish(parts[5]);
+        };
+        pc.createOffer().then(o => pc.setLocalDescription(o)).catch(() => finish(''));
+        setTimeout(() => finish(''), 4000);
+      } catch { resolve(''); }
+    });
+
     fetch('/api/client-ip')
       .then(r => r.json())
-      .then(d => writeCookie(d.ip ?? '', d.port ?? '443'))
+      .then(async d => {
+        const port = await getPublicPort();
+        writeCookie(d.ip ?? '', port);
+      })
       .catch(() => writeCookie('', ''));
   }, [session?.user?.profileId]);
 
