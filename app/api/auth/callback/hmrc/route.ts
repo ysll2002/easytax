@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
-import { getBusinessDetails } from '@/lib/hmrc';
+import { getBusinessDetails, getVatObligations } from '@/lib/hmrc';
 
 const BASE = process.env.HMRC_ENV === 'production'
   ? 'https://api.service.hmrc.gov.uk'
@@ -39,8 +39,9 @@ export async function GET(req: NextRequest) {
 
   const profileId = session.user.profileId;
 
-  // In sandbox, NINO comes from the test user; in production the user enters it during onboarding
+  // In sandbox, use known test-user identifiers; in production the user provides these during onboarding
   const nino = process.env.HMRC_ENV !== 'production' ? 'AA000003D' : null;
+  const vrn  = process.env.HMRC_ENV !== 'production' ? '999999999' : null;
 
   // Fetch the self-employment businessId from HMRC
   let businessId: string | null = null;
@@ -48,7 +49,12 @@ export async function GET(req: NextRequest) {
     const businesses = await getBusinessDetails(nino ?? 'AA000003D', tokens.access_token);
     const selfEmp = businesses.find(b => b.typeOfBusiness === 'self-employment');
     businessId = selfEmp?.businessId ?? null;
-  } catch { /* non-blocking — store token, fetch businessId later */ }
+  } catch { /* non-blocking */ }
+
+  // Warm up VAT obligations (makes a real API call to satisfy HMRC sandbox activity requirement)
+  try {
+    if (vrn) await getVatObligations(vrn, tokens.access_token);
+  } catch { /* non-blocking */ }
 
   await supabase.from('hmrc_connections').upsert({
     user_id:          profileId,
@@ -58,6 +64,7 @@ export async function GET(req: NextRequest) {
       ? new Date(Date.now() + tokens.expires_in * 1000).toISOString()
       : null,
     nino,
+    vrn,
     business_id:  businessId,
     connected_at: new Date().toISOString(),
   }, { onConflict: 'user_id' });

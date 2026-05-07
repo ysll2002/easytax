@@ -10,6 +10,8 @@ export default async function HmrcConnectPage() {
   const scopes = [
     'read:self-assessment',
     'write:self-assessment',
+    'read:vat',
+    'write:vat',
   ].join('+');
 
   const authUrl = `https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
@@ -27,7 +29,7 @@ export default async function HmrcConnectPage() {
 
       <div className="p-5 rounded-2xl mb-6 space-y-2" style={{ backgroundColor: '#F5EDDC', border: '1px solid #C9963D30' }}>
         <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>What we access</p>
-        {['Your Self Assessment obligations and deadlines', 'Income and employment records (P60, P45)', 'Previously submitted returns'].map(item => (
+        {['Your Self Assessment obligations and deadlines', 'VAT obligations and return submissions', 'Income and employment records (P60, P45)', 'Previously submitted returns'].map(item => (
           <div key={item} className="flex items-start gap-2 text-sm" style={{ color: '#4A4035' }}>
             <span style={{ color: '#C9963D', marginTop: '2px' }}>✓</span> {item}
           </div>

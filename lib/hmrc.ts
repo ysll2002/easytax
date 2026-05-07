@@ -219,3 +219,69 @@ export async function submitFinalDeclaration(nino: string, taxYear: string, toke
     { method: 'POST', body: '{}' },
   );
 }
+
+// ─── VAT MTD ──────────────────────────────────────────────────────────────────
+
+export type VatObligation = {
+  periodKey:   string;
+  start:       string;
+  end:         string;
+  due:         string;
+  received?:   string;
+  status:      'O' | 'F';
+};
+
+export async function getVatObligations(vrn: string, token: string): Promise<VatObligation[]> {
+  const from = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const to   = new Date().toISOString().slice(0, 10);
+  const data = await hmrcFetch(
+    `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`,
+    token,
+    { headers: { Accept: 'application/vnd.hmrc.1.0+json' } },
+  );
+  return (data.obligations ?? []).map((o: {
+    periodKey: string; start: string; end: string;
+    due: string; received?: string; status: 'O' | 'F';
+  }) => ({
+    periodKey: o.periodKey,
+    start:     o.start,
+    end:       o.end,
+    due:       o.due,
+    received:  o.received,
+    status:    o.status,
+  }));
+}
+
+export type VatReturnPayload = {
+  periodKey:                    string;
+  vatDueSales:                  number;
+  vatDueAcquisitions:           number;
+  totalVatDue:                  number;
+  vatReclaimedCurrPeriod:       number;
+  netVatDue:                    number;
+  totalValueSalesExVAT:         number;
+  totalValuePurchasesExVAT:     number;
+  totalValueGoodsSuppliedExVAT: number;
+  totalAcquisitionsExVAT:       number;
+  finalised:                    boolean;
+};
+
+export async function submitVatReturn(vrn: string, payload: VatReturnPayload, token: string) {
+  return hmrcFetch(
+    `/organisations/vat/${vrn}/returns`,
+    token,
+    {
+      method:  'POST',
+      body:    JSON.stringify(payload),
+      headers: { Accept: 'application/vnd.hmrc.1.0+json' },
+    },
+  );
+}
+
+export async function getVatReturn(vrn: string, periodKey: string, token: string) {
+  return hmrcFetch(
+    `/organisations/vat/${vrn}/returns/${periodKey}`,
+    token,
+    { headers: { Accept: 'application/vnd.hmrc.1.0+json' } },
+  );
+}

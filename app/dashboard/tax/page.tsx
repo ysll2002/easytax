@@ -7,7 +7,7 @@ export default async function TaxPage() {
   const profileId = session!.user.profileId;
 
   const [{ data: hmrc }, { data: bank }] = await Promise.all([
-    supabase.from('hmrc_connections').select('utr, nino, connected_at').eq('user_id', profileId).single(),
+    supabase.from('hmrc_connections').select('utr, nino, vrn, connected_at').eq('user_id', profileId).single(),
     supabase.from('bank_connections').select('account_name, connected_at').eq('user_id', profileId).single(),
   ]);
 
@@ -34,12 +34,23 @@ export default async function TaxPage() {
     },
     {
       n: '03',
-      title: 'Review & File',
+      title: 'Self Assessment',
       desc: 'Review your tax obligations, confirm expenses, and submit your Self Assessment.',
       done: false,
       href: hmrc && bank ? '/dashboard/tax/tasks' : '#',
       cta: 'View Tasks →',
       disabled: !hmrc || !bank,
+    },
+    {
+      n: '04',
+      title: 'VAT Return',
+      desc: hmrc?.vrn
+        ? `VAT Registration Number: ${hmrc.vrn}`
+        : 'File your quarterly VAT return directly to HMRC via Making Tax Digital.',
+      done: false,
+      href: hmrc ? '/dashboard/tax/vat' : '#',
+      cta: 'File VAT Return →',
+      disabled: !hmrc,
     },
   ];
 
