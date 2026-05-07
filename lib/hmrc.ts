@@ -5,6 +5,21 @@ const BASE = process.env.HMRC_ENV === 'production'
   ? 'https://api.service.hmrc.gov.uk'
   : 'https://test-api.service.hmrc.gov.uk';
 
+// Cache server outbound IP for 10 minutes to avoid fetching on every request
+let cachedVendorIp = { ip: '', expiresAt: 0 };
+async function getVendorPublicIp(): Promise<string> {
+  if (process.env.SERVER_PUBLIC_IP) return process.env.SERVER_PUBLIC_IP;
+  if (Date.now() < cachedVendorIp.expiresAt) return cachedVendorIp.ip;
+  try {
+    const res = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(2000) });
+    const { ip } = await res.json();
+    cachedVendorIp = { ip: ip ?? '', expiresAt: Date.now() + 10 * 60 * 1000 };
+    return cachedVendorIp.ip;
+  } catch {
+    return '';
+  }
+}
+
 // ─── Token management ────────────────────────────────────────────────────────
 
 async function refreshToken(userId: string, refreshToken: string) {
@@ -54,23 +69,25 @@ async function fraudHeaders(): Promise<Record<string, string>> {
   let deviceData: Record<string, string> = {};
   try {
     const raw = jar.get('hmrc_device')?.value;
-    if (raw) deviceData = JSON.parse(raw);
+    if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
   } catch { /* ignore */ }
 
+  const vendorIp = await getVendorPublicIp();
+
   return {
-    'Gov-Client-Connection-Method': 'WEB_APP_VIA_SERVER',
+    'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
     'Gov-Client-Browser-JS-User-Agent': deviceData.userAgent ?? '',
-    'Gov-Client-Device-ID':            deviceData.deviceId  ?? '',
-    'Gov-Client-Screens':              deviceData.screens   ?? '',
-    'Gov-Client-Timezone':             deviceData.timezone  ?? 'UTC+00:00',
-    'Gov-Client-Window-Size':          deviceData.window    ?? '',
-    'Gov-Client-Public-IP':            deviceData.ip        ?? '',
-    'Gov-Client-Public-IP-Timestamp':  deviceData.ipTs      ?? new Date().toISOString(),
-    'Gov-Client-User-IDs':             deviceData.userId ? `easytax=${deviceData.userId}` : '',
-    'Gov-Vendor-Product-Name':         'EasyTax',
-    'Gov-Vendor-Version':              'easytax=0.1.0',
-    'Gov-Vendor-Public-IP':            process.env.SERVER_PUBLIC_IP ?? '',
-    'Gov-Vendor-License-IDs':          '',
+    'Gov-Client-Device-ID':             deviceData.deviceId  ?? '',
+    'Gov-Client-Screens':               deviceData.screens   ?? '',
+    'Gov-Client-Timezone':              deviceData.timezone  ?? 'UTC+00:00',
+    'Gov-Client-Window-Size':           deviceData.window    ?? '',
+    'Gov-Client-Public-IP':             deviceData.ip        ?? '',
+    'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? new Date().toISOString(),
+    'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
+    'Gov-Vendor-Product-Name':          'EasyTax',
+    'Gov-Vendor-Version':               'easytax=0.1.0',
+    'Gov-Vendor-Public-IP':             vendorIp,
+    'Gov-Vendor-License-IDs':           '',
   };
 }
 
