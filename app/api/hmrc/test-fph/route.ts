@@ -25,6 +25,7 @@ export async function GET() {
   } catch { /* ignore */ }
 
   const vendorIp = await getVendorIp();
+  const clientIp = deviceData.ip ?? '';
 
   const fphHeaders: Record<string, string> = {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
@@ -33,13 +34,15 @@ export async function GET() {
     'Gov-Client-Screens':               deviceData.screens   ?? '',
     'Gov-Client-Timezone':              deviceData.timezone  ?? 'UTC+00:00',
     'Gov-Client-Window-Size':           deviceData.window    ?? '',
-    'Gov-Client-Public-IP':             deviceData.ip        ?? '',
+    'Gov-Client-Public-IP':             clientIp,
     'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? new Date().toISOString(),
+    'Gov-Client-Public-Port':           deviceData.port      ?? '',
     'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
     'Gov-Vendor-Product-Name':          'EasyTax',
     'Gov-Vendor-Version':               'easytax=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
-    'Gov-Vendor-License-IDs':           '',
+    'Gov-Vendor-Forwarded':             clientIp && vendorIp ? `by=${vendorIp}&for=${clientIp}` : '',
+    'Gov-Vendor-License-IDs':           'easytax=0.1.0',
   };
 
   try {

@@ -24,7 +24,7 @@ export default function DeviceDataCollector() {
     const m = String(Math.abs(offset) % 60).padStart(2, '0');
     const timezone = `UTC${sign}${h}:${m}`;
 
-    const writeCookie = (ip: string) => {
+    const writeCookie = (ip: string, port: string) => {
       const payload = JSON.stringify({
         userAgent: navigator.userAgent,
         deviceId,
@@ -32,17 +32,18 @@ export default function DeviceDataCollector() {
         timezone,
         window:   windowSize,
         ip,
+        port,
         ipTs:     new Date().toISOString(),
         userId:   session?.user?.profileId ?? '',
       });
       document.cookie = `${COOKIE_KEY}=${encodeURIComponent(payload)};path=/;max-age=3600;SameSite=Strict`;
     };
 
-    // Fetch the real client IP from our server-side endpoint
+    // Fetch the real client IP and port from our server-side endpoint
     fetch('/api/client-ip')
       .then(r => r.json())
-      .then(d => writeCookie(d.ip ?? ''))
-      .catch(() => writeCookie(''));
+      .then(d => writeCookie(d.ip ?? '', d.port ?? '443'))
+      .catch(() => writeCookie('', ''));
   }, [session?.user?.profileId]);
 
   return null;
