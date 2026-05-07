@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken } from '@/lib/hmrc';
 import { cookies } from 'next/headers';
+import { createHash } from 'crypto';
 
 const SANDBOX = 'https://test-api.service.hmrc.gov.uk';
 
@@ -42,7 +43,9 @@ export async function GET() {
     'Gov-Vendor-Version':               'easytax=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
     'Gov-Vendor-Forwarded':             clientIp && vendorIp ? `by=${vendorIp}&for=${clientIp}` : '',
-    'Gov-Vendor-License-IDs':           'easytax=0.1.0',
+    'Gov-Vendor-License-IDs':           deviceData.userId
+      ? `easytax=${createHash('sha256').update(deviceData.userId).digest('hex')}`
+      : '',
   };
 
   try {
