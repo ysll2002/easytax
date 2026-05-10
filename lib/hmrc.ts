@@ -243,6 +243,66 @@ export async function submitFinalDeclaration(nino: string, taxYear: string, toke
   );
 }
 
+// ─── Annual Adjustments ───────────────────────────────────────────────────────
+
+export type AnnualAdjustments = {
+  overlapReliefUsed?:        number;
+  accountingAdjustment?:     number;
+  outstandingBusinessIncome?: number;
+  balancingCharge?:          number;
+  goodsAndServicesOwnUse?:   number;
+};
+
+export async function submitAnnualAdjustments(
+  nino: string,
+  businessId: string,
+  taxYear: string,
+  data: AnnualAdjustments,
+  token: string,
+) {
+  return hmrcFetch(
+    `/individuals/self-assessment/adjustments/${nino}/${businessId}/${taxYear}`,
+    token,
+    { method: 'PUT', body: JSON.stringify(data) },
+  );
+}
+
+export type SavingsIncome = { accountId?: string; accountName: string; grossInterest: number };
+
+export async function submitSavingsIncome(nino: string, taxYear: string, accounts: SavingsIncome[], token: string) {
+  return hmrcFetch(
+    `/individuals/income-received/savings/${nino}/${taxYear}`,
+    token,
+    { method: 'PUT', body: JSON.stringify({ savingsAccounts: accounts }) },
+  );
+}
+
+export async function submitDividendsIncome(
+  nino: string,
+  taxYear: string,
+  data: { ukDividends?: number; otherUkDividends?: number },
+  token: string,
+) {
+  return hmrcFetch(
+    `/individuals/income-received/dividends/${nino}/${taxYear}`,
+    token,
+    { method: 'PUT', body: JSON.stringify(data) },
+  );
+}
+
+export async function submitCharitableGiving(
+  nino: string,
+  taxYear: string,
+  data: { giftAidPayments?: { totalAmount?: number }; gifts?: { totalAmount?: number } },
+  token: string,
+) {
+  return hmrcFetch(
+    `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`,
+    token,
+    { method: 'PUT', body: JSON.stringify(data) },
+  );
+}
+
 // ─── VAT MTD ──────────────────────────────────────────────────────────────────
 
 export type VatObligation = {
