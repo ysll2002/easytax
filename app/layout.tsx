@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 const playfair = Playfair_Display({
   variable: "--font-display",
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>
         <Providers>{children}</Providers>
+        {process.env.VERCEL_ENV === 'production' && <Analytics />}
       </body>
     </html>
   );
