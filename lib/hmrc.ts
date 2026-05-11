@@ -122,7 +122,7 @@ export async function getBusinessDetails(nino: string, token: string) {
   const data = await hmrcFetch(
     `/individuals/business/details/${nino}/list`,
     token,
-    { headers: { Accept: 'application/vnd.hmrc.3.0+json' } },
+    { headers: { Accept: 'application/vnd.hmrc.2.0+json' } },
   );
   return data.listOfBusinesses as {
     typeOfBusiness: string;
@@ -186,6 +186,7 @@ export async function submitQuarterlyUpdate(
     token,
     {
       method: 'PUT',
+      headers: { Accept: 'application/vnd.hmrc.5.0+json' },
       body: JSON.stringify({
         periodDates: {
           periodStartDate: data.periodStartDate,
@@ -216,7 +217,7 @@ export async function triggerCalculation(nino: string, taxYear: string, token: s
   return hmrcFetch(
     `/individuals/calculations/${nino}/self-assessment/${taxYear}`,
     token,
-    { method: 'POST', body: JSON.stringify({ finalDeclaration: false }) },
+    { method: 'POST', body: JSON.stringify({ finalDeclaration: false }), headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
   );
 }
 
