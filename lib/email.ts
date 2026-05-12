@@ -1,11 +1,13 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export async function sendWelcomeEmail(to: string, name: string) {
   const firstName = name.split(' ')[0];
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: 'EasyTax <hello@easytax.vip>',
     to,
     subject: 'Welcome to EasyTax',
