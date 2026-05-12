@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -53,14 +54,19 @@ export default function Home() {
         </section>
 
         {/* Trust bar */}
-        <section style={{ borderTop: '1px solid #DDD5C8', borderBottom: '1px solid #DDD5C8', backgroundColor: '#F0EBE1', padding: '2.5rem 0' }}>
+        <section style={{ borderTop: '1px solid #E8E2DA', borderBottom: '1px solid #E8E2DA', backgroundColor: '#F8F5F0', padding: '2rem 0' }}>
           <div className="max-w-7xl mx-auto px-6">
-            <p className="text-xs font-semibold uppercase tracking-widest text-center mb-6" style={{ color: '#9A8F83' }}>Built for modern work</p>
-            <div className="flex flex-wrap justify-center gap-12">
-              {['Freelancers', 'Contractors', 'Sole Traders', 'HMRC Compliant'].map((label) => (
-                <span key={label} className="text-base font-semibold" style={{ color: '#C5BAB0', fontFamily: 'var(--font-display), Playfair Display, Georgia, serif' }}>
-                  {label}
-                </span>
+            <div className="flex flex-wrap justify-center items-center gap-8">
+              {[
+                { Icon: CheckCircle2, label: 'HMRC Approved', color: '#059669' },
+                { Icon: ShieldCheck,  label: 'Bank-grade Security', color: '#FF6B35' },
+                { Icon: Clock,        label: 'File in 5 Minutes', color: '#7C3AED' },
+                { Icon: Sparkles,     label: 'AI-powered', color: '#C9963D' },
+              ].map(({ Icon, label, color }) => (
+                <div key={label} className="flex items-center gap-2">
+                  <Icon size={16} color={color} strokeWidth={2} />
+                  <span className="text-sm font-medium" style={{ color: '#4A4035' }}>{label}</span>
+                </div>
               ))}
             </div>
           </div>
@@ -80,30 +86,30 @@ export default function Home() {
             <div className="grid md:grid-cols-3 gap-6">
               {[
                 {
-                  icon: '🏦',
+                  Icon: Landmark,
                   title: 'Bank Connections',
                   body: "Securely connect your business bank account. We automatically pull in transactions so you don't miss a single expense.",
-                  accent: '#C4622D',
-                  bg: '#F5E4D8',
+                  iconColor: '#FF6B35',
+                  iconBg: 'linear-gradient(135deg, #FFF0EB 0%, #FFD9CC 100%)',
                 },
                 {
-                  icon: '🤖',
+                  Icon: Sparkles,
                   title: 'Smart Categorisation',
                   body: '"Is a coffee meeting deductible?" Our AI categorises transactions and flags potential tax savings instantly.',
-                  accent: '#6B8E6E',
-                  bg: '#E2EDE2',
+                  iconColor: '#7C3AED',
+                  iconBg: 'linear-gradient(135deg, #F5F0FF 0%, #DDD6FE 100%)',
                 },
                 {
-                  icon: '📤',
+                  Icon: Send,
                   title: 'Direct Filing',
                   body: 'Connect your Government Gateway ID once. Review your return, hit submit, and get your HMRC confirmation instantly.',
-                  accent: '#C9963D',
-                  bg: '#F5EDDC',
+                  iconColor: '#059669',
+                  iconBg: 'linear-gradient(135deg, #ECFDF5 0%, #A7F3D0 100%)',
                 },
               ].map((f) => (
-                <div key={f.title} className="p-8 rounded-2xl transition-all" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-6" style={{ backgroundColor: f.bg }}>
-                    {f.icon}
+                <div key={f.title} className="p-8 rounded-2xl transition-all hover:shadow-md" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6" style={{ background: f.iconBg }}>
+                    <f.Icon size={22} color={f.iconColor} strokeWidth={1.8} />
                   </div>
                   <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
                     {f.title}
@@ -139,14 +145,14 @@ export default function Home() {
 
               <div className="space-y-4">
                 {[
-                  { n: '01', title: 'Connect HMRC Gateway', desc: 'Securely link your Government Gateway ID. We fetch your income records automatically.' },
-                  { n: '02', title: 'Review Your Expenses', desc: 'Our AI categorises transactions. You simply approve or reject in seconds.' },
-                  { n: '03', title: 'File & Pay', desc: 'Review your completed return, pay the £20 fee, and we submit directly to HMRC.' },
+                  { Icon: ShieldCheck, title: 'Connect HMRC Gateway', desc: 'Securely link your Government Gateway ID. We fetch your income records automatically.', color: '#FF6B35' },
+                  { Icon: Sparkles,    title: 'Review Your Expenses',  desc: 'Our AI categorises transactions. You simply approve or reject in seconds.',            color: '#7C3AED' },
+                  { Icon: CheckCircle2, title: 'File & Pay',           desc: 'Review your completed return, pay the £20 fee, and we submit directly to HMRC.',       color: '#059669' },
                 ].map((step) => (
-                  <div key={step.n} className="flex gap-5 p-5 rounded-xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
-                    <span style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#DDD5C8', flexShrink: 0, lineHeight: 1 }}>
-                      {step.n}
-                    </span>
+                  <div key={step.title} className="flex gap-5 p-5 rounded-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: step.color + '15' }}>
+                      <step.Icon size={18} color={step.color} strokeWidth={2} />
+                    </div>
                     <div>
                       <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{step.title}</p>
                       <p className="text-sm" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{step.desc}</p>
