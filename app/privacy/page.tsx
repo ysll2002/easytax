@@ -78,43 +78,7 @@ export default function Privacy() {
 
           {/* 3 */}
           <section>
-            <H2>3. Third Parties We Share Data With</H2>
-            <P>We do not sell your data. We only share data with the following processors and controllers, who are bound by data processing agreements or equivalent safeguards:</P>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', marginTop: '1rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '2px solid #DDD5C8' }}>
-                  {['Party', 'Purpose', 'Location', 'Safeguard'].map(h => (
-                    <th key={h} style={{ textAlign: 'left', padding: '0.5rem 0.75rem', color: '#1C1208', fontWeight: 600 }}>{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ['HMRC', 'Filing your tax return', 'UK', 'Legal obligation / your instruction'],
-                  ['Supabase', 'Database hosting', 'EU / US', 'Standard Contractual Clauses'],
-                  ['Vercel', 'Application hosting', 'US', 'Standard Contractual Clauses'],
-                  ['Stripe', 'Payment processing', 'US', 'Standard Contractual Clauses'],
-                  ['TrueLayer', 'Open Banking data', 'UK', 'FCA-regulated, DPA'],
-                  ['Google', 'Sign-in (optional)', 'US', 'Standard Contractual Clauses'],
-                  ['Resend', 'Transactional email', 'US', 'Standard Contractual Clauses'],
-                ].map(([party, purpose, location, safeguard]) => (
-                  <tr key={party} style={{ borderBottom: '1px solid #E8E2DA' }}>
-                    <td style={{ padding: '0.6rem 0.75rem', fontWeight: 500, color: '#1C1208' }}>{party}</td>
-                    <td style={{ padding: '0.6rem 0.75rem' }}>{purpose}</td>
-                    <td style={{ padding: '0.6rem 0.75rem' }}>{location}</td>
-                    <td style={{ padding: '0.6rem 0.75rem', color: '#9A8F83', fontSize: '0.825rem' }}>{safeguard}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <P style={{ marginTop: '1rem' }}>
-              Transfers to the US and other third countries rely on Standard Contractual Clauses (SCCs) approved by the UK ICO, or the UK International Data Transfer Agreement (IDTA), as applicable.
-            </P>
-          </section>
-
-          {/* 4 */}
-          <section>
-            <H2>4. How Long We Keep Your Data</H2>
+            <H2>3. How Long We Keep Your Data</H2>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', marginTop: '1rem' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #DDD5C8' }}>
@@ -143,9 +107,9 @@ export default function Privacy() {
             </table>
           </section>
 
-          {/* 5 */}
+          {/* 4 */}
           <section>
-            <H2>5. Your Rights Under UK GDPR</H2>
+            <H2>4. Your Rights Under UK GDPR</H2>
             <P>You have the following rights regarding your personal data. To exercise any of them, email <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a>. We will respond within 30 days.</P>
             <div className="space-y-3" style={{ marginTop: '1rem' }}>
               {[
@@ -166,15 +130,15 @@ export default function Privacy() {
             </div>
           </section>
 
-          {/* 6 */}
+          {/* 5 */}
           <section>
-            <H2>6. Cookies</H2>
+            <H2>5. Cookies</H2>
             <P>We use only technically necessary cookies (session authentication). We do not use advertising or tracking cookies. No cookie consent banner is required for strictly necessary cookies.</P>
           </section>
 
-          {/* 7 */}
+          {/* 6 */}
           <section>
-            <H2>7. Security</H2>
+            <H2>6. Security</H2>
             <P>
               We implement appropriate technical and organisational measures including TLS encryption in transit, encryption at rest, access controls, and token-based authentication. HMRC access tokens are stored encrypted. We do not store Government Gateway passwords.
             </P>
@@ -183,21 +147,21 @@ export default function Privacy() {
             </P>
           </section>
 
+          {/* 7 */}
+          <section>
+            <H2>7. Children</H2>
+            <P>Our service is not directed at anyone under the age of 18. We do not knowingly collect data from minors.</P>
+          </section>
+
           {/* 8 */}
           <section>
-            <H2>8. Children</H2>
-            <P>Our service is not directed at anyone under the age of 18. We do not knowingly collect data from minors.</P>
+            <H2>8. Changes to This Policy</H2>
+            <P>We may update this policy from time to time. We will notify you of material changes by email or by a prominent notice in the app at least 14 days before changes take effect. The "Last updated" date at the top of this page reflects the most recent revision.</P>
           </section>
 
           {/* 9 */}
           <section>
-            <H2>9. Changes to This Policy</H2>
-            <P>We may update this policy from time to time. We will notify you of material changes by email or by a prominent notice in the app at least 14 days before changes take effect. The "Last updated" date at the top of this page reflects the most recent revision.</P>
-          </section>
-
-          {/* 10 */}
-          <section>
-            <H2>10. How to Complain</H2>
+            <H2>9. How to Complain</H2>
             <P>
               If you are unhappy with how we handle your data, please contact us first at <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a>. If you remain unsatisfied, you have the right to lodge a complaint with the UK's supervisory authority:
             </P>
@@ -208,9 +172,9 @@ export default function Privacy() {
             </div>
           </section>
 
-          {/* 11 */}
+          {/* 10 */}
           <section>
-            <H2>11. Contact Us</H2>
+            <H2>10. Contact Us</H2>
             <P>For any privacy-related questions or to exercise your rights:</P>
             <P><strong>Email:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a></P>
             <P>We aim to respond to all requests within <strong>30 days</strong>. For complex requests we may extend this by a further two months, in which case we will notify you.</P>
