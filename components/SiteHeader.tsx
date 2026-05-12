@@ -18,7 +18,7 @@ export default function SiteHeader() {
       <div className="flex gap-4 items-center">
         {session ? (
           <>
-            <Link href="/dashboard" className="text-sm font-medium transition-colors" style={{ color: '#9A8F83', textDecoration: 'none' }}>Dashboard</Link>
+            <Link href="/dashboard" className="text-sm font-medium px-5 py-2.5 rounded-full transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>Dashboard</Link>
             <button
               onClick={() => signOut({ callbackUrl: '/' })}
               className="text-sm font-medium px-5 py-2.5 rounded-full transition-all"
