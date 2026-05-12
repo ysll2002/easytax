@@ -29,10 +29,10 @@ export default function Privacy() {
           <section>
             <H2>1. Who We Are</H2>
             <P>
-              EasyTax Ltd ("<strong>EasyTax</strong>", "we", "us", "our") is the data controller responsible for your personal data. We are registered in England and Wales.
+              Finance Panda Limited, trading as EasyTax ("<strong>EasyTax</strong>", "we", "us", "our") is the data controller responsible for your personal data. We are registered in England and Wales.
             </P>
             <Table rows={[
-              ['Company name', 'EasyTax Ltd'],
+              ['Company name', 'Finance Panda Limited'],
               ['Registered address', 'London, United Kingdom'],
               ['Email', 'privacy@easytax.vip'],
               ['ICO registration', 'Pending'],
@@ -185,7 +185,7 @@ export default function Privacy() {
 
       <footer style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FDFCF8', padding: '2rem 0', marginTop: '4rem' }}>
         <div className="max-w-4xl mx-auto px-6 flex justify-between items-center text-sm" style={{ color: '#9A8F83' }}>
-          <span>© {new Date().getFullYear()} EasyTax Ltd. Built in London.</span>
+          <span>© {new Date().getFullYear()} Finance Panda Limited. Built in London.</span>
           <Link href="/terms" style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms of Service</Link>
         </div>
       </footer>

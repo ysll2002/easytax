@@ -29,7 +29,7 @@ export default function Terms() {
           <section>
             <H2>1. About These Terms</H2>
             <P>
-              These Terms of Service ("Terms") form a legally binding agreement between you and <strong>EasyTax Ltd</strong>, a company registered in England and Wales ("EasyTax", "we", "us", "our"). By creating an account or using our platform at easytax.vip, you agree to these Terms in full.
+              These Terms of Service ("Terms") form a legally binding agreement between you and <strong>Finance Panda Limited</strong>, a company registered in England and Wales, trading as EasyTax ("EasyTax", "we", "us", "our"). By creating an account or using our platform at easytax.vip, you agree to these Terms in full.
             </P>
             <P>
               If you do not agree, please do not use the Service. We recommend you read these Terms carefully before proceeding.
@@ -155,7 +155,7 @@ export default function Terms() {
           <section>
             <H2>10. Intellectual Property</H2>
             <P>
-              All content, software, trademarks, and design elements of EasyTax are owned by EasyTax Ltd or our licensors. You may not reproduce, distribute, or create derivative works without our express written permission.
+              All content, software, trademarks, and design elements of EasyTax are owned by Finance Panda Limited or our licensors. You may not reproduce, distribute, or create derivative works without our express written permission.
             </P>
             <P>
               You retain ownership of all data you submit through the Service. You grant us a limited licence to process that data solely to provide the Service to you.
@@ -228,7 +228,7 @@ export default function Terms() {
             <H2>16. Contact Us</H2>
             <P><strong>Email:</strong> <a href="mailto:support@easytax.vip" style={{ color: '#C4622D' }}>support@easytax.vip</a></P>
             <P><strong>Privacy:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a></P>
-            <P>EasyTax Ltd, London, United Kingdom.</P>
+            <P>Finance Panda Limited, London, United Kingdom.</P>
           </section>
 
         </div>
@@ -236,7 +236,7 @@ export default function Terms() {
 
       <footer style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FDFCF8', padding: '2rem 0', marginTop: '4rem' }}>
         <div className="max-w-4xl mx-auto px-6 flex justify-between items-center text-sm" style={{ color: '#9A8F83' }}>
-          <span>© {new Date().getFullYear()} EasyTax Ltd. Built in London.</span>
+          <span>© {new Date().getFullYear()} Finance Panda Limited. Built in London.</span>
           <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy Policy</Link>
         </div>
       </footer>
