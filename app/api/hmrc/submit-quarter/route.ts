@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   if (!hmrc) return NextResponse.json({ error: 'No HMRC connection' }, { status: 404 });
 
-  const nino       = hmrc.nino       ?? (process.env.HMRC_ENV !== 'production' ? 'AA000003D' : null);
+  const nino       = hmrc.nino       ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
   const businessId = hmrc.business_id ?? (process.env.HMRC_ENV !== 'production' ? 'XAIS12345678910' : null);
 
   if (!nino || !businessId) {

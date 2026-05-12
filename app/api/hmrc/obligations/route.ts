@@ -17,7 +17,7 @@ export async function GET() {
 
   if (!hmrc) return NextResponse.json({ error: 'No HMRC connection' }, { status: 404 });
 
-  const nino = hmrc.nino ?? (process.env.HMRC_ENV !== 'production' ? 'AA000003D' : null);
+  const nino = hmrc.nino ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
   if (!nino) return NextResponse.json({ error: 'NINO not found' }, { status: 400 });
 
   try {

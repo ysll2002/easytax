@@ -40,13 +40,13 @@ export async function GET(req: NextRequest) {
   const profileId = session.user.profileId;
 
   // In sandbox, use known test-user identifiers; in production the user provides these during onboarding
-  const nino = process.env.HMRC_ENV !== 'production' ? 'AA000003D' : null;
+  const nino = process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null;
   const vrn  = process.env.HMRC_ENV !== 'production' ? '999999999' : null;
 
   // Fetch the self-employment businessId from HMRC
   let businessId: string | null = null;
   try {
-    const businesses = await getBusinessDetails(nino ?? 'AA000003D', tokens.access_token);
+    const businesses = await getBusinessDetails(nino ?? 'GW460330D', tokens.access_token);
     const selfEmp = businesses.find(b => b.typeOfBusiness === 'self-employment');
     businessId = selfEmp?.businessId ?? null;
   } catch { /* non-blocking */ }

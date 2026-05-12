@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     .eq('user_id', profileId)
     .single();
 
-  const nino       = hmrc?.nino       ?? (process.env.HMRC_ENV !== 'production' ? 'AA000003D'       : null);
+  const nino       = hmrc?.nino       ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D'       : null);
   const businessId = hmrc?.business_id ?? (process.env.HMRC_ENV !== 'production' ? 'XAIS12345678910' : null);
 
   if (!nino) return NextResponse.json({ error: 'NINO missing — add it in Profile' }, { status: 400 });
