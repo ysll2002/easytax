@@ -8,8 +8,10 @@ export default async function BankingPage() {
   const clientId   = process.env.TRUELAYER_CLIENT_ID!;
   const redirectUri = process.env.TRUELAYER_REDIRECT_URI!;
   const authBase   = process.env.TRUELAYER_AUTH_URL ?? 'https://auth.truelayer-sandbox.com';
+  const isSandbox  = authBase.includes('sandbox');
+  const providers  = isSandbox ? 'mock' : 'uk-ob-all+uk-oauth-all';
 
-  const authUrl = `${authBase}/?response_type=code&client_id=${clientId}&scope=accounts+transactions+balance+offline_access&redirect_uri=${encodeURIComponent(redirectUri)}&providers=uk-ob-all+uk-oauth-all`;
+  const authUrl = `${authBase}/?response_type=code&client_id=${clientId}&scope=accounts+transactions+balance+offline_access&redirect_uri=${encodeURIComponent(redirectUri)}&providers=${providers}`;
 
   return (
     <div className="p-8 max-w-xl">
