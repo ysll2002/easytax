@@ -21,8 +21,8 @@ export default function SiteHeader() {
             <Link href="/dashboard" className="text-sm font-medium px-5 py-2.5 rounded-full transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>Dashboard</Link>
             <button
               onClick={() => signOut({ callbackUrl: '/' })}
-              className="text-sm font-medium px-5 py-2.5 rounded-full transition-all"
-              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', border: 'none', cursor: 'pointer' }}
+              className="text-sm font-medium transition-colors"
+              style={{ backgroundColor: 'transparent', color: '#9A8F83', border: 'none', cursor: 'pointer' }}
             >
               Log out
             </button>
