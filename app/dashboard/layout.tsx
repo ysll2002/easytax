@@ -2,14 +2,7 @@ import { auth, signOut } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DeviceDataCollector from '@/components/DeviceDataCollector';
-
-const nav = [
-  { href: '/dashboard/tax',       label: 'Tax Filing',  icon: '📄' },
-  { href: '/dashboard/reconcile', label: 'Reconcile',   icon: '🔁' },
-  { href: '/dashboard/fph-test',  label: 'FPH Test',    icon: '🔒' },
-  { href: '/dashboard/profile',   label: 'Profile',     icon: '👤' },
-  { href: '/dashboard/settings',  label: 'Settings',    icon: '⚙️'  },
-];
+import SidebarNav from '@/components/SidebarNav';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -26,19 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           EasyTax
         </Link>
 
-        <nav style={{ flex: 1, padding: '0 0.75rem' }}>
-          {nav.map(item => (
-            <Link
-              key={item.href}
-              href={item.href}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 0.75rem', borderRadius: '0.75rem', color: '#9A8F83', fontSize: '0.9rem', fontWeight: 500, marginBottom: '0.25rem', textDecoration: 'none' }}
-              className="hover:bg-white/5 hover:text-[#FDFCF8] transition-colors"
-            >
-              <span>{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <SidebarNav />
 
         {/* User + log out */}
         <div style={{ padding: '0 1.5rem', borderTop: '1px solid #2E2418', paddingTop: '1.25rem', marginTop: '1rem' }}>
