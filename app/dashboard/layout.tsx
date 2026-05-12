@@ -1,8 +1,9 @@
-import { auth, signOut } from '@/auth';
+import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import DeviceDataCollector from '@/components/DeviceDataCollector';
 import SidebarNav from '@/components/SidebarNav';
+import LogoutButton from '@/components/LogoutButton';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -36,11 +37,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <p style={{ color: '#4A4035', fontSize: '0.7rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
             </div>
           </div>
-          <form action={async () => { 'use server'; await signOut({ redirectTo: '/' }); }}>
-            <button type="submit" style={{ width: '100%', padding: '0.5rem', borderRadius: '0.5rem', border: '1px solid #2E2418', color: '#4A4035', fontSize: '0.8rem', backgroundColor: 'transparent', cursor: 'pointer', textAlign: 'left' }}>
-              Log out
-            </button>
-          </form>
+          <LogoutButton />
         </div>
       </aside>
 
