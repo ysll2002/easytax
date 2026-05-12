@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { supabase } from '@/lib/supabase';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   const { name, email, password } = await req.json();
@@ -26,6 +27,8 @@ export async function POST(req: NextRequest) {
   if (error) {
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 });
   }
+
+  sendWelcomeEmail(email, name).catch(() => {}); // non-blocking
 
   return NextResponse.json({ ok: true });
 }
