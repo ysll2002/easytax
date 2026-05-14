@@ -87,6 +87,14 @@ export default async function TaxPage() {
           </div>
         ))}
       </div>
+
+      <div className="mt-8 pt-6" style={{ borderTop: '1px solid #E8E2DA' }}>
+        <Link href="/dashboard/tax/history"
+          className="inline-flex items-center gap-2 text-sm"
+          style={{ color: '#9A8F83', textDecoration: 'none' }}>
+          View filing history →
+        </Link>
+      </div>
     </div>
   );
 }

@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
   try {
     const token  = await getValidToken(profileId);
     const result = await submitFinalDeclaration(nino, taxYear, token);
+
+    await supabase.from('sa_filings').insert({
+      user_id:      profileId,
+      tax_year:     taxYear,
+      filing_type:  'final_declaration',
+      hmrc_response: result,
+    });
+
     return NextResponse.json({ success: true, result });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

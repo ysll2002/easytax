@@ -26,8 +26,23 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const token = await getValidToken(profileId);
+    const token  = await getValidToken(profileId);
     const result = await submitQuarterlyUpdate(nino, businessId, body.taxYear, body, token);
+
+    const totalExpenses = Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0);
+    await supabase.from('sa_filings').insert({
+      user_id:         profileId,
+      tax_year:        body.taxYear,
+      filing_type:     'quarterly',
+      period_start:    body.periodStartDate,
+      period_end:      body.periodEndDate,
+      turnover:        body.turnover,
+      total_expenses:  totalExpenses,
+      net_profit:      body.turnover - totalExpenses,
+      expenses_detail: body.expenses,
+      hmrc_response:   result,
+    });
+
     return NextResponse.json({ success: true, result });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
