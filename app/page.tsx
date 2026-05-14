@@ -24,11 +24,10 @@ export default function Home() {
                 Launching for 2025/26 Tax Year
               </div>
 
-              <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
-                <span style={{ fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)', display: 'block' }}>
-                  Self Assessment, <span style={{ color: '#6B8E6E' }}>Making Tax Digital,</span>
-                </span>
-                <em style={{ color: '#C4622D', fontStyle: 'italic', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>sorted.</em>
+              <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
+                Self Assessment, <span style={{ color: '#6B8E6E' }}>Making Tax Digital,</span>
+                <br />
+                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
               </h1>
 
               <p className="text-xl leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '520px' }}>
