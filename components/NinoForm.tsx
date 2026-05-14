@@ -53,7 +53,7 @@ export default function NinoForm({ initialNino }: { initialNino: string }) {
         </div>
         <button onClick={() => { setInput(nino); setEditing(true); }}
           className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full"
-          style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: 'transparent', cursor: 'pointer' }}>
+          style={{ border: '1px solid #1C1208', color: '#1C1208', backgroundColor: 'transparent', cursor: 'pointer', fontWeight: 600 }}>
           <Edit2 size={12} /> Edit
         </button>
       </div>
