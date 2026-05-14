@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { CheckCircle2, Clock, AlertCircle, ChevronRight, Calculator, FileCheck, CreditCard, SlidersHorizontal } from 'lucide-react';
 import { type Obligation } from '@/lib/hmrc';
 
 type CalcState = { id: string | null; incomeTax?: number; class4Nic?: number; totalDue?: number };
@@ -18,20 +19,25 @@ function quarterLabel(start: string, end: string) {
   return `${fmt(s)} – ${fmt(e)}`;
 }
 
+function daysUntil(date: string) {
+  const diff = Math.ceil((new Date(date).getTime() - Date.now()) / 86400000);
+  return diff;
+}
+
 export default function TasksPage() {
-  const [obligations,    setObligations]    = useState<Obligation[]>([]);
-  const [loading,        setLoading]        = useState(true);
-  const [error,          setError]          = useState('');
-  const [calc,           setCalc]           = useState<CalcState>({ id: null });
-  const [calcLoading,    setCalcLoading]    = useState(false);
-  const [declaring,      setDeclaring]      = useState(false);
-  const [declared,       setDeclared]       = useState(false);
-  const [adjSubmitted,   setAdjSubmitted]   = useState(false);
+  const [obligations,  setObligations]  = useState<Obligation[]>([]);
+  const [loading,      setLoading]      = useState(true);
+  const [error,        setError]        = useState('');
+  const [calc,         setCalc]         = useState<CalcState>({ id: null });
+  const [calcLoading,  setCalcLoading]  = useState(false);
+  const [declaring,    setDeclaring]    = useState(false);
+  const [declared,     setDeclared]     = useState(false);
+  const [adjSubmitted, setAdjSubmitted] = useState(false);
 
   const taxYear = currentTaxYear();
+  const [startYear, endYear] = taxYear.split('-');
 
   useEffect(() => {
-    // Check for adjustments=done in URL
     const params = new URLSearchParams(window.location.search);
     if (params.get('adjustments') === 'done') setAdjSubmitted(true);
 
@@ -48,11 +54,11 @@ export default function TasksPage() {
   const quarterlyObs = obligations.filter(o => o.periodKey !== '#001');
   const finalObs     = obligations.find(o => o.periodKey === '#001');
   const allFulfilled = quarterlyObs.length > 0 && quarterlyObs.every(o => o.status === 'Fulfilled');
+  const submittedCount = quarterlyObs.filter(o => o.status === 'Fulfilled').length;
 
-  // Payment deadline: 31 Jan of the year after the tax year ends
-  const taxYearEnd    = parseInt(taxYear.slice(0, 4)) + 1;
-  const payDeadline   = `31 January ${taxYearEnd + 1}`;
-  const balancingDate = `31 July ${taxYearEnd + 1}`;
+  const taxYearEnd    = parseInt(startYear) + 1;
+  const payDeadline   = `31 Jan ${taxYearEnd + 1}`;
+  const balancingDate = `31 Jul ${taxYearEnd + 1}`;
 
   async function handleCalculate() {
     setCalcLoading(true);
@@ -103,201 +109,255 @@ export default function TasksPage() {
     }
   }
 
+  // Overall step: 1=quarters, 2=adjustments, 3=calculate, 4=declare, 5=pay
+  const currentStep = declared ? 5 : calc.id ? 4 : adjSubmitted ? 3 : allFulfilled ? 2 : 1;
+
+  const steps = [
+    { n: 1, label: 'Quarterly updates' },
+    { n: 2, label: 'Adjustments' },
+    { n: 3, label: 'Tax estimate' },
+    { n: 4, label: 'Declaration' },
+    { n: 5, label: 'Payment' },
+  ];
+
   if (loading) {
-    return <div className="p-8"><p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>Loading HMRC obligations…</p></div>;
+    return (
+      <div className="p-8 flex items-center gap-3" style={{ color: '#9A8F83' }}>
+        <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
+        Loading HMRC obligations…
+      </div>
+    );
   }
 
   return (
     <div className="p-8 max-w-3xl">
-      <Link href="/dashboard/tax" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/tax" className="text-sm mb-8 inline-flex items-center gap-1" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+        ← Back
+      </Link>
 
-      <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
-        Tax Filing {taxYear}
-      </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>Making Tax Digital — quarterly updates, adjustments, and final declaration.</p>
+      {/* Header */}
+      <div className="mb-8">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+          Making Tax Digital · {startYear}/{endYear.slice(-2)}
+        </div>
+        <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208' }}>
+          Self Assessment {taxYear}
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: '#9A8F83' }}>
+          {quarterlyObs.length > 0
+            ? `${submittedCount} of ${quarterlyObs.length} quarterly updates submitted`
+            : 'No obligations loaded yet'}
+        </p>
+      </div>
+
+      {/* Progress bar */}
+      <div className="flex items-center gap-0 mb-10">
+        {steps.map((s, i) => {
+          const done    = s.n < currentStep;
+          const active  = s.n === currentStep;
+          return (
+            <div key={s.n} className="flex items-center flex-1">
+              <div className="flex flex-col items-center gap-1" style={{ minWidth: 0 }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0,
+                  backgroundColor: done ? '#C4622D' : active ? '#1C1208' : '#E8E2DA',
+                  color: done || active ? '#FDFCF8' : '#9A8F83',
+                }}>
+                  {done ? '✓' : s.n}
+                </div>
+                <span style={{ fontSize: '0.65rem', color: active ? '#1C1208' : '#9A8F83', fontWeight: active ? 600 : 400, whiteSpace: 'nowrap' }}>{s.label}</span>
+              </div>
+              {i < steps.length - 1 && (
+                <div style={{ flex: 1, height: 2, backgroundColor: s.n < currentStep ? '#C4622D' : '#E8E2DA', margin: '0 4px', marginBottom: 16 }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
 
       {error && (
-        <div className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
+        <div className="flex items-center gap-2 p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>
+          <AlertCircle size={16} />
+          {error}
+        </div>
       )}
 
-      {/* ── Step 1: Quarterly Updates ── */}
-      <section className="mb-8">
-        <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
-          Step 1 — Quarterly Updates
-        </h2>
+      {/* Step 1: Quarterly Updates */}
+      <Section icon={<Clock size={18} />} title="Step 1 — Quarterly Updates" done={allFulfilled} active={currentStep === 1}>
         {quarterlyObs.length === 0 ? (
-          <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>No quarterly obligations found for this tax year.</p>
+          <p className="text-sm" style={{ color: '#9A8F83' }}>No quarterly obligations found. Make sure your HMRC connection is active.</p>
         ) : (
-          <div className="space-y-3">
-            {quarterlyObs.map(ob => {
+          <div className="space-y-2">
+            {quarterlyObs.map((ob, i) => {
               const done    = ob.status === 'Fulfilled';
-              const overdue = !done && new Date(ob.dueDate) < new Date();
+              const days    = daysUntil(ob.dueDate);
+              const overdue = !done && days < 0;
+              const urgent  = !done && days >= 0 && days <= 14;
               return (
-                <div key={ob.periodKey} className="flex items-center justify-between p-5 rounded-2xl"
-                  style={{ backgroundColor: done ? '#F0EBE1' : '#FDFCF8', border: `1px solid ${done ? '#C4622D40' : '#DDD5C8'}`, borderLeft: `4px solid ${done ? '#C4622D' : overdue ? '#EF4444' : '#DDD5C8'}` }}>
-                  <div>
-                    <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>{quarterLabel(ob.periodStartDate, ob.periodEndDate)}</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>Due {new Date(ob.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-                  </div>
+                <div key={ob.periodKey} className="flex items-center justify-between p-4 rounded-xl"
+                  style={{ backgroundColor: done ? '#F0EBE1' : '#FAFAF8', border: `1.5px solid ${done ? '#C4622D30' : overdue ? '#FCA5A5' : '#E8E2DA'}` }}>
                   <div className="flex items-center gap-3">
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-full"
-                      style={{ backgroundColor: done ? '#F5E4D8' : overdue ? '#FEE2E2' : '#F0F0EB', color: done ? '#C4622D' : overdue ? '#991B1B' : '#9A8F83' }}>
-                      {done ? 'Submitted' : overdue ? 'Overdue' : 'Open'}
-                    </span>
-                    {!done && (
-                      <Link href={`/dashboard/tax/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`}
-                        className="text-xs font-medium px-3 py-1.5 rounded-full"
-                        style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
-                        Submit →
-                      </Link>
-                    )}
+                    <div style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: done ? '#C4622D15' : '#F0EBE1', flexShrink: 0 }}>
+                      {done
+                        ? <CheckCircle2 size={16} color="#C4622D" />
+                        : <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9A8F83' }}>Q{i + 1}</span>
+                      }
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{quarterLabel(ob.periodStartDate, ob.periodEndDate)}</p>
+                      <p className="text-xs mt-0.5" style={{ color: overdue ? '#EF4444' : urgent ? '#C4622D' : '#9A8F83' }}>
+                        {done ? `Submitted · Due ${new Date(ob.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}` :
+                         overdue ? `Overdue by ${Math.abs(days)} days` :
+                         `Due ${new Date(ob.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} · ${days} days left`}
+                      </p>
+                    </div>
                   </div>
+                  {done ? (
+                    <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: '#C4622D15', color: '#C4622D' }}>Submitted</span>
+                  ) : (
+                    <Link href={`/dashboard/tax/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`}
+                      className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full"
+                      style={{ backgroundColor: overdue ? '#EF4444' : '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+                      Submit <ChevronRight size={12} />
+                    </Link>
+                  )}
                 </div>
               );
             })}
           </div>
         )}
-      </section>
+      </Section>
 
-      {/* ── Step 2: Annual Adjustments ── */}
-      {allFulfilled && (
-        <section className="mb-8 p-6 rounded-2xl" style={{ border: `1px solid ${adjSubmitted ? '#C4622D40' : '#DDD5C8'}`, backgroundColor: adjSubmitted ? '#F0EBE1' : '#FDFCF8', borderLeft: `4px solid ${adjSubmitted ? '#C4622D' : '#DDD5C8'}` }}>
-          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            Step 2 — Annual Adjustments
-          </h2>
-          <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
-            Declare other income (savings interest, dividends), claim reliefs (overlap, Gift Aid), and submit year-end business adjustments.
-          </p>
-          {adjSubmitted ? (
-            <p className="text-sm font-semibold" style={{ color: '#C4622D' }}>✓ Adjustments submitted</p>
-          ) : (
-            <Link href="/dashboard/tax/adjustments"
-              className="inline-block text-sm font-medium px-5 py-2.5 rounded-full"
-              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
-              Review &amp; Submit Adjustments →
-            </Link>
-          )}
-        </section>
-      )}
-
-      {/* ── Step 3: Tax Estimate ── */}
-      {allFulfilled && adjSubmitted && (
-        <section className="mb-8 p-6 rounded-2xl" style={{ border: `1px solid ${calc.id ? '#C4622D40' : '#DDD5C8'}`, backgroundColor: '#FDFCF8' }}>
-          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
-            Step 3 — Tax Estimate
-          </h2>
-          {calc.id ? (
-            <div className="space-y-2 text-sm">
-              {calc.incomeTax !== undefined && (
-                <div className="flex justify-between" style={{ color: '#4A4035' }}>
-                  <span>Income Tax</span><span className="font-semibold">£{calc.incomeTax.toFixed(2)}</span>
-                </div>
-              )}
-              {calc.class4Nic !== undefined && (
-                <div className="flex justify-between" style={{ color: '#4A4035' }}>
-                  <span>Class 4 NIC</span><span className="font-semibold">£{calc.class4Nic.toFixed(2)}</span>
-                </div>
-              )}
-              {calc.totalDue !== undefined && (
-                <div className="flex justify-between pt-2 font-bold" style={{ color: '#1C1208', borderTop: '1px solid #DDD5C8' }}>
-                  <span>Total Due</span>
-                  <span style={{ color: '#C4622D', fontSize: '1.1rem' }}>£{calc.totalDue.toFixed(2)}</span>
-                </div>
-              )}
-            </div>
-          ) : (
-            <button onClick={handleCalculate} disabled={calcLoading}
-              className="text-sm font-medium px-5 py-2.5 rounded-full"
-              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: calcLoading ? 0.6 : 1, cursor: calcLoading ? 'wait' : 'pointer' }}>
-              {calcLoading ? 'Calculating…' : 'Calculate My Tax'}
-            </button>
-          )}
-        </section>
-      )}
-
-      {/* ── Step 4: Final Declaration ── */}
-      {allFulfilled && adjSubmitted && (
-        <section className="mb-8 p-6 rounded-2xl" style={{ border: '1px solid #C4622D40', backgroundColor: '#FFF9F5' }}>
-          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            Step 4 — Final Declaration
-          </h2>
-          <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
-            Confirm all figures are complete and correct, then submit your Self Assessment to HMRC.
-            {finalObs && ` Due: ${new Date(finalObs.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`}
-          </p>
-          {declared ? (
-            <p className="text-sm font-semibold" style={{ color: '#6B8E6E' }}>✓ Final Declaration submitted successfully</p>
-          ) : (
-            <>
-              <button onClick={handleFinalDeclaration} disabled={declaring || !calc.id}
-                className="text-sm font-medium px-6 py-3 rounded-full"
-                style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: (declaring || !calc.id) ? 0.5 : 1, cursor: (declaring || !calc.id) ? 'not-allowed' : 'pointer' }}>
-                {declaring ? 'Submitting…' : 'Submit Final Declaration →'}
-              </button>
-              {!calc.id && <p className="text-xs mt-2" style={{ color: '#9A8F83' }}>Complete Step 3 first.</p>}
-            </>
-          )}
-        </section>
-      )}
-
-      {/* ── Step 5: Payment ── */}
-      {declared && (
-        <section className="p-6 rounded-2xl" style={{ border: '1px solid #6B8E6E40', backgroundColor: '#F0F5F0' }}>
-          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            Step 5 — Pay Your Tax
-          </h2>
-          <p className="text-sm mb-5" style={{ color: '#4A4035' }}>
-            Your Self Assessment has been submitted. You now need to pay what you owe directly to HMRC.
-          </p>
-
-          <div className="space-y-3 text-sm mb-5">
-            <div className="flex justify-between p-3 rounded-xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
-              <span style={{ color: '#4A4035' }}>Balancing payment deadline</span>
-              <span className="font-bold" style={{ color: '#1C1208' }}>{payDeadline}</span>
-            </div>
-            <div className="flex justify-between p-3 rounded-xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
-              <span style={{ color: '#4A4035' }}>First payment on account</span>
-              <span className="font-bold" style={{ color: '#1C1208' }}>{payDeadline}</span>
-            </div>
-            <div className="flex justify-between p-3 rounded-xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
-              <span style={{ color: '#4A4035' }}>Second payment on account</span>
-              <span className="font-bold" style={{ color: '#1C1208' }}>{balancingDate}</span>
-            </div>
+      {/* Step 2: Adjustments */}
+      <Section icon={<SlidersHorizontal size={18} />} title="Step 2 — Annual Adjustments" done={adjSubmitted} active={currentStep === 2} locked={!allFulfilled}>
+        <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
+          Declare savings interest, dividends, charitable giving, and claim overlap relief or other end-of-year adjustments.
+        </p>
+        {adjSubmitted ? (
+          <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#C4622D' }}>
+            <CheckCircle2 size={16} /> Adjustments submitted
           </div>
+        ) : (
+          <Link href="/dashboard/tax/adjustments"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full"
+            style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+            Review & Submit <ChevronRight size={14} />
+          </Link>
+        )}
+      </Section>
 
-          {calc.totalDue !== undefined && (
-            <div className="p-4 rounded-xl mb-5 text-sm" style={{ backgroundColor: '#FDFCF8', border: '1px solid #C4622D40' }}>
-              <p style={{ color: '#9A8F83', marginBottom: '0.25rem' }}>Estimated total due</p>
-              <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#C4622D' }}>£{calc.totalDue.toFixed(2)}</p>
-              <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>Log in to your HMRC account to see the exact amount including any payments on account.</p>
-            </div>
-          )}
-
-          <p className="text-sm font-medium mb-3" style={{ color: '#1C1208' }}>How to pay</p>
-          <div className="space-y-2 text-sm mb-5">
+      {/* Step 3: Tax Estimate */}
+      <Section icon={<Calculator size={18} />} title="Step 3 — Tax Estimate" done={!!calc.id} active={currentStep === 3} locked={!allFulfilled || !adjSubmitted}>
+        {calc.id ? (
+          <div className="space-y-2">
             {[
-              { method: 'Online banking', detail: 'Use sort code 08-32-10, account 12001039, reference is your 10-digit UTR + K' },
-              { method: 'HMRC online', detail: 'Pay by debit card or approve a bank payment via your Government Gateway account' },
-              { method: 'Direct Debit', detail: 'Set up a budget payment plan or one-off payment via HMRC online services' },
-            ].map(item => (
-              <div key={item.method} className="p-3 rounded-xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
-                <p className="font-medium" style={{ color: '#1C1208' }}>{item.method}</p>
-                <p style={{ color: '#9A8F83', marginTop: '0.15rem' }}>{item.detail}</p>
+              { label: 'Income Tax', value: calc.incomeTax },
+              { label: 'Class 4 NIC', value: calc.class4Nic },
+            ].filter(r => r.value !== undefined).map(r => (
+              <div key={r.label} className="flex justify-between text-sm" style={{ color: '#4A4035' }}>
+                <span>{r.label}</span>
+                <span className="font-semibold">£{r.value!.toFixed(2)}</span>
               </div>
             ))}
+            {calc.totalDue !== undefined && (
+              <div className="flex justify-between text-sm font-bold pt-2 mt-1" style={{ color: '#1C1208', borderTop: '1px solid #E8E2DA' }}>
+                <span>Total Due</span>
+                <span style={{ color: '#C4622D', fontSize: '1.1rem' }}>£{calc.totalDue.toFixed(2)}</span>
+              </div>
+            )}
           </div>
+        ) : (
+          <>
+            <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>Request a tax calculation from HMRC based on all your submitted data.</p>
+            <button onClick={handleCalculate} disabled={calcLoading}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full"
+              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: calcLoading ? 0.6 : 1, cursor: calcLoading ? 'wait' : 'pointer', border: 'none' }}>
+              {calcLoading
+                ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" /> Calculating…</>
+                : <>Calculate My Tax <ChevronRight size={14} /></>}
+            </button>
+          </>
+        )}
+      </Section>
 
-          <a
-            href="https://www.gov.uk/pay-self-assessment-tax-bill"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block text-sm font-medium px-5 py-2.5 rounded-full"
-            style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8', textDecoration: 'none' }}
-          >
-            Pay via HMRC →
-          </a>
-        </section>
-      )}
+      {/* Step 4: Final Declaration */}
+      <Section icon={<FileCheck size={18} />} title="Step 4 — Final Declaration" done={declared} active={currentStep === 4} locked={!allFulfilled || !adjSubmitted}>
+        <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
+          Confirm all figures are complete and correct, then submit your Self Assessment to HMRC.
+          {finalObs && ` Deadline: ${new Date(finalObs.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`}
+        </p>
+        {declared ? (
+          <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B8E6E' }}>
+            <CheckCircle2 size={16} /> Final Declaration submitted successfully
+          </div>
+        ) : (
+          <>
+            <button onClick={handleFinalDeclaration} disabled={declaring || !calc.id}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-full"
+              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: (declaring || !calc.id) ? 0.5 : 1, cursor: (declaring || !calc.id) ? 'not-allowed' : 'pointer', border: 'none' }}>
+              {declaring
+                ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" /> Submitting…</>
+                : <>Submit Final Declaration <ChevronRight size={14} /></>}
+            </button>
+            {!calc.id && <p className="text-xs mt-2" style={{ color: '#9A8F83' }}>Complete Step 3 first.</p>}
+          </>
+        )}
+      </Section>
+
+      {/* Step 5: Payment */}
+      <Section icon={<CreditCard size={18} />} title="Step 5 — Pay Your Tax" done={false} active={currentStep === 5} locked={!declared}>
+        {declared ? (
+          <div className="space-y-4">
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { label: 'Balancing payment', date: payDeadline },
+                { label: '1st payment on account', date: payDeadline },
+                { label: '2nd payment on account', date: balancingDate },
+              ].map(d => (
+                <div key={d.label} className="p-3 rounded-xl text-center" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+                  <p className="text-xs mb-1" style={{ color: '#9A8F83' }}>{d.label}</p>
+                  <p className="text-sm font-bold" style={{ color: '#1C1208' }}>{d.date}</p>
+                </div>
+              ))}
+            </div>
+            {calc.totalDue !== undefined && (
+              <div className="flex items-center justify-between p-4 rounded-xl" style={{ backgroundColor: '#FFF9F5', border: '1px solid #C4622D30' }}>
+                <p className="text-sm" style={{ color: '#9A8F83' }}>Estimated amount due</p>
+                <p style={{ fontSize: '1.4rem', fontWeight: 700, color: '#C4622D' }}>£{calc.totalDue.toFixed(2)}</p>
+              </div>
+            )}
+            <a href="https://www.gov.uk/pay-self-assessment-tax-bill" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full"
+              style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8', textDecoration: 'none' }}>
+              Pay via HMRC.gov.uk <ChevronRight size={14} />
+            </a>
+          </div>
+        ) : (
+          <p className="text-sm" style={{ color: '#9A8F83' }}>Complete Steps 1–4 first, then we'll show your payment deadlines here.</p>
+        )}
+      </Section>
+    </div>
+  );
+}
+
+function Section({ icon, title, children, done, active, locked }: {
+  icon: React.ReactNode;
+  title: string;
+  children: React.ReactNode;
+  done: boolean;
+  active: boolean;
+  locked?: boolean;
+}) {
+  const borderColor = done ? '#C4622D' : active ? '#1C1208' : '#E8E2DA';
+  return (
+    <div className="mb-4 rounded-2xl overflow-hidden" style={{ border: `1.5px solid ${borderColor}`, opacity: locked ? 0.45 : 1 }}>
+      <div className="flex items-center gap-3 px-5 py-4" style={{ backgroundColor: done ? '#F5EDDC' : active ? '#F8F7F5' : '#FAFAF8', borderBottom: `1px solid ${borderColor}` }}>
+        <div style={{ color: done ? '#C4622D' : active ? '#1C1208' : '#9A8F83' }}>{icon}</div>
+        <h2 style={{ fontWeight: 700, fontSize: '0.95rem', color: done ? '#C4622D' : '#1C1208' }}>{title}</h2>
+        {done && <CheckCircle2 size={16} color="#C4622D" style={{ marginLeft: 'auto' }} />}
+        {locked && <span className="text-xs ml-auto px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#9A8F83' }}>Locked</span>}
+      </div>
+      <div className="p-5">{children}</div>
     </div>
   );
 }
