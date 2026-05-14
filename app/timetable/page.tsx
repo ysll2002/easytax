@@ -68,14 +68,39 @@ export default function TimetablePage() {
 
       <main className="flex-grow max-w-3xl mx-auto px-6 py-16 w-full">
 
-        {/* Header */}
-        <div className="mb-12">
+        {/* What is MTD section */}
+        <div className="mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-            Making Tax Digital · Key Dates
+            Making Tax Digital
           </div>
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.5rem', fontWeight: 700, color: '#1C1208', lineHeight: 1.1, marginBottom: '1.25rem' }}>
-            What are the deadlines for<br />Making Tax Digital?
+            What is Making Tax Digital?
           </h1>
+          <p style={{ color: '#4A4035', lineHeight: 1.8, fontSize: '1rem', maxWidth: '600px', marginBottom: '1.25rem' }}>
+            If you&apos;re a sole trader or landlord with a gross income of more than <strong>£50,000</strong> from self-employment and/or property, you&apos;ll no longer file just one Self Assessment return a year.
+          </p>
+          <p style={{ color: '#4A4035', lineHeight: 1.8, fontSize: '1rem', maxWidth: '600px', marginBottom: '1.25rem' }}>
+            Instead, from April 2026, you&apos;ll need to keep digital records and send updates to HMRC every three months — plus a final year-end Tax Return.
+          </p>
+          <div className="p-5 rounded-2xl mb-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #C4622D20', maxWidth: '600px' }}>
+            <p style={{ color: '#1C1208', fontWeight: 700, fontSize: '1rem', marginBottom: '0.25rem' }}>5 submissions a year instead of 1</p>
+            <p style={{ color: '#4A4035', fontSize: '0.9rem', lineHeight: 1.7 }}>
+              Four quarterly updates plus a final year-end Tax Return, using software that&apos;s compatible with HMRC systems.
+            </p>
+          </div>
+          <p style={{ color: '#4A4035', lineHeight: 1.8, fontSize: '1rem', maxWidth: '600px' }}>
+            This is part of the Government&apos;s &apos;Making Tax Digital&apos; (MTD) scheme. While it&apos;s designed to spread the workload, it also brings new admin, new deadlines — and ultimately penalties if you miss them.
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div style={{ borderTop: '1px solid #E8E2DA', marginBottom: '3.5rem' }} />
+
+        {/* Deadlines header */}
+        <div className="mb-10">
+          <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.75rem', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
+            What are the deadlines for Making Tax Digital?
+          </h2>
           <p style={{ color: '#4A4035', lineHeight: 1.8, fontSize: '1rem', maxWidth: '600px' }}>
             With MTD updates being more frequent than with Self-Assessment — and the penalties if you miss these — it&apos;s a good idea to set reminders for each Quarterly Update deadline, as well as for your Tax Return and tax payment.
           </p>
