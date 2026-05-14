@@ -24,8 +24,9 @@ export default function Home() {
                 Launching for 2025/26 Tax Year
               </div>
 
-              <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
-                Self Assessment,
+              <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2.5rem, 7vw, 5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
+                Self Assessment,{' '}
+                <span style={{ color: '#6B8E6E' }}>Making Tax Digital,</span>
                 <br />
                 <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
               </h1>
