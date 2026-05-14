@@ -1,100 +1,163 @@
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import NinoForm from '@/components/NinoForm';
+import { CheckCircle2, ChevronRight, History } from 'lucide-react';
 
 export default async function TaxPage() {
-  const session = await auth();
+  const session   = await auth();
   const profileId = session!.user.profileId;
 
   const [{ data: hmrc }, { data: bank }] = await Promise.all([
-    supabase.from('hmrc_connections').select('utr, nino, vrn, connected_at').eq('user_id', profileId).single(),
+    supabase.from('hmrc_connections').select('nino, utr, vrn, access_token, connected_at').eq('user_id', profileId).single(),
     supabase.from('bank_connections').select('account_name, connected_at').eq('user_id', profileId).single(),
   ]);
 
-  const steps = [
-    {
-      n: '01',
-      title: 'Connect HMRC',
-      desc: hmrc
-        ? `Connected · UTR ${hmrc.utr ?? '—'}`
-        : 'Link your HMRC Government Gateway account to fetch your tax obligations.',
-      done: !!hmrc,
-      href: '/dashboard/tax/hmrc',
-      cta: hmrc ? 'Reconnect' : 'Connect HMRC →',
-    },
-    {
-      n: '02',
-      title: 'Connect Bank Account',
-      desc: bank
-        ? `Connected · ${bank.account_name}`
-        : 'Link your business bank via Open Banking to import transactions.',
-      done: !!bank,
-      href: '/dashboard/tax/banking',
-      cta: bank ? 'Manage' : 'Connect Bank →',
-    },
-    {
-      n: '03',
-      title: 'Self Assessment',
-      desc: 'Review your tax obligations, confirm expenses, and submit your Self Assessment.',
-      done: false,
-      href: hmrc && bank ? '/dashboard/tax/tasks' : '#',
-      cta: 'View Tasks →',
-      disabled: !hmrc || !bank,
-    },
-    {
-      n: '04',
-      title: 'VAT Return',
-      desc: hmrc?.vrn
-        ? `VAT Registration Number: ${hmrc.vrn}`
-        : 'File your quarterly VAT return directly to HMRC via Making Tax Digital.',
-      done: false,
-      href: hmrc ? '/dashboard/tax/vat' : '#',
-      cta: 'File VAT Return →',
-      disabled: !hmrc,
-    },
-  ];
+  const hasNino  = !!hmrc?.nino;
+  const hasHmrc  = !!hmrc?.access_token;
+  const hasSA    = hasNino && hasHmrc;
 
   return (
     <div className="p-8 max-w-2xl">
-      <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-        Tax Filing
+      <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
+        Self Assessment
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>Complete the steps below to file your Self Assessment.</p>
+      <p style={{ color: '#9A8F83', marginBottom: '2.5rem', fontSize: '0.9rem' }}>
+        Complete the steps below to file your Self Assessment with HMRC.
+      </p>
 
       <div className="space-y-4">
-        {steps.map(step => (
-          <div key={step.n} className="p-6 rounded-2xl" style={{ backgroundColor: step.done ? '#F0EBE1' : '#FDFCF8', border: `1px solid ${step.done ? '#C4622D40' : '#DDD5C8'}`, borderLeft: `4px solid ${step.done ? '#C4622D' : '#DDD5C8'}` }}>
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex gap-4 items-start">
-                <span style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: step.done ? '#C4622D' : '#DDD5C8', lineHeight: 1, flexShrink: 0 }}>{step.n}</span>
+
+        {/* Step 1: NINO */}
+        <Step n={1} title="National Insurance Number" done={hasNino}>
+          <NinoForm initialNino={hmrc?.nino ?? ''} />
+        </Step>
+
+        {/* Step 2: Connect HMRC */}
+        <Step n={2} title="Connect HMRC" done={hasHmrc} locked={!hasNino}>
+          {hasHmrc ? (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 size={18} color="#6B8E6E" />
                 <div>
-                  <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{step.title}</p>
-                  <p className="text-sm" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{step.desc}</p>
+                  <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>HMRC connected</p>
+                  <p className="text-xs" style={{ color: '#9A8F83' }}>
+                    {hmrc?.utr ? `UTR: ${hmrc.utr}` : 'Government Gateway authorised'}
+                    {hmrc?.connected_at ? ` · Connected ${new Date(hmrc.connected_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
+                  </p>
                 </div>
               </div>
-              {!step.disabled && (
-                <Link href={step.href} className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-medium"
-                  style={{ backgroundColor: step.done ? '#F5E4D8' : '#1C1208', color: step.done ? '#C4622D' : '#FDFCF8' }}>
-                  {step.cta}
-                </Link>
-              )}
-              {step.disabled && (
-                <span className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#9A8F83' }}>
-                  Complete steps above first
-                </span>
+              <Link href="/dashboard/tax/hmrc"
+                className="text-xs px-3 py-1.5 rounded-full"
+                style={{ border: '1px solid #DDD5C8', color: '#9A8F83', textDecoration: 'none' }}>
+                Reconnect
+              </Link>
+            </div>
+          ) : (
+            <div>
+              <p className="text-sm mb-3" style={{ color: '#4A4035' }}>
+                Link your Government Gateway account so EasyTax can fetch your tax obligations and submit returns on your behalf.
+              </p>
+              <Link href="/dashboard/tax/hmrc"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold"
+                style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+                Connect HMRC <ChevronRight size={14} />
+              </Link>
+            </div>
+          )}
+        </Step>
+
+        {/* Step 3: Self Assessment */}
+        <Step n={3} title="Self Assessment" done={false} locked={!hasSA}>
+          {hasSA ? (
+            <div className="space-y-3">
+              <ActionLink
+                href="/dashboard/tax/tasks"
+                label="Quarterly Updates & Filing"
+                desc="Submit quarterly income & expense updates and complete your annual declaration"
+                primary
+              />
+              <ActionLink
+                href="/dashboard/tax/banking"
+                label="Connect Bank Account"
+                desc={bank ? `Connected · ${bank.account_name}` : 'Import transactions via Open Banking'}
+                done={!!bank}
+              />
+              {hmrc?.vrn && (
+                <ActionLink
+                  href="/dashboard/tax/vat"
+                  label="VAT Return"
+                  desc={`VRN: ${hmrc.vrn} · File quarterly VAT returns via Making Tax Digital`}
+                />
               )}
             </div>
-          </div>
-        ))}
+          ) : (
+            <p className="text-sm" style={{ color: '#9A8F83' }}>
+              Complete Steps 1 and 2 to unlock Self Assessment filing.
+            </p>
+          )}
+        </Step>
+
       </div>
 
-      <div className="mt-8 pt-6" style={{ borderTop: '1px solid #E8E2DA' }}>
-        <Link href="/dashboard/tax/history"
-          className="inline-flex items-center gap-2 text-sm"
-          style={{ color: '#9A8F83', textDecoration: 'none' }}>
-          View filing history →
-        </Link>
-      </div>
+      {hasSA && (
+        <div className="mt-8 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
+          <History size={14} color="#9A8F83" />
+          <Link href="/dashboard/tax/history" style={{ color: '#9A8F83', textDecoration: 'none', fontSize: '0.875rem' }}>
+            View filing history
+          </Link>
+        </div>
+      )}
     </div>
+  );
+}
+
+function Step({ n, title, done, locked, children }: {
+  n: number; title: string; done: boolean; locked?: boolean; children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{
+      border: `1.5px solid ${done ? '#6B8E6E40' : locked ? '#E8E2DA' : '#DDD5C8'}`,
+      opacity: locked ? 0.45 : 1,
+    }}>
+      <div className="flex items-center gap-3 px-5 py-3.5" style={{
+        backgroundColor: done ? '#F0F5F0' : locked ? '#FAFAF8' : '#F8F7F5',
+        borderBottom: `1px solid ${done ? '#6B8E6E30' : '#E8E2DA'}`,
+      }}>
+        <div style={{
+          width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '0.75rem', fontWeight: 700, flexShrink: 0,
+          backgroundColor: done ? '#6B8E6E' : locked ? '#E8E2DA' : '#1C1208',
+          color: done || !locked ? '#FDFCF8' : '#9A8F83',
+        }}>
+          {done ? '✓' : n}
+        </div>
+        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: done ? '#6B8E6E' : '#1C1208' }}>{title}</span>
+        {locked && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#9A8F83' }}>Locked</span>}
+      </div>
+      <div className="px-5 py-4" style={{ backgroundColor: '#FFFFFF' }}>{children}</div>
+    </div>
+  );
+}
+
+function ActionLink({ href, label, desc, primary, done }: {
+  href: string; label: string; desc: string; primary?: boolean; done?: boolean;
+}) {
+  return (
+    <Link href={href} style={{ textDecoration: 'none', display: 'block' }}>
+      <div className="flex items-center justify-between p-4 rounded-xl" style={{
+        backgroundColor: primary ? '#1C1208' : '#FAFAF8',
+        border: `1px solid ${primary ? 'transparent' : '#E8E2DA'}`,
+      }}>
+        <div>
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold" style={{ color: primary ? '#FDFCF8' : '#1C1208' }}>{label}</p>
+            {done && <CheckCircle2 size={14} color="#6B8E6E" />}
+          </div>
+          <p className="text-xs mt-0.5" style={{ color: primary ? '#9A8F83' : '#9A8F83' }}>{desc}</p>
+        </div>
+        <ChevronRight size={16} color={primary ? '#9A8F83' : '#C4622D'} />
+      </div>
+    </Link>
   );
 }

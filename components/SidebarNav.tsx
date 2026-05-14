@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { FileText, RefreshCw, Shield, User, Settings } from 'lucide-react';
 
 const nav = [
-  { href: '/dashboard/tax',       label: 'Tax Filing', icon: FileText },
+  { href: '/dashboard/tax',       label: 'Self Assessment', icon: FileText },
   { href: '/dashboard/reconcile', label: 'Reconcile',  icon: RefreshCw },
   { href: '/dashboard/fph-test',  label: 'FPH Test',   icon: Shield },
   { href: '/dashboard/profile',   label: 'Profile',    icon: User },
