@@ -34,7 +34,7 @@ export default async function TaxPage() {
         </Step>
 
         {/* Step 2: Connect HMRC */}
-        <Step n={2} title="Connect HMRC" done={hasHmrc} locked={!hasNino} active={hasNino && !hasHmrc}>
+        <Step n={2} title="Connect HMRC" done={hasHmrc} locked={!hasNino}>
           {hasHmrc ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -68,7 +68,7 @@ export default async function TaxPage() {
         </Step>
 
         {/* Step 3: Self Assessment */}
-        <Step n={3} title="Self Assessment" done={false} locked={!hasSA} active={hasSA}>
+        <Step n={3} title="Self Assessment" done={false} locked={!hasSA}>
           {hasSA ? (
             <div className="space-y-3">
               <ActionLink
@@ -112,34 +112,27 @@ export default async function TaxPage() {
   );
 }
 
-function Step({ n, title, done, locked, active, children }: {
-  n: number; title: string; done: boolean; locked?: boolean; active?: boolean; children: React.ReactNode;
+function Step({ n, title, done, locked, children }: {
+  n: number; title: string; done: boolean; locked?: boolean; children: React.ReactNode;
 }) {
-  const borderColor = done ? '#6B8E6E50' : active ? '#C4622D' : locked ? '#E8E2DA' : '#DDD5C8';
-  const headerBg    = done ? '#F0F5F0'   : active ? '#FFF6F2' : locked ? '#FAFAF8' : '#F8F7F5';
-  const circleBg    = done ? '#6B8E6E'   : active ? '#C4622D' : locked ? '#E8E2DA' : '#1C1208';
-  const titleColor  = done ? '#6B8E6E'   : active ? '#C4622D' : '#1C1208';
-
   return (
     <div className="rounded-2xl overflow-hidden" style={{
-      border: `1.5px solid ${borderColor}`,
+      border: `1.5px solid ${done ? '#6B8E6E40' : locked ? '#E8E2DA' : '#DDD5C8'}`,
       opacity: locked ? 0.4 : 1,
-      boxShadow: active ? '0 0 0 3px #C4622D18' : 'none',
     }}>
       <div className="flex items-center gap-3 px-5 py-3.5" style={{
-        backgroundColor: headerBg,
-        borderBottom: `1px solid ${done ? '#6B8E6E20' : active ? '#C4622D20' : '#E8E2DA'}`,
+        backgroundColor: done ? '#F0F5F0' : locked ? '#FAFAF8' : '#F8F7F5',
+        borderBottom: `1px solid ${done ? '#6B8E6E20' : '#E8E2DA'}`,
       }}>
         <div style={{
           width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '0.75rem', fontWeight: 700, flexShrink: 0,
-          backgroundColor: circleBg,
+          backgroundColor: done ? '#6B8E6E' : locked ? '#E8E2DA' : '#1C1208',
           color: locked && !done ? '#9A8F83' : '#FDFCF8',
         }}>
           {done ? '✓' : n}
         </div>
-        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: titleColor }}>{title}</span>
-        {active && !done && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#C4622D20', color: '#C4622D' }}>Action required</span>}
+        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: done ? '#6B8E6E' : '#1C1208' }}>{title}</span>
         {locked && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#9A8F83' }}>Locked</span>}
       </div>
       <div className="px-5 py-4" style={{ backgroundColor: '#FFFFFF' }}>{children}</div>
