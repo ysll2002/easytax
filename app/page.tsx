@@ -35,20 +35,9 @@ export default function Home() {
                 Connect your bank, categorize expenses, file to HMRC in minutes.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3 max-w-md">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="flex-1 px-5 py-3.5 rounded-full text-sm focus:outline-none"
-                  style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#FDFCF8', color: '#1C1208' }}
-                />
-                <Link href="/onboarding" className="px-7 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                  Get Early Access
-                </Link>
-              </div>
-              <p className="mt-4 text-xs" style={{ color: '#9A8F83' }}>
-                Join 600+ freelancers on the waitlist. No spam, ever.
-              </p>
+              <Link href="/register" className="inline-block px-8 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
+                Get Early Access
+              </Link>
             </div>
           </div>
         </section>
