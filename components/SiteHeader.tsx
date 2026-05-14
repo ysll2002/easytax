@@ -11,9 +11,10 @@ export default function SiteHeader() {
         EasyTax
       </Link>
       <nav className="hidden md:flex gap-8 text-sm font-medium">
-        <Link href="/#features" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">How it Works</Link>
-        <Link href="/#pricing"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">Pricing</Link>
-        <Link href="/#faq"      style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">FAQ</Link>
+        <Link href="/#features"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">How it Works</Link>
+        <Link href="/#pricing"   style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">Pricing</Link>
+        <Link href="/#faq"       style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">FAQ</Link>
+        <Link href="/timetable"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">Timetable</Link>
       </nav>
       <div className="flex gap-4 items-center">
         {session ? (
