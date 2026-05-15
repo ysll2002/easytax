@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
+import { auth } from '@/auth';
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+  const ctaHref = session ? '/dashboard' : '/register';
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
 
@@ -35,7 +38,7 @@ export default function Home() {
                 Connect your bank, categorize expenses, file to HMRC in minutes.
               </p>
 
-              <Link href="/register" className="inline-block px-8 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
+              <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
                 Get Early Access
               </Link>
             </div>
@@ -127,7 +130,7 @@ export default function Home() {
                   <span style={{ color: '#9A8F83', marginBottom: '0.5rem' }}>+ VAT per return</span>
                 </div>
                 <p style={{ color: '#9A8F83', fontSize: '0.875rem', marginBottom: '2rem' }}>Founder pricing — locked in for life.</p>
-                <Link href="/onboarding" className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
                   Start Filing →
                 </Link>
               </div>
@@ -188,7 +191,7 @@ export default function Home() {
             <p style={{ color: '#9A8F83', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
               Get early access and lock in founder pricing for life.
             </p>
-            <Link href="/onboarding" className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+            <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
               Get Early Access
             </Link>
           </div>
