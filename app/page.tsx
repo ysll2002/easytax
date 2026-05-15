@@ -21,26 +21,40 @@ export default async function Home() {
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8 pointer-events-none" style={{ background: 'radial-gradient(circle, #C9963D 0%, transparent 70%)', transform: 'translate(-40%, 40%)' }} />
 
           <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                Launching for 2025/26 Tax Year
+            <div className="flex items-center gap-12">
+              {/* Left: text */}
+              <div className="flex-1 min-w-0">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                  Launching for 2025/26 Tax Year
+                </div>
+
+                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
+                  Self Assessment, <span style={{ color: '#6B8E6E' }}>Making Tax Digital,</span>
+                  <br />
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
+                </h1>
+
+                <p className="text-xl leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '480px' }}>
+                  The simplest way for UK freelancers and contractors to file tax returns.
+                  Connect your bank, categorize expenses, file to HMRC in minutes.
+                </p>
+
+                <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
+                  Get Early Access
+                </Link>
               </div>
 
-              <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
-                Self Assessment, <span style={{ color: '#6B8E6E' }}>Making Tax Digital,</span>
-                <br />
-                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
-              </h1>
-
-              <p className="text-xl leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '520px' }}>
-                The simplest way for UK freelancers and contractors to file tax returns.
-                Connect your bank, categorize expenses, file to HMRC in minutes.
-              </p>
-
-              <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                Get Early Access
-              </Link>
+              {/* Right: dashboard preview */}
+              <div className="hidden lg:block flex-shrink-0" style={{ width: '480px' }}>
+                <div style={{ borderRadius: '1rem', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.12)', border: '1px solid #E8E2DA' }}>
+                  <img
+                    src="/dashboard-preview.png"
+                    alt="EasyTax dashboard — Self Assessment filing flow"
+                    style={{ width: '100%', display: 'block' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </section>
