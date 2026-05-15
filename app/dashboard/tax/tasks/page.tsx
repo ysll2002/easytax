@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { CheckCircle2, Clock, AlertCircle, ChevronRight, Calculator, FileCheck, CreditCard, SlidersHorizontal } from 'lucide-react';
+import { CheckCircle2, Clock, ChevronRight, Calculator, FileCheck, CreditCard, SlidersHorizontal } from 'lucide-react';
 import { type Obligation } from '@/lib/hmrc';
 
 type CalcState = { id: string | null; incomeTax?: number; class4Nic?: number; totalDue?: number };
@@ -45,10 +45,9 @@ export default function TasksPage() {
       fetch('/api/hmrc/obligations').then(r => r.json()),
       fetch('/api/hmrc/adjustments').then(r => r.json()),
     ]).then(([obs, adj]) => {
-      if (obs.error) setError(obs.error);
-      else setObligations(obs.obligations ?? []);
+      setObligations(obs.obligations ?? []);
       if (adj.submitted) setAdjSubmitted(true);
-    }).catch(() => setError('Could not reach HMRC')).finally(() => setLoading(false));
+    }).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   const quarterlyObs = obligations.filter(o => o.periodKey !== '#001');
@@ -175,12 +174,6 @@ export default function TasksPage() {
         })}
       </div>
 
-      {error && (
-        <div className="flex items-center gap-2 p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>
-          <AlertCircle size={16} />
-          {error}
-        </div>
-      )}
 
       {/* Step 1: Quarterly Updates */}
       <Section icon={<Clock size={18} />} title="Step 1 — Quarterly Updates" done={allFulfilled} active={currentStep === 1}>
