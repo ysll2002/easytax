@@ -140,7 +140,7 @@ export default async function Home() {
                   We built EasyTax for people who'd rather spend time on their craft than wrestling with HMRC forms. One flat fee. No surprises.
                 </p>
                 <div className="inline-flex items-end gap-2 mb-2">
-                  <span style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '3.5rem', fontWeight: 700, color: '#1C1208', lineHeight: 1 }}>£20</span>
+                  <span style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '3.5rem', fontWeight: 700, color: '#1C1208', lineHeight: 1 }}>£9.9</span>
                   <span style={{ color: '#9A8F83', marginBottom: '0.5rem' }}>+ VAT per return</span>
                 </div>
                 <p style={{ color: '#9A8F83', fontSize: '0.875rem', marginBottom: '2rem' }}>Founder pricing — locked in for life.</p>
@@ -153,7 +153,7 @@ export default async function Home() {
                 {[
                   { Icon: ShieldCheck, title: 'Connect HMRC Gateway', desc: 'Securely link your Government Gateway ID. We fetch your income records automatically.', color: '#FF6B35' },
                   { Icon: Sparkles,    title: 'Review Your Expenses',  desc: 'Our AI categorises transactions. You simply approve or reject in seconds.',            color: '#7C3AED' },
-                  { Icon: CheckCircle2, title: 'File & Pay',           desc: 'Review your completed return, pay the £20 fee, and we submit directly to HMRC.',       color: '#059669' },
+                  { Icon: CheckCircle2, title: 'File & Pay',           desc: 'Review your completed return, pay the £9.9 fee, and we submit directly to HMRC.',       color: '#059669' },
                 ].map((step) => (
                   <div key={step.title} className="flex gap-5 p-5 rounded-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: step.color + '15' }}>
