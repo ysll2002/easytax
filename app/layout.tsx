@@ -58,6 +58,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: { canonical: 'https://easytax.vip' },
+  verification: { google: 'GZdrRpA0y85OwCBOYVWYrdxur7Jur44AfjMbeH8MliE' },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
