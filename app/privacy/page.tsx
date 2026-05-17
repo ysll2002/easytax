@@ -1,4 +1,12 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'How EasyTax (Finance Panda Limited) collects, uses and protects your personal data under UK GDPR.',
+  alternates: { canonical: 'https://easytax.vip/privacy' },
+  robots: { index: false },
+};
 
 export default function Privacy() {
   return (

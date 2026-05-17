@@ -1,4 +1,12 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description: 'Terms of Service for EasyTax — the Self Assessment and Making Tax Digital filing platform by Finance Panda Limited.',
+  alternates: { canonical: 'https://easytax.vip/terms' },
+  robots: { index: false },
+};
 
 export default function Terms() {
   return (

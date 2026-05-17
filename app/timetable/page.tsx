@@ -1,5 +1,17 @@
+import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'MTD Deadlines 2026–2028 — Making Tax Digital Timetable',
+  description: 'Key Making Tax Digital (MTD ITSA) deadlines for 2026, 2027 and 2028. Quarterly update dates, Self Assessment deadlines and payment dates for UK sole traders and freelancers.',
+  alternates: { canonical: 'https://easytax.vip/timetable' },
+  openGraph: {
+    title: 'MTD Deadlines 2026–2028 — Making Tax Digital Timetable',
+    description: 'Key Making Tax Digital deadlines for UK freelancers and sole traders.',
+    url: 'https://easytax.vip/timetable',
+  },
+};
 
 const deadlines = [
   {
