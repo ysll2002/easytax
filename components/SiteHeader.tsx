@@ -21,6 +21,7 @@ export default function SiteHeader() {
           <Link href="/#pricing"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">Pricing</Link>
           <Link href="/#faq"      style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">FAQ</Link>
           <Link href="/timetable" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">Timetable</Link>
+          <Link href="/tax-tips"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">Tax Tips</Link>
         </nav>
 
         {/* Desktop auth */}
@@ -60,6 +61,7 @@ export default function SiteHeader() {
               { href: '/#pricing',  label: 'Pricing' },
               { href: '/#faq',      label: 'FAQ' },
               { href: '/timetable', label: 'Timetable' },
+              { href: '/tax-tips',  label: 'Tax Tips' },
             ].map(item => (
               <Link key={item.href} href={item.href} onClick={() => setOpen(false)}
                 style={{ color: '#4A4035', textDecoration: 'none', fontSize: '0.95rem', fontWeight: 500, padding: '0.25rem 0' }}>

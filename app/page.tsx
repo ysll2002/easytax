@@ -1,11 +1,20 @@
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
-import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck } from 'lucide-react';
+import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar } from 'lucide-react';
 import { auth } from '@/auth';
+import { supabase } from '@/lib/supabase';
+
+export const revalidate = 3600;
 
 export default async function Home() {
   const session = await auth();
   const ctaHref = session ? '/dashboard' : '/register';
+
+  const { data: latestArticles } = await supabase
+    .from('tax_articles')
+    .select('title, slug, excerpt, published_at')
+    .order('published_at', { ascending: false })
+    .limit(3);
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
 
@@ -190,6 +199,56 @@ export default async function Home() {
                 </details>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Daily Tax Tips */}
+        <section className="py-16 sm:py-24" style={{ backgroundColor: '#FDFCF8', borderTop: '1px solid #E8E2DA' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                  Updated daily
+                </div>
+                <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2 }}>
+                  What you need to know<br />
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>about the tax.</em>
+                </h2>
+              </div>
+              <Link href="/tax-tips" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                All articles →
+              </Link>
+            </div>
+
+            {latestArticles && latestArticles.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                {latestArticles.map((a) => (
+                  <Link key={a.slug} href={`/tax-tips/${a.slug}`} style={{ textDecoration: 'none' }}>
+                    <div className="h-full p-6 rounded-2xl transition-all hover:shadow-md flex flex-col" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
+                      <div className="flex items-center gap-1.5 mb-3">
+                        <Calendar size={12} color="#9A8F83" />
+                        <span className="text-xs" style={{ color: '#9A8F83' }}>
+                          {new Date(a.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                      </div>
+                      <h3 className="font-bold mb-2 flex-1" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1rem', color: '#1C1208', lineHeight: 1.4 }}>
+                        {a.title}
+                      </h3>
+                      <p className="text-xs leading-relaxed mb-4" style={{ color: '#9A8F83' }}>
+                        {a.excerpt.slice(0, 100)}…
+                      </p>
+                      <p className="text-xs font-medium" style={{ color: '#C4622D' }}>Read more →</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="py-10 text-center rounded-2xl" style={{ backgroundColor: '#F8F5F0', border: '1px solid #E8E2DA' }}>
+                <p className="font-medium" style={{ color: '#4A4035' }}>First article coming tomorrow at 8am.</p>
+                <Link href="/tax-tips" className="text-sm mt-2 inline-block" style={{ color: '#C4622D' }}>Visit Tax Tips →</Link>
+              </div>
+            )}
           </div>
         </section>
 

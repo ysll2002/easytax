@@ -41,6 +41,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-body), 'DM Sans', system-ui, sans-serif;
 }
 
+/* Article prose styles */
+.prose-article h2 { font-family: var(--font-display), Georgia, serif; font-size: 1.3rem; font-weight: 700; color: #1C1208; margin: 2rem 0 0.75rem; }
+.prose-article p  { color: #4A4035; line-height: 1.8; margin-bottom: 1rem; }
+.prose-article ul { margin: 0.75rem 0 1rem 1.25rem; list-style-type: disc; }
+.prose-article li { color: #4A4035; line-height: 1.7; margin-bottom: 0.4rem; }
+.prose-article strong { color: #1C1208; font-weight: 600; }
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
