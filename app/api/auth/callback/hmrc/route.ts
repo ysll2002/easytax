@@ -16,21 +16,23 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/dashboard/tax/hmrc?error=access_denied', req.url));
   }
 
+  const redirectUri = (process.env.HMRC_REDIRECT_URI ?? '').trim();
+
   const tokenRes = await fetch(`${BASE}/oauth/token`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       grant_type:    'authorization_code',
-      client_id:     process.env.HMRC_CLIENT_ID!,
-      client_secret: process.env.HMRC_CLIENT_SECRET!,
+      client_id:     (process.env.HMRC_CLIENT_ID ?? '').trim(),
+      client_secret: (process.env.HMRC_CLIENT_SECRET ?? '').trim(),
       code,
-      redirect_uri:  process.env.HMRC_REDIRECT_URI!,
+      redirect_uri:  redirectUri,
     }),
   });
 
   if (!tokenRes.ok) {
     const body = await tokenRes.text().catch(() => '');
-    const detail = encodeURIComponent(body.slice(0, 300));
+    const detail = encodeURIComponent(`redirect_uri sent: ${redirectUri} | HMRC: ${body.slice(0, 200)}`);
     return NextResponse.redirect(new URL(`/dashboard/tax/hmrc?error=token_exchange&detail=${detail}&status=${tokenRes.status}`, req.url));
   }
 

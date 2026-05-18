@@ -6,8 +6,8 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
   void session; // used by callback
   const sp = await searchParams;
 
-  const clientId   = process.env.HMRC_CLIENT_ID!;
-  const redirectUri = process.env.HMRC_REDIRECT_URI!;
+  const clientId    = (process.env.HMRC_CLIENT_ID ?? '').trim();
+  const redirectUri = (process.env.HMRC_REDIRECT_URI ?? '').trim();
   const scopes = [
     'read:self-assessment',
     'write:self-assessment',
