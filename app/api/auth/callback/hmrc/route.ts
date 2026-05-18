@@ -29,7 +29,9 @@ export async function GET(req: NextRequest) {
   });
 
   if (!tokenRes.ok) {
-    return NextResponse.redirect(new URL('/dashboard/tax/hmrc?error=token_exchange', req.url));
+    const body = await tokenRes.text().catch(() => '');
+    const detail = encodeURIComponent(body.slice(0, 300));
+    return NextResponse.redirect(new URL(`/dashboard/tax/hmrc?error=token_exchange&detail=${detail}&status=${tokenRes.status}`, req.url));
   }
 
   const tokens = await tokenRes.json();

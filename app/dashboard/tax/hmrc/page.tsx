@@ -1,9 +1,10 @@
 import { auth } from '@/auth';
 import Link from 'next/link';
 
-export default async function HmrcConnectPage() {
+export default async function HmrcConnectPage({ searchParams }: { searchParams: Promise<{ error?: string; detail?: string; status?: string }> }) {
   const session = await auth();
   void session; // used by callback
+  const sp = await searchParams;
 
   const clientId   = process.env.HMRC_CLIENT_ID!;
   const redirectUri = process.env.HMRC_REDIRECT_URI!;
@@ -35,6 +36,13 @@ export default async function HmrcConnectPage() {
           </div>
         ))}
       </div>
+
+      {sp.error && (
+        <div className="p-4 rounded-xl mb-4 text-xs font-mono break-all" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>
+          <p className="font-bold mb-1">Error: {sp.error} {sp.status ? `(HTTP ${sp.status})` : ''}</p>
+          {sp.detail && <p>{decodeURIComponent(sp.detail)}</p>}
+        </div>
+      )}
 
       <a href={authUrl}
         className="inline-block w-full text-center py-3.5 rounded-xl font-medium text-sm"
