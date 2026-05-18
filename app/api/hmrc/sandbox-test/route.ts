@@ -1,15 +1,11 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken } from '@/lib/hmrc';
-import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { createHash } from 'crypto';
 
-// Use the same base as lib/hmrc.ts — a production token can't call sandbox URLs
-const HMRC_ENV = process.env.HMRC_ENV ?? 'sandbox';
-const BASE = HMRC_ENV === 'production'
-  ? 'https://api.service.hmrc.gov.uk'
-  : 'https://test-api.service.hmrc.gov.uk';
+// Always target the sandbox — sandbox tokens are required
+const BASE = 'https://test-api.service.hmrc.gov.uk';
 
 type ApiResult = {
   name: string;
@@ -29,7 +25,7 @@ async function getVendorIp(): Promise<string> {
   } catch { return ''; }
 }
 
-async function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): Promise<Record<string, string>> {
+function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): Record<string, string> {
   const clientIp = deviceData.ip ?? '';
   return {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
@@ -66,6 +62,7 @@ async function call(
   try {
     const res = await fetch(`${BASE}${endpoint}`, {
       method,
+      signal: AbortSignal.timeout(8000),
       headers: {
         Authorization:  `Bearer ${token}`,
         Accept:         opts.accept ?? 'application/vnd.hmrc.2.0+json',
@@ -76,278 +73,182 @@ async function call(
     });
     entry.status = res.status;
     entry.ok     = res.ok || res.status === 204;
-    try { entry.data = await res.json(); } catch { entry.data = null; }
+    const text = await res.text().catch(() => '');
+    try { entry.data = JSON.parse(text); } catch { entry.data = text.slice(0, 200) || null; }
     return entry.data;
   } catch (err) {
-    entry.error = err instanceof Error ? err.message : String(err);
+    entry.status = null;
+    entry.error  = err instanceof Error ? err.message : String(err);
     return null;
   }
 }
 
 export async function GET() {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  const profileId = session.user.profileId;
-
-  let token: string;
-  try { token = await getValidToken(profileId); }
-  catch (err) {
-    return NextResponse.json({ error: 'No HMRC connection — connect your HMRC account first.' }, { status: 400 });
-  }
-
-  // Always use HMRC's official sandbox test-user values — never the DB values,
-  // which may have been set via the NinoForm with a real/test NINO.
-  const nino       = 'GW460330D';
-  const vrn        = '999999999';
-  const businessId = 'XAIS12345678910';  // resolved later from Business Details API
-  const taxYear    = '2025-26';
-  const PERIOD_START = '2025-04-06';
-  const PERIOD_END   = '2025-07-05';
-
-  const jar = await cookies();
-  let deviceData: Record<string, string> = {};
+  // Top-level catch so we always return valid JSON even if something crashes
   try {
-    const raw = jar.get('hmrc_device')?.value;
-    if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
-  } catch { /* ignore */ }
+    const session = await auth();
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const vendorIp = await getVendorIp();
-  const fph = await buildFphHeaders(deviceData, vendorIp);
+    const profileId = session.user.profileId;
 
-  const results: ApiResult[] = [];
+    let token: string;
+    try {
+      token = await getValidToken(profileId);
+    } catch {
+      return NextResponse.json(
+        { error: 'No HMRC connection found. Connect your HMRC account first.' },
+        { status: 400 },
+      );
+    }
 
-  // ── 1. Hello World (user-restricted) ────────────────────────────────────────
-  await call(results, 'Hello World', '/hello/user', 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    if (!token) {
+      return NextResponse.json(
+        { error: 'HMRC token is null — please reconnect your HMRC account.' },
+        { status: 400 },
+      );
+    }
 
-  // ── 2. Fraud Prevention Headers validation ───────────────────────────────────
-  await call(results, 'FPH Validate', '/test/fraud-prevention-headers/validate', 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    const nino         = 'GW460330D';
+    const vrn          = '999999999';
+    const taxYear      = '2025-26';
+    const PERIOD_START = '2025-04-06';
+    const PERIOD_END   = '2025-07-05';
 
-  // ── 3. Business Details ──────────────────────────────────────────────────────
-  const bizData = await call(results, 'Business Details – List', `/individuals/business/details/${nino}/list`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
+    const jar = await cookies();
+    let deviceData: Record<string, string> = {};
+    try {
+      const raw = jar.get('hmrc_device')?.value;
+      if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
+    } catch { /* ignore */ }
 
-  // Use businessId from API if available, otherwise fall back
-  let resolvedBusinessId = businessId;
-  try {
-    const businesses = (bizData as { listOfBusinesses?: { typeOfBusiness: string; businessId: string }[] })?.listOfBusinesses ?? [];
-    const se = businesses.find(b => b.typeOfBusiness === 'self-employment');
-    if (se) resolvedBusinessId = se.businessId;
-  } catch { /* keep fallback */ }
+    const vendorIp = await getVendorIp();
+    const fph      = buildFphHeaders(deviceData, vendorIp);
 
-  // ── 4. Individuals Obligations ───────────────────────────────────────────────
-  await call(results, 'Obligations – Income & Expenditure', `/obligations/details/${nino}/income-and-expenditure?typeOfBusiness=self-employment`, 'GET', token, fph, { accept: 'application/vnd.hmrc.3.0+json' });
+    const results: ApiResult[] = [];
 
-  // ── 5. Period Summaries – Quarterly Update (PUT) ─────────────────────────────
-  await call(
-    results,
-    'Period Summaries – Quarterly Update',
-    `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${taxYear}`,
-    'PUT',
-    token,
-    fph,
-    {
-      accept: 'application/vnd.hmrc.5.0+json',
-      body: {
-        periodDates: { periodStartDate: PERIOD_START, periodEndDate: PERIOD_END },
-        periodIncome: { turnover: 5000, other: 0 },
-        periodExpenses: {
-          costOfGoods:          { amount: 200 },
-          staffCosts:           { amount: 100 },
-          travelCosts:          { amount: 50 },
-          premisesRunningCosts: { amount: 300 },
-          adminCosts:           { amount: 80 },
-          advertisingCosts:     { amount: 120 },
-          professionalFees:     { amount: 250 },
-          other:                { amount: 150 },
-        },
-      },
-    },
-  );
+    // ── 1. Hello World (user-restricted) ─────────────────────────────────────
+    await call(results, 'Hello World', '/hello/user', 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
-  // ── 6. Annual Adjustments (PUT) ──────────────────────────────────────────────
-  await call(
-    results,
-    'Annual Adjustments',
-    `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${taxYear}`,
-    'PUT',
-    token,
-    fph,
-    { body: { overlapReliefUsed: 100, accountingAdjustment: 50 } },
-  );
+    // ── 2. FPH Validate ──────────────────────────────────────────────────────
+    await call(results, 'FPH Validate', '/test/fraud-prevention-headers/validate', 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
-  // ── 7. Tax Calculation – Trigger ─────────────────────────────────────────────
-  const calcTrigger = await call(
-    results,
-    'Calculation – Trigger',
-    `/individuals/calculations/${nino}/self-assessment/${taxYear}`,
-    'POST',
-    token,
-    fph,
-    { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } },
-  );
+    // ── 3. Business Details ──────────────────────────────────────────────────
+    const bizData = await call(results, 'Business Details – List', `/individuals/business/details/${nino}/list`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
 
-  // ── 8. Tax Calculation – Retrieve ────────────────────────────────────────────
-  const calculationId = (calcTrigger as { calculationId?: string })?.calculationId;
-  if (calculationId) {
+    let resolvedBusinessId = 'XAIS12345678910';
+    try {
+      const biz = (bizData as { listOfBusinesses?: { typeOfBusiness: string; businessId: string }[] })?.listOfBusinesses ?? [];
+      const se  = biz.find(b => b.typeOfBusiness === 'self-employment');
+      if (se?.businessId) resolvedBusinessId = se.businessId;
+    } catch { /* keep fallback */ }
+
+    // ── 4. Obligations ───────────────────────────────────────────────────────
+    await call(results, 'Obligations – Income & Expenditure', `/obligations/details/${nino}/income-and-expenditure?typeOfBusiness=self-employment`, 'GET', token, fph, { accept: 'application/vnd.hmrc.3.0+json' });
+
+    // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     await call(
       results,
-      'Calculation – Retrieve',
-      `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}`,
-      'GET',
-      token,
-      fph,
-      { accept: 'application/vnd.hmrc.8.0+json' },
-    );
-  } else {
-    results.push({ name: 'Calculation – Retrieve', endpoint: '(skipped — no calculationId from trigger)', method: 'GET', status: null, ok: false, error: 'Skipped: no calculationId returned' });
-  }
-
-  // ── 9. Savings Income (PUT) ──────────────────────────────────────────────────
-  await call(
-    results,
-    'Income Received – Savings',
-    `/individuals/income-received/savings/${nino}/${taxYear}`,
-    'PUT',
-    token,
-    fph,
-    { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } },
-  );
-
-  // ── 10. Dividends Income (PUT) ───────────────────────────────────────────────
-  await call(
-    results,
-    'Income Received – Dividends',
-    `/individuals/income-received/dividends/${nino}/${taxYear}`,
-    'PUT',
-    token,
-    fph,
-    { body: { ukDividends: 300, otherUkDividends: 50 } },
-  );
-
-  // ── 11. Charitable Giving / Reliefs (PUT) ────────────────────────────────────
-  await call(
-    results,
-    'Reliefs – Charitable Giving',
-    `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`,
-    'PUT',
-    token,
-    fph,
-    { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } },
-  );
-
-  // ── 12. Individuals Charges (PUT) ────────────────────────────────────────────
-  await call(
-    results,
-    'Individuals Charges – Pension Schemes',
-    `/individuals/charges/pensions/${nino}/${taxYear}`,
-    'PUT',
-    token,
-    fph,
-    { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } },
-  );
-
-  // ── 13. Business Source Adjustable Summary (GET) ─────────────────────────────
-  await call(
-    results,
-    'Business Source Adjustable Summary',
-    `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`,
-    'GET',
-    token,
-    fph,
-    { accept: 'application/vnd.hmrc.7.0+json' },
-  );
-
-  // ── 14. VAT – Obligations ────────────────────────────────────────────────────
-  const fromDate = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const toDate   = new Date().toISOString().slice(0, 10);
-  const vatOblData = await call(
-    results,
-    'VAT – Obligations',
-    `/organisations/vat/${vrn}/obligations?from=${fromDate}&to=${toDate}`,
-    'GET',
-    token,
-    fph,
-    { accept: 'application/vnd.hmrc.1.0+json' },
-  );
-
-  // Get an open VAT period key for submission
-  let vatPeriodKey = '#001';
-  try {
-    const obs = (vatOblData as { obligations?: { periodKey: string; status: string }[] })?.obligations ?? [];
-    const open = obs.find(o => o.status === 'O');
-    if (open?.periodKey) vatPeriodKey = open.periodKey;
-  } catch { /* keep default */ }
-
-  // ── 15. VAT – Submit Return (POST) ───────────────────────────────────────────
-  await call(
-    results,
-    'VAT – Submit Return',
-    `/organisations/vat/${vrn}/returns`,
-    'POST',
-    token,
-    fph,
-    {
-      accept: 'application/vnd.hmrc.1.0+json',
-      body: {
-        periodKey:                    vatPeriodKey,
-        vatDueSales:                  105.50,
-        vatDueAcquisitions:           0,
-        totalVatDue:                  105.50,
-        vatReclaimedCurrPeriod:       23.80,
-        netVatDue:                    81.70,
-        totalValueSalesExVAT:         527,
-        totalValuePurchasesExVAT:     119,
-        totalValueGoodsSuppliedExVAT: 0,
-        totalAcquisitionsExVAT:       0,
-        finalised:                    true,
+      'Period Summaries – Quarterly Update',
+      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${taxYear}`,
+      'PUT', token, fph,
+      {
+        accept: 'application/vnd.hmrc.5.0+json',
+        body: {
+          periodDates:    { periodStartDate: PERIOD_START, periodEndDate: PERIOD_END },
+          periodIncome:   { turnover: 5000, other: 0 },
+          periodExpenses: {
+            costOfGoods:          { amount: 200 },
+            staffCosts:           { amount: 100 },
+            travelCosts:          { amount: 50 },
+            premisesRunningCosts: { amount: 300 },
+            adminCosts:           { amount: 80 },
+            advertisingCosts:     { amount: 120 },
+            professionalFees:     { amount: 250 },
+            other:                { amount: 150 },
+          },
+        },
       },
-    },
-  );
+    );
 
-  // ── 16. VAT – Retrieve Return (GET) ──────────────────────────────────────────
-  await call(
-    results,
-    'VAT – Retrieve Return',
-    `/organisations/vat/${vrn}/returns/${encodeURIComponent(vatPeriodKey)}`,
-    'GET',
-    token,
-    fph,
-    { accept: 'application/vnd.hmrc.1.0+json' },
-  );
+    // ── 6. Annual Adjustments ────────────────────────────────────────────────
+    await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${taxYear}`, 'PUT', token, fph, { body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
 
-  // ── 17. VAT – Liabilities (GET) ──────────────────────────────────────────────
-  await call(
-    results,
-    'VAT – Liabilities',
-    `/organisations/vat/${vrn}/liabilities?from=${fromDate}&to=${toDate}`,
-    'GET',
-    token,
-    fph,
-    { accept: 'application/vnd.hmrc.1.0+json' },
-  );
+    // ── 7. Calculation – Trigger ─────────────────────────────────────────────
+    const calcTrigger = await call(results, 'Calculation – Trigger', `/individuals/calculations/${nino}/self-assessment/${taxYear}`, 'POST', token, fph, { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } });
 
-  // ── 18. VAT – Payments (GET) ─────────────────────────────────────────────────
-  await call(
-    results,
-    'VAT – Payments',
-    `/organisations/vat/${vrn}/payments?from=${fromDate}&to=${toDate}`,
-    'GET',
-    token,
-    fph,
-    { accept: 'application/vnd.hmrc.1.0+json' },
-  );
+    // ── 8. Calculation – Retrieve ────────────────────────────────────────────
+    const calculationId = (calcTrigger as { calculationId?: string })?.calculationId;
+    if (calculationId) {
+      await call(results, 'Calculation – Retrieve', `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.8.0+json' });
+    } else {
+      results.push({ name: 'Calculation – Retrieve', endpoint: '(skipped – no calculationId)', method: 'GET', status: null, ok: false, error: 'Skipped: no calculationId from trigger' });
+    }
 
-  const passed  = results.filter(r => r.ok).length;
-  const failed  = results.filter(r => !r.ok).length;
-  const summary = `${passed}/${results.length} calls succeeded`;
+    // ── 9. Savings Income ────────────────────────────────────────────────────
+    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${taxYear}`, 'PUT', token, fph, { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
 
-  return NextResponse.json({
-    summary,
-    passed,
-    failed,
-    total: results.length,
-    debug: { hmrcEnv: HMRC_ENV, baseUrl: BASE, tokenPrefix: token.slice(0, 8) + '…' },
-    context: { nino, vrn, businessId: resolvedBusinessId, taxYear },
-    results,
-  });
+    // ── 10. Dividends Income ─────────────────────────────────────────────────
+    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${taxYear}`, 'PUT', token, fph, { body: { ukDividends: 300, otherUkDividends: 50 } });
+
+    // ── 11. Charitable Giving ────────────────────────────────────────────────
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`, 'PUT', token, fph, { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
+
+    // ── 12. Individuals Charges ──────────────────────────────────────────────
+    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${taxYear}`, 'PUT', token, fph, { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
+
+    // ── 13. Business Source Adjustable Summary ───────────────────────────────
+    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
+
+    // ── 14–18. VAT MTD ───────────────────────────────────────────────────────
+    const from = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const to   = new Date().toISOString().slice(0, 10);
+
+    const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+
+    let vatPeriodKey = '#001';
+    try {
+      const obs = (vatOblData as { obligations?: { periodKey: string; status: string }[] })?.obligations ?? [];
+      const open = obs.find(o => o.status === 'O');
+      if (open?.periodKey) vatPeriodKey = open.periodKey;
+    } catch { /* keep default */ }
+
+    await call(
+      results, 'VAT – Submit Return', `/organisations/vat/${vrn}/returns`,
+      'POST', token, fph,
+      {
+        accept: 'application/vnd.hmrc.1.0+json',
+        body: {
+          periodKey: vatPeriodKey, vatDueSales: 105.50, vatDueAcquisitions: 0,
+          totalVatDue: 105.50, vatReclaimedCurrPeriod: 23.80, netVatDue: 81.70,
+          totalValueSalesExVAT: 527, totalValuePurchasesExVAT: 119,
+          totalValueGoodsSuppliedExVAT: 0, totalAcquisitionsExVAT: 0, finalised: true,
+        },
+      },
+    );
+
+    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/${encodeURIComponent(vatPeriodKey)}`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    await call(results, 'VAT – Liabilities',       `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,          'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    await call(results, 'VAT – Payments',          `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,             'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+
+    const passed  = results.filter(r => r.ok).length;
+    const failed  = results.filter(r => !r.ok).length;
+    const summary = `${passed}/${results.length} calls succeeded`;
+
+    return NextResponse.json({
+      summary, passed, failed, total: results.length,
+      debug: {
+        hmrcEnv:    process.env.HMRC_ENV ?? '(not set)',
+        baseUrl:    BASE,
+        tokenLen:   token.length,
+        tokenStart: token.substring(0, 8),
+      },
+      context: { nino, vrn, businessId: resolvedBusinessId, taxYear },
+      results,
+    });
+
+  } catch (err) {
+    // Always return valid JSON — never let the function return an empty body
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: `Unhandled server error: ${msg}` }, { status: 500 });
+  }
 }

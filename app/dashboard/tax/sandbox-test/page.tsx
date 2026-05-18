@@ -35,9 +35,16 @@ export default function SandboxTestPage() {
     setReport(null);
     try {
       const res  = await fetch('/api/hmrc/sandbox-test');
-      const data = await res.json();
-      if (!res.ok) { setError(data.error ?? 'Unknown error'); return; }
-      setReport(data as TestReport);
+      const text = await res.text();
+      let data: TestReport & { error?: string };
+      try {
+        data = JSON.parse(text);
+      } catch {
+        setError(`Server returned non-JSON (status ${res.status}): ${text.slice(0, 300)}`);
+        return;
+      }
+      if (!res.ok || data.error) { setError(data.error ?? 'Unknown error'); return; }
+      setReport(data);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Request failed');
     } finally {
