@@ -4,6 +4,7 @@ import Link from 'next/link';
 import DeviceDataCollector from '@/components/DeviceDataCollector';
 import SidebarNav from '@/components/SidebarNav';
 import LogoutButton from '@/components/LogoutButton';
+import MobileNav from '@/components/MobileNav';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -14,15 +15,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#FDFCF8' }}>
 
-      {/* Sidebar */}
-      <aside style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', display: 'flex', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
+      {/* Sidebar — desktop only */}
+      <aside className="hidden md:flex" style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
         <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#C4622D', padding: '0 1.5rem', marginBottom: '2.5rem', display: 'block' }}>
           EasyTax
         </Link>
 
         <SidebarNav />
 
-        {/* User + log out */}
         <div style={{ padding: '0 1.5rem', borderTop: '1px solid #2E2418', paddingTop: '1.25rem', marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
             {user.image ? (
@@ -41,11 +41,27 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </div>
       </aside>
 
+      {/* Mobile top bar */}
+      <div className="md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', display: 'flex', alignItems: 'center' }}>
+        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
+          EasyTax
+        </Link>
+      </div>
+
       {/* Main content */}
-      <main style={{ flex: 1, overflow: 'auto' }}>
+      <main style={{ flex: 1, overflow: 'auto', paddingTop: 0 }}>
+        {/* Mobile top spacer */}
+        <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />
         {children}
+        {/* Mobile bottom spacer */}
+        <div className="md:hidden" style={{ height: '72px' }} />
       </main>
+
+      {/* Mobile bottom nav */}
+      <div className="md:hidden">
+        <MobileNav />
+      </div>
     </div>
   );
 }

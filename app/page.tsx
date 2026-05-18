@@ -15,32 +15,30 @@ export default async function Home() {
       <main className="flex-grow">
 
         {/* Hero */}
-        <section className="relative pt-16 pb-28 overflow-hidden">
-          {/* Decorative background shapes */}
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4622D 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-8 pointer-events-none" style={{ background: 'radial-gradient(circle, #C9963D 0%, transparent 70%)', transform: 'translate(-40%, 40%)' }} />
+        <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-28 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4622D 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
 
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-center gap-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
               {/* Left: text */}
               <div className="flex-1 min-w-0">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
                   <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
                   Launching for 2025/26 Tax Year
                 </div>
 
-                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.5rem' }}>
+                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.25rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
                   Self Assessment, <span style={{ color: '#6B8E6E' }}>Making Tax Digital,</span>
                   <br />
                   <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
                 </h1>
 
-                <p className="text-xl leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '480px' }}>
+                <p className="text-base sm:text-xl leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: '480px' }}>
                   The simplest way for UK freelancers and contractors to file tax returns.
                   Connect your bank, categorize expenses, file to HMRC in minutes.
                 </p>
 
-                <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
+                <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
                   Get Early Access
                 </Link>
               </div>
@@ -89,7 +87,7 @@ export default async function Home() {
               <p style={{ color: '#9A8F83', fontSize: '1.1rem' }}>Replace your spreadsheet with something smarter.</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
               {[
                 {
                   Icon: Landmark,
@@ -128,9 +126,9 @@ export default async function Home() {
         </section>
 
         {/* Steps */}
-        <section id="pricing" className="py-28" style={{ backgroundColor: '#F0EBE1' }}>
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid md:grid-cols-2 gap-16 items-center">
+        <section id="pricing" className="py-16 sm:py-28" style={{ backgroundColor: '#F0EBE1' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
               <div>
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1.5rem' }}>
                   File in five minutes,<br />

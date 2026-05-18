@@ -15,7 +15,7 @@ export default async function ReconcilePage() {
 
   if (!bank) {
     return (
-      <div className="p-8 max-w-xl">
+      <div className="p-4 sm:p-8 max-w-xl">
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
           Reconcile Transactions
         </h1>

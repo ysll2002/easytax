@@ -179,7 +179,7 @@ export default function HistoryPage() {
   const taxYears = Object.keys(grouped).sort().reverse();
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 sm:p-8 max-w-3xl">
       <Link href="/dashboard/tax" className="text-sm mb-8 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
         ← Back
       </Link>

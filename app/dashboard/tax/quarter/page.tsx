@@ -71,7 +71,7 @@ function QuarterForm() {
 
   if (submitted) {
     return (
-      <div className="p-8 max-w-lg">
+      <div className="p-4 sm:p-8 max-w-lg">
         <div className="flex flex-col items-center text-center py-12">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#F0EBE1' }}>
             <CheckCircle2 size={36} color="#C4622D" />
@@ -96,7 +96,7 @@ function QuarterForm() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <Link href="/dashboard/tax/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
         ← Back to Filing Overview
       </Link>
@@ -116,7 +116,7 @@ function QuarterForm() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <div className="flex gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
 
           {/* Left: form */}
           <div className="flex-1 space-y-6">
@@ -183,7 +183,7 @@ function QuarterForm() {
           </div>
 
           {/* Right: live summary */}
-          <div className="w-72 flex-shrink-0 sticky top-8">
+          <div className="w-full lg:w-72 lg:flex-shrink-0 lg:sticky lg:top-8">
             <div className="rounded-2xl overflow-hidden" style={{ border: '1.5px solid #DDD5C8' }}>
               <div className="px-5 py-4" style={{ backgroundColor: '#1C1208' }}>
                 <p className="text-xs font-semibold mb-1" style={{ color: '#9A8F83' }}>LIVE SUMMARY</p>
