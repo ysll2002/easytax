@@ -5,7 +5,11 @@ import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { createHash } from 'crypto';
 
-const SANDBOX = 'https://test-api.service.hmrc.gov.uk';
+// Use the same base as lib/hmrc.ts — a production token can't call sandbox URLs
+const HMRC_ENV = process.env.HMRC_ENV ?? 'sandbox';
+const BASE = HMRC_ENV === 'production'
+  ? 'https://api.service.hmrc.gov.uk'
+  : 'https://test-api.service.hmrc.gov.uk';
 
 type ApiResult = {
   name: string;
@@ -60,7 +64,7 @@ async function call(
   const entry: ApiResult = { name, endpoint, method, status: null, ok: false };
   results.push(entry);
   try {
-    const res = await fetch(`${SANDBOX}${endpoint}`, {
+    const res = await fetch(`${BASE}${endpoint}`, {
       method,
       headers: {
         Authorization:  `Bearer ${token}`,
@@ -342,6 +346,7 @@ export async function GET() {
     passed,
     failed,
     total: results.length,
+    debug: { hmrcEnv: HMRC_ENV, baseUrl: BASE, tokenPrefix: token.slice(0, 8) + '…' },
     context: { nino, vrn, businessId: resolvedBusinessId, taxYear },
     results,
   });
