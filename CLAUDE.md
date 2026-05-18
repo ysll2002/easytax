@@ -2,16 +2,42 @@
 
 ## Deployment Rules
 
-**正确流程：**
-1. 代码改完后，先运行 `vercel deploy`，把预览 URL 发给用户
-2. 用户在预览环境（`staging.easytax.vip` 或 `easytax-xxx.vercel.app`）确认效果满意
-3. 用户明确说"发布"或"上线"后，才运行 `vercel deploy --prod`
-4. `vercel deploy --prod` 会直接更新 `easytax.vip`（真实线上环境，有真实用户）
+**环境说明：**
+- `staging.easytax.vip` — 预览/测试环境，对应 GitHub `staging` 分支
+- `easytax.vip` — 生产环境，有真实用户，对应 GitHub `main` 分支
+- 本地代码克隆在 `/tmp/easytax`，工作分支为 `staging`
+
+**标准部署流程：**
+1. 修改代码后，commit 并 push 到 `staging` 分支：
+   ```
+   git add -A
+   git commit -m "..."
+   git push origin staging
+   ```
+2. 运行预览部署并更新 staging 域名：
+   ```
+   vercel deploy --scope lilingabriel-5465s-projects --yes
+   vercel alias set <预览URL> staging.easytax.vip --scope lilingabriel-5465s-projects
+   ```
+3. 把 `staging.easytax.vip` 链接发给用户，等待确认
+4. 用户明确说"发布"或"上线"后，才运行：
+   ```
+   vercel deploy --prod --scope lilingabriel-5465s-projects --yes
+   ```
+
+**代码提交规范：**
+- commit message 必须包含 `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
+- 使用语义化前缀：`feat:` / `fix:` / `revert:` / `docs:`
 
 **严格禁止：**
-- 未经用户确认，不得运行 `vercel deploy --prod`
-- Bug 修复、功能开发、任何代码变更，都必须先走预览环境
+- 未经用户明确确认，不得运行 `vercel deploy --prod`
+- 任何代码变更（包括 bug 修复、样式调整）都必须先经过 staging 预览
 - 不得以"只是小改动"为由跳过预览步骤
+- 不得跳过 `--scope lilingabriel-5465s-projects` 参数，否则部署到错误项目
+
+**重要背景：**
+- 如果 `/tmp/easytax` 目录丢失（例如重启），需重新克隆：`git clone https://github.com/ysll2002/easytax /tmp/easytax && cd /tmp/easytax && git checkout staging`
+- HMRC sandbox 的 staging redirect URI 暂未生效，staging 目前使用 `https://easytax.vip/api/auth/callback/hmrc` 作为 HMRC_REDIRECT_URI 的临时绕过方案
 
 ## Mobile-First Design Rules
 
