@@ -92,15 +92,11 @@ export async function GET() {
     return NextResponse.json({ error: 'No HMRC connection — connect your HMRC account first.' }, { status: 400 });
   }
 
-  const { data: conn } = await supabase
-    .from('hmrc_connections')
-    .select('nino, vrn, business_id')
-    .eq('user_id', profileId)
-    .single();
-
-  const nino       = conn?.nino       ?? 'GW460330D';
-  const vrn        = conn?.vrn        ?? '999999999';
-  const businessId = conn?.business_id ?? 'XAIS12345678910';
+  // Always use HMRC's official sandbox test-user values — never the DB values,
+  // which may have been set via the NinoForm with a real/test NINO.
+  const nino       = 'GW460330D';
+  const vrn        = '999999999';
+  const businessId = 'XAIS12345678910';  // resolved later from Business Details API
   const taxYear    = '2025-26';
   const PERIOD_START = '2025-04-06';
   const PERIOD_END   = '2025-07-05';
