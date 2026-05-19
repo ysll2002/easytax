@@ -18,7 +18,7 @@ type TestReport = {
   passed: number;
   failed: number;
   total: number;
-  debug: { hmrcEnv: string; baseUrl: string; tokenPrefix: string };
+  debug: { hmrcEnv: string; baseUrl: string; tokenStart: string; tokenLen: number };
   context: { nino: string; vrn: string; businessId: string; taxYear: string };
   results: ApiResult[];
 };
@@ -118,7 +118,7 @@ export default function SandboxTestPage() {
               <p className="text-xs font-mono" style={{ color: '#9A8F83' }}>
                 env: <span style={{ color: '#C4622D' }}>{report.debug.hmrcEnv}</span> ·
                 base: <span style={{ color: '#C4622D' }}>{report.debug.baseUrl}</span> ·
-                token: <span style={{ color: '#C4622D' }}>{report.debug.tokenPrefix}</span>
+                token: <span style={{ color: '#C4622D' }}>{report.debug.tokenStart}… ({report.debug.tokenLen} chars)</span>
               </p>
             </div>
           </div>
