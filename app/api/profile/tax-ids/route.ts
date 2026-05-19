@@ -8,13 +8,12 @@ export async function GET() {
 
   const { data } = await supabase
     .from('hmrc_connections')
-    .select('nino, utr')
+    .select('nino')
     .eq('user_id', session.user.profileId)
     .single();
 
   return NextResponse.json({
     nino: data?.nino ?? '',
-    utr:  data?.utr  ?? '',
     user: session.user,
   });
 }
@@ -23,12 +22,12 @@ export async function PUT(req: NextRequest) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { nino, utr } = await req.json();
+  const { nino } = await req.json();
 
   const { error } = await supabase
     .from('hmrc_connections')
     .upsert(
-      { user_id: session.user.profileId, nino: nino || null, utr: utr || null },
+      { user_id: session.user.profileId, nino: nino || null },
       { onConflict: 'user_id' },
     );
 

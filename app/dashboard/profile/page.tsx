@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-type TaxIds = { nino: string; utr: string; user: { name?: string; email?: string; image?: string; profileId?: string } };
+type TaxIds = { nino: string; user: { name?: string; email?: string; image?: string; profileId?: string } };
 
 const inputStyle = {
   width: '100%', padding: '0.6rem 0.875rem', borderRadius: '0.75rem',
@@ -13,7 +13,6 @@ const inputStyle = {
 export default function ProfilePage() {
   const [data, setData]     = useState<TaxIds | null>(null);
   const [nino, setNino]     = useState('');
-  const [utr, setUtr]       = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved]   = useState(false);
   const [error, setError]   = useState('');
@@ -21,7 +20,7 @@ export default function ProfilePage() {
   useEffect(() => {
     fetch('/api/profile/tax-ids')
       .then(r => r.json())
-      .then((d: TaxIds) => { setData(d); setNino(d.nino); setUtr(d.utr); });
+      .then((d: TaxIds) => { setData(d); setNino(d.nino); });
   }, []);
 
   async function handleSave(e: React.FormEvent) {
@@ -32,7 +31,7 @@ export default function ProfilePage() {
       const res = await fetch('/api/profile/tax-ids', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nino: nino.trim().toUpperCase(), utr: utr.trim() }),
+        body: JSON.stringify({ nino: nino.trim().toUpperCase() }),
       });
       const d = await res.json();
       if (d.error) { setError(d.error); return; }
@@ -81,36 +80,19 @@ export default function ProfilePage() {
             Required for HMRC Self Assessment submissions.
           </p>
 
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A4035' }}>
-                National Insurance Number (NINO)
-              </label>
-              <input
-                type="text"
-                value={nino}
-                onChange={e => setNino(e.target.value)}
-                placeholder="AB 12 34 56 C"
-                maxLength={13}
-                style={inputStyle}
-              />
-              <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>Format: 2 letters, 6 digits, 1 letter — found on your P60 or HMRC letters.</p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A4035' }}>
-                Unique Taxpayer Reference (UTR)
-              </label>
-              <input
-                type="text"
-                value={utr}
-                onChange={e => setUtr(e.target.value)}
-                placeholder="1234567890"
-                maxLength={10}
-                style={inputStyle}
-              />
-              <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>10-digit number on your Self Assessment tax return or HMRC letters.</p>
-            </div>
+          <div>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A4035' }}>
+              National Insurance Number (NINO)
+            </label>
+            <input
+              type="text"
+              value={nino}
+              onChange={e => setNino(e.target.value)}
+              placeholder="AB 12 34 56 C"
+              maxLength={13}
+              style={inputStyle}
+            />
+            <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>Format: 2 letters, 6 digits, 1 letter — found on your P60 or HMRC letters.</p>
           </div>
 
           {error && (

@@ -9,7 +9,7 @@ export default async function TaxPage() {
   const profileId = session!.user.profileId;
 
   const [{ data: hmrc }, { data: bank }] = await Promise.all([
-    supabase.from('hmrc_connections').select('nino, utr, vrn, access_token, connected_at').eq('user_id', profileId).single(),
+    supabase.from('hmrc_connections').select('nino, vrn, access_token, connected_at').eq('user_id', profileId).single(),
     supabase.from('bank_connections').select('account_name, connected_at').eq('user_id', profileId).single(),
   ]);
 
@@ -42,7 +42,7 @@ export default async function TaxPage() {
                 <div>
                   <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>HMRC connected</p>
                   <p className="text-xs" style={{ color: '#9A8F83' }}>
-                    {hmrc?.utr ? `UTR: ${hmrc.utr}` : 'Government Gateway authorised'}
+                    {'Government Gateway authorised'}
                     {hmrc?.connected_at ? ` · Connected ${new Date(hmrc.connected_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
                   </p>
                 </div>
