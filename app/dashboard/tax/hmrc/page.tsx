@@ -9,6 +9,7 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
   const clientId    = (process.env.HMRC_CLIENT_ID ?? '').trim();
   const redirectUri = (process.env.HMRC_REDIRECT_URI ?? '').trim();
   const scopes = [
+    'hello',
     'read:self-assessment',
     'write:self-assessment',
     'read:vat',
