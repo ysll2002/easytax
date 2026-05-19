@@ -226,7 +226,7 @@ export async function GET() {
     await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { ukDividends: 300, otherUkDividends: 50 } });
 
     // ── 10. Charitable Giving (Individuals Reliefs MTD v3.0) ─────────────────
-    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.3.0+json', body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.3.0+json', body: { giftAidPayments: { totalAmount: 100, oneOffAmount: 50 } } });
 
     // ── 11. Business Source Adjustable Summary (BSAS MTD v7.0) ───────────────
     await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
@@ -268,7 +268,9 @@ export async function GET() {
       results.push({ name: 'VAT – Submit Return', endpoint: `POST /organisations/vat/${vrn}/returns`, method: 'POST', status: null, ok: false, error: 'Skipped: no open VAT obligation found' });
     }
 
-    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/${encodeURIComponent(vatPeriodKeyAny)}`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    // '18A2' is the known submitted period in this sandbox — use it for retrieve
+    const retrieveKey = vatPeriodKeyAny !== '#001' ? vatPeriodKeyAny : '18A2';
+    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/${encodeURIComponent(retrieveKey)}`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
     await call(results, 'VAT – Liabilities',       `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,          'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
     await call(results, 'VAT – Payments',          `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,             'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
