@@ -268,9 +268,7 @@ export async function GET() {
       results.push({ name: 'VAT – Submit Return', endpoint: `POST /organisations/vat/${vrn}/returns`, method: 'POST', status: null, ok: false, error: 'Skipped: no open VAT obligation found' });
     }
 
-    // '18A2' is the known submitted period in this sandbox — use it for retrieve
-    const retrieveKey = vatPeriodKeyAny !== '#001' ? vatPeriodKeyAny : '18A2';
-    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/${encodeURIComponent(retrieveKey)}`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/18A2`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
     await call(results, 'VAT – Liabilities',       `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,          'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
     await call(results, 'VAT – Payments',          `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,             'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
