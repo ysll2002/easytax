@@ -177,6 +177,11 @@ export async function GET() {
       }
     } catch { /* keep defaults */ }
 
+    // v5.0 only supports 2023-24+; use v3.0 for older obligation periods
+    const periodSummaryAccept = oblTaxYear >= '2023-24'
+      ? 'application/vnd.hmrc.5.0+json'
+      : 'application/vnd.hmrc.3.0+json';
+
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     await call(
       results,
@@ -184,7 +189,7 @@ export async function GET() {
       `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${oblTaxYear}`,
       'PUT', token, fph,
       {
-        accept: 'application/vnd.hmrc.5.0+json',
+        accept: periodSummaryAccept,
         body: {
           periodDates:    { periodStartDate: periodStart, periodEndDate: periodEnd },
           periodIncome:   { turnover: 5000, other: 0 },
@@ -202,6 +207,9 @@ export async function GET() {
       },
     );
 
+    // Use current tax year for non-period-specific SA endpoints (BSAS needs 2019-20+)
+    const recentTaxYear = taxYear;
+
     // ── 6. Annual Adjustments ────────────────────────────────────────────────
     await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${oblTaxYear}`, 'PUT', token, fph, { body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
 
@@ -217,24 +225,24 @@ export async function GET() {
     }
 
     // ── 9. Savings Income ────────────────────────────────────────────────────
-    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
+    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
 
     // ── 10. Dividends Income ─────────────────────────────────────────────────
-    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { ukDividends: 300, otherUkDividends: 50 } });
+    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { ukDividends: 300, otherUkDividends: 50 } });
 
     // ── 11. Charitable Giving ────────────────────────────────────────────────
-    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
 
     // ── 12. Individuals Charges ──────────────────────────────────────────────
-    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
+    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
 
     // ── 13. Business Source Adjustable Summary ───────────────────────────────
-    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${oblTaxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
+    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${recentTaxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
 
     // ── 14–18. VAT MTD ───────────────────────────────────────────────────────
-    // VAT APIs allow max 1-year range
+    // Use last 6 months to avoid DATE_RANGE_INVALID
     const to   = new Date().toISOString().slice(0, 10);
-    const from = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const from = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
     const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
