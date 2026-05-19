@@ -225,16 +225,16 @@ export async function GET() {
     }
 
     // ── 9. Savings Income ────────────────────────────────────────────────────
-    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
+    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
 
     // ── 10. Dividends Income ─────────────────────────────────────────────────
-    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { ukDividends: 300, otherUkDividends: 50 } });
+    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { ukDividends: 300, otherUkDividends: 50 } });
 
     // ── 11. Charitable Giving ────────────────────────────────────────────────
-    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
 
     // ── 12. Individuals Charges ──────────────────────────────────────────────
-    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${recentTaxYear}`, 'PUT', token, fph, { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
+    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
 
     // ── 13. Business Source Adjustable Summary ───────────────────────────────
     await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${recentTaxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
@@ -246,28 +246,37 @@ export async function GET() {
 
     const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
-    let vatPeriodKey = '#001';
+    // Find any fulfilled period key (for Retrieve) and any open one (for Submit)
+    let vatPeriodKeyAny  = '18A2';  // fallback — the one we know exists
+    let vatOpenPeriodKey: string | null = null;
     try {
       const obs = (vatOblData as { obligations?: { periodKey: string; status: string }[] })?.obligations ?? [];
-      const open = obs.find(o => o.status === 'O');
-      if (open?.periodKey) vatPeriodKey = open.periodKey;
-    } catch { /* keep default */ }
+      const fulfilled = obs.find(o => o.status === 'F');
+      const open      = obs.find(o => o.status === 'O');
+      if (fulfilled?.periodKey) vatPeriodKeyAny  = fulfilled.periodKey;
+      if (open?.periodKey)      vatOpenPeriodKey = open.periodKey;
+    } catch { /* keep defaults */ }
 
-    await call(
-      results, 'VAT – Submit Return', `/organisations/vat/${vrn}/returns`,
-      'POST', token, fph,
-      {
-        accept: 'application/vnd.hmrc.1.0+json',
-        body: {
-          periodKey: vatPeriodKey, vatDueSales: 105.50, vatDueAcquisitions: 0,
-          totalVatDue: 105.50, vatReclaimedCurrPeriod: 23.80, netVatDue: 81.70,
-          totalValueSalesExVAT: 527, totalValuePurchasesExVAT: 119,
-          totalValueGoodsSuppliedExVAT: 0, totalAcquisitionsExVAT: 0, finalised: true,
+    // Only attempt VAT submission when there is an open obligation
+    if (vatOpenPeriodKey) {
+      await call(
+        results, 'VAT – Submit Return', `/organisations/vat/${vrn}/returns`,
+        'POST', token, fph,
+        {
+          accept: 'application/vnd.hmrc.1.0+json',
+          body: {
+            periodKey: vatOpenPeriodKey, vatDueSales: 105.50, vatDueAcquisitions: 0,
+            totalVatDue: 105.50, vatReclaimedCurrPeriod: 23.80, netVatDue: 81.70,
+            totalValueSalesExVAT: 527, totalValuePurchasesExVAT: 119,
+            totalValueGoodsSuppliedExVAT: 0, totalAcquisitionsExVAT: 0, finalised: true,
+          },
         },
-      },
-    );
+      );
+    } else {
+      results.push({ name: 'VAT – Submit Return', endpoint: `POST /organisations/vat/${vrn}/returns`, method: 'POST', status: null, ok: false, error: 'Skipped: no open VAT obligation found' });
+    }
 
-    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/${encodeURIComponent(vatPeriodKey)}`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/${encodeURIComponent(vatPeriodKeyAny)}`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
     await call(results, 'VAT – Liabilities',       `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,          'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
     await call(results, 'VAT – Payments',          `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,             'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
