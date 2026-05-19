@@ -27,8 +27,8 @@ export default async function Home() {
         <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-28 overflow-hidden">
           <div className="absolute top-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4622D 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6">
-            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-12">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               {/* Left: text */}
               <div className="flex-1 min-w-0">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
