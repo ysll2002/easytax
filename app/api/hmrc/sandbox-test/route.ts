@@ -237,7 +237,9 @@ export async function GET() {
     const to   = new Date().toISOString().slice(0, 10);
     const from = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
-    const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    // Use a wider range for obligations to find open periods (not limited to 6 months)
+    const vatOblFrom = new Date(Date.now() - 730 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${vatOblFrom}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
     // Find any fulfilled period key (for Retrieve) and any open one (for Submit)
     let vatPeriodKeyAny  = '18A2';  // fallback — the one we know exists
