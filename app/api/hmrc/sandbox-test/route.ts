@@ -224,11 +224,11 @@ export async function GET() {
     await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
 
     // ── 14–18. VAT MTD ───────────────────────────────────────────────────────
-    // Wide date range to maximise chance of finding obligations in sandbox
-    const from = '2020-01-01';
+    // VAT APIs allow max 1-year range
     const to   = new Date().toISOString().slice(0, 10);
+    const from = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
-    const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}&status=OPEN`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+    const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
     let vatPeriodKey = '#001';
     try {
