@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import NinoForm from '@/components/NinoForm';
-import { CheckCircle2, ChevronRight, History } from 'lucide-react';
+import { CheckCircle2, ChevronRight, History, Edit2 } from 'lucide-react';
 
 export default async function TaxPage() {
   const session   = await auth();
@@ -48,9 +48,9 @@ export default async function TaxPage() {
                 </div>
               </div>
               <Link href="/dashboard/tax/hmrc"
-                className="text-xs px-3 py-1.5 rounded-full"
-                style={{ border: '1px solid #DDD5C8', color: '#9A8F83', textDecoration: 'none' }}>
-                Reconnect
+                className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full font-semibold"
+                style={{ border: '1px solid #1C1208', color: '#1C1208', textDecoration: 'none', backgroundColor: 'transparent' }}>
+                <Edit2 size={12} /> Reconnect
               </Link>
             </div>
           ) : (
