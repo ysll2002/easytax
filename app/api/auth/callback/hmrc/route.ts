@@ -78,16 +78,13 @@ export async function GET(req: NextRequest) {
     connected_at: new Date().toISOString(),
   };
 
-  const { data: existingRow } = await supabase
+  const { error: dbError } = await supabase
     .from('hmrc_connections')
-    .select('user_id')
-    .eq('user_id', profileId)
-    .maybeSingle();
+    .upsert({ user_id: profileId, ...payload }, { onConflict: 'user_id' });
 
-  if (existingRow) {
-    await supabase.from('hmrc_connections').update(payload).eq('user_id', profileId);
-  } else {
-    await supabase.from('hmrc_connections').insert({ user_id: profileId, ...payload });
+  if (dbError) {
+    const detail = encodeURIComponent(`DB error: ${dbError.message}`);
+    return NextResponse.redirect(new URL(`/dashboard/tax/hmrc?error=db&detail=${detail}`, req.url));
   }
 
   return NextResponse.redirect(new URL('/dashboard/tax', req.url));
