@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { CheckCircle2, Edit2 } from 'lucide-react';
 
 export default function NinoForm({ initialNino }: { initialNino: string }) {
+  const router = useRouter();
   const [editing, setEditing] = useState(!initialNino);
   const [nino,    setNino]    = useState(initialNino);
   const [input,   setInput]   = useState(initialNino);
@@ -34,6 +36,7 @@ export default function NinoForm({ initialNino }: { initialNino: string }) {
       if (d.error) { setError(d.error); return; }
       setNino(input);
       setEditing(false);
+      router.refresh();
     } finally {
       setSaving(false);
     }
