@@ -43,9 +43,15 @@ export async function GET(req: NextRequest) {
 
   const profileId = session.user.profileId;
 
-  // In sandbox, use known test-user identifiers; in production the user provides these during onboarding
-  const nino = process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null;
-  const vrn  = process.env.HMRC_ENV !== 'production' ? '999999999' : null;
+  // Preserve any NINO the user has already entered; only fall back to sandbox default if nothing stored
+  const { data: existing } = await supabase
+    .from('hmrc_connections')
+    .select('nino, vrn')
+    .eq('user_id', profileId)
+    .single();
+
+  const nino = existing?.nino ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
+  const vrn  = existing?.vrn  ?? (process.env.HMRC_ENV !== 'production' ? '999999999' : null);
 
   // Fetch the self-employment businessId from HMRC
   let businessId: string | null = null;

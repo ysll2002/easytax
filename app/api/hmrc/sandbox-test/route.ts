@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken } from '@/lib/hmrc';
+import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 import { createHash } from 'crypto';
 
@@ -108,9 +109,15 @@ export async function GET() {
       );
     }
 
-    const nino         = 'GW460330D';
-    const vrn          = '999999999';
-    const taxYear      = '2025-26';
+    const { data: conn } = await supabase
+      .from('hmrc_connections')
+      .select('nino, vrn')
+      .eq('user_id', profileId)
+      .single();
+
+    const nino    = conn?.nino ?? 'GW460330D';
+    const vrn     = conn?.vrn  ?? '999999999';
+    const taxYear = '2025-26';
     const PERIOD_START = '2025-04-06';
     const PERIOD_END   = '2025-07-05';
 
