@@ -157,23 +157,31 @@ export async function GET() {
     // ── 4. Obligations ───────────────────────────────────────────────────────
     const oblData = await call(results, 'Obligations – Income & Expenditure', `/obligations/details/${nino}/income-and-expenditure?typeOfBusiness=self-employment`, 'GET', token, fph, { accept: 'application/vnd.hmrc.3.0+json' });
 
-    // Use actual obligation period dates if available
+    // Use actual obligation period dates if available (HMRC returns lowercase status)
     let periodStart = PERIOD_START;
     let periodEnd   = PERIOD_END;
+    let oblTaxYear  = taxYear;
     try {
       type OblDetail = { periodStartDate: string; periodEndDate: string; status: string };
       const allObls: OblDetail[] = (oblData as { obligations?: { obligationDetails: OblDetail[] }[] })
         ?.obligations?.flatMap(o => o.obligationDetails) ?? [];
-      const open = allObls.find(o => o.status === 'Open');
-      if (open?.periodStartDate) periodStart = open.periodStartDate;
-      if (open?.periodEndDate)   periodEnd   = open.periodEndDate;
+      const open = allObls.find(o => o.status.toLowerCase() === 'open');
+      if (open?.periodStartDate) {
+        periodStart = open.periodStartDate;
+        periodEnd   = open.periodEndDate ?? PERIOD_END;
+        // Derive taxYear from the obligation period
+        const d = new Date(periodStart);
+        const yr2 = (d.getMonth() > 3 || (d.getMonth() === 3 && d.getDate() >= 6))
+          ? d.getFullYear() : d.getFullYear() - 1;
+        oblTaxYear = `${yr2}-${String(yr2 + 1).slice(2)}`;
+      }
     } catch { /* keep defaults */ }
 
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     await call(
       results,
       'Period Summaries – Quarterly Update',
-      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${taxYear}`,
+      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${oblTaxYear}`,
       'PUT', token, fph,
       {
         accept: 'application/vnd.hmrc.5.0+json',
@@ -195,33 +203,33 @@ export async function GET() {
     );
 
     // ── 6. Annual Adjustments ────────────────────────────────────────────────
-    await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${taxYear}`, 'PUT', token, fph, { body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
+    await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${oblTaxYear}`, 'PUT', token, fph, { body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
 
     // ── 7. Calculation – Trigger ─────────────────────────────────────────────
-    const calcTrigger = await call(results, 'Calculation – Trigger', `/individuals/calculations/${nino}/self-assessment/${taxYear}`, 'POST', token, fph, { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } });
+    const calcTrigger = await call(results, 'Calculation – Trigger', `/individuals/calculations/${nino}/self-assessment/${oblTaxYear}`, 'POST', token, fph, { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } });
 
     // ── 8. Calculation – Retrieve ────────────────────────────────────────────
     const calculationId = (calcTrigger as { calculationId?: string })?.calculationId;
     if (calculationId) {
-      await call(results, 'Calculation – Retrieve', `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.8.0+json' });
+      await call(results, 'Calculation – Retrieve', `/individuals/calculations/${nino}/self-assessment/${oblTaxYear}/${calculationId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.8.0+json' });
     } else {
       results.push({ name: 'Calculation – Retrieve', endpoint: '(skipped – no calculationId)', method: 'GET', status: null, ok: false, error: 'Skipped: no calculationId from trigger' });
     }
 
     // ── 9. Savings Income ────────────────────────────────────────────────────
-    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${taxYear}`, 'PUT', token, fph, { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
+    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
 
     // ── 10. Dividends Income ─────────────────────────────────────────────────
-    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${taxYear}`, 'PUT', token, fph, { body: { ukDividends: 300, otherUkDividends: 50 } });
+    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { ukDividends: 300, otherUkDividends: 50 } });
 
     // ── 11. Charitable Giving ────────────────────────────────────────────────
-    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`, 'PUT', token, fph, { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
 
     // ── 12. Individuals Charges ──────────────────────────────────────────────
-    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${taxYear}`, 'PUT', token, fph, { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
+    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${oblTaxYear}`, 'PUT', token, fph, { body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
 
     // ── 13. Business Source Adjustable Summary ───────────────────────────────
-    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
+    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${oblTaxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
 
     // ── 14–18. VAT MTD ───────────────────────────────────────────────────────
     // VAT APIs allow max 1-year range
