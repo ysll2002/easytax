@@ -115,11 +115,16 @@ export async function GET() {
       .eq('user_id', profileId)
       .single();
 
-    const nino    = conn?.nino ?? 'GW460330D';
-    const vrn     = conn?.vrn  ?? '999999999';
-    const taxYear = '2025-26';
-    const PERIOD_START = '2025-04-06';
-    const PERIOD_END   = '2025-07-05';
+    const nino = conn?.nino ?? 'GW460330D';
+    const vrn  = conn?.vrn  ?? '999999999';
+
+    // Current UK tax year (April 6 → April 5)
+    const now = new Date();
+    const yr  = (now.getMonth() > 3 || (now.getMonth() === 3 && now.getDate() >= 6))
+      ? now.getFullYear() : now.getFullYear() - 1;
+    const taxYear      = `${yr}-${String(yr + 1).slice(2)}`;
+    const PERIOD_START = `${yr}-04-06`;
+    const PERIOD_END   = `${yr}-07-05`;
 
     const jar = await cookies();
     let deviceData: Record<string, string> = {};
@@ -150,7 +155,23 @@ export async function GET() {
     } catch { /* keep fallback */ }
 
     // ── 4. Obligations ───────────────────────────────────────────────────────
-    await call(results, 'Obligations – Income & Expenditure', `/obligations/details/${nino}/income-and-expenditure?typeOfBusiness=self-employment`, 'GET', token, fph, { accept: 'application/vnd.hmrc.3.0+json' });
+    const oblData = await call(results, 'Obligations – Income & Expenditure', `/obligations/details/${nino}/income-and-expenditure?typeOfBusiness=self-employment`, 'GET', token, fph, { accept: 'application/vnd.hmrc.3.0+json' });
+
+    // Use actual obligation period dates if available
+    try {
+      type OblDetail = { periodStartDate: string; periodEndDate: string; status: string };
+      const allObls: OblDetail[] = (oblData as { obligations?: { obligationDetails: OblDetail[] }[] })
+        ?.obligations?.flatMap(o => o.obligationDetails) ?? [];
+      const open = allObls.find(o => o.status === 'Open');
+      if (open) {
+        (globalThis as Record<string, string>).__oblStart = open.periodStartDate;
+        (globalThis as Record<string, string>).__oblEnd   = open.periodEndDate;
+      }
+    } catch { /* keep defaults */ }
+    const periodStart = (globalThis as Record<string, string>).__oblStart ?? PERIOD_START;
+    const periodEnd   = (globalThis as Record<string, string>).__oblEnd   ?? PERIOD_END;
+    delete (globalThis as Record<string, string>).__oblStart;
+    delete (globalThis as Record<string, string>).__oblEnd;
 
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     await call(
@@ -161,7 +182,7 @@ export async function GET() {
       {
         accept: 'application/vnd.hmrc.5.0+json',
         body: {
-          periodDates:    { periodStartDate: PERIOD_START, periodEndDate: PERIOD_END },
+          periodDates:    { periodStartDate: periodStart, periodEndDate: periodEnd },
           periodIncome:   { turnover: 5000, other: 0 },
           periodExpenses: {
             costOfGoods:          { amount: 200 },
