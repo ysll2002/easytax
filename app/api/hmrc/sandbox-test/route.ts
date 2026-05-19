@@ -177,21 +177,22 @@ export async function GET() {
       }
     } catch { /* keep defaults */ }
 
-    // v5.0 only supports 2023-24+; use v3.0 for older obligation periods
-    const periodSummaryAccept = oblTaxYear >= '2023-24'
-      ? 'application/vnd.hmrc.5.0+json'
-      : 'application/vnd.hmrc.3.0+json';
+    // Self Employment Business (MTD) v5.0 only supports 2023-24+
+    // If obligation taxYear is older, fall back to current taxYear with current period
+    const psTaxYear = oblTaxYear >= '2023-24' ? oblTaxYear : taxYear;
+    const psStart   = oblTaxYear >= '2023-24' ? periodStart : PERIOD_START;
+    const psEnd     = oblTaxYear >= '2023-24' ? periodEnd   : PERIOD_END;
 
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     await call(
       results,
       'Period Summaries – Quarterly Update',
-      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${oblTaxYear}`,
+      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${psTaxYear}`,
       'PUT', token, fph,
       {
-        accept: periodSummaryAccept,
+        accept: 'application/vnd.hmrc.5.0+json',
         body: {
-          periodDates:    { periodStartDate: periodStart, periodEndDate: periodEnd },
+          periodDates:    { periodStartDate: psStart, periodEndDate: psEnd },
           periodIncome:   { turnover: 5000, other: 0 },
           periodExpenses: {
             costOfGoods:          { amount: 200 },
@@ -207,37 +208,28 @@ export async function GET() {
       },
     );
 
-    // Use current tax year for non-period-specific SA endpoints (BSAS needs 2019-20+)
-    const recentTaxYear = taxYear;
-
     // ── 6. Annual Adjustments ────────────────────────────────────────────────
-    await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${oblTaxYear}`, 'PUT', token, fph, { body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
+    await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${psTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.5.0+json', body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
 
     // ── 7. Calculation – Trigger ─────────────────────────────────────────────
-    const calcTrigger = await call(results, 'Calculation – Trigger', `/individuals/calculations/${nino}/self-assessment/${oblTaxYear}`, 'POST', token, fph, { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } });
+    const calcTrigger = await call(results, 'Calculation – Trigger', `/individuals/calculations/${nino}/self-assessment/${psTaxYear}`, 'POST', token, fph, { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } });
 
     // ── 8. Calculation – Retrieve ────────────────────────────────────────────
     const calculationId = (calcTrigger as { calculationId?: string })?.calculationId;
     if (calculationId) {
-      await call(results, 'Calculation – Retrieve', `/individuals/calculations/${nino}/self-assessment/${oblTaxYear}/${calculationId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.8.0+json' });
+      await call(results, 'Calculation – Retrieve', `/individuals/calculations/${nino}/self-assessment/${psTaxYear}/${calculationId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.8.0+json' });
     } else {
       results.push({ name: 'Calculation – Retrieve', endpoint: '(skipped – no calculationId)', method: 'GET', status: null, ok: false, error: 'Skipped: no calculationId from trigger' });
     }
 
-    // ── 9. Savings Income ────────────────────────────────────────────────────
-    await call(results, 'Income Received – Savings', `/individuals/income-received/savings/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { savingsAccounts: [{ accountName: 'Test Savings Account', grossInterest: 150 }] } });
+    // ── 9. Dividends Income (Individuals Dividends Income MTD v2.0) ──────────
+    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { ukDividends: 300, otherUkDividends: 50 } });
 
-    // ── 10. Dividends Income ─────────────────────────────────────────────────
-    await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { ukDividends: 300, otherUkDividends: 50 } });
+    // ── 10. Charitable Giving (Individuals Reliefs MTD v3.0) ─────────────────
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.3.0+json', body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
 
-    // ── 11. Charitable Giving ────────────────────────────────────────────────
-    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.3.0+json', body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
-
-    // ── 12. Individuals Charges ──────────────────────────────────────────────
-    await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
-
-    // ── 13. Business Source Adjustable Summary ───────────────────────────────
-    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${recentTaxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
+    // ── 11. Business Source Adjustable Summary (BSAS MTD v7.0) ───────────────
+    await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
 
     // ── 14–18. VAT MTD ───────────────────────────────────────────────────────
     // Use last 6 months to avoid DATE_RANGE_INVALID
