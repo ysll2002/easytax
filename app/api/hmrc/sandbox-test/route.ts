@@ -224,7 +224,7 @@ export async function GET() {
 
     // ── 9. Dividends Income (Individuals Dividends Income MTD v2.0) ──────────
     // Correct path for this API is /individuals/dividends-income/ not /income-received/dividends/
-    await call(results, 'Dividends Income', `/individuals/dividends-income/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { dividends: { ukDividends: 300, otherUkDividends: 50 } } });
+    await call(results, 'Dividends Income', `/individuals/dividends-income/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { ukDividends: 300.00 } });
 
     // ── 10. Charitable Giving (Individuals Reliefs MTD v3.0) ─────────────────
     await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.3.0+json', body: { giftAidPayments: { totalAmount: 100, oneOffAmount: 50 } } });
