@@ -231,7 +231,7 @@ export async function GET() {
     await call(results, 'Income Received – Dividends', `/individuals/income-received/dividends/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { ukDividends: 300, otherUkDividends: 50 } });
 
     // ── 11. Charitable Giving ────────────────────────────────────────────────
-    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.1.0+json', body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
+    await call(results, 'Reliefs – Charitable Giving', `/individuals/reliefs/charitable-giving/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.3.0+json', body: { giftAidPayments: { totalAmount: 100 }, gifts: { totalAmount: 20 } } });
 
     // ── 12. Individuals Charges ──────────────────────────────────────────────
     await call(results, 'Individuals Charges – Pension', `/individuals/charges/pensions/${nino}/${recentTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.2.0+json', body: { pensionSchemeTaxReference: ['00123456RA'], lumpSumBenefitTaken: { amount: 500 } } });
