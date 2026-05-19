@@ -66,8 +66,7 @@ export async function GET(req: NextRequest) {
     if (vrn) await getVatObligations(vrn, tokens.access_token);
   } catch { /* non-blocking */ }
 
-  await supabase.from('hmrc_connections').upsert({
-    user_id:          profileId,
+  const payload = {
     access_token:     tokens.access_token,
     refresh_token:    tokens.refresh_token ?? null,
     token_expires_at: tokens.expires_in
@@ -77,7 +76,19 @@ export async function GET(req: NextRequest) {
     vrn,
     business_id:  businessId,
     connected_at: new Date().toISOString(),
-  }, { onConflict: 'user_id' });
+  };
+
+  const { data: existingRow } = await supabase
+    .from('hmrc_connections')
+    .select('user_id')
+    .eq('user_id', profileId)
+    .maybeSingle();
+
+  if (existingRow) {
+    await supabase.from('hmrc_connections').update(payload).eq('user_id', profileId);
+  } else {
+    await supabase.from('hmrc_connections').insert({ user_id: profileId, ...payload });
+  }
 
   return NextResponse.redirect(new URL('/dashboard/tax', req.url));
 }
