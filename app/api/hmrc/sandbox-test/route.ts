@@ -158,20 +158,16 @@ export async function GET() {
     const oblData = await call(results, 'Obligations – Income & Expenditure', `/obligations/details/${nino}/income-and-expenditure?typeOfBusiness=self-employment`, 'GET', token, fph, { accept: 'application/vnd.hmrc.3.0+json' });
 
     // Use actual obligation period dates if available
+    let periodStart = PERIOD_START;
+    let periodEnd   = PERIOD_END;
     try {
       type OblDetail = { periodStartDate: string; periodEndDate: string; status: string };
       const allObls: OblDetail[] = (oblData as { obligations?: { obligationDetails: OblDetail[] }[] })
         ?.obligations?.flatMap(o => o.obligationDetails) ?? [];
       const open = allObls.find(o => o.status === 'Open');
-      if (open) {
-        (globalThis as Record<string, string>).__oblStart = open.periodStartDate;
-        (globalThis as Record<string, string>).__oblEnd   = open.periodEndDate;
-      }
+      if (open?.periodStartDate) periodStart = open.periodStartDate;
+      if (open?.periodEndDate)   periodEnd   = open.periodEndDate;
     } catch { /* keep defaults */ }
-    const periodStart = (globalThis as Record<string, string>).__oblStart ?? PERIOD_START;
-    const periodEnd   = (globalThis as Record<string, string>).__oblEnd   ?? PERIOD_END;
-    delete (globalThis as Record<string, string>).__oblStart;
-    delete (globalThis as Record<string, string>).__oblEnd;
 
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     await call(
