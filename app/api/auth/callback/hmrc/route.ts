@@ -66,7 +66,7 @@ export async function GET(req: NextRequest) {
     if (vrn) await getVatObligations(vrn, tokens.access_token);
   } catch { /* non-blocking */ }
 
-  const payload = {
+  const payload: Record<string, string | null> = {
     access_token:     tokens.access_token,
     refresh_token:    tokens.refresh_token ?? null,
     token_expires_at: tokens.expires_in
@@ -74,9 +74,10 @@ export async function GET(req: NextRequest) {
       : null,
     nino,
     vrn,
-    business_id:  businessId,
     connected_at: new Date().toISOString(),
   };
+  // Only include business_id if we found one (column may not exist yet)
+  if (businessId) payload.business_id = businessId;
 
   const { error: dbError } = await supabase
     .from('hmrc_connections')
