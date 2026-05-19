@@ -43,15 +43,16 @@ export async function GET(req: NextRequest) {
 
   const profileId = session.user.profileId;
 
-  // Preserve any NINO the user has already entered; only fall back to sandbox default if nothing stored
+  // Preserve NINO/VRN the user has already entered; use maybeSingle to avoid error on missing row
   const { data: existing } = await supabase
     .from('hmrc_connections')
     .select('nino, vrn')
     .eq('user_id', profileId)
-    .single();
+    .maybeSingle();
 
-  const nino = existing?.nino ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
-  const vrn  = existing?.vrn  ?? (process.env.HMRC_ENV !== 'production' ? '999999999' : null);
+  // Never overwrite a real NINO/VRN with sandbox defaults
+  const nino = existing?.nino && existing.nino !== 'GW460330D' ? existing.nino : (existing?.nino ?? null);
+  const vrn  = existing?.vrn  && existing.vrn  !== '999999999' ? existing.vrn  : (existing?.vrn  ?? null);
 
   // Fetch the self-employment businessId from HMRC
   let businessId: string | null = null;
