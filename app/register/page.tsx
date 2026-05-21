@@ -85,6 +85,8 @@ export default function Register() {
             </span>
           </label>
 
+          {error && <p className="text-sm py-2 px-3 rounded-lg mb-4" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
+
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
             <span className="text-xs" style={{ color: '#9A8F83' }}>or</span>
@@ -113,7 +115,7 @@ export default function Register() {
                 onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))} style={inputStyle} />
             </div>
 
-            {error && <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
+            {error && agreed && <p className="text-sm py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
 
             <button type="submit" disabled={loading}
               className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2"
