@@ -6,12 +6,14 @@ import SiteHeader from '@/components/SiteHeader';
 
 export default function Register() {
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
+  const [agreed, setAgreed] = useState(false);
   const [error, setError]   = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!agreed) { setError('You must agree to the Terms & Conditions and Privacy Policy'); return; }
     if (form.password !== form.confirm) { setError('Passwords do not match'); return; }
     if (form.password.length < 8)       { setError('Password must be at least 8 characters'); return; }
 
@@ -50,7 +52,11 @@ export default function Register() {
         <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
           {/* Google */}
           <button
-            onClick={() => signIn('google', { callbackUrl: '/dashboard' })}
+            onClick={() => {
+              if (!agreed) { setError('You must agree to the Terms & Conditions and Privacy Policy'); return; }
+              setError('');
+              signIn('google', { callbackUrl: '/dashboard' });
+            }}
             className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-medium text-sm mb-6"
             style={{ backgroundColor: '#FDFCF8', border: '1.5px solid #DDD5C8', color: '#1C1208' }}
           >
@@ -62,6 +68,22 @@ export default function Register() {
             </svg>
             Continue with Google
           </button>
+
+          {/* T&C consent */}
+          <label className="flex items-start gap-3 mb-5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={e => { setAgreed(e.target.checked); if (e.target.checked) setError(''); }}
+              style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#C4622D', cursor: 'pointer' }}
+            />
+            <span className="text-sm" style={{ color: '#4A4035', lineHeight: '1.5' }}>
+              I agree to the{' '}
+              <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>Terms &amp; Conditions</Link>
+              {' '}and{' '}
+              <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>Privacy Policy</Link>
+            </span>
+          </label>
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
