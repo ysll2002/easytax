@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 type Category = 'unreviewed' | 'business_income' | 'business_expense' | 'personal';
 
@@ -23,10 +24,9 @@ const catMap = Object.fromEntries(CATEGORIES.map(c => [c.value, c]));
 
 type Filter = 'all' | Category;
 
-export default function ReconcileClient({ accountName, accountId, accessToken }: {
+export default function ReconcileClient({ accountName, accountId }: {
   accountName: string;
   accountId: string;
-  accessToken: string;
 }) {
   const [transactions, setTransactions] = useState<Tx[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,12 +41,12 @@ export default function ReconcileClient({ accountName, accountId, accessToken }:
         if (data.error) { setError(data.error); return; }
         setTransactions((data.transactions ?? []).map((tx: Omit<Tx, 'category'>) => ({
           ...tx,
-          category: (tx.amount > 0 ? 'unreviewed' : 'unreviewed') as Category,
+          category: 'unreviewed' as Category,
         })));
       })
       .catch(() => setError('Failed to load transactions'))
       .finally(() => setLoading(false));
-  }, [accountId, accessToken]);
+  }, [accountId]);
 
   const setCategory = (id: string, cat: Category) => {
     setTransactions(prev => prev.map(tx => tx.transaction_id === id ? { ...tx, category: cat } : tx));
@@ -129,11 +129,45 @@ export default function ReconcileClient({ accountName, accountId, accessToken }:
 
       {/* Transaction list */}
       {loading ? (
-        <p style={{ color: '#9A8F83', textAlign: 'center', padding: '3rem' }}>Loading transactions…</p>
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#9A8F83' }}>Loading transactions…</div>
+      ) : error === 'token_expired' || error === 'token_refresh_failed' ? (
+        <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ backgroundColor: '#F5EDDC' }}>🔄</div>
+            <div>
+              <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Bank connection expired</p>
+              <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>Your bank connection has expired. Reconnect to continue importing transactions.</p>
+              <Link href="/dashboard/tax/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+                Reconnect Bank →
+              </Link>
+            </div>
+          </div>
+        </div>
       ) : error ? (
-        <p style={{ color: '#C4622D', textAlign: 'center', padding: '3rem' }}>{error}</p>
+        <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ backgroundColor: '#F5EDDC' }}>🏦</div>
+            <div>
+              <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Could not load transactions</p>
+              <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>There was a problem fetching your bank data. Try reconnecting your account.</p>
+              <Link href="/dashboard/tax/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+                Reconnect Bank →
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : filtered.length === 0 && transactions.length === 0 ? (
+        <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ backgroundColor: '#F5EDDC' }}>📭</div>
+            <div>
+              <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>No transactions found</p>
+              <p className="text-sm" style={{ color: '#9A8F83', lineHeight: 1.6 }}>No transactions in the last 90 days for this account. If you think this is wrong, try reconnecting your bank.</p>
+            </div>
+          </div>
+        </div>
       ) : filtered.length === 0 ? (
-        <p style={{ color: '#9A8F83', textAlign: 'center', padding: '3rem' }}>No transactions found.</p>
+        <p style={{ color: '#9A8F83', textAlign: 'center', padding: '3rem' }}>No transactions match your filter.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           {filtered.map(tx => (

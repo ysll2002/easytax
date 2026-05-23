@@ -47,5 +47,5 @@ export default async function ReconcilePage() {
     );
   }
 
-  return <ReconcileClient accountName={bank.account_name} accountId={bank.account_id} accessToken={bank.access_token} />;
+  return <ReconcileClient accountName={bank.account_name} accountId={bank.account_id} />;
 }
