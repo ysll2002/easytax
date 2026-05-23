@@ -3,6 +3,7 @@ import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactWidget from "@/components/ContactWidget";
 
 const playfair = Playfair_Display({
@@ -91,6 +92,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Providers>{children}</Providers>
         <ContactWidget />
         {process.env.VERCEL_ENV === 'production' && <Analytics />}
+        {process.env.VERCEL_ENV === 'production' && <GoogleAnalytics gaId="G-ZF21G9RTJW" />}
       </body>
     </html>
   );
