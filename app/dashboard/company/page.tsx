@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Receipt, FileText, BarChart2, TrendingUp, ChevronRight, CheckCircle2, Lock } from 'lucide-react';
+import { Receipt, FileText, BarChart2, TrendingUp, RefreshCw, ChevronRight, CheckCircle2, Lock } from 'lucide-react';
 
 export default async function CompanyPage() {
   const session = await auth();
@@ -52,6 +52,13 @@ export default async function CompanyPage() {
       desc: 'Real-time P&L statement categorised by income type and expense class.',
       status: 'coming_soon',
       badge: 'Coming Soon',
+    },
+    {
+      icon: RefreshCw,
+      label: 'Reconcile Transactions',
+      desc: 'Categorise bank transactions as business income, expense, or personal.',
+      href: '/dashboard/reconcile',
+      status: 'available' as const,
     },
   ];
 

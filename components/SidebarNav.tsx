@@ -14,7 +14,8 @@ const groups = [
   {
     label: 'Company',
     items: [
-      { href: '/dashboard/company', label: 'Company Tax', icon: Building2 },
+      { href: '/dashboard/company',   label: 'Company Tax', icon: Building2 },
+      { href: '/dashboard/reconcile', label: 'Reconcile',   icon: RefreshCw },
     ],
   },
   {
