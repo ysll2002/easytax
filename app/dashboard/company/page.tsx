@@ -1,7 +1,7 @@
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Receipt, FileText, BarChart2, TrendingUp, RefreshCw, ChevronRight, CheckCircle2, Lock } from 'lucide-react';
+import { Receipt, FileText, BarChart2, TrendingUp, RefreshCw, BookOpen, ChevronRight, CheckCircle2, Lock } from 'lucide-react';
 
 export default async function CompanyPage() {
   const session = await auth();
@@ -33,25 +33,32 @@ export default async function CompanyPage() {
       badge: hasVrn ? undefined : 'Requires VRN',
     },
     {
-      icon: FileText,
-      label: 'CT600 Company Tax Return',
-      desc: 'Corporation Tax return filed to HMRC — covers your company profit and tax owed.',
-      status: 'coming_soon',
-      badge: 'Coming Soon',
+      icon: TrendingUp,
+      label: 'Profit & Loss',
+      desc: 'Real-time P&L statement categorised by income type and expense class.',
+      href: '/dashboard/company/pl',
+      status: 'available' as const,
     },
     {
       icon: BarChart2,
       label: 'Balance Sheet',
-      desc: 'Auto-generated from your reconciled transactions — assets, liabilities, and equity.',
-      status: 'coming_soon',
+      desc: 'Auto-generated from your bank balance and P&L — assets, liabilities, and equity.',
+      href: '/dashboard/company/balance-sheet',
+      status: 'available' as const,
+    },
+    {
+      icon: FileText,
+      label: 'CT600 Company Tax Return',
+      desc: 'Corporation Tax return filed to HMRC — covers your company profit and tax owed.',
+      status: 'coming_soon' as const,
       badge: 'Coming Soon',
     },
     {
-      icon: TrendingUp,
-      label: 'Profit & Loss',
-      desc: 'Real-time P&L statement categorised by income type and expense class.',
-      status: 'coming_soon',
-      badge: 'Coming Soon',
+      icon: BookOpen,
+      label: 'Chart of Accounts',
+      desc: 'Standard UK SME double-entry account structure (FRS 102) used for all reports.',
+      href: '/dashboard/company/accounts',
+      status: 'available' as const,
     },
     {
       icon: RefreshCw,
