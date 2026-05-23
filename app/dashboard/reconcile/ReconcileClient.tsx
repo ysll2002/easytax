@@ -36,7 +36,7 @@ export default function ReconcileClient({ accountName, accountId }: {
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const [search, setSearch] = useState('');
-  const [chatOpen, setChatOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(true);
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
