@@ -18,6 +18,9 @@ const SEED_TOPICS = [
   'The most common allowable expenses UK freelancers miss on their Self Assessment return',
   'Making Tax Digital for Income Tax: what self-employed people need to do before April 2026',
   'How to calculate your tax-free personal allowance and Marriage Allowance as a freelancer',
+  'How to prepare your first VAT return as a UK limited company',
+  'CT600 explained: what every UK limited company director needs to know about Corporation Tax',
+  'Balance Sheet basics for small UK limited companies: what you need to include',
 ];
 
 async function generateArticle(topic: string): Promise<{ title: string; excerpt: string; content: string }> {
@@ -28,12 +31,12 @@ async function generateArticle(topic: string): Promise<{ title: string; excerpt:
     max_tokens: 1500,
     messages: [{
       role: 'user',
-      content: `You are a UK tax expert writing for EasyTax, a platform for UK freelancers and self-employed professionals.
+      content: `You are a UK tax expert writing for EasyTax, a platform for UK freelancers, sole traders, and limited companies.
 
 Today is ${today}. Write a practical, informative article about the following topic:
 "${topic}"
 
-Make it specific to UK tax rules, accurate, and actionable for freelancers.
+Make it specific to UK tax rules, accurate, and actionable. Write for the most relevant audience (freelancers/sole traders OR limited company directors, depending on the topic).
 
 Return ONLY valid JSON (no markdown, no code blocks) in this exact format:
 {
@@ -85,7 +88,8 @@ export async function GET(req: NextRequest) {
         max_tokens: 100,
         messages: [{
           role: 'user',
-          content: `You are a UK tax expert. Suggest ONE specific, practical article topic for UK freelancers and self-employed people.
+          content: `You are a UK tax expert. Suggest ONE specific, practical article topic for a UK tax audience.
+Topics can cover any of: Self Assessment, Making Tax Digital (MTD ITSA), freelancer/sole trader expenses, VAT returns, Corporation Tax (CT600), company accounts (Balance Sheet, P&L), or general UK business tax.
 Avoid these recent topics: ${recentTitles || 'none'}.
 Reply with ONLY the topic sentence, no explanation.`,
         }],
