@@ -177,7 +177,7 @@ export default function ReconcileClient({ accountName, accountId }: {
                 <p style={{ fontSize: '0.75rem', color: '#9A8F83', marginTop: '0.15rem' }}>{new Date(tx.timestamp).toLocaleDateString('en-GB')}</p>
               </div>
               <p style={{ fontWeight: 700, color: tx.amount >= 0 ? '#6B8E6E' : '#C4622D', whiteSpace: 'nowrap' }}>
-                {tx.amount >= 0 ? '+' : ''}£{Math.abs(tx.amount).toFixed(2)}
+                {tx.amount >= 0 ? '+' : '-'}£{Math.abs(tx.amount).toFixed(2)}
               </p>
               <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                 {CATEGORIES.map(c => (
