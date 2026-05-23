@@ -155,7 +155,7 @@ export default function PLClient() {
             </div>
             <div className="px-6" style={{ backgroundColor: '#FFFFFF' }}>
               {pl.expenseLines.map((line, i) => (
-                <Row key={i} label={line.label ?? line.account} value={fmt(line.amount)} indent />
+                <Row key={i} label={line.account} value={fmt(line.amount)} indent />
               ))}
               <Row label="Total Expenses" value={fmt(pl.totalExpenses)} bold color="#C4622D" />
             </div>
