@@ -179,11 +179,32 @@ export default function TasksPage() {
           Analysing your HMRC obligations…
         </div>
       ) : error ? (
-        <div className="flex items-center gap-2 p-4 rounded-xl text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>
-          <AlertCircle size={16} />
-          {error === 'No HMRC connection'
-            ? <span>Connect HMRC first. <Link href="/dashboard/tax" style={{ color: '#C4622D' }}>Self Assessment →</Link></span>
-            : error}
+        <div className="p-5 rounded-2xl text-sm" style={{ backgroundColor: '#FEE2E2', border: '1px solid #FCA5A5' }}>
+          <div className="flex items-start gap-3">
+            <AlertCircle size={18} color="#991B1B" className="flex-shrink-0 mt-0.5" />
+            <div>
+              {error === 'No HMRC connection' ? (
+                <>
+                  <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>HMRC 未连接</p>
+                  <p style={{ color: '#7F1D1D' }}>请先完成 Self Assessment 的前两个步骤。<Link href="/dashboard/tax" style={{ color: '#C4622D' }}>前往设置 →</Link></p>
+                </>
+              ) : error === 'NINO_MISMATCH' ? (
+                <>
+                  <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>NINO 与 HMRC 登录账号不匹配</p>
+                  <p className="mb-3" style={{ color: '#7F1D1D', lineHeight: 1.6 }}>
+                    你在 Step 1 填写的 NINO，与连接 HMRC 时使用的 Government Gateway 账号不属于同一个用户。
+                    请确认两者一致，然后重新连接。
+                  </p>
+                  <Link href="/dashboard/tax" style={{ color: '#C4622D', fontWeight: 600 }}>去检查 NINO →</Link>
+                </>
+              ) : (
+                <>
+                  <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>无法加载 HMRC 数据</p>
+                  <p style={{ color: '#7F1D1D' }}>{error}</p>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       ) : tasks.length === 0 ? (
         <div className="p-6 rounded-2xl text-center" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>

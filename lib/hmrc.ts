@@ -111,6 +111,9 @@ async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
   });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
+    if (res.status === 403 && body.includes('CLIENT_OR_AGENT_NOT_AUTHORISED')) {
+      throw new Error('NINO_MISMATCH');
+    }
     throw new Error(`HMRC ${res.status}: ${body}`);
   }
   return res.json();

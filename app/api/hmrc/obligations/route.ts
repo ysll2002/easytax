@@ -26,6 +26,9 @@ export async function GET() {
     return NextResponse.json({ obligations });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
+    if (msg === 'NINO_MISMATCH') {
+      return NextResponse.json({ error: 'NINO_MISMATCH' }, { status: 403 });
+    }
     return NextResponse.json({ error: msg }, { status: 502 });
   }
 }
