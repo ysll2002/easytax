@@ -26,6 +26,13 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
 
+      {/* ── Free announcement bar ── */}
+      <div style={{ backgroundColor: '#6B8E6E', padding: '0.6rem 1rem', textAlign: 'center' }}>
+        <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
+          🎉 EasyTax is completely free — no subscriptions, no per-filing fees, ever.
+        </p>
+      </div>
+
       <SiteHeader />
 
       <main className="flex-grow">
@@ -37,14 +44,9 @@ export default async function Home() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap gap-2 mb-6 sm:mb-10">
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
-                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                    Now supporting limited companies
-                  </div>
-                  <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold" style={{ border: '1px solid #6B8E6E40', color: '#6B8E6E', backgroundColor: '#F0F5F0' }}>
-                    100% Free
-                  </div>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                  Now supporting limited companies
                 </div>
 
                 <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
@@ -59,7 +61,7 @@ export default async function Home() {
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                    Get Early Access
+                    Start for Free →
                   </Link>
                   <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}>
                     See what we cover →
@@ -318,7 +320,7 @@ export default async function Home() {
               Free for UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes.
             </p>
             <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-              Get Early Access
+              Start for Free →
             </Link>
           </div>
         </section>
