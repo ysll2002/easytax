@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
@@ -5,6 +6,12 @@ import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: 'EasyTax — Free UK Tax Software for Freelancers & Limited Companies',
+  description: 'Free UK tax software. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC in minutes. Built for freelancers, sole traders and limited companies.',
+  alternates: { canonical: 'https://easytax.vip' },
+};
 
 export default async function Home() {
   const session = await auth();
@@ -30,9 +37,14 @@ export default async function Home() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  Now supporting limited companies
+                <div className="flex flex-wrap gap-2 mb-6 sm:mb-10">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                    Now supporting limited companies
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold" style={{ border: '1px solid #6B8E6E40', color: '#6B8E6E', backgroundColor: '#F0F5F0' }}>
+                    100% Free
+                  </div>
                 </div>
 
                 <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
@@ -188,10 +200,9 @@ export default async function Home() {
                 </p>
                 <div className="flex flex-col gap-2 mb-8">
                   <div className="flex items-baseline gap-2">
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.75rem', fontWeight: 700, color: '#1C1208', lineHeight: 1 }}>£9.9</span>
-                    <span style={{ color: '#9A8F83' }}>+ VAT / Self Assessment</span>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.75rem', fontWeight: 700, color: '#6B8E6E', lineHeight: 1 }}>Free</span>
                   </div>
-                  <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>Company accounts from £29 · Founder pricing locked for life</p>
+                  <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>No subscriptions, no per-filing fees — EasyTax is completely free to use.</p>
                 </div>
                 <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
                   Start Filing →
@@ -202,7 +213,7 @@ export default async function Home() {
                 {[
                   { Icon: ShieldCheck,  title: 'Connect your accounts',   desc: 'Link your Government Gateway ID and business bank account. We pull your records automatically — no manual data entry.',  color: '#FF6B35' },
                   { Icon: Sparkles,     title: 'AI does the heavy lifting', desc: 'Our AI categorises every transaction, calculates allowable expenses, and prepares your return or company accounts.', color: '#7C3AED' },
-                  { Icon: CheckCircle2, title: 'Review, pay & file',       desc: 'Check a plain-English summary of your return. Pay the flat fee and we submit directly to HMRC — instantly confirmed.',  color: '#059669' },
+                  { Icon: CheckCircle2, title: 'Review & file',             desc: 'Check a plain-English summary of your return and submit directly to HMRC — instantly confirmed. Completely free.',  color: '#059669' },
                 ].map((step) => (
                   <div key={step.title} className="flex gap-4 p-5 rounded-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: step.color + '15' }}>
@@ -227,7 +238,7 @@ export default async function Home() {
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
-                { q: 'Does EasyTax support limited companies?',     a: 'Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Company accounts are available from £29 + VAT.' },
+                { q: 'Does EasyTax support limited companies?',     a: 'Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Everything is completely free.' },
                 { q: 'What VAT schemes do you support?',            a: 'We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.' },
                 { q: 'How is the Balance Sheet generated?',         a: 'EasyTax automatically derives your Balance Sheet from your reconciled bank transactions, categorised income and expenses, and opening balances you provide during setup.' },
                 { q: 'What is the CT600 and do I need it?',         a: 'CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax prepares and submits it based on your P&L and company accounts.' },
@@ -304,7 +315,7 @@ export default async function Home() {
               <em style={{ color: '#C4622D', fontStyle: 'italic' }}>the paperwork.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
-              Get early access and lock in founder pricing for life — whether you&apos;re a freelancer or running a limited company.
+              Free for UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes.
             </p>
             <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
               Get Early Access

@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import NinoForm from '@/components/NinoForm';
+import TasksTimeline from '@/components/TasksTimeline';
 import { CheckCircle2, ChevronRight, History, Edit2 } from 'lucide-react';
 
 export default async function TaxPage() {
@@ -70,26 +71,26 @@ export default async function TaxPage() {
         {/* Step 3: Self Assessment */}
         <Step n={3} title="Self Assessment" done={false} locked={!hasSA}>
           {hasSA ? (
-            <div className="space-y-3">
-              <ActionLink
-                href="/dashboard/tax/tasks"
-                label="Quarterly Updates & Filing"
-                desc="Submit quarterly income & expense updates and complete your annual declaration"
-                primary
-              />
-              <ActionLink
-                href="/dashboard/tax/banking"
-                label="Connect Bank Account"
-                desc={bank ? `Connected · ${bank.account_name}` : 'Import transactions via Open Banking'}
-                done={!!bank}
-              />
-              {hmrc?.vrn && (
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9A8F83' }}>Tax Tasks · past year &amp; next 12 months</p>
+              </div>
+              <TasksTimeline />
+              <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid #F0EBE1' }}>
                 <ActionLink
-                  href="/dashboard/tax/vat"
-                  label="VAT Return"
-                  desc={`VRN: ${hmrc.vrn} · File quarterly VAT returns via Making Tax Digital`}
+                  href="/dashboard/tax/banking"
+                  label="Connect Bank Account"
+                  desc={bank ? `Connected · ${bank.account_name}` : 'Import transactions via Open Banking'}
+                  done={!!bank}
                 />
-              )}
+                {hmrc?.vrn && (
+                  <ActionLink
+                    href="/dashboard/tax/vat"
+                    label="VAT Return"
+                    desc={`VRN: ${hmrc.vrn} · File quarterly VAT returns via Making Tax Digital`}
+                  />
+                )}
+              </div>
             </div>
           ) : (
             <p className="text-sm" style={{ color: '#9A8F83' }}>
@@ -101,7 +102,7 @@ export default async function TaxPage() {
       </div>
 
       {hasSA && (
-        <div className="mt-8 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
+        <div className="mt-6 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
           <History size={14} color="#9A8F83" />
           <Link href="/dashboard/tax/history" style={{ color: '#9A8F83', textDecoration: 'none', fontSize: '0.875rem' }}>
             View filing history
