@@ -59,7 +59,7 @@ export default async function Home() {
                 </h1>
 
                 <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '520px' }}>
-                  From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts. <strong style={{ color: '#1C1208' }}>£0/year, forever.</strong>
+                  From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts. <strong style={{ color: '#1C1208' }}>£0/year.</strong>
                 </p>
 
                 <div className="flex items-center gap-3 mb-7 flex-wrap">
