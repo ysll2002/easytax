@@ -17,11 +17,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   return [
-    { url: base,                lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
-    { url: `${base}/register`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${base}/login`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${base}/privacy`,   lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
-    { url: `${base}/terms`,     lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
+    { url: base,                          lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
+    { url: `${base}/coconut-alternative`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${base}/register`,            lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${base}/login`,               lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    { url: `${base}/privacy`,             lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
+    { url: `${base}/terms`,               lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
     ...articleUrls,
   ];
 }

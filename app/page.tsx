@@ -23,13 +23,16 @@ export default async function Home() {
     .order('published_at', { ascending: false })
     .limit(3);
 
+  const Q1_DEADLINE = new Date('2026-08-05T23:59:59Z');
+  const daysToQ1 = Math.max(0, Math.ceil((Q1_DEADLINE.getTime() - Date.now()) / 86_400_000));
+
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
 
-      {/* ── Free announcement bar ── */}
-      <div style={{ backgroundColor: '#6B8E6E', padding: '0.6rem 1rem', textAlign: 'center' }}>
+      {/* ── MTD 2026 announcement bar ── */}
+      <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          🎉 EasyTax is completely free — no subscriptions, no per-filing fees, ever.
+          <span style={{ color: '#C4622D' }}>MTD ITSA is live.</span> Q1 update due 5 Aug 2026 — <span style={{ color: '#6B8E6E' }}>EasyTax does it free.</span>
         </p>
       </div>
 
@@ -44,24 +47,36 @@ export default async function Home() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-10" style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#F0EBE1' }}>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
                   <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  Now supporting limited companies
+                  {daysToQ1} days until your first MTD ITSA quarterly update
                 </div>
 
-                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
-                  Self Assessment, VAT &<br />
-                  <span style={{ color: '#6B8E6E' }}>Company Accounts,</span>{' '}
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>sorted.</em>
+                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
+                  MTD ITSA is here.<br />
+                  <span style={{ color: '#6B8E6E' }}>File quarterly to HMRC</span>{' '}
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>for free.</em>
                 </h1>
 
-                <p className="text-base sm:text-xl leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: '500px' }}>
-                  One platform for UK freelancers and limited companies. File to HMRC in minutes — Self Assessment, VAT returns, CT600, Balance Sheet, and P&amp;L.
+                <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '520px' }}>
+                  From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts. <strong style={{ color: '#1C1208' }}>£0/year, forever.</strong>
                 </p>
+
+                <div className="flex items-center gap-3 mb-7 flex-wrap">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>
+                    £0 / year
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
+                    No card needed
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
+                    HMRC-recognised
+                  </span>
+                </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                    Start for Free →
+                    Get MTD-ready for free →
                   </Link>
                   <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}>
                     See what we cover →
