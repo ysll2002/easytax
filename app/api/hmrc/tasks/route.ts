@@ -51,7 +51,7 @@ function fmtPeriod(start: string, end: string): string {
   return `${s} – ${e}`;
 }
 
-// Generate SA payment deadlines for a given tax year end (e.g. 2025 for 2024/25)
+// Generate SA payment deadlines for a given tax year end (e.g. 2026 for 2025/26)
 function paymentTasks(taxYearEndYear: number): Task[] {
   const jan31 = `${taxYearEndYear + 1}-01-31`;
   const jul31 = `${taxYearEndYear + 1}-07-31`;
