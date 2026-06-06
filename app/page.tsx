@@ -57,7 +57,7 @@ export default async function Home() {
                   {t('hero.pill', { days: daysToQ1 })}
                 </div>
 
-                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
+                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
                   {t('hero.title1')}<br />
                   <span style={{ color: '#6B8E6E' }}>{t('hero.title2')}</span>{' '}
                   <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('hero.title3')}</em>
