@@ -2,8 +2,8 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useState, useTransition, useRef, useEffect } from 'react';
 import { setLocaleAction } from '@/lib/locale-actions';
-import { locales, localeNames, type Locale } from '@/i18n/routing';
-import { Globe, Check } from 'lucide-react';
+import { locales, localeNames, localeFlags, type Locale } from '@/i18n/routing';
+import { Check } from 'lucide-react';
 
 export default function LanguageSwitcher() {
   const current = useLocale() as Locale;
@@ -36,7 +36,7 @@ export default function LanguageSwitcher() {
         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
         style={{ color: '#4A4035', backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8', cursor: 'pointer' }}
       >
-        <Globe size={13} strokeWidth={2} />
+        <span style={{ fontSize: '1rem', lineHeight: 1 }} aria-hidden>{localeFlags[current]}</span>
         <span>{localeNames[current]}</span>
       </button>
 
@@ -70,7 +70,10 @@ export default function LanguageSwitcher() {
                   fontWeight: active ? 600 : 500,
                 }}
               >
-                <span>{localeNames[loc]}</span>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem' }}>
+                  <span style={{ fontSize: '1.05rem', lineHeight: 1 }} aria-hidden>{localeFlags[loc]}</span>
+                  <span>{localeNames[loc]}</span>
+                </span>
                 {active && <Check size={14} color="#6B8E6E" />}
               </button>
             );

@@ -12,6 +12,16 @@ export const localeNames: Record<Locale, string> = {
   ar: 'العربية',
 };
 
+export const localeFlags: Record<Locale, string> = {
+  en: '🇬🇧',
+  es: '🇪🇸',
+  fr: '🇫🇷',
+  zh: '🇨🇳',
+  ko: '🇰🇷',
+  ja: '🇯🇵',
+  ar: '🇸🇦',
+};
+
 export const rtlLocales: ReadonlyArray<Locale> = ['ar'] as const;
 export const isRtl = (l: string) => (rtlLocales as readonly string[]).includes(l);
 
