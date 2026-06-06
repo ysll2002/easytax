@@ -1,10 +1,12 @@
 'use client';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
 export default function Register() {
+  const t = useTranslations('auth.register');
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [agreed, setAgreed] = useState(false);
   const [error, setError]   = useState('');
@@ -13,9 +15,9 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    if (!agreed) { setError('You must agree to the Terms & Conditions and Privacy Policy'); return; }
-    if (form.password !== form.confirm) { setError('Passwords do not match'); return; }
-    if (form.password.length < 8)       { setError('Password must be at least 8 characters'); return; }
+    if (!agreed) { setError(t('mustAgree')); return; }
+    if (form.password !== form.confirm) { setError(t('passwordsMismatch')); return; }
+    if (form.password.length < 8)       { setError(t('passwordTooShort')); return; }
 
     setLoading(true);
     const res = await fetch('/api/register', {
@@ -25,9 +27,8 @@ export default function Register() {
     });
     const data = await res.json();
 
-    if (!res.ok) { setError(data.error || 'Registration failed'); setLoading(false); return; }
+    if (!res.ok) { setError(data.error || t('registrationFailed')); setLoading(false); return; }
 
-    // Auto sign in after registration
     await signIn('credentials', { email: form.email, password: form.password, callbackUrl: '/dashboard' });
   };
 
@@ -44,16 +45,15 @@ export default function Register() {
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            Create your account
+            {t('title')}
           </h1>
-          <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>Start filing your taxes in minutes</p>
+          <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>{t('subtitle')}</p>
         </div>
 
         <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-          {/* Google */}
           <button
             onClick={() => {
-              if (!agreed) { setError('You must agree to the Terms & Conditions and Privacy Policy'); return; }
+              if (!agreed) { setError(t('mustAgree')); return; }
               setError('');
               signIn('google', { callbackUrl: '/dashboard' });
             }}
@@ -66,10 +66,9 @@ export default function Register() {
               <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
               <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
             </svg>
-            Continue with Google
+            {t('continueGoogle')}
           </button>
 
-          {/* T&C consent */}
           <label className="flex items-start gap-3 mb-5 cursor-pointer">
             <input
               type="checkbox"
@@ -78,10 +77,10 @@ export default function Register() {
               style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#C4622D', cursor: 'pointer' }}
             />
             <span className="text-sm" style={{ color: '#4A4035', lineHeight: '1.5' }}>
-              I agree to the{' '}
-              <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>Terms &amp; Conditions</Link>
-              {' '}and{' '}
-              <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>Privacy Policy</Link>
+              {t('agreementPrefix')}{' '}
+              <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>{t('terms')}</Link>
+              {' '}{t('and')}{' '}
+              <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>{t('privacy')}</Link>
             </span>
           </label>
 
@@ -89,29 +88,29 @@ export default function Register() {
 
           <div className="flex items-center gap-3 mb-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
-            <span className="text-xs" style={{ color: '#9A8F83' }}>or</span>
+            <span className="text-xs" style={{ color: '#9A8F83' }}>{t('or')}</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Full name</label>
-              <input type="text" required placeholder="Jane Doe" value={form.name}
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('fullName')}</label>
+              <input type="text" required placeholder={t('namePlaceholder')} value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Email address</label>
-              <input type="email" required placeholder="you@example.com" value={form.email}
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('email')}</label>
+              <input type="email" required placeholder={t('emailPlaceholder')} value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Password</label>
-              <input type="password" required placeholder="Min. 8 characters" value={form.password}
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('password')}</label>
+              <input type="password" required placeholder={t('passwordPlaceholder')} value={form.password}
                 onChange={e => setForm(f => ({ ...f, password: e.target.value }))} style={inputStyle} />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Confirm password</label>
-              <input type="password" required placeholder="Repeat password" value={form.confirm}
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('confirmPassword')}</label>
+              <input type="password" required placeholder={t('confirmPlaceholder')} value={form.confirm}
                 onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))} style={inputStyle} />
             </div>
 
@@ -120,13 +119,13 @@ export default function Register() {
             <button type="submit" disabled={loading}
               className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2"
               style={{ backgroundColor: loading ? '#DDD5C8' : '#C4622D', color: '#FDFCF8', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '0.25rem' }}>
-              {loading ? 'Creating account...' : 'Create account →'}
+              {loading ? t('creating') : t('createButton')}
             </button>
           </form>
 
           <p className="text-center text-sm mt-6" style={{ color: '#9A8F83' }}>
-            Already have an account?{' '}
-            <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>Log in</Link>
+            {t('haveAccount')}{' '}
+            <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>{t('logIn')}</Link>
           </p>
         </div>
       </div>

@@ -1,11 +1,14 @@
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import { getTranslations, getLocale } from 'next-intl/server';
 import { Receipt, FileText, BarChart2, TrendingUp, RefreshCw, BookOpen, ChevronRight, CheckCircle2, Lock } from 'lucide-react';
 
 export default async function CompanyPage() {
   const session = await auth();
   const profileId = session!.user.profileId;
+  const t = await getTranslations('dashboard.company');
+  const locale = await getLocale();
 
   const { data: hmrc } = await supabase
     .from('hmrc_connections')
@@ -26,44 +29,44 @@ export default async function CompanyPage() {
   }[] = [
     {
       icon: Receipt,
-      label: 'VAT Return',
-      desc: 'File quarterly VAT returns directly to HMRC via Making Tax Digital.',
+      label: t('vatLabel'),
+      desc: t('vatDesc'),
       href: '/dashboard/tax/vat',
       status: hasVrn ? 'available' : hasHmrc ? 'locked' : 'locked',
-      badge: hasVrn ? undefined : 'Requires VRN',
+      badge: hasVrn ? undefined : t('vatBadge'),
     },
     {
       icon: TrendingUp,
-      label: 'Profit & Loss',
-      desc: 'Real-time P&L statement categorised by income type and expense class.',
+      label: t('plLabel'),
+      desc: t('plDesc'),
       href: '/dashboard/company/pl',
       status: 'available' as const,
     },
     {
       icon: BarChart2,
-      label: 'Balance Sheet',
-      desc: 'Auto-generated from your bank balance and P&L — assets, liabilities, and equity.',
+      label: t('balanceLabel'),
+      desc: t('balanceDesc'),
       href: '/dashboard/company/balance-sheet',
       status: 'available' as const,
     },
     {
       icon: FileText,
-      label: 'CT600 Company Tax Return',
-      desc: 'Corporation Tax return filed to HMRC — covers your company profit and tax owed.',
+      label: t('ct600Label'),
+      desc: t('ct600Desc'),
       status: 'coming_soon' as const,
-      badge: 'Coming Soon',
+      badge: t('comingSoon'),
     },
     {
       icon: BookOpen,
-      label: 'Chart of Accounts',
-      desc: 'Standard UK SME double-entry account structure (FRS 102) used for all reports.',
+      label: t('coaLabel'),
+      desc: t('coaDesc'),
       href: '/dashboard/company/accounts',
       status: 'available' as const,
     },
     {
       icon: RefreshCw,
-      label: 'Reconcile Transactions',
-      desc: 'Categorise bank transactions as business income, expense, or personal.',
+      label: t('reconcileLabel'),
+      desc: t('reconcileDesc'),
       href: '/dashboard/reconcile',
       status: 'available' as const,
     },
@@ -73,27 +76,26 @@ export default async function CompanyPage() {
     <div className="p-4 sm:p-8 max-w-2xl">
       <div className="mb-8">
         <Link href="/dashboard" className="text-sm mb-4 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
-          ← Dashboard
+          {t('back')}
         </Link>
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
-          Company Tax & Accounts
+          {t('title')}
         </h1>
         <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>
-          VAT returns, Corporation Tax, Balance Sheet and P&amp;L for your limited company.
+          {t('subtitle')}
         </p>
       </div>
 
-      {/* HMRC connection prompt */}
       {!hasHmrc && (
         <div className="p-5 rounded-2xl mb-6 flex items-start gap-4" style={{ backgroundColor: '#F5EDDC', border: '1px solid #C9963D30' }}>
           <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 text-base" style={{ backgroundColor: '#F5EDDC', border: '1px solid #C9963D40' }}>⚠️</div>
           <div>
-            <p className="text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>Connect HMRC first</p>
+            <p className="text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>{t('connectFirstTitle')}</p>
             <p className="text-xs mb-3" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
-              Link your Government Gateway account to enable VAT filing. Go to Self Assessment → Connect HMRC.
+              {t('connectFirstBody')}
             </p>
             <Link href="/dashboard/tax" className="inline-block px-4 py-2 rounded-full text-xs font-semibold" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
-              Connect HMRC →
+              {t('connectHmrc')}
             </Link>
           </div>
         </div>
@@ -154,10 +156,10 @@ export default async function CompanyPage() {
       {hasHmrc && (
         <div className="mt-8 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
           <p className="text-xs" style={{ color: '#9A8F83' }}>
-            Connected to HMRC
-            {hmrc?.connected_at ? ` · ${new Date(hmrc.connected_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
+            {t('connectedHmrc')}
+            {hmrc?.connected_at ? ` · ${new Date(hmrc.connected_at).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
           </p>
-          {hasVrn && <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E2EDE2', color: '#6B8E6E' }}>VRN registered</span>}
+          {hasVrn && <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E2EDE2', color: '#6B8E6E' }}>{t('vrnRegistered')}</span>}
         </div>
       )}
     </div>

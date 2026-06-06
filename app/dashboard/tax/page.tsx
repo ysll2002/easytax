@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import { getTranslations, getLocale } from 'next-intl/server';
 import NinoForm from '@/components/NinoForm';
 import TasksTimeline from '@/components/TasksTimeline';
 import { CheckCircle2, ChevronRight, History, Edit2 } from 'lucide-react';
@@ -8,6 +9,8 @@ import { CheckCircle2, ChevronRight, History, Edit2 } from 'lucide-react';
 export default async function TaxPage() {
   const session   = await auth();
   const profileId = session!.user.profileId;
+  const t       = await getTranslations('dashboard.tax');
+  const locale  = await getLocale();
 
   const [{ data: hmrc }, { data: bank }] = await Promise.all([
     supabase.from('hmrc_connections').select('nino, vrn, access_token, connected_at').eq('user_id', profileId).single(),
@@ -18,83 +21,85 @@ export default async function TaxPage() {
   const hasHmrc  = !!hmrc?.access_token;
   const hasSA    = hasNino && hasHmrc;
 
+  const formatDate = (d: string) => new Date(d).toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
+
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
-        Self Assessment
+        {t('title')}
       </h1>
       <p style={{ color: '#9A8F83', marginBottom: '2.5rem', fontSize: '0.9rem' }}>
-        Complete the steps below to file your Self Assessment with HMRC.
+        {t('subtitle')}
       </p>
 
       <div className="space-y-4">
 
         {/* Step 1: NINO */}
-        <Step n={1} title="National Insurance Number" done={hasNino}>
+        <Step n={1} title={t('step1Title')} done={hasNino} lockedLabel={t('locked')}>
           <NinoForm initialNino={hmrc?.nino ?? ''} />
         </Step>
 
         {/* Step 2: Connect HMRC */}
-        <Step n={2} title="Connect HMRC" done={hasHmrc} locked={!hasNino}>
+        <Step n={2} title={t('step2Title')} done={hasHmrc} locked={!hasNino} lockedLabel={t('locked')}>
           {hasHmrc ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <CheckCircle2 size={18} color="#6B8E6E" />
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>HMRC connected</p>
+                  <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{t('hmrcConnected')}</p>
                   <p className="text-xs" style={{ color: '#9A8F83' }}>
-                    {'Government Gateway authorised'}
-                    {hmrc?.connected_at ? ` · Connected ${new Date(hmrc.connected_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}
+                    {t('gatewayAuth')}
+                    {hmrc?.connected_at ? ` · ${t('connectedOn', { date: formatDate(hmrc.connected_at) })}` : ''}
                   </p>
                 </div>
               </div>
               <Link href="/dashboard/tax/hmrc"
                 className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full font-semibold"
                 style={{ border: '1px solid #1C1208', color: '#1C1208', textDecoration: 'none', backgroundColor: 'transparent' }}>
-                <Edit2 size={12} /> Reconnect
+                <Edit2 size={12} /> {t('reconnect')}
               </Link>
             </div>
           ) : (
             <div>
               <p className="text-sm mb-3" style={{ color: '#4A4035' }}>
-                Link your Government Gateway account so EasyTax can fetch your tax obligations and submit returns on your behalf.
+                {t('step2Body')}
               </p>
               <Link href="/dashboard/tax/hmrc"
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold"
                 style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
-                Connect HMRC <ChevronRight size={14} />
+                {t('connectHmrc')} <ChevronRight size={14} />
               </Link>
             </div>
           )}
         </Step>
 
         {/* Step 3: Self Assessment */}
-        <Step n={3} title="Self Assessment" done={false} locked={!hasSA}>
+        <Step n={3} title={t('step3Title')} done={false} locked={!hasSA} lockedLabel={t('locked')}>
           {hasSA ? (
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9A8F83' }}>Tax Tasks · past year &amp; next 12 months</p>
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9A8F83' }}>{t('tasksHeader')}</p>
               </div>
               <TasksTimeline />
               <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid #F0EBE1' }}>
                 <ActionLink
                   href="/dashboard/tax/banking"
-                  label="Connect Bank Account"
-                  desc={bank ? `Connected · ${bank.account_name}` : 'Import transactions via Open Banking'}
+                  label={t('connectBank')}
+                  desc={bank ? t('bankConnected', { name: bank.account_name }) : t('bankImport')}
                   done={!!bank}
                 />
                 {hmrc?.vrn && (
                   <ActionLink
                     href="/dashboard/tax/vat"
-                    label="VAT Return"
-                    desc={`VRN: ${hmrc.vrn} · File quarterly VAT returns via Making Tax Digital`}
+                    label={t('vatReturn')}
+                    desc={t('vatDesc', { vrn: hmrc.vrn })}
                   />
                 )}
               </div>
             </div>
           ) : (
             <p className="text-sm" style={{ color: '#9A8F83' }}>
-              Complete Steps 1 and 2 to unlock Self Assessment filing.
+              {t('step3Locked')}
             </p>
           )}
         </Step>
@@ -105,7 +110,7 @@ export default async function TaxPage() {
         <div className="mt-6 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
           <History size={14} color="#9A8F83" />
           <Link href="/dashboard/tax/history" style={{ color: '#9A8F83', textDecoration: 'none', fontSize: '0.875rem' }}>
-            View filing history
+            {t('filingHistory')}
           </Link>
         </div>
       )}
@@ -113,8 +118,8 @@ export default async function TaxPage() {
   );
 }
 
-function Step({ n, title, done, locked, children }: {
-  n: number; title: string; done: boolean; locked?: boolean; children: React.ReactNode;
+function Step({ n, title, done, locked, lockedLabel, children }: {
+  n: number; title: string; done: boolean; locked?: boolean; lockedLabel: string; children: React.ReactNode;
 }) {
   return (
     <div className="rounded-2xl overflow-hidden" style={{
@@ -134,7 +139,7 @@ function Step({ n, title, done, locked, children }: {
           {done ? '✓' : n}
         </div>
         <span style={{ fontWeight: 700, fontSize: '0.9rem', color: done ? '#6B8E6E' : '#1C1208' }}>{title}</span>
-        {locked && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#9A8F83' }}>Locked</span>}
+        {locked && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#9A8F83' }}>{lockedLabel}</span>}
       </div>
       <div className="px-5 py-4" style={{ backgroundColor: '#FFFFFF' }}>{children}</div>
     </div>

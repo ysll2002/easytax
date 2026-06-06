@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { usePlaidLink, type PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   className?: string;
@@ -11,6 +12,7 @@ type Props = {
 
 export default function PlaidLinkButton({ className, style, children }: Props) {
   const router = useRouter();
+  const t = useTranslations('dashboard.banking');
   const [linkToken, setLinkToken] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -63,15 +65,15 @@ export default function PlaidLinkButton({ className, style, children }: Props) {
         className={className}
         style={{ ...style, opacity: disabled ? 0.6 : 1, cursor: disabled ? 'wait' : 'pointer' }}
       >
-        {submitting ? 'Connecting…' : children}
+        {submitting ? t('connecting') : children}
       </button>
       {error && (
         <p className="text-xs text-center mt-3" style={{ color: '#C46262' }}>
           {error === 'link_token_unavailable' || error === 'link_token_failed'
-            ? 'Could not start Plaid Link — please retry.'
+            ? t('errorRetry')
             : error === 'network_error'
-            ? 'Network error.'
-            : `Connection failed (${error}).`}
+            ? t('errorNetwork')
+            : t('errorGeneric', { error })}
         </p>
       )}
     </>

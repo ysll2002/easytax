@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 type TaxIds = { nino: string; user: { name?: string; email?: string; image?: string; profileId?: string } };
 
@@ -11,6 +12,7 @@ const inputStyle = {
 };
 
 export default function ProfilePage() {
+  const t = useTranslations('dashboard.profile');
   const [data, setData]     = useState<TaxIds | null>(null);
   const [nino, setNino]     = useState('');
   const [saving, setSaving] = useState(false);
@@ -47,11 +49,10 @@ export default function ProfilePage() {
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-        Profile
+        {t('title')}
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>Manage your personal and tax information.</p>
+      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>{t('subtitle')}</p>
 
-      {/* Account info */}
       <div className="p-6 rounded-2xl mb-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
         <div className="flex items-center gap-4 pb-5 mb-5" style={{ borderBottom: '1px solid #DDD5C8' }}>
           {user?.image ? (
@@ -66,23 +67,22 @@ export default function ProfilePage() {
             <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>{user?.email ?? '—'}</p>
           </div>
         </div>
-        <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>Account ID</p>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>{t('accountId')}</p>
         <p style={{ color: '#4A4035', fontSize: '0.875rem', fontFamily: 'monospace' }}>{user?.profileId ?? '—'}</p>
       </div>
 
-      {/* Tax IDs */}
       <form onSubmit={handleSave}>
         <div className="p-6 rounded-2xl" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
           <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
-            Tax Identifiers
+            {t('taxIdsTitle')}
           </h2>
           <p className="text-sm mb-5" style={{ color: '#9A8F83' }}>
-            Required for HMRC Self Assessment submissions.
+            {t('taxIdsSubtitle')}
           </p>
 
           <div>
             <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A4035' }}>
-              National Insurance Number (NINO)
+              {t('ninoLabel')}
             </label>
             <input
               type="text"
@@ -92,7 +92,7 @@ export default function ProfilePage() {
               maxLength={13}
               style={inputStyle}
             />
-            <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>Format: 2 letters, 6 digits, 1 letter — found on your P60 or HMRC letters.</p>
+            <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>{t('ninoHelp')}</p>
           </div>
 
           {error && (
@@ -106,9 +106,9 @@ export default function ProfilePage() {
               className="px-6 py-2.5 rounded-full text-sm font-medium"
               style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
             >
-              {saving ? 'Saving…' : 'Save'}
+              {saving ? t('saving') : t('save')}
             </button>
-            {saved && <span className="text-sm" style={{ color: '#6B8E6E' }}>✓ Saved</span>}
+            {saved && <span className="text-sm" style={{ color: '#6B8E6E' }}>{t('saved')}</span>}
           </div>
         </div>
       </form>
