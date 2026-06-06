@@ -1,0 +1,127 @@
+{
+  "nav": {
+    "howItWorks": "仕組み",
+    "pricing": "料金",
+    "faq": "よくある質問",
+    "timetable": "申告スケジュール",
+    "taxTips": "税務情報",
+    "dashboard": "ダッシュボード",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "register": "登録",
+    "language": "言語"
+  },
+  "home": {
+    "announcement": {
+      "live": "MTD ITSA が施行されました。",
+      "deadline": "Q1 申告期限は 2026 年 8 月 5 日 ——",
+      "freeCallout": "EasyTax なら無料で対応。"
+    },
+    "hero": {
+      "pill": "最初の MTD ITSA 四半期申告まであと {days} 日",
+      "title1": "MTD ITSA の時代へ。",
+      "title2": "HMRC への四半期申告を",
+      "title3": "無料で。",
+      "subtitle": "2026 年 4 月から、年収 5 万ポンドを超える自営業者と賃貸オーナーは HMRC に四半期ごとの更新を提出する必要があります。EasyTax なら数分で完了 —— Self Assessment、VAT、法人会計まで対応。",
+      "subtitleEmph": "年間 £0。",
+      "badgeFree": "年間 £0",
+      "badgeNoCard": "カード不要",
+      "badgeHmrc": "HMRC 認定",
+      "ctaPrimary": "無料で MTD 対応を始める →",
+      "ctaSecondary": "対応範囲を見る →"
+    },
+    "trust": {
+      "hmrc": "HMRC 認定",
+      "security": "銀行レベルのセキュリティ",
+      "fast": "5 分で申告",
+      "ai": "AI 搭載",
+      "company": "法人対応"
+    },
+    "services": {
+      "title1": "すべてに対応、",
+      "title2": "あなたが誰であれ。",
+      "subtitle": "Self Assessment を申告するフリーランスから、法人会計を管理する有限会社まで、EasyTax がカバーします。",
+      "freelancer": {
+        "kicker": "フリーランス・個人事業主向け",
+        "title": "個人と自営業",
+        "f1Label": "Self Assessment (SA100)",
+        "f1Desc": "年次申告を数分で HMRC に直接提出。",
+        "f2Label": "Making Tax Digital (MTD ITSA)",
+        "f2Desc": "HMRC への四半期更新 —— 2026 年義務化に先手を打つ。",
+        "f3Label": "Open Banking",
+        "f3Desc": "銀行を連携して取引を自動取り込み。",
+        "f4Label": "経費分類",
+        "f4Desc": "AI がすべての取引にタグ付け。あなたは数秒で承認するだけ。",
+        "cta": "Self Assessment を始める →"
+      },
+      "company": {
+        "kicker": "有限会社向け",
+        "title": "法人会計と税務",
+        "f1Label": "VAT 申告",
+        "f1Desc": "MTD 対応 API で四半期・年次 VAT 申告を直接提出。",
+        "f2Label": "CT600 法人税",
+        "f2Desc": "法人税申告を HMRC に直接提出 —— 会計士不要。",
+        "f3Label": "貸借対照表",
+        "f3Desc": "取引と照合済み口座から自動生成。",
+        "f4Label": "損益計算書",
+        "f4Desc": "収入と支出の種類別に分類されたリアルタイム P&L。",
+        "cta": "法人アカウントを設定 →"
+      }
+    },
+    "how": {
+      "title1": "5 分で申告、",
+      "title2": "5 時間ではなく。",
+      "body": "銀行と HMRC アカウントを一度だけ接続。EasyTax がデータを取得し、AI で分類して申告 —— Self Assessment、VAT、法人会計のいずれにも対応。",
+      "priceLabel": "無料",
+      "priceCaption": "サブスクなし、申告ごとの料金なし —— EasyTax は完全無料。",
+      "cta": "申告を始める →",
+      "step1Title": "アカウントを接続",
+      "step1Desc": "Government Gateway ID とビジネス銀行口座を連携。記録を自動取得 —— 手入力不要。",
+      "step2Title": "AI が重労働を担当",
+      "step2Desc": "AI がすべての取引を分類し、控除可能経費を計算し、申告または法人会計を準備します。",
+      "step3Title": "確認して提出",
+      "step3Desc": "わかりやすい要約を確認し、HMRC へ直接送信 —— 即時確認。完全無料。"
+    },
+    "faq": {
+      "title1": "疑問に",
+      "title2": "お答えします。",
+      "q1Q": "EasyTax は有限会社に対応していますか？",
+      "q1A": "はい。EasyTax は個人事業主・フリーランス（Self Assessment、MTD ITSA）と有限会社（VAT 申告、CT600 法人税、貸借対照表、P&L）の両方に対応。すべて完全無料。",
+      "q2Q": "対応している VAT スキームは？",
+      "q2A": "Standard、Flat Rate、Annual VAT Accounting に対応し、MTD 対応 API で HMRC へ直接提出します。",
+      "q3Q": "貸借対照表はどう生成されますか？",
+      "q3A": "EasyTax は照合済み銀行取引、分類された収支、設定時に入力した期首残高から自動的に貸借対照表を生成します。",
+      "q4Q": "CT600 とは何ですか？必要ですか？",
+      "q4A": "CT600 は英国のすべての有限会社が毎年 HMRC に提出すべき法人税申告書です。EasyTax があなたの P&L と法人会計に基づいて準備・提出します。",
+      "q5Q": "HMRC データは安全ですか？",
+      "q5A": "認証情報を保存することはありません。暗号化された接続でデータを取得し、すぐに破棄します。",
+      "q6Q": "Self Assessment の期限は？",
+      "q6A": "オンライン Self Assessment の期限は毎年 1 月 31 日。VAT は各期間終了後 1 か月 7 日以内。EasyTax がすべての期限を自動追跡します。"
+    },
+    "tips": {
+      "kicker": "毎日更新",
+      "title1": "税務について",
+      "title2": "知っておくべきこと。",
+      "viewAll": "すべての記事 →",
+      "readMore": "続きを読む →",
+      "empty": "最初の記事は明朝 8 時に。",
+      "visit": "税務情報を見る →"
+    },
+    "finalCta": {
+      "title1": "もう書類仕事に",
+      "title2": "怯えないで。",
+      "subtitle": "英国のフリーランスと有限会社に無料。アカウントを接続し、数分で HMRC に申告。",
+      "button": "無料で始める →"
+    },
+    "footer": {
+      "tagline": "EasyTax Ltd. ロンドン発。",
+      "privacy": "プライバシー",
+      "terms": "利用規約",
+      "twitter": "Twitter"
+    },
+    "meta": {
+      "title": "EasyTax — 英国個人事業主・有限会社向け無料 MTD ITSA ソフトウェア",
+      "description": "英国の個人事業主、賃貸オーナー、有限会社向けの無料 MTD ITSA ソフトウェア。HMRC への四半期更新、Self Assessment、VAT、CT600 を申告。年間 £0 —— カード不要。"
+    }
+  }
+}

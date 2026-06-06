@@ -1,0 +1,127 @@
+{
+  "nav": {
+    "howItWorks": "Comment ça marche",
+    "pricing": "Tarifs",
+    "faq": "FAQ",
+    "timetable": "Calendrier",
+    "taxTips": "Conseils fiscaux",
+    "dashboard": "Tableau de bord",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "register": "S'inscrire",
+    "language": "Langue"
+  },
+  "home": {
+    "announcement": {
+      "live": "MTD ITSA est en vigueur.",
+      "deadline": "Mise à jour T1 due le 5 août 2026 —",
+      "freeCallout": "EasyTax le fait gratuitement."
+    },
+    "hero": {
+      "pill": "{days} jours avant votre première mise à jour trimestrielle MTD ITSA",
+      "title1": "MTD ITSA est arrivé.",
+      "title2": "Déclarez trimestriellement au HMRC",
+      "title3": "gratuitement.",
+      "subtitle": "À partir d'avril 2026, les travailleurs indépendants et propriétaires gagnant plus de 50 000 £ doivent envoyer des mises à jour trimestrielles au HMRC. EasyTax le fait en quelques minutes — plus Self Assessment, TVA, et comptes d'entreprise complets.",
+      "subtitleEmph": "0 £ par an.",
+      "badgeFree": "0 £ / an",
+      "badgeNoCard": "Sans carte",
+      "badgeHmrc": "Reconnu par HMRC",
+      "ctaPrimary": "Préparez-vous au MTD gratuitement →",
+      "ctaSecondary": "Voir ce que nous couvrons →"
+    },
+    "trust": {
+      "hmrc": "Reconnu HMRC",
+      "security": "Sécurité bancaire",
+      "fast": "Déclarez en 5 minutes",
+      "ai": "Propulsé par IA",
+      "company": "Sociétés limitées"
+    },
+    "services": {
+      "title1": "Tout est couvert,",
+      "title2": "quel que soit votre profil.",
+      "subtitle": "Que vous soyez freelance déclarant Self Assessment ou une société limitée gérant ses comptes, EasyTax vous accompagne.",
+      "freelancer": {
+        "kicker": "Pour freelances et auto-entrepreneurs",
+        "title": "Personnel et travail indépendant",
+        "f1Label": "Self Assessment (SA100)",
+        "f1Desc": "Déposez votre déclaration annuelle directement au HMRC en quelques minutes.",
+        "f2Label": "Making Tax Digital (MTD ITSA)",
+        "f2Desc": "Mises à jour trimestrielles au HMRC — anticipez le mandat 2026.",
+        "f3Label": "Open Banking",
+        "f3Desc": "Connectez votre banque et importez vos transactions automatiquement.",
+        "f4Label": "Catégorisation des dépenses",
+        "f4Desc": "L'IA étiquette chaque transaction. Vous validez en quelques secondes.",
+        "cta": "Démarrer Self Assessment →"
+      },
+      "company": {
+        "kicker": "Pour sociétés limitées",
+        "title": "Comptabilité et fiscalité d'entreprise",
+        "f1Label": "Déclaration TVA",
+        "f1Desc": "Déposez vos déclarations TVA trimestrielles ou annuelles via API compatible MTD.",
+        "f2Label": "CT600 impôt sur les sociétés",
+        "f2Desc": "Déclaration d'impôt sur les sociétés transmise au HMRC — sans comptable.",
+        "f3Label": "Bilan",
+        "f3Desc": "Généré automatiquement à partir de vos transactions et comptes rapprochés.",
+        "f4Label": "Compte de résultat",
+        "f4Desc": "État P&L en temps réel, catégorisé par type de revenu et dépense.",
+        "cta": "Configurer compte société →"
+      }
+    },
+    "how": {
+      "title1": "Déclarez en cinq minutes,",
+      "title2": "pas cinq heures.",
+      "body": "Connectez votre banque et votre compte HMRC une fois. EasyTax récupère vos données, catégorise tout avec l'IA et dépose — Self Assessment, TVA ou comptes complets.",
+      "priceLabel": "Gratuit",
+      "priceCaption": "Pas d'abonnement, pas de frais par déclaration — EasyTax est entièrement gratuit.",
+      "cta": "Commencer à déclarer →",
+      "step1Title": "Connectez vos comptes",
+      "step1Desc": "Liez votre Government Gateway ID et votre compte bancaire professionnel. Nous récupérons vos données automatiquement — pas de saisie manuelle.",
+      "step2Title": "L'IA fait le gros du travail",
+      "step2Desc": "Notre IA catégorise chaque transaction, calcule les dépenses déductibles et prépare votre déclaration ou vos comptes.",
+      "step3Title": "Vérifiez et déposez",
+      "step3Desc": "Consultez un résumé clair et soumettez directement au HMRC — confirmé instantanément. Entièrement gratuit."
+    },
+    "faq": {
+      "title1": "Questions,",
+      "title2": "réponses.",
+      "q1Q": "EasyTax supporte-t-il les sociétés limitées ?",
+      "q1A": "Oui. EasyTax supporte les auto-entrepreneurs/freelances (Self Assessment, MTD ITSA) et les sociétés limitées (TVA, CT600, bilan, P&L). Tout est gratuit.",
+      "q2Q": "Quels régimes TVA supportez-vous ?",
+      "q2A": "Nous supportons les régimes Standard, Flat Rate et Annual VAT Accounting, déposés directement au HMRC via API compatibles MTD.",
+      "q3Q": "Comment le bilan est-il généré ?",
+      "q3A": "EasyTax génère votre bilan automatiquement à partir de vos transactions bancaires rapprochées, revenus et dépenses catégorisés, et soldes d'ouverture que vous fournissez à la configuration.",
+      "q4Q": "Qu'est-ce que le CT600 et en ai-je besoin ?",
+      "q4A": "CT600 est la déclaration d'impôt sur les sociétés que toute société limitée britannique doit déposer chaque année au HMRC. EasyTax la prépare et la soumet à partir de votre P&L et vos comptes.",
+      "q5Q": "Mes données HMRC sont-elles en sécurité ?",
+      "q5A": "Vos identifiants ne sont jamais stockés. Nous les utilisons pour récupérer vos données via une connexion chiffrée et les supprimons immédiatement après.",
+      "q6Q": "Quelle est la date limite du Self Assessment ?",
+      "q6A": "Les déclarations Self Assessment en ligne sont dues le 31 janvier de chaque année. Les déclarations TVA sont dues un mois et sept jours après la fin de chaque période. EasyTax suit toutes vos échéances automatiquement."
+    },
+    "tips": {
+      "kicker": "Mis à jour quotidiennement",
+      "title1": "Ce que vous devez savoir",
+      "title2": "sur la fiscalité.",
+      "viewAll": "Tous les articles →",
+      "readMore": "Lire plus →",
+      "empty": "Premier article demain à 8h.",
+      "visit": "Visiter Conseils fiscaux →"
+    },
+    "finalCta": {
+      "title1": "Arrêtez de redouter",
+      "title2": "la paperasse.",
+      "subtitle": "Gratuit pour freelances et sociétés limitées britanniques. Connectez vos comptes, déposez au HMRC en minutes.",
+      "button": "Commencer gratuitement →"
+    },
+    "footer": {
+      "tagline": "EasyTax Ltd. Conçu à Londres.",
+      "privacy": "Confidentialité",
+      "terms": "Conditions",
+      "twitter": "Twitter"
+    },
+    "meta": {
+      "title": "EasyTax — Logiciel MTD ITSA gratuit pour indépendants et sociétés au Royaume-Uni",
+      "description": "Logiciel MTD ITSA gratuit pour auto-entrepreneurs, propriétaires et sociétés limitées au Royaume-Uni. Envoyez les mises à jour trimestrielles au HMRC, déposez Self Assessment, TVA et CT600. 0 £/an — sans carte."
+    }
+  }
+}

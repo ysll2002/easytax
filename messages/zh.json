@@ -1,0 +1,127 @@
+{
+  "nav": {
+    "howItWorks": "工作原理",
+    "pricing": "价格",
+    "faq": "常见问题",
+    "timetable": "申报日程",
+    "taxTips": "报税小贴士",
+    "dashboard": "控制台",
+    "login": "登录",
+    "logout": "退出",
+    "register": "注册",
+    "language": "语言"
+  },
+  "home": {
+    "announcement": {
+      "live": "MTD ITSA 已经生效。",
+      "deadline": "Q1 季度申报截止 2026 年 8 月 5 日 ——",
+      "freeCallout": "EasyTax 免费帮你搞定。"
+    },
+    "hero": {
+      "pill": "距离你第一次 MTD ITSA 季度申报还有 {days} 天",
+      "title1": "MTD ITSA 时代到了。",
+      "title2": "向 HMRC 季度申报",
+      "title3": "完全免费。",
+      "subtitle": "从 2026 年 4 月起，年收入超过 5 万英镑的个体户和房东必须每季度向 HMRC 上报数据。EasyTax 几分钟内搞定 —— 同时支持 Self Assessment、VAT 和完整的公司账目。",
+      "subtitleEmph": "£0/年。",
+      "badgeFree": "£0 / 年",
+      "badgeNoCard": "无需信用卡",
+      "badgeHmrc": "HMRC 认证",
+      "ctaPrimary": "免费开始 MTD 申报 →",
+      "ctaSecondary": "查看支持范围 →"
+    },
+    "trust": {
+      "hmrc": "HMRC 认证",
+      "security": "银行级安全",
+      "fast": "5 分钟完成申报",
+      "ai": "AI 智能",
+      "company": "支持有限公司"
+    },
+    "services": {
+      "title1": "全面覆盖，",
+      "title2": "无论你是谁。",
+      "subtitle": "无论你是申报 Self Assessment 的自由职业者，还是管理完整账目的有限公司，EasyTax 都为你准备好了。",
+      "freelancer": {
+        "kicker": "面向自由职业者和个体户",
+        "title": "个人与自雇所得",
+        "f1Label": "Self Assessment (SA100)",
+        "f1Desc": "几分钟内直接向 HMRC 提交年度申报。",
+        "f2Label": "Making Tax Digital (MTD ITSA)",
+        "f2Desc": "季度上报 HMRC —— 提前应对 2026 年新规。",
+        "f3Label": "Open Banking 开放银行",
+        "f3Desc": "连接你的银行账户，自动导入交易记录。",
+        "f4Label": "支出分类",
+        "f4Desc": "AI 给每一笔交易打标签，你只需几秒确认。",
+        "cta": "开始 Self Assessment →"
+      },
+      "company": {
+        "kicker": "面向有限公司",
+        "title": "公司账目与税务",
+        "f1Label": "VAT 增值税申报",
+        "f1Desc": "通过 MTD 兼容 API 直接申报季度或年度 VAT。",
+        "f2Label": "CT600 公司税",
+        "f2Desc": "公司所得税申报直接提交 HMRC，无需会计师。",
+        "f3Label": "资产负债表",
+        "f3Desc": "根据你的交易和对账数据自动生成。",
+        "f4Label": "损益表",
+        "f4Desc": "实时损益报表，按收入和支出类别分类。",
+        "cta": "设置公司账户 →"
+      }
+    },
+    "how": {
+      "title1": "5 分钟搞定，",
+      "title2": "而不是 5 小时。",
+      "body": "只需一次连接你的银行和 HMRC 账户。EasyTax 自动拉取数据、AI 智能分类，然后帮你申报 —— 不论是 Self Assessment、VAT 还是完整公司账目。",
+      "priceLabel": "免费",
+      "priceCaption": "无订阅费、无每次申报费用 —— EasyTax 完全免费。",
+      "cta": "开始申报 →",
+      "step1Title": "连接你的账户",
+      "step1Desc": "绑定你的 Government Gateway ID 和企业银行账户。我们自动拉取记录 —— 不需要手动录入。",
+      "step2Title": "AI 处理繁重工作",
+      "step2Desc": "AI 自动给每笔交易分类、计算可抵扣支出，并准备你的申报或公司账目。",
+      "step3Title": "审核并提交",
+      "step3Desc": "查看你的申报清晰摘要，直接提交 HMRC —— 即时确认，完全免费。"
+    },
+    "faq": {
+      "title1": "你的疑问，",
+      "title2": "我们解答。",
+      "q1Q": "EasyTax 支持有限公司吗？",
+      "q1A": "支持。EasyTax 既适用于个体户/自由职业者（Self Assessment、MTD ITSA），也适用于有限公司（VAT 申报、CT600 公司所得税、资产负债表、损益表）。一切都完全免费。",
+      "q2Q": "你们支持哪些 VAT 计划？",
+      "q2A": "我们支持标准计划、Flat Rate 和年度 VAT 会计计划，通过 MTD 兼容 API 直接提交 HMRC。",
+      "q3Q": "资产负债表如何生成？",
+      "q3A": "EasyTax 根据你的对账银行交易、分类后的收支以及你在设置时提供的期初余额，自动生成资产负债表。",
+      "q4Q": "什么是 CT600？我需要吗？",
+      "q4A": "CT600 是每家英国有限公司每年必须向 HMRC 申报的公司所得税申报表。EasyTax 根据你的损益表和公司账目自动准备并提交。",
+      "q5Q": "我的 HMRC 数据安全吗？",
+      "q5A": "我们绝不储存你的凭据。仅通过加密连接拉取记录，使用完即时丢弃。",
+      "q6Q": "Self Assessment 的截止日期是什么时候？",
+      "q6A": "在线 Self Assessment 申报每年 1 月 31 日截止。VAT 申报需在 VAT 期结束后 1 个月 7 天内完成。EasyTax 自动追踪你的所有截止日期。"
+    },
+    "tips": {
+      "kicker": "每日更新",
+      "title1": "关于税务",
+      "title2": "你需要知道的。",
+      "viewAll": "所有文章 →",
+      "readMore": "继续阅读 →",
+      "empty": "明早 8 点见首篇文章。",
+      "visit": "访问报税小贴士 →"
+    },
+    "finalCta": {
+      "title1": "别再害怕",
+      "title2": "繁琐的报税。",
+      "subtitle": "面向英国自由职业者和有限公司，完全免费。连接账户，几分钟内向 HMRC 提交申报。",
+      "button": "免费开始 →"
+    },
+    "footer": {
+      "tagline": "EasyTax Ltd. 伦敦出品。",
+      "privacy": "隐私",
+      "terms": "条款",
+      "twitter": "Twitter"
+    },
+    "meta": {
+      "title": "EasyTax — 英国个体户与有限公司的免费 MTD ITSA 软件",
+      "description": "面向英国个体户、房东和有限公司的免费 MTD ITSA 软件。向 HMRC 季度上报、申报 Self Assessment、VAT 和 CT600。每年 £0 —— 无需信用卡。"
+    }
+  }
+}

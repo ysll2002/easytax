@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from 'next-intl/server';
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactWidget from "@/components/ContactWidget";
+import { isRtl } from '@/i18n/routing';
 
 const playfair = Playfair_Display({
   variable: "--font-display",
@@ -79,9 +82,13 @@ export const metadata: Metadata = {
   verification: { google: 'GZdrRpA0y85OwCBOYVWYrdxur7Jur44AfjMbeH8MliE' },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+  const dir = isRtl(locale) ? 'rtl' : 'ltr';
+
   return (
-    <html lang="en-GB">
+    <html lang={locale} dir={dir}>
       <head>
         <script
           type="application/ld+json"
@@ -117,8 +124,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
       <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>
-        <Providers>{children}</Providers>
-        <ContactWidget />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Providers>{children}</Providers>
+          <ContactWidget />
+        </NextIntlClientProvider>
         {process.env.VERCEL_ENV === 'production' && <Analytics />}
         {process.env.VERCEL_ENV === 'production' && <GoogleAnalytics gaId="G-ZF21G9RTJW" />}
       </body>

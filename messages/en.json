@@ -1,0 +1,127 @@
+{
+  "nav": {
+    "howItWorks": "How it Works",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "timetable": "Timetable",
+    "taxTips": "Tax Tips",
+    "dashboard": "Dashboard",
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Register",
+    "language": "Language"
+  },
+  "home": {
+    "announcement": {
+      "live": "MTD ITSA is live.",
+      "deadline": "Q1 update due 5 Aug 2026 —",
+      "freeCallout": "EasyTax does it free."
+    },
+    "hero": {
+      "pill": "{days} days until your first MTD ITSA quarterly update",
+      "title1": "MTD ITSA is here.",
+      "title2": "File quarterly to HMRC",
+      "title3": "for free.",
+      "subtitle": "From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts.",
+      "subtitleEmph": "£0/year.",
+      "badgeFree": "£0 / year",
+      "badgeNoCard": "No card needed",
+      "badgeHmrc": "HMRC-recognised",
+      "ctaPrimary": "Get MTD-ready for free →",
+      "ctaSecondary": "See what we cover →"
+    },
+    "trust": {
+      "hmrc": "HMRC Recognised",
+      "security": "Bank-grade Security",
+      "fast": "File in 5 Minutes",
+      "ai": "AI-powered",
+      "company": "Limited Companies"
+    },
+    "services": {
+      "title1": "Everything covered,",
+      "title2": "whoever you are.",
+      "subtitle": "Whether you're a freelancer filing Self Assessment or a limited company managing full accounts, EasyTax has you covered.",
+      "freelancer": {
+        "kicker": "For Freelancers & Sole Traders",
+        "title": "Personal & Self-Employment",
+        "f1Label": "Self Assessment (SA100)",
+        "f1Desc": "File your annual return directly to HMRC in minutes.",
+        "f2Label": "Making Tax Digital (MTD ITSA)",
+        "f2Desc": "Quarterly updates to HMRC — stay ahead of the 2026 mandate.",
+        "f3Label": "Open Banking",
+        "f3Desc": "Connect your bank and auto-import transactions.",
+        "f4Label": "Expense Categorisation",
+        "f4Desc": "AI tags every transaction. You approve in seconds.",
+        "cta": "Start Self Assessment →"
+      },
+      "company": {
+        "kicker": "For Limited Companies",
+        "title": "Company Accounts & Tax",
+        "f1Label": "VAT Return",
+        "f1Desc": "File quarterly or annual VAT returns directly via MTD-compliant API.",
+        "f2Label": "CT600 Company Tax",
+        "f2Desc": "Corporation Tax return filed to HMRC — no accountant needed.",
+        "f3Label": "Balance Sheet",
+        "f3Desc": "Automatically generated from your transactions and reconciled accounts.",
+        "f4Label": "Profit & Loss",
+        "f4Desc": "Real-time P&L statement, categorised by income and expense type.",
+        "cta": "Set Up Company Account →"
+      }
+    },
+    "how": {
+      "title1": "File in five minutes,",
+      "title2": "not five hours.",
+      "body": "Connect your bank and HMRC account once. EasyTax pulls your data, categorises everything with AI, and files — whether it's a Self Assessment, VAT return, or full company accounts.",
+      "priceLabel": "Free",
+      "priceCaption": "No subscriptions, no per-filing fees — EasyTax is completely free to use.",
+      "cta": "Start Filing →",
+      "step1Title": "Connect your accounts",
+      "step1Desc": "Link your Government Gateway ID and business bank account. We pull your records automatically — no manual data entry.",
+      "step2Title": "AI does the heavy lifting",
+      "step2Desc": "Our AI categorises every transaction, calculates allowable expenses, and prepares your return or company accounts.",
+      "step3Title": "Review & file",
+      "step3Desc": "Check a plain-English summary of your return and submit directly to HMRC — instantly confirmed. Completely free."
+    },
+    "faq": {
+      "title1": "Questions,",
+      "title2": "answered.",
+      "q1Q": "Does EasyTax support limited companies?",
+      "q1A": "Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Everything is completely free.",
+      "q2Q": "What VAT schemes do you support?",
+      "q2A": "We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.",
+      "q3Q": "How is the Balance Sheet generated?",
+      "q3A": "EasyTax automatically derives your Balance Sheet from your reconciled bank transactions, categorised income and expenses, and opening balances you provide during setup.",
+      "q4Q": "What is the CT600 and do I need it?",
+      "q4A": "CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax prepares and submits it based on your P&L and company accounts.",
+      "q5Q": "Is my HMRC data safe?",
+      "q5A": "Your credentials are never stored. We use them to fetch your records via a secure, encrypted connection and discard them immediately after.",
+      "q6Q": "What's the Self Assessment deadline?",
+      "q6A": "Online Self Assessment returns are due 31 January each year. VAT returns are due one month and seven days after each VAT period ends. EasyTax tracks all your deadlines automatically."
+    },
+    "tips": {
+      "kicker": "Updated daily",
+      "title1": "What you need to know",
+      "title2": "about the tax.",
+      "viewAll": "All articles →",
+      "readMore": "Read more →",
+      "empty": "First article coming tomorrow at 8am.",
+      "visit": "Visit Tax Tips →"
+    },
+    "finalCta": {
+      "title1": "Stop dreading",
+      "title2": "the paperwork.",
+      "subtitle": "Free for UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes.",
+      "button": "Start for Free →"
+    },
+    "footer": {
+      "tagline": "EasyTax Ltd. Built in London.",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "twitter": "Twitter"
+    },
+    "meta": {
+      "title": "EasyTax — Free MTD ITSA Software for UK Sole Traders & Limited Companies",
+      "description": "Free MTD ITSA software for UK sole traders, landlords and limited companies. Send quarterly updates to HMRC, file Self Assessment, VAT returns and CT600. £0/year — no card needed."
+    }
+  }
+}
