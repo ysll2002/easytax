@@ -1,17 +1,10 @@
 import { auth } from '@/auth';
 import Link from 'next/link';
+import PlaidLinkButton from '@/components/PlaidLinkButton';
 
 export default async function BankingPage() {
   const session = await auth();
   void session;
-
-  const clientId   = process.env.TRUELAYER_CLIENT_ID!;
-  const redirectUri = process.env.TRUELAYER_REDIRECT_URI!;
-  const authBase   = process.env.TRUELAYER_AUTH_URL ?? 'https://auth.truelayer-sandbox.com';
-  const isSandbox  = authBase.includes('sandbox');
-  const providers  = isSandbox ? 'mock' : 'uk-ob-all+uk-oauth-all';
-
-  const authUrl = `${authBase}/?response_type=code&client_id=${clientId}&scope=accounts+transactions+balance+offline_access&redirect_uri=${encodeURIComponent(redirectUri)}&providers=${providers}`;
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
@@ -33,14 +26,15 @@ export default async function BankingPage() {
         ))}
       </div>
 
-      <a href={authUrl}
-        className="inline-block w-full text-center py-3.5 rounded-xl font-medium text-sm"
-        style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+      <PlaidLinkButton
+        className="w-full text-center py-3.5 rounded-xl font-medium text-sm"
+        style={{ backgroundColor: '#1C1208', color: '#FDFCF8', border: 'none' }}
+      >
         Connect via Open Banking →
-      </a>
+      </PlaidLinkButton>
 
       <p className="text-xs text-center mt-4" style={{ color: '#9A8F83' }}>
-        Read-only access. We can never move money. Powered by TrueLayer.
+        Read-only access. We can never move money. Powered by Plaid.
       </p>
     </div>
   );

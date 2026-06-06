@@ -64,7 +64,7 @@ export default function Privacy() {
             <Legal basis="Contract" detail="Necessary to calculate and submit your Self Assessment tax return." />
 
             <H3>2.3 Bank Transaction Data</H3>
-            <P>Bank account details and transaction history retrieved via TrueLayer's Open Banking connection, used to identify and categorise expenses.</P>
+            <P>Bank account details and transaction history retrieved via Plaid's Open Banking connection, used to identify and categorise expenses.</P>
             <Legal basis="Consent" detail="You explicitly authorise this connection. You can disconnect at any time from your dashboard." />
 
             <H3>2.4 HMRC OAuth Connection</H3>

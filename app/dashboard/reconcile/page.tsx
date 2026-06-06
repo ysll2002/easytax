@@ -31,7 +31,7 @@ export default async function ReconcilePage() {
             <div>
               <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>No bank account connected</p>
               <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
-                Connect your business bank account via Open Banking to start reconciling transactions. We use TrueLayer — read-only access, we can never move money.
+                Connect your business bank account via Open Banking to start reconciling transactions. We use Plaid — read-only access, we can never move money.
               </p>
               <Link
                 href="/dashboard/tax/banking"
