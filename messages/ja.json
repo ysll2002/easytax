@@ -181,7 +181,8 @@
       "settings": "設定",
       "selfAssessShort": "Self Assess",
       "companyShort": "会社",
-      "logout": "ログアウト"
+      "logout": "ログアウト",
+      "homepage": "ホーム"
     },
     "home": {
       "welcome": "ようこそ、{name} さん",

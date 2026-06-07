@@ -181,7 +181,8 @@
       "settings": "Settings",
       "selfAssessShort": "Self Assess",
       "companyShort": "Company",
-      "logout": "Log out"
+      "logout": "Log out",
+      "homepage": "Homepage"
     },
     "home": {
       "welcome": "Welcome, {name}",

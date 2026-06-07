@@ -181,7 +181,8 @@
       "settings": "Paramètres",
       "selfAssessShort": "Self Assess",
       "companyShort": "Société",
-      "logout": "Déconnexion"
+      "logout": "Déconnexion",
+      "homepage": "Accueil"
     },
     "home": {
       "welcome": "Bienvenue, {name}",

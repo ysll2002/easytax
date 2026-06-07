@@ -181,7 +181,8 @@
       "settings": "الإعدادات",
       "selfAssessShort": "Self Assess",
       "companyShort": "شركة",
-      "logout": "تسجيل الخروج"
+      "logout": "تسجيل الخروج",
+      "homepage": "الرئيسية"
     },
     "home": {
       "welcome": "مرحباً، {name}",

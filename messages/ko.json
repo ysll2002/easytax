@@ -181,7 +181,8 @@
       "settings": "설정",
       "selfAssessShort": "Self Assess",
       "companyShort": "법인",
-      "logout": "로그아웃"
+      "logout": "로그아웃",
+      "homepage": "홈"
     },
     "home": {
       "welcome": "환영합니다, {name}님",

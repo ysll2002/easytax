@@ -181,7 +181,8 @@
       "settings": "Ajustes",
       "selfAssessShort": "Self Assess",
       "companyShort": "Empresa",
-      "logout": "Cerrar sesión"
+      "logout": "Cerrar sesión",
+      "homepage": "Inicio"
     },
     "home": {
       "welcome": "Bienvenido, {name}",

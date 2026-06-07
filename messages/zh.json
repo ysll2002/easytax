@@ -181,7 +181,8 @@
       "settings": "设置",
       "selfAssessShort": "Self Assess",
       "companyShort": "公司",
-      "logout": "退出"
+      "logout": "退出",
+      "homepage": "首页"
     },
     "home": {
       "welcome": "欢迎，{name}",

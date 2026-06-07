@@ -6,6 +6,7 @@ import SidebarNav from '@/components/SidebarNav';
 import LogoutButton from '@/components/LogoutButton';
 import MobileNav from '@/components/MobileNav';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import HomepageLink from '@/components/HomepageLink';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -48,13 +49,17 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
           EasyTax
         </Link>
-        <LanguageSwitcher />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <HomepageLink />
+          <LanguageSwitcher />
+        </div>
       </div>
 
       {/* Main content */}
       <main style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
-        {/* Desktop floating language switcher in the top-right */}
-        <div className="hidden md:block" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30 }}>
+        {/* Desktop floating top-right controls */}
+        <div className="hidden md:flex" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30, gap: '0.5rem' }}>
+          <HomepageLink />
           <LanguageSwitcher />
         </div>
         {/* Mobile top spacer */}
