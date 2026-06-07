@@ -39,10 +39,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </div>
           </div>
 
-          <div style={{ marginBottom: '0.75rem' }}>
-            <LanguageSwitcher />
-          </div>
-
           <LogoutButton />
         </div>
       </aside>
@@ -56,7 +52,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </div>
 
       {/* Main content */}
-      <main style={{ flex: 1, overflow: 'auto', paddingTop: 0 }}>
+      <main style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
+        {/* Desktop floating language switcher in the top-right */}
+        <div className="hidden md:block" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30 }}>
+          <LanguageSwitcher />
+        </div>
         {/* Mobile top spacer */}
         <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />
