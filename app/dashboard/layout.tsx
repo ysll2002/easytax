@@ -5,6 +5,7 @@ import DeviceDataCollector from '@/components/DeviceDataCollector';
 import SidebarNav from '@/components/SidebarNav';
 import LogoutButton from '@/components/LogoutButton';
 import MobileNav from '@/components/MobileNav';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -37,15 +38,21 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <p style={{ color: '#4A4035', fontSize: '0.7rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
             </div>
           </div>
+
+          <div style={{ marginBottom: '0.75rem' }}>
+            <LanguageSwitcher />
+          </div>
+
           <LogoutButton />
         </div>
       </aside>
 
       {/* Mobile top bar */}
-      <div className="flex md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', alignItems: 'center' }}>
+      <div className="flex md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
           EasyTax
         </Link>
+        <LanguageSwitcher />
       </div>
 
       {/* Main content */}
