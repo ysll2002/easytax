@@ -9,15 +9,14 @@ export default function HomepageLink() {
     <Link
       href="/"
       aria-label={t('homepage')}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
+      className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-medium transition-colors"
       style={{
-        color: '#4A4035',
-        backgroundColor: '#F0EBE1',
-        border: '1px solid #DDD5C8',
+        backgroundColor: '#C4622D',
+        color: '#FDFCF8',
         textDecoration: 'none',
       }}
     >
-      <Home size={13} strokeWidth={2} />
+      <Home size={14} strokeWidth={2} />
       <span>{t('homepage')}</span>
     </Link>
   );
