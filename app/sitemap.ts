@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';

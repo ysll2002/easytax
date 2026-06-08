@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Calendar } from 'lucide-react';

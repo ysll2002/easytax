@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { createHash } from 'crypto';
 
 const BASE = process.env.HMRC_ENV === 'production'

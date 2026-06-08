@@ -1,5 +1,5 @@
 import { auth } from '@/auth';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import Link from 'next/link';
 import { getTranslations, getLocale } from 'next-intl/server';
 import NinoForm from '@/components/NinoForm';

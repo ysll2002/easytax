@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken } from '@/lib/hmrc';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { cookies } from 'next/headers';
 import { createHash } from 'crypto';
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { plaidClient } from '@/lib/plaid';
 
 // ── Expense sub-account keyword rules ────────────────────────────────────────

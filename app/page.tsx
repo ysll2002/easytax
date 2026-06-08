@@ -3,7 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
 import { auth } from '@/auth';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { getTranslations } from 'next-intl/server';
 
 export const revalidate = 3600;

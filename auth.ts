@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 
 // Allow NextAuth to infer the URL from request headers on Vercel Preview deployments
 if (process.env.VERCEL_URL && !process.env.NEXTAUTH_URL) {
