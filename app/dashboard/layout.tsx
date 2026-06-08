@@ -50,8 +50,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
           EasyTax
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <HomepageLink />
           <LanguageSwitcher />
+          <HomepageLink />
         </div>
       </div>
 
@@ -59,8 +59,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <main style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
         {/* Desktop floating top-right controls */}
         <div className="hidden md:flex" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30, gap: '0.5rem' }}>
-          <HomepageLink />
           <LanguageSwitcher />
+          <HomepageLink />
         </div>
         {/* Mobile top spacer */}
         <div className="md:hidden" style={{ height: '52px' }} />
