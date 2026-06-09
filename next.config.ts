@@ -12,6 +12,16 @@ const nextConfig: NextConfig = {
         destination: 'https://easytax.vip/:path*',
         permanent: true,
       },
+      {
+        source: '/privacy-policy',
+        destination: '/privacy',
+        permanent: true,
+      },
+      {
+        source: '/terms-conditions',
+        destination: '/terms',
+        permanent: true,
+      },
     ];
   },
 };
