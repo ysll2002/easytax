@@ -28,6 +28,14 @@ async function getVendorIp(): Promise<string> {
 
 function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): Record<string, string> {
   const clientIp = deviceData.ip ?? '';
+  // The MFA challenge is performed by HMRC's Government Gateway during OAuth sign-in;
+  // our software does not handle the factor itself, so we report type=OTHER with a
+  // timestamp derived from the device session so HMRC has a verifiable reference.
+  const mfaRef = deviceData.userId
+    ? createHash('sha256').update(`mfa:${deviceData.userId}`).digest('hex').slice(0, 16)
+    : 'unknown';
+  const mfaTs  = deviceData.ipTs ?? new Date().toISOString();
+  const multiFactor = `type=OTHER&timestamp=${mfaTs}&unique-reference=${mfaRef}`;
   return {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
     'Gov-Client-Browser-JS-User-Agent': deviceData.userAgent ?? '',
@@ -39,6 +47,7 @@ function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): 
     'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs ?? new Date().toISOString(),
     'Gov-Client-Public-Port':           deviceData.port ?? '',
     'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
+    'Gov-Client-Multi-Factor':          multiFactor,
     'Gov-Vendor-Product-Name':          'EasyTax',
     'Gov-Vendor-Version':               'easytax=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
@@ -56,7 +65,7 @@ async function call(
   method: string,
   token: string,
   fph: Record<string, string>,
-  opts: { accept?: string; body?: unknown } = {},
+  opts: { accept?: string; body?: unknown; scenario?: string } = {},
 ): Promise<unknown> {
   const entry: ApiResult = { name, endpoint, method, status: null, ok: false };
   results.push(entry);
@@ -69,6 +78,7 @@ async function call(
         Accept:         opts.accept ?? 'application/vnd.hmrc.2.0+json',
         'Content-Type': 'application/json',
         ...fph,
+        ...(opts.scenario ? { 'Gov-Test-Scenario': opts.scenario } : {}),
       },
       ...(opts.body != null ? { body: JSON.stringify(opts.body) } : {}),
     });
@@ -270,8 +280,14 @@ export async function GET() {
     }
 
     await call(results, 'VAT – Retrieve Return',  `/organisations/vat/${vrn}/returns/18A2`, 'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
-    await call(results, 'VAT – Liabilities',       `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,          'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
-    await call(results, 'VAT – Payments',          `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,             'GET',  token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+
+    // HMRC sandbox returns 404 for these endpoints unless a Gov-Test-Scenario header
+    // forces sample data. Without the scenario, the request is well-formed but the
+    // upstream test backend has no row matching real-date queries.
+    await call(results, 'VAT – Liabilities',         `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,             'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_LIABILITY' });
+    await call(results, 'VAT – Payments',            `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,                'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_PAYMENT' });
+    await call(results, 'VAT – Penalties',           `/organisations/vat/${vrn}/penalties`,                                     'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'PENALTIES_LSP_AND_LPP' });
+    await call(results, 'VAT – Financial Details',   `/organisations/vat/${vrn}/financial-details?searchType=CHARGE`,           'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'FINANCIAL_DETAILS' });
 
     const passed  = results.filter(r => r.ok).length;
     const failed  = results.filter(r => !r.ok).length;
