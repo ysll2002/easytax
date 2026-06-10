@@ -31,7 +31,10 @@ function QuarterForm() {
   void router;
   const start   = params.get('start') ?? '';
   const end     = params.get('end')   ?? '';
-  const taxYear = currentTaxYear();
+  // Allow overriding via ?taxYear=2025-26 — useful for HMRC sandbox testing
+  // because the sandbox test data is typically populated for the previous
+  // tax year, not the current one.
+  const taxYear = params.get('taxYear') ?? currentTaxYear();
 
   const [turnover,   setTurnover]   = useState('');
   const [expenses,   setExpenses]   = useState<Record<string, string>>({});
