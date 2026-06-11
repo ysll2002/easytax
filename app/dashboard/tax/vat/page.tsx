@@ -43,7 +43,10 @@ export default function VatPage() {
   }, []);
 
   const totalVatDue = +(boxes.vatDueSales + boxes.vatDueAcquisitions).toFixed(2);
-  const netVatDue   = +Math.max(0, totalVatDue - boxes.vatReclaimedCurrPeriod).toFixed(2);
+  // HMRC requires netVatDue = |totalVatDue - vatReclaimedCurrPeriod| (absolute
+  // difference). When reclaimed exceeds due the user is owed a refund — but
+  // netVatDue is still the magnitude, not a negative number.
+  const netVatDue   = +Math.abs(totalVatDue - boxes.vatReclaimedCurrPeriod).toFixed(2);
 
   const handleSubmit = async () => {
     if (!selected) return;
