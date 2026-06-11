@@ -27,6 +27,7 @@ export default function VatPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [alreadyFiled, setAlreadyFiled] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -71,7 +72,13 @@ export default function VatPage() {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Submission failed');
+      // HMRC returns 403 with DUPLICATE_SUBMISSION when this period was
+      // already filed successfully — treat that as a non-failure so the
+      // user sees "already submitted" rather than a red error.
+      const errorBody = data?.error ?? '';
+      const isDuplicate = res.status === 502 && errorBody.includes('DUPLICATE_SUBMISSION');
+      if (!res.ok && !isDuplicate) throw new Error(errorBody || 'Submission failed');
+      setAlreadyFiled(isDuplicate);
       setSubmitted(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Submission failed');
@@ -103,10 +110,12 @@ export default function VatPage() {
     <div className="p-4 sm:p-8 max-w-lg flex flex-col items-center text-center">
       <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mb-6" style={{ backgroundColor: '#E2EDE2' }}>✓</div>
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.75rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-        VAT Return Submitted
+        {alreadyFiled ? 'Already Filed' : 'VAT Return Submitted'}
       </h1>
       <p style={{ color: '#9A8F83', marginBottom: '2rem' }}>
-        Your return for period {selected?.start} – {selected?.end} has been sent to HMRC via MTD.
+        {alreadyFiled
+          ? `HMRC has on record that your return for ${selected?.start} – ${selected?.end} was already submitted. No further action needed.`
+          : `Your return for period ${selected?.start} – ${selected?.end} has been sent to HMRC via MTD.`}
       </p>
       <Link href="/dashboard/tax" className="px-6 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
         Back to Tax Filing
