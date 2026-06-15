@@ -166,7 +166,14 @@
       "creating": "Creando cuenta…",
       "createButton": "Crear cuenta →",
       "haveAccount": "¿Ya tienes cuenta?",
-      "logIn": "Iniciar sesión"
+      "logIn": "Iniciar sesión",
+      "nameOptional": "(opcional)",
+      "passwordShow": "Mostrar",
+      "passwordHide": "Ocultar",
+      "passwordRuleLength": "Al menos 8 caracteres",
+      "mustAgreeShort": "Marca primero la casilla de acuerdo a continuación",
+      "trustSignal": "Cifrado bancario · Software reconocido por HMRC · Conforme con RGPD",
+      "accountCreatedLogin": "Cuenta creada — inicia sesión para continuar"
     }
   },
   "dashboard": {

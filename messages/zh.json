@@ -166,7 +166,14 @@
       "creating": "创建中…",
       "createButton": "创建账户 →",
       "haveAccount": "已经有账户？",
-      "logIn": "登录"
+      "logIn": "登录",
+      "nameOptional": "（可选）",
+      "passwordShow": "显示",
+      "passwordHide": "隐藏",
+      "passwordRuleLength": "至少 8 个字符",
+      "mustAgreeShort": "请先勾选下方的同意框",
+      "trustSignal": "银行级加密 · HMRC 认可软件 · 符合 GDPR",
+      "accountCreatedLogin": "账户已创建 — 请登录以继续"
     }
   },
   "dashboard": {

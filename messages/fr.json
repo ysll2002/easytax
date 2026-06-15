@@ -166,7 +166,14 @@
       "creating": "Création du compte…",
       "createButton": "Créer le compte →",
       "haveAccount": "Vous avez déjà un compte ?",
-      "logIn": "Connexion"
+      "logIn": "Connexion",
+      "nameOptional": "(facultatif)",
+      "passwordShow": "Afficher",
+      "passwordHide": "Masquer",
+      "passwordRuleLength": "Au moins 8 caractères",
+      "mustAgreeShort": "Veuillez d'abord cocher la case ci-dessous",
+      "trustSignal": "Chiffrement bancaire · Logiciel reconnu HMRC · Conforme RGPD",
+      "accountCreatedLogin": "Compte créé — connectez-vous pour continuer"
     }
   },
   "dashboard": {

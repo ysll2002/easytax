@@ -6,8 +6,11 @@ import { sendWelcomeEmail } from '@/lib/email';
 export async function POST(req: NextRequest) {
   const { name, email, password } = await req.json();
 
-  if (!name || !email || !password) {
-    return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+  if (!email || !password) {
+    return NextResponse.json({ error: 'Email and password are required', code: 'missing_fields' }, { status: 400 });
+  }
+  if (typeof password !== 'string' || password.length < 8) {
+    return NextResponse.json({ error: 'Password must be at least 8 characters', code: 'pwd_too_short' }, { status: 400 });
   }
 
   const { data: existing } = await supabase
@@ -17,18 +20,20 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (existing) {
-    return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
+    return NextResponse.json({ error: 'This email is already registered. Try logging in instead.', code: 'email_exists' }, { status: 409 });
   }
 
   const password_hash = await bcrypt.hash(password, 12);
+  const finalName = (typeof name === 'string' && name.trim()) || email.split('@')[0];
 
-  const { error } = await supabase.from('profiles').insert({ name, email, password_hash });
+  const { error } = await supabase.from('profiles').insert({ name: finalName, email, password_hash });
 
   if (error) {
-    return NextResponse.json({ error: 'Registration failed' }, { status: 500 });
+    console.error('[register] supabase insert failed', { code: error.code, message: error.message });
+    return NextResponse.json({ error: 'Registration failed. Please try again.', code: error.code || 'db_error' }, { status: 500 });
   }
 
-  sendWelcomeEmail(email, name).catch(() => {}); // non-blocking
+  sendWelcomeEmail(email, finalName).catch(() => {}); // non-blocking
 
   return NextResponse.json({ ok: true });
 }

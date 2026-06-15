@@ -166,7 +166,14 @@
       "creating": "جارٍ الإنشاء…",
       "createButton": "إنشاء حساب ←",
       "haveAccount": "لديك حساب بالفعل؟",
-      "logIn": "تسجيل الدخول"
+      "logIn": "تسجيل الدخول",
+      "nameOptional": "(اختياري)",
+      "passwordShow": "إظهار",
+      "passwordHide": "إخفاء",
+      "passwordRuleLength": "8 أحرف على الأقل",
+      "mustAgreeShort": "يرجى تحديد مربع الموافقة أدناه أولاً",
+      "trustSignal": "تشفير بمستوى البنوك · برنامج معتمد من HMRC · متوافق مع GDPR",
+      "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة"
     }
   },
   "dashboard": {

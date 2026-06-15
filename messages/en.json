@@ -166,7 +166,14 @@
       "creating": "Creating account…",
       "createButton": "Create account →",
       "haveAccount": "Already have an account?",
-      "logIn": "Log in"
+      "logIn": "Log in",
+      "nameOptional": "(optional)",
+      "passwordShow": "Show",
+      "passwordHide": "Hide",
+      "passwordRuleLength": "At least 8 characters",
+      "mustAgreeShort": "Please tick the agreement box below first",
+      "trustSignal": "Bank-grade encryption · HMRC-recognised software · GDPR-compliant",
+      "accountCreatedLogin": "Account created — please log in to continue"
     }
   },
   "dashboard": {

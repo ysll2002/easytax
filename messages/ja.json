@@ -166,7 +166,14 @@
       "creating": "作成中…",
       "createButton": "アカウント作成 →",
       "haveAccount": "すでにアカウントをお持ちですか？",
-      "logIn": "ログイン"
+      "logIn": "ログイン",
+      "nameOptional": "（任意）",
+      "passwordShow": "表示",
+      "passwordHide": "非表示",
+      "passwordRuleLength": "8文字以上",
+      "mustAgreeShort": "下の同意ボックスにチェックを入れてください",
+      "trustSignal": "銀行レベルの暗号化 · HMRC公認ソフトウェア · GDPR準拠",
+      "accountCreatedLogin": "アカウントが作成されました — 続行するにはログインしてください"
     }
   },
   "dashboard": {
