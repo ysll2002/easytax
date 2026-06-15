@@ -1,34 +1,36 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { FileText, RefreshCw, Building2, User, Settings } from 'lucide-react';
-
-const groups = [
-  {
-    label: 'Personal',
-    items: [
-      { href: '/dashboard/tax',       label: 'Self Assessment', icon: FileText },
-      { href: '/dashboard/reconcile', label: 'Reconcile',       icon: RefreshCw },
-    ],
-  },
-  {
-    label: 'Company',
-    items: [
-      { href: '/dashboard/company',   label: 'Company Tax', icon: Building2 },
-      { href: '/dashboard/reconcile', label: 'Reconcile',   icon: RefreshCw },
-    ],
-  },
-  {
-    label: 'Account',
-    items: [
-      { href: '/dashboard/profile',  label: 'Profile',  icon: User },
-      { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-    ],
-  },
-];
 
 export default function SidebarNav() {
   const pathname = usePathname();
+  const t = useTranslations('dashboard.nav');
+
+  const groups = [
+    {
+      label: t('personal'),
+      items: [
+        { href: '/dashboard/tax',       label: t('selfAssessment'), icon: FileText },
+        { href: '/dashboard/reconcile', label: t('reconcile'),      icon: RefreshCw },
+      ],
+    },
+    {
+      label: t('company'),
+      items: [
+        { href: '/dashboard/company',   label: t('companyTax'), icon: Building2 },
+        { href: '/dashboard/reconcile', label: t('reconcile'),  icon: RefreshCw },
+      ],
+    },
+    {
+      label: t('account'),
+      items: [
+        { href: '/dashboard/profile',  label: t('profile'),  icon: User },
+        { href: '/dashboard/settings', label: t('settings'), icon: Settings },
+      ],
+    },
+  ];
 
   return (
     <nav style={{ flex: 1, padding: '0 0.75rem', overflowY: 'auto' }}>

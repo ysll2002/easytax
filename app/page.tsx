@@ -3,19 +3,24 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
 import { auth } from '@/auth';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { getTranslations } from 'next-intl/server';
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: 'EasyTax — Free UK Tax Software for Freelancers & Limited Companies',
-  description: 'Free UK tax software. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC in minutes. Built for freelancers, sole traders and limited companies.',
-  alternates: { canonical: 'https://easytax.vip' },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('home.meta');
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: { canonical: 'https://easytax.vip' },
+  };
+}
 
 export default async function Home() {
   const session = await auth();
   const ctaHref = session ? '/dashboard' : '/register';
+  const t = await getTranslations('home');
 
   const { data: latestArticles } = await supabase
     .from('tax_articles')
@@ -32,7 +37,7 @@ export default async function Home() {
       {/* ── MTD 2026 announcement bar ── */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          <span style={{ color: '#C4622D' }}>MTD ITSA is live.</span> Q1 update due 5 Aug 2026 — <span style={{ color: '#6B8E6E' }}>EasyTax does it free.</span>
+          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span> {t('announcement.deadline')} <span style={{ color: '#6B8E6E' }}>{t('announcement.freeCallout')}</span>
         </p>
       </div>
 
@@ -49,37 +54,37 @@ export default async function Home() {
               <div className="flex-1 min-w-0">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
                   <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  {daysToQ1} days until your first MTD ITSA quarterly update
+                  {t('hero.pill', { days: daysToQ1 })}
                 </div>
 
-                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem' }}>
-                  MTD ITSA is here.<br />
-                  <span style={{ color: '#6B8E6E' }}>File quarterly to HMRC</span>{' '}
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>for free.</em>
+                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
+                  {t('hero.title1')}<br />
+                  <span style={{ color: '#6B8E6E' }}>{t('hero.title2')}</span>{' '}
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('hero.title3')}</em>
                 </h1>
 
                 <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '520px' }}>
-                  From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts. <strong style={{ color: '#1C1208' }}>£0/year, forever.</strong>
+                  {t('hero.subtitle')} <strong style={{ color: '#1C1208' }}>{t('hero.subtitleEmph')}</strong>
                 </p>
 
                 <div className="flex items-center gap-3 mb-7 flex-wrap">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>
-                    £0 / year
+                    {t('hero.badgeFree')}
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
-                    No card needed
+                    {t('hero.badgeNoCard')}
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
-                    HMRC-recognised
+                    {t('hero.badgeHmrc')}
                   </span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                    Get MTD-ready for free →
+                    {t('hero.ctaPrimary')}
                   </Link>
                   <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}>
-                    See what we cover →
+                    {t('hero.ctaSecondary')}
                   </a>
                 </div>
               </div>
@@ -102,11 +107,11 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10">
               {[
-                { Icon: CheckCircle2, label: 'HMRC Recognised',    color: '#059669' },
-                { Icon: ShieldCheck,  label: 'Bank-grade Security', color: '#FF6B35' },
-                { Icon: Clock,        label: 'File in 5 Minutes',   color: '#7C3AED' },
-                { Icon: Sparkles,     label: 'AI-powered',          color: '#C9963D' },
-                { Icon: Building2,    label: 'Limited Companies',   color: '#1C1208' },
+                { Icon: CheckCircle2, label: t('trust.hmrc'),     color: '#059669' },
+                { Icon: ShieldCheck,  label: t('trust.security'), color: '#FF6B35' },
+                { Icon: Clock,        label: t('trust.fast'),     color: '#7C3AED' },
+                { Icon: Sparkles,     label: t('trust.ai'),       color: '#C9963D' },
+                { Icon: Building2,    label: t('trust.company'),  color: '#1C1208' },
               ].map(({ Icon, label, color }) => (
                 <div key={label} className="flex items-center gap-2">
                   <Icon size={16} color={color} strokeWidth={2} />
@@ -122,11 +127,11 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="mb-14 max-w-2xl">
               <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
-                Everything covered,<br />
-                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>whoever you are.</em>
+                {t('services.title1')}<br />
+                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('services.title2')}</em>
               </h2>
               <p style={{ color: '#9A8F83', fontSize: '1.05rem', lineHeight: 1.7 }}>
-                Whether you&apos;re a freelancer filing Self Assessment or a limited company managing full accounts, EasyTax has you covered.
+                {t('services.subtitle')}
               </p>
             </div>
 
@@ -139,16 +144,16 @@ export default async function Home() {
                     <User size={18} color="#FDFCF8" strokeWidth={1.8} />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>For Freelancers & Sole Traders</p>
-                    <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208' }}>Personal & Self-Employment</h3>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>{t('services.freelancer.kicker')}</p>
+                    <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208' }}>{t('services.freelancer.title')}</h3>
                   </div>
                 </div>
                 <div className="space-y-3">
                   {[
-                    { icon: FileText,  label: 'Self Assessment (SA100)',        desc: 'File your annual return directly to HMRC in minutes.' },
-                    { icon: Sparkles,  label: 'Making Tax Digital (MTD ITSA)',  desc: 'Quarterly updates to HMRC — stay ahead of the 2026 mandate.' },
-                    { icon: Landmark,  label: 'Open Banking',                   desc: 'Connect your bank and auto-import transactions.' },
-                    { icon: Receipt,   label: 'Expense Categorisation',         desc: 'AI tags every transaction. You approve in seconds.' },
+                    { icon: FileText,  label: t('services.freelancer.f1Label'), desc: t('services.freelancer.f1Desc') },
+                    { icon: Sparkles,  label: t('services.freelancer.f2Label'), desc: t('services.freelancer.f2Desc') },
+                    { icon: Landmark,  label: t('services.freelancer.f3Label'), desc: t('services.freelancer.f3Desc') },
+                    { icon: Receipt,   label: t('services.freelancer.f4Label'), desc: t('services.freelancer.f4Desc') },
                   ].map(({ icon: Icon, label, desc }) => (
                     <div key={label} className="flex gap-3 p-4 rounded-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
                       <Icon size={16} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
@@ -161,7 +166,7 @@ export default async function Home() {
                 </div>
                 <div className="mt-6">
                   <Link href={ctaHref} className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                    Start Self Assessment →
+                    {t('services.freelancer.cta')}
                   </Link>
                 </div>
               </div>
@@ -173,16 +178,16 @@ export default async function Home() {
                     <Building2 size={18} color="#FDFCF8" strokeWidth={1.8} />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>For Limited Companies</p>
-                    <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#FDFCF8' }}>Company Accounts & Tax</h3>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>{t('services.company.kicker')}</p>
+                    <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#FDFCF8' }}>{t('services.company.title')}</h3>
                   </div>
                 </div>
                 <div className="space-y-3">
                   {[
-                    { icon: Receipt,    label: 'VAT Return',             desc: 'File quarterly or annual VAT returns directly via MTD-compliant API.' },
-                    { icon: Send,       label: 'CT600 Company Tax',      desc: 'Corporation Tax return filed to HMRC — no accountant needed.' },
-                    { icon: BarChart2,  label: 'Balance Sheet',          desc: 'Automatically generated from your transactions and reconciled accounts.' },
-                    { icon: FileText,   label: 'Profit & Loss',          desc: 'Real-time P&L statement, categorised by income and expense type.' },
+                    { icon: Receipt,    label: t('services.company.f1Label'), desc: t('services.company.f1Desc') },
+                    { icon: Send,       label: t('services.company.f2Label'), desc: t('services.company.f2Desc') },
+                    { icon: BarChart2,  label: t('services.company.f3Label'), desc: t('services.company.f3Desc') },
+                    { icon: FileText,   label: t('services.company.f4Label'), desc: t('services.company.f4Desc') },
                   ].map(({ icon: Icon, label, desc }) => (
                     <div key={label} className="flex gap-3 p-4 rounded-xl" style={{ backgroundColor: '#2E2418', border: '1px solid #3D3025' }}>
                       <Icon size={16} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
@@ -195,7 +200,7 @@ export default async function Home() {
                 </div>
                 <div className="mt-6">
                   <Link href={ctaHref} className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-                    Set Up Company Account →
+                    {t('services.company.cta')}
                   </Link>
                 </div>
               </div>
@@ -209,28 +214,28 @@ export default async function Home() {
             <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
               <div>
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1.25rem' }}>
-                  File in five minutes,<br />
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>not five hours.</em>
+                  {t('how.title1')}<br />
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('how.title2')}</em>
                 </h2>
                 <p style={{ color: '#4A4035', lineHeight: 1.8, marginBottom: '1.75rem' }}>
-                  Connect your bank and HMRC account once. EasyTax pulls your data, categorises everything with AI, and files — whether it&apos;s a Self Assessment, VAT return, or full company accounts.
+                  {t('how.body')}
                 </p>
                 <div className="flex flex-col gap-2 mb-8">
                   <div className="flex items-baseline gap-2">
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.75rem', fontWeight: 700, color: '#6B8E6E', lineHeight: 1 }}>Free</span>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.75rem', fontWeight: 700, color: '#6B8E6E', lineHeight: 1 }}>{t('how.priceLabel')}</span>
                   </div>
-                  <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>No subscriptions, no per-filing fees — EasyTax is completely free to use.</p>
+                  <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>{t('how.priceCaption')}</p>
                 </div>
                 <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-                  Start Filing →
+                  {t('how.cta')}
                 </Link>
               </div>
 
               <div className="space-y-4">
                 {[
-                  { Icon: ShieldCheck,  title: 'Connect your accounts',   desc: 'Link your Government Gateway ID and business bank account. We pull your records automatically — no manual data entry.',  color: '#FF6B35' },
-                  { Icon: Sparkles,     title: 'AI does the heavy lifting', desc: 'Our AI categorises every transaction, calculates allowable expenses, and prepares your return or company accounts.', color: '#7C3AED' },
-                  { Icon: CheckCircle2, title: 'Review & file',             desc: 'Check a plain-English summary of your return and submit directly to HMRC — instantly confirmed. Completely free.',  color: '#059669' },
+                  { Icon: ShieldCheck,  title: t('how.step1Title'), desc: t('how.step1Desc'), color: '#FF6B35' },
+                  { Icon: Sparkles,     title: t('how.step2Title'), desc: t('how.step2Desc'), color: '#7C3AED' },
+                  { Icon: CheckCircle2, title: t('how.step3Title'), desc: t('how.step3Desc'), color: '#059669' },
                 ].map((step) => (
                   <div key={step.title} className="flex gap-4 p-5 rounded-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
                     <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: step.color + '15' }}>
@@ -251,16 +256,16 @@ export default async function Home() {
         <section id="faq" className="py-20 sm:py-28" style={{ backgroundColor: '#FDFCF8' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 className="text-center mb-14" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208' }}>
-              Questions, <em style={{ color: '#C4622D', fontStyle: 'italic' }}>answered.</em>
+              {t('faq.title1')} <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('faq.title2')}</em>
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
-                { q: 'Does EasyTax support limited companies?',     a: 'Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Everything is completely free.' },
-                { q: 'What VAT schemes do you support?',            a: 'We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.' },
-                { q: 'How is the Balance Sheet generated?',         a: 'EasyTax automatically derives your Balance Sheet from your reconciled bank transactions, categorised income and expenses, and opening balances you provide during setup.' },
-                { q: 'What is the CT600 and do I need it?',         a: 'CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax prepares and submits it based on your P&L and company accounts.' },
-                { q: 'Is my HMRC data safe?',                       a: 'Your credentials are never stored. We use them to fetch your records via a secure, encrypted connection and discard them immediately after.' },
-                { q: 'What\'s the Self Assessment deadline?',       a: 'Online Self Assessment returns are due 31 January each year. VAT returns are due one month and seven days after each VAT period ends. EasyTax tracks all your deadlines automatically.' },
+                { q: t('faq.q1Q'), a: t('faq.q1A') },
+                { q: t('faq.q2Q'), a: t('faq.q2A') },
+                { q: t('faq.q3Q'), a: t('faq.q3A') },
+                { q: t('faq.q4Q'), a: t('faq.q4A') },
+                { q: t('faq.q5Q'), a: t('faq.q5A') },
+                { q: t('faq.q6Q'), a: t('faq.q6A') },
               ].map((item) => (
                 <details key={item.q} className="group py-5 sm:py-6" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm sm:text-base" style={{ color: '#1C1208' }}>
@@ -281,15 +286,15 @@ export default async function Home() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
                   <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  Updated daily
+                  {t('tips.kicker')}
                 </div>
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2 }}>
-                  What you need to know<br />
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>about the tax.</em>
+                  {t('tips.title1')}<br />
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('tips.title2')}</em>
                 </h2>
               </div>
               <Link href="/tax-tips" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
-                All articles →
+                {t('tips.viewAll')}
               </Link>
             </div>
 
@@ -310,15 +315,15 @@ export default async function Home() {
                       <p className="text-xs leading-relaxed mb-4" style={{ color: '#9A8F83' }}>
                         {a.excerpt.slice(0, 100)}…
                       </p>
-                      <p className="text-xs font-medium" style={{ color: '#C4622D' }}>Read more →</p>
+                      <p className="text-xs font-medium" style={{ color: '#C4622D' }}>{t('tips.readMore')}</p>
                     </div>
                   </Link>
                 ))}
               </div>
             ) : (
               <div className="py-10 text-center rounded-2xl" style={{ backgroundColor: '#F8F5F0', border: '1px solid #E8E2DA' }}>
-                <p className="font-medium" style={{ color: '#4A4035' }}>First article coming tomorrow at 8am.</p>
-                <Link href="/tax-tips" className="text-sm mt-2 inline-block" style={{ color: '#C4622D' }}>Visit Tax Tips →</Link>
+                <p className="font-medium" style={{ color: '#4A4035' }}>{t('tips.empty')}</p>
+                <Link href="/tax-tips" className="text-sm mt-2 inline-block" style={{ color: '#C4622D' }}>{t('tips.visit')}</Link>
               </div>
             )}
           </div>
@@ -328,14 +333,14 @@ export default async function Home() {
         <section className="py-24 sm:py-28" style={{ backgroundColor: '#1C1208' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 5vw, 3.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.1, marginBottom: '1.5rem' }}>
-              Stop dreading<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>the paperwork.</em>
+              {t('finalCta.title1')}<br />
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('finalCta.title2')}</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
-              Free for UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes.
+              {t('finalCta.subtitle')}
             </p>
             <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-              Start for Free →
+              {t('finalCta.button')}
             </Link>
           </div>
         </section>
@@ -345,12 +350,12 @@ export default async function Home() {
       <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', color: '#4A4035' }}>
-            EasyTax Ltd. Built in London.
+            {t('footer.tagline')}
           </div>
           <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">Terms</Link>
-            <Link href="#" className="hover:text-[#C4622D] transition-colors">Twitter</Link>
+            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">{t('footer.privacy')}</Link>
+            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">{t('footer.terms')}</Link>
+            <Link href="#" className="hover:text-[#C4622D] transition-colors">{t('footer.twitter')}</Link>
           </div>
         </div>
       </footer>

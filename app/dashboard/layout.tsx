@@ -5,6 +5,8 @@ import DeviceDataCollector from '@/components/DeviceDataCollector';
 import SidebarNav from '@/components/SidebarNav';
 import LogoutButton from '@/components/LogoutButton';
 import MobileNav from '@/components/MobileNav';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import HomepageLink from '@/components/HomepageLink';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -37,19 +39,29 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <p style={{ color: '#4A4035', fontSize: '0.7rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
             </div>
           </div>
+
           <LogoutButton />
         </div>
       </aside>
 
       {/* Mobile top bar */}
-      <div className="flex md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', alignItems: 'center' }}>
+      <div className="flex md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
           EasyTax
         </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <LanguageSwitcher />
+          <HomepageLink />
+        </div>
       </div>
 
       {/* Main content */}
-      <main style={{ flex: 1, overflow: 'auto', paddingTop: 0 }}>
+      <main style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
+        {/* Desktop floating top-right controls */}
+        <div className="hidden md:flex" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30, gap: '0.5rem' }}>
+          <LanguageSwitcher />
+          <HomepageLink />
+        </div>
         {/* Mobile top spacer */}
         <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />

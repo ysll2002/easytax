@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -15,6 +16,7 @@ function track(event: string, params?: Record<string, unknown>) {
 }
 
 export default function Register() {
+  const t = useTranslations('auth.register');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [agreed, setAgreed] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
@@ -28,7 +30,7 @@ export default function Register() {
   const handleGoogle = () => {
     setError(''); setGoogleError('');
     if (!agreed) {
-      setGoogleError('Please tick the agreement box below first');
+      setGoogleError(t('mustAgreeShort'));
       track('register_failed', { method: 'google', reason: 'missing_tnc' });
       return;
     }
@@ -41,12 +43,12 @@ export default function Register() {
     setError(''); setGoogleError('');
 
     if (!agreed) {
-      setError('Please agree to the Terms & Conditions and Privacy Policy');
+      setError(t('mustAgree'));
       track('register_failed', { method: 'email', reason: 'missing_tnc' });
       return;
     }
     if (!pwdLongEnough) {
-      setError('Password must be at least 8 characters');
+      setError(t('passwordTooShort'));
       track('register_failed', { method: 'email', reason: 'pwd_too_short' });
       return;
     }
@@ -61,7 +63,7 @@ export default function Register() {
     const data = await res.json();
 
     if (!res.ok) {
-      setError(data.error || 'Registration failed');
+      setError(data.error || t('registrationFailed'));
       track('register_failed', { method: 'email', reason: data.code || 'api_error' });
       setLoading(false);
       return;
@@ -76,7 +78,7 @@ export default function Register() {
 
     if (result?.error) {
       track('register_failed', { method: 'email', reason: 'signin_after_register' });
-      setError('Account created — please log in to continue');
+      setError(t('accountCreatedLogin'));
       setLoading(false);
       return;
     }
@@ -101,13 +103,12 @@ export default function Register() {
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            Create your account
+            {t('title')}
           </h1>
-          <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>Start filing your taxes in minutes</p>
+          <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>{t('subtitle')}</p>
         </div>
 
         <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-          {/* Google */}
           <button
             type="button"
             onClick={handleGoogle}
@@ -120,7 +121,7 @@ export default function Register() {
               <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
               <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
             </svg>
-            Continue with Google
+            {t('continueGoogle')}
           </button>
 
           {googleError && (
@@ -129,30 +130,30 @@ export default function Register() {
 
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
-            <span className="text-xs" style={{ color: '#9A8F83' }}>or</span>
+            <span className="text-xs" style={{ color: '#9A8F83' }}>{t('or')}</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
-                Full name <span style={{ color: '#9A8F83', fontWeight: 400 }}>(optional)</span>
+                {t('fullName')} <span style={{ color: '#9A8F83', fontWeight: 400 }}>{t('nameOptional')}</span>
               </label>
-              <input type="text" placeholder="Jane Doe" value={form.name}
+              <input type="text" placeholder={t('namePlaceholder')} value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Email address</label>
-              <input type="email" required placeholder="you@example.com" value={form.email}
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('email')}</label>
+              <input type="email" required placeholder={t('emailPlaceholder')} value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
             </div>
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Password</label>
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('password')}</label>
               <div style={{ position: 'relative' }}>
                 <input
                   type={showPwd ? 'text' : 'password'}
                   required
-                  placeholder="At least 8 characters"
+                  placeholder={t('passwordRuleLength')}
                   value={form.password}
                   onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                   style={{ ...inputStyle, paddingRight: '3.5rem' }}
@@ -163,17 +164,17 @@ export default function Register() {
                   className="text-xs font-semibold"
                   style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#C4622D', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0.5rem' }}
                 >
-                  {showPwd ? 'Hide' : 'Show'}
+                  {showPwd ? t('passwordHide') : t('passwordShow')}
                 </button>
               </div>
               {pwdStarted && (
                 <p className="text-xs mt-2" style={{ color: pwdLongEnough ? '#2E7D5B' : '#9A8F83' }}>
-                  {pwdLongEnough ? '✓' : '○'} At least 8 characters
+                  {pwdLongEnough ? '✓' : '○'} {t('passwordRuleLength')}
                 </p>
               )}
             </div>
 
-            {/* T&C consent — moved next to submit so its purpose is obvious */}
+            {/* T&C consent — placed next to submit so its purpose is obvious */}
             <label className="flex items-start gap-3 cursor-pointer pt-2">
               <input
                 type="checkbox"
@@ -182,10 +183,10 @@ export default function Register() {
                 style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#C4622D', cursor: 'pointer' }}
               />
               <span className="text-sm" style={{ color: '#4A4035', lineHeight: '1.5' }}>
-                I agree to the{' '}
-                <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>Terms &amp; Conditions</Link>
-                {' '}and{' '}
-                <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>Privacy Policy</Link>
+                {t('agreementPrefix')}{' '}
+                <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>{t('terms')}</Link>
+                {' '}{t('and')}{' '}
+                <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>{t('privacy')}</Link>
               </span>
             </label>
 
@@ -196,18 +197,18 @@ export default function Register() {
             <button type="submit" disabled={loading}
               className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2"
               style={{ backgroundColor: loading ? '#DDD5C8' : '#C4622D', color: '#FDFCF8', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '0.25rem' }}>
-              {loading ? 'Creating account…' : 'Create account →'}
+              {loading ? t('creating') : t('createButton')}
             </button>
           </form>
 
           <p className="text-xs text-center mt-6" style={{ color: '#9A8F83', lineHeight: '1.6' }}>
             <span style={{ marginRight: '0.5rem' }}>🔒</span>
-            Bank-grade encryption · HMRC-recognised software · GDPR-compliant
+            {t('trustSignal')}
           </p>
 
           <p className="text-center text-sm mt-4" style={{ color: '#9A8F83' }}>
-            Already have an account?{' '}
-            <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>Log in</Link>
+            {t('haveAccount')}{' '}
+            <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>{t('logIn')}</Link>
           </p>
         </div>
       </div>

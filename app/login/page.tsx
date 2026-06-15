@@ -2,11 +2,13 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
 export default function Login() {
   const router = useRouter();
+  const t = useTranslations('auth.login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,7 +29,7 @@ export default function Login() {
       redirect: false,
     });
     if (result?.error) {
-      setError('Invalid email or password');
+      setError(t('invalidCredentials'));
       setLoading(false);
     } else {
       router.push('/dashboard');
@@ -53,10 +55,10 @@ export default function Login() {
 
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            Welcome back
+            {t('title')}
           </h1>
           <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>
-            Log in to your EasyTax account
+            {t('subtitle')}
           </p>
         </div>
 
@@ -88,13 +90,13 @@ export default function Login() {
                 <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
               </svg>
             )}
-            {googleLoading ? 'Redirecting...' : 'Continue with Google'}
+            {googleLoading ? t('redirecting') : t('continueGoogle')}
           </button>
 
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
-            <span className="text-xs" style={{ color: '#9A8F83' }}>or</span>
+            <span className="text-xs" style={{ color: '#9A8F83' }}>{t('or')}</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
           </div>
 
@@ -102,13 +104,13 @@ export default function Login() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
-                Email address
+                {t('email')}
               </label>
               <input
                 id="email"
                 type="email"
                 required
-                placeholder="you@example.com"
+                placeholder={t('emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={inputStyle}
@@ -118,17 +120,17 @@ export default function Login() {
             <div>
               <div className="flex justify-between items-center mb-2">
                 <label htmlFor="password" className="block text-sm font-semibold" style={{ color: '#1C1208' }}>
-                  Password
+                  {t('password')}
                 </label>
                 <Link href="#" className="text-xs" style={{ color: '#C4622D' }}>
-                  Forgot password?
+                  {t('forgotPassword')}
                 </Link>
               </div>
               <input
                 id="password"
                 type="password"
                 required
-                placeholder="Your password"
+                placeholder={t('passwordPlaceholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={inputStyle}
@@ -154,16 +156,16 @@ export default function Login() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Logging in...
+                  {t('loggingIn')}
                 </>
-              ) : 'Log in →'}
+              ) : t('logIn')}
             </button>
           </form>
 
           <p className="text-center text-sm mt-6" style={{ color: '#9A8F83' }}>
-            Don&apos;t have an account?{' '}
+            {t('noAccount')}{' '}
             <Link href="/register" style={{ color: '#C4622D', fontWeight: 600 }}>
-              Create account
+              {t('createAccount')}
             </Link>
           </p>
         </div>

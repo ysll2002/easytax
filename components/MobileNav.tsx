@@ -1,18 +1,20 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { FileText, Building2, RefreshCw, User, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
-const nav = [
-  { href: '/dashboard/tax',       label: 'Self Assess', icon: FileText },
-  { href: '/dashboard/company',   label: 'Company',     icon: Building2 },
-  { href: '/dashboard/reconcile', label: 'Reconcile',   icon: RefreshCw },
-  { href: '/dashboard/profile',   label: 'Profile',     icon: User },
-];
-
 export default function MobileNav() {
   const pathname = usePathname();
+  const t = useTranslations('dashboard.nav');
+
+  const nav = [
+    { href: '/dashboard/tax',       label: t('selfAssessShort'), icon: FileText },
+    { href: '/dashboard/company',   label: t('companyShort'),    icon: Building2 },
+    { href: '/dashboard/reconcile', label: t('reconcile'),       icon: RefreshCw },
+    { href: '/dashboard/profile',   label: t('profile'),         icon: User },
+  ];
 
   return (
     <nav style={{
@@ -41,7 +43,7 @@ export default function MobileNav() {
         color: '#9A8F83', background: 'none', border: 'none', cursor: 'pointer',
       }}>
         <LogOut size={20} strokeWidth={1.8} />
-        <span style={{ fontSize: '0.6rem' }}>Log out</span>
+        <span style={{ fontSize: '0.6rem' }}>{t('logout')}</span>
       </button>
     </nav>
   );

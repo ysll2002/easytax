@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://easytax.vip/coconut-alternative' },
   openGraph: {
     title: 'Coconut Alternative — Free MTD ITSA Software for UK Sole Traders',
-    description: 'Free MTD ITSA software for sole traders, landlords and limited companies. £0/year, forever.',
+    description: 'Free MTD ITSA software for sole traders, landlords and limited companies. £0/year.',
     url: 'https://easytax.vip/coconut-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -31,7 +31,7 @@ type Row = { feature: string; easytax: string | boolean; coconut: string | boole
 
 const rows: Row[] = [
   { feature: 'Price (annual)',                     easytax: '£0',           coconut: '£99.99 – £159.99' },
-  { feature: 'Free forever (no trial limit)',      easytax: true,           coconut: false,             note: 'Coconut is 14-day trial then paid' },
+  { feature: 'No trial limit, no card needed',     easytax: true,           coconut: false,             note: 'Coconut is 14-day trial then paid' },
   { feature: 'MTD ITSA quarterly updates',         easytax: true,           coconut: true },
   { feature: 'Self Assessment (SA100)',            easytax: true,           coconut: true },
   { feature: 'VAT returns (MTD VAT)',              easytax: true,           coconut: false,             note: 'Coconut focuses on Income Tax, not VAT' },
@@ -82,7 +82,7 @@ export default async function CoconutAlternative() {
               Looking for a <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Coconut alternative</em>?
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year. EasyTax does MTD ITSA, Self Assessment, VAT and CT600 for <strong style={{ color: '#6B8E6E' }}>£0/year, forever</strong> — and we cover limited companies, which Coconut doesn&apos;t.
+              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year. EasyTax does MTD ITSA, Self Assessment, VAT and CT600 for <strong style={{ color: '#6B8E6E' }}>£0/year</strong> — and we cover limited companies, which Coconut doesn&apos;t.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£0 / year</span>

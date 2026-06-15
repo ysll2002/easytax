@@ -51,7 +51,7 @@ export default function Terms() {
               EasyTax is a software platform that helps UK-based sole traders, freelancers, and contractors to:
             </P>
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }} className="space-y-1">
-              <li>Connect their bank account via Open Banking (TrueLayer) to import transactions</li>
+              <li>Connect their bank account via Open Banking (Plaid) to import transactions</li>
               <li>Categorise expenses using AI-assisted tools</li>
               <li>Connect to HMRC via Government Gateway OAuth</li>
               <li>Prepare and submit Self Assessment tax returns directly to HMRC</li>
@@ -116,10 +116,10 @@ export default function Terms() {
           <section>
             <H2>7. Open Banking Connection</H2>
             <P>
-              By connecting a bank account via TrueLayer, you grant read-only access to your transaction data. We cannot and will never initiate payments or move money from your account. You can disconnect your bank at any time from your dashboard.
+              By connecting a bank account via Plaid, you grant read-only access to your transaction data. We cannot and will never initiate payments or move money from your account. You can disconnect your bank at any time from your dashboard.
             </P>
             <P>
-              Open Banking connections are subject to TrueLayer's own terms of service and FCA regulations.
+              Open Banking connections are subject to Plaid's own terms of service and FCA regulations.
             </P>
           </section>
 

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { createHash } from 'crypto';
 
 const BASE = process.env.HMRC_ENV === 'production'
@@ -75,6 +75,13 @@ async function fraudHeaders(): Promise<Record<string, string>> {
 
   const vendorIp = await getVendorPublicIp();
   const clientIp = deviceData.ip ?? '';
+  // MFA happens on HMRC's Government Gateway during OAuth — our software never
+  // sees the factor itself. We report type=OTHER with a stable per-user reference
+  // so HMRC has an audit-friendly value.
+  const mfaRef = deviceData.userId
+    ? createHash('sha256').update(`mfa:${deviceData.userId}`).digest('hex').slice(0, 16)
+    : 'unknown';
+  const mfaTs  = deviceData.ipTs ?? new Date().toISOString();
 
   return {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
@@ -87,6 +94,7 @@ async function fraudHeaders(): Promise<Record<string, string>> {
     'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? new Date().toISOString(),
     'Gov-Client-Public-Port':           deviceData.port      ?? '',
     'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
+    'Gov-Client-Multi-Factor':          `type=OTHER&timestamp=${mfaTs}&unique-reference=${mfaRef}`,
     'Gov-Vendor-Product-Name':          'EasyTax',
     'Gov-Vendor-Version':               'easytax=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
