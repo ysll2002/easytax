@@ -4,20 +4,55 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 
+declare global {
+  interface Window { gtag?: (...args: unknown[]) => void }
+}
+
+function track(event: string, params?: Record<string, unknown>) {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', event, params);
+  }
+}
+
 export default function Register() {
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [agreed, setAgreed] = useState(false);
-  const [error, setError]   = useState('');
+  const [showPwd, setShowPwd] = useState(false);
+  const [error, setError] = useState('');
+  const [googleError, setGoogleError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const pwdLongEnough = form.password.length >= 8;
+  const pwdStarted = form.password.length > 0;
+
+  const handleGoogle = () => {
+    setError(''); setGoogleError('');
+    if (!agreed) {
+      setGoogleError('Please tick the agreement box below first');
+      track('register_failed', { method: 'google', reason: 'missing_tnc' });
+      return;
+    }
+    track('register_attempted', { method: 'google' });
+    signIn('google', { callbackUrl: '/dashboard' });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    if (!agreed) { setError('You must agree to the Terms & Conditions and Privacy Policy'); return; }
-    if (form.password !== form.confirm) { setError('Passwords do not match'); return; }
-    if (form.password.length < 8)       { setError('Password must be at least 8 characters'); return; }
+    setError(''); setGoogleError('');
+
+    if (!agreed) {
+      setError('Please agree to the Terms & Conditions and Privacy Policy');
+      track('register_failed', { method: 'email', reason: 'missing_tnc' });
+      return;
+    }
+    if (!pwdLongEnough) {
+      setError('Password must be at least 8 characters');
+      track('register_failed', { method: 'email', reason: 'pwd_too_short' });
+      return;
+    }
 
     setLoading(true);
+    track('register_attempted', { method: 'email' });
     const res = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -25,16 +60,38 @@ export default function Register() {
     });
     const data = await res.json();
 
-    if (!res.ok) { setError(data.error || 'Registration failed'); setLoading(false); return; }
+    if (!res.ok) {
+      setError(data.error || 'Registration failed');
+      track('register_failed', { method: 'email', reason: data.code || 'api_error' });
+      setLoading(false);
+      return;
+    }
 
-    // Auto sign in after registration
-    await signIn('credentials', { email: form.email, password: form.password, callbackUrl: '/dashboard' });
+    track('register_success', { method: 'email' });
+    const result = await signIn('credentials', {
+      email: form.email,
+      password: form.password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      track('register_failed', { method: 'email', reason: 'signin_after_register' });
+      setError('Account created — please log in to continue');
+      setLoading(false);
+      return;
+    }
+
+    window.location.href = '/dashboard';
   };
 
   const inputStyle = {
     width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem',
     border: '1.5px solid #DDD5C8', backgroundColor: '#FDFCF8', color: '#1C1208',
     fontSize: '0.875rem', outline: 'none',
+  };
+
+  const errorBoxStyle = {
+    backgroundColor: '#F5E4D8', color: '#C4622D',
   };
 
   return (
@@ -52,12 +109,9 @@ export default function Register() {
         <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
           {/* Google */}
           <button
-            onClick={() => {
-              if (!agreed) { setError('You must agree to the Terms & Conditions and Privacy Policy'); return; }
-              setError('');
-              signIn('google', { callbackUrl: '/dashboard' });
-            }}
-            className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-medium text-sm mb-6"
+            type="button"
+            onClick={handleGoogle}
+            className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-medium text-sm"
             style={{ backgroundColor: '#FDFCF8', border: '1.5px solid #DDD5C8', color: '#1C1208' }}
           >
             <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
@@ -69,25 +123,11 @@ export default function Register() {
             Continue with Google
           </button>
 
-          {/* T&C consent */}
-          <label className="flex items-start gap-3 mb-5 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={agreed}
-              onChange={e => { setAgreed(e.target.checked); if (e.target.checked) setError(''); }}
-              style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#C4622D', cursor: 'pointer' }}
-            />
-            <span className="text-sm" style={{ color: '#4A4035', lineHeight: '1.5' }}>
-              I agree to the{' '}
-              <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>Terms &amp; Conditions</Link>
-              {' '}and{' '}
-              <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>Privacy Policy</Link>
-            </span>
-          </label>
+          {googleError && (
+            <p className="text-sm py-2 px-3 rounded-lg mt-3" style={errorBoxStyle}>{googleError}</p>
+          )}
 
-          {error && <p className="text-sm py-2 px-3 rounded-lg mb-4" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
-
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
             <span className="text-xs" style={{ color: '#9A8F83' }}>or</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
@@ -95,8 +135,10 @@ export default function Register() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Full name</label>
-              <input type="text" required placeholder="Jane Doe" value={form.name}
+              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
+                Full name <span style={{ color: '#9A8F83', fontWeight: 400 }}>(optional)</span>
+              </label>
+              <input type="text" placeholder="Jane Doe" value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
             </div>
             <div>
@@ -106,25 +148,64 @@ export default function Register() {
             </div>
             <div>
               <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Password</label>
-              <input type="password" required placeholder="Min. 8 characters" value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))} style={inputStyle} />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Confirm password</label>
-              <input type="password" required placeholder="Repeat password" value={form.confirm}
-                onChange={e => setForm(f => ({ ...f, confirm: e.target.value }))} style={inputStyle} />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPwd ? 'text' : 'password'}
+                  required
+                  placeholder="At least 8 characters"
+                  value={form.password}
+                  onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                  style={{ ...inputStyle, paddingRight: '3.5rem' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd(s => !s)}
+                  className="text-xs font-semibold"
+                  style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#C4622D', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0.5rem' }}
+                >
+                  {showPwd ? 'Hide' : 'Show'}
+                </button>
+              </div>
+              {pwdStarted && (
+                <p className="text-xs mt-2" style={{ color: pwdLongEnough ? '#2E7D5B' : '#9A8F83' }}>
+                  {pwdLongEnough ? '✓' : '○'} At least 8 characters
+                </p>
+              )}
             </div>
 
-            {error && agreed && <p className="text-sm py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
+            {/* T&C consent — moved next to submit so its purpose is obvious */}
+            <label className="flex items-start gap-3 cursor-pointer pt-2">
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={e => { setAgreed(e.target.checked); if (e.target.checked) { setError(''); setGoogleError(''); } }}
+                style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#C4622D', cursor: 'pointer' }}
+              />
+              <span className="text-sm" style={{ color: '#4A4035', lineHeight: '1.5' }}>
+                I agree to the{' '}
+                <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>Terms &amp; Conditions</Link>
+                {' '}and{' '}
+                <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>Privacy Policy</Link>
+              </span>
+            </label>
+
+            {error && (
+              <p className="text-sm py-2 px-3 rounded-lg" style={errorBoxStyle}>{error}</p>
+            )}
 
             <button type="submit" disabled={loading}
               className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2"
               style={{ backgroundColor: loading ? '#DDD5C8' : '#C4622D', color: '#FDFCF8', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '0.25rem' }}>
-              {loading ? 'Creating account...' : 'Create account →'}
+              {loading ? 'Creating account…' : 'Create account →'}
             </button>
           </form>
 
-          <p className="text-center text-sm mt-6" style={{ color: '#9A8F83' }}>
+          <p className="text-xs text-center mt-6" style={{ color: '#9A8F83', lineHeight: '1.6' }}>
+            <span style={{ marginRight: '0.5rem' }}>🔒</span>
+            Bank-grade encryption · HMRC-recognised software · GDPR-compliant
+          </p>
+
+          <p className="text-center text-sm mt-4" style={{ color: '#9A8F83' }}>
             Already have an account?{' '}
             <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>Log in</Link>
           </p>
