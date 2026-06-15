@@ -8,21 +8,34 @@
 - 本地代码克隆在 `/tmp/easytax`，工作分支为 `staging`
 
 **标准部署流程：**
-1. 修改代码后，commit 并 push 到 `staging` 分支：
+1. 切到 staging 之后、动手改代码之前，必须先运行：
+   ```
+   git fetch origin && git log staging..origin/main --oneline
+   ```
+   只要这条命令有输出，说明 main 比 staging 多了 commit（即生产已经领先于 staging），**必须先把 main merge 进 staging 并解决冲突**才能继续：
+   ```
+   git merge origin/main
+   ```
+   原因：`vercel deploy --prod` 部署的是本地工作目录的代码，不是 main 分支。如果 staging 落后于 main 就直接上 prod，会把生产回退到旧版本，丢失功能。
+2. 修改代码后，commit 并 push 到 `staging` 分支：
    ```
    git add -A
    git commit -m "..."
    git push origin staging
    ```
-2. 运行预览部署并更新 staging 域名：
+3. 运行预览部署并更新 staging 域名：
    ```
    vercel deploy --scope lilingabriel-5465s-projects --yes
    vercel alias set <预览URL> staging.easytax.vip --scope lilingabriel-5465s-projects
    ```
-3. 把 `staging.easytax.vip` 链接发给用户，等待确认
-4. 用户明确说"发布"或"上线"后，才运行：
+4. 把 `staging.easytax.vip` 链接发给用户，等待确认
+5. 用户明确说"发布"或"上线"后，才运行：
    ```
    vercel deploy --prod --scope lilingabriel-5465s-projects --yes
+   ```
+6. 上线后把 staging 同步回 main，让 git 历史和生产对齐：
+   ```
+   git checkout main && git merge staging --no-ff && git push origin main && git checkout staging
    ```
 
 **代码提交规范：**
