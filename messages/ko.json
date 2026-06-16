@@ -173,7 +173,8 @@
       "passwordRuleLength": "최소 8자",
       "mustAgreeShort": "아래 동의 상자에 먼저 체크해 주세요",
       "trustSignal": "은행 수준 암호화 · HMRC 공인 소프트웨어 · GDPR 준수",
-      "accountCreatedLogin": "계정이 생성되었습니다 — 계속하려면 로그인하세요"
+      "accountCreatedLogin": "계정이 생성되었습니다 — 계속하려면 로그인하세요",
+      "redirecting": "리디렉션 중…"
     }
   },
   "dashboard": {

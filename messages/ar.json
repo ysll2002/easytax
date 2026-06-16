@@ -173,7 +173,8 @@
       "passwordRuleLength": "8 أحرف على الأقل",
       "mustAgreeShort": "يرجى تحديد مربع الموافقة أدناه أولاً",
       "trustSignal": "تشفير بمستوى البنوك · برنامج معتمد من HMRC · متوافق مع GDPR",
-      "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة"
+      "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة",
+      "redirecting": "إعادة توجيه…"
     }
   },
   "dashboard": {

@@ -173,7 +173,8 @@
       "passwordRuleLength": "8文字以上",
       "mustAgreeShort": "下の同意ボックスにチェックを入れてください",
       "trustSignal": "銀行レベルの暗号化 · HMRC公認ソフトウェア · GDPR準拠",
-      "accountCreatedLogin": "アカウントが作成されました — 続行するにはログインしてください"
+      "accountCreatedLogin": "アカウントが作成されました — 続行するにはログインしてください",
+      "redirecting": "リダイレクト中…"
     }
   },
   "dashboard": {

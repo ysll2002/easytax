@@ -173,7 +173,8 @@
       "passwordRuleLength": "Au moins 8 caractères",
       "mustAgreeShort": "Veuillez d'abord cocher la case ci-dessous",
       "trustSignal": "Chiffrement bancaire · Logiciel reconnu HMRC · Conforme RGPD",
-      "accountCreatedLogin": "Compte créé — connectez-vous pour continuer"
+      "accountCreatedLogin": "Compte créé — connectez-vous pour continuer",
+      "redirecting": "Redirection…"
     }
   },
   "dashboard": {

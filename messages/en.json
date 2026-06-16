@@ -173,7 +173,8 @@
       "passwordRuleLength": "At least 8 characters",
       "mustAgreeShort": "Please tick the agreement box below first",
       "trustSignal": "Bank-grade encryption · HMRC-recognised software · GDPR-compliant",
-      "accountCreatedLogin": "Account created — please log in to continue"
+      "accountCreatedLogin": "Account created — please log in to continue",
+      "redirecting": "Redirecting…"
     }
   },
   "dashboard": {
