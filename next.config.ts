@@ -33,8 +33,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: '/dashboard/reconcile',
-        destination: '/dashboard/individual/reconcile',
+        source: '/dashboard/individual/reconcile',
+        destination: '/dashboard/reconcile',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/company/reconcile',
+        destination: '/dashboard/reconcile',
         permanent: true,
       },
     ];

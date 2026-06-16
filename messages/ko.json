@@ -190,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "법인",
       "logout": "로그아웃",
-      "homepage": "홈"
+      "homepage": "홈",
+      "bank": "은행"
     },
     "home": {
       "welcome": "환영합니다, {name}님",
@@ -268,7 +269,10 @@
       "poweredBy": "읽기 전용 접근. 자금을 이동할 수 없습니다. Plaid 제공.",
       "errorRetry": "Plaid Link를 시작할 수 없습니다 —— 다시 시도해 주세요.",
       "errorNetwork": "네트워크 오류.",
-      "errorGeneric": "연결 실패 ({error})."
+      "errorGeneric": "연결 실패 ({error}).",
+      "connectedTitle": "연결된 계정",
+      "reconcileCta": "거래 대조 →",
+      "connectAnother": "다른 계정 연결 →"
     },
     "profile": {
       "title": "프로필",

@@ -67,7 +67,7 @@ export default async function CompanyPage() {
       icon: RefreshCw,
       label: t('reconcileLabel'),
       desc: t('reconcileDesc'),
-      href: '/dashboard/company/reconcile',
+      href: '/dashboard/reconcile',
       status: 'available' as const,
     },
   ];

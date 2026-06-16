@@ -190,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "公司",
       "logout": "退出",
-      "homepage": "首页"
+      "homepage": "首页",
+      "bank": "银行"
     },
     "home": {
       "welcome": "欢迎，{name}",
@@ -268,7 +269,10 @@
       "poweredBy": "只读访问。我们绝不能动你的钱。由 Plaid 提供支持。",
       "errorRetry": "无法启动 Plaid Link —— 请重试。",
       "errorNetwork": "网络错误。",
-      "errorGeneric": "连接失败（{error}）。"
+      "errorGeneric": "连接失败（{error}）。",
+      "connectedTitle": "已连接账户",
+      "reconcileCta": "对账交易 →",
+      "connectAnother": "连接另一个账户 →"
     },
     "profile": {
       "title": "个人资料",

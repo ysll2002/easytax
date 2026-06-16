@@ -190,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "Empresa",
       "logout": "Cerrar sesión",
-      "homepage": "Inicio"
+      "homepage": "Inicio",
+      "bank": "Banco"
     },
     "home": {
       "welcome": "Bienvenido, {name}",
@@ -268,7 +269,10 @@
       "poweredBy": "Acceso de solo lectura. Nunca moveremos tu dinero. Con tecnología de Plaid.",
       "errorRetry": "No se pudo iniciar Plaid Link — vuelve a intentarlo.",
       "errorNetwork": "Error de red.",
-      "errorGeneric": "Conexión fallida ({error})."
+      "errorGeneric": "Conexión fallida ({error}).",
+      "connectedTitle": "Cuenta conectada",
+      "reconcileCta": "Conciliar transacciones →",
+      "connectAnother": "Conectar otra cuenta →"
     },
     "profile": {
       "title": "Perfil",

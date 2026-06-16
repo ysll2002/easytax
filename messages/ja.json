@@ -190,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "会社",
       "logout": "ログアウト",
-      "homepage": "ホーム"
+      "homepage": "ホーム",
+      "bank": "銀行"
     },
     "home": {
       "welcome": "ようこそ、{name} さん",
@@ -268,7 +269,10 @@
       "poweredBy": "読み取り専用アクセス。送金は一切できません。Plaid 提供。",
       "errorRetry": "Plaid Link を開始できません —— 再試行してください。",
       "errorNetwork": "ネットワークエラー。",
-      "errorGeneric": "接続失敗（{error}）。"
+      "errorGeneric": "接続失敗（{error}）。",
+      "connectedTitle": "接続済みアカウント",
+      "reconcileCta": "取引を照合 →",
+      "connectAnother": "別のアカウントを接続 →"
     },
     "profile": {
       "title": "プロフィール",
