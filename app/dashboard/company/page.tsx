@@ -31,7 +31,7 @@ export default async function CompanyPage() {
       icon: Receipt,
       label: t('vatLabel'),
       desc: t('vatDesc'),
-      href: '/dashboard/tax/vat',
+      href: '/dashboard/individual/vat',
       status: hasVrn ? 'available' : hasHmrc ? 'locked' : 'locked',
       badge: hasVrn ? undefined : t('vatBadge'),
     },
@@ -94,7 +94,7 @@ export default async function CompanyPage() {
             <p className="text-xs mb-3" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
               {t('connectFirstBody')}
             </p>
-            <Link href="/dashboard/tax" className="inline-block px-4 py-2 rounded-full text-xs font-semibold" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+            <Link href="/dashboard/individual" className="inline-block px-4 py-2 rounded-full text-xs font-semibold" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
               {t('connectHmrc')}
             </Link>
           </div>

@@ -230,7 +230,7 @@ export default function ReconcileClient({ accountName, accountId }: {
               <div>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Bank connection expired</p>
                 <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>Your bank connection has expired. Reconnect to continue importing transactions.</p>
-                <Link href="/dashboard/tax/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+                <Link href="/dashboard/individual/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
                   Reconnect Bank →
                 </Link>
               </div>
@@ -243,7 +243,7 @@ export default function ReconcileClient({ accountName, accountId }: {
               <div>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Could not load transactions</p>
                 <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>There was a problem fetching your bank data. Try reconnecting your account.</p>
-                <Link href="/dashboard/tax/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+                <Link href="/dashboard/individual/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
                   Reconnect Bank →
                 </Link>
               </div>

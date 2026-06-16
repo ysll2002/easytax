@@ -125,7 +125,7 @@ export async function GET() {
             dueDate:       ob.dueDate,
             status:        taskStatus(ob.dueDate, completed),
             completedDate: ob.receivedDate,
-            actionHref:    `/dashboard/tax/tasks`,
+            actionHref:    `/dashboard/individual/tasks`,
             taxYear,
           });
         } else {
@@ -137,7 +137,7 @@ export async function GET() {
             dueDate:       ob.dueDate,
             status:        taskStatus(ob.dueDate, completed),
             completedDate: ob.receivedDate,
-            actionHref:    `/dashboard/tax/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`,
+            actionHref:    `/dashboard/individual/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`,
             periodStart:   ob.periodStartDate,
             periodEnd:     ob.periodEndDate,
             periodKey:     ob.periodKey,
@@ -161,7 +161,7 @@ export async function GET() {
             dueDate:       ob.due,
             status:        taskStatus(ob.due, completed),
             completedDate: ob.received,
-            actionHref:    `/dashboard/tax/vat`,
+            actionHref:    `/dashboard/individual/vat`,
             periodStart:   ob.start,
             periodEnd:     ob.end,
             periodKey:     ob.periodKey,

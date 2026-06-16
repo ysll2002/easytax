@@ -104,7 +104,7 @@ export default function AdjustmentsPage() {
       });
       const d = await res.json();
       if (d.error) { setError(d.error); return; }
-      router.push('/dashboard/tax/tasks?adjustments=done');
+      router.push('/dashboard/individual/tasks?adjustments=done');
     } finally {
       setSubmitting(false);
     }
@@ -112,7 +112,7 @@ export default function AdjustmentsPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/tax/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
 
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         Annual Adjustments
@@ -191,7 +191,7 @@ export default function AdjustmentsPage() {
 
         <p className="text-xs text-center mt-3" style={{ color: '#9A8F83' }}>
           You can skip this step if you have no adjustments or additional income to declare.{' '}
-          <Link href="/dashboard/tax/tasks?adjustments=done" style={{ color: '#C4622D' }}>Skip →</Link>
+          <Link href="/dashboard/individual/tasks?adjustments=done" style={{ color: '#C4622D' }}>Skip →</Link>
         </p>
       </form>
     </div>

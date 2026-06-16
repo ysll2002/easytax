@@ -40,7 +40,7 @@ export default function PlaidLinkButton({ className, style, children }: Props) {
           body:    JSON.stringify({ public_token, institution: metadata.institution }),
         });
         if (!res.ok) throw new Error(`exchange_${res.status}`);
-        router.push('/dashboard/tax');
+        router.push('/dashboard/individual');
       } catch (e) {
         setError(e instanceof Error ? e.message : 'exchange_failed');
         setSubmitting(false);

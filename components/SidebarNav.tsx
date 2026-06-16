@@ -12,7 +12,7 @@ export default function SidebarNav() {
     {
       label: t('personal'),
       items: [
-        { href: '/dashboard/tax',       label: t('selfAssessment'), icon: FileText },
+        { href: '/dashboard/individual',       label: t('selfAssessment'), icon: FileText },
         { href: '/dashboard/reconcile', label: t('reconcile'),      icon: RefreshCw },
       ],
     },

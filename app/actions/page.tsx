@@ -20,7 +20,7 @@ const MOCK_ACTIONS: ActionItem[] = [
     title: 'MTD ITSA Q1 Quarterly Update',
     description: 'First MTD ITSA quarter (6 Apr – 5 Jul 2026) is due 5 Aug 2026. Send your Q1 update to HMRC.',
     cta: 'Send Update',
-    ctaLink: '/dashboard/tax/quarter',
+    ctaLink: '/dashboard/individual/quarter',
     completed: false,
   },
   {

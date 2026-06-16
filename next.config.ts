@@ -22,6 +22,16 @@ const nextConfig: NextConfig = {
         destination: '/terms',
         permanent: true,
       },
+      {
+        source: '/dashboard/tax',
+        destination: '/dashboard/individual',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/tax/:path*',
+        destination: '/dashboard/individual/:path*',
+        permanent: true,
+      },
     ];
   },
 };

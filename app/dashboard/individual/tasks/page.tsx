@@ -144,7 +144,7 @@ export default function TasksPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/tax" className="text-sm mb-4 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>← Self Assessment</Link>
+      <Link href="/dashboard/individual" className="text-sm mb-4 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>← Self Assessment</Link>
 
       <div className="flex items-start justify-between mb-8 gap-4">
         <div>
@@ -186,7 +186,7 @@ export default function TasksPage() {
               {error === 'No HMRC connection' ? (
                 <>
                   <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>HMRC 未连接</p>
-                  <p style={{ color: '#7F1D1D' }}>请先完成 Self Assessment 的前两个步骤。<Link href="/dashboard/tax" style={{ color: '#C4622D' }}>前往设置 →</Link></p>
+                  <p style={{ color: '#7F1D1D' }}>请先完成 Self Assessment 的前两个步骤。<Link href="/dashboard/individual" style={{ color: '#C4622D' }}>前往设置 →</Link></p>
                 </>
               ) : error === 'NINO_MISMATCH' ? (
                 <>
@@ -195,7 +195,7 @@ export default function TasksPage() {
                     你在 Step 1 填写的 NINO，与连接 HMRC 时使用的 Government Gateway 账号不属于同一个用户。
                     请确认两者一致，然后重新连接。
                   </p>
-                  <Link href="/dashboard/tax" style={{ color: '#C4622D', fontWeight: 600 }}>去检查 NINO →</Link>
+                  <Link href="/dashboard/individual" style={{ color: '#C4622D', fontWeight: 600 }}>去检查 NINO →</Link>
                 </>
               ) : (
                 <>
