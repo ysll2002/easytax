@@ -2,7 +2,6 @@ import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { RefreshCw } from 'lucide-react';
 import PlaidLinkButton from '@/components/PlaidLinkButton';
 
 export default async function BankingPage() {
@@ -26,21 +25,6 @@ export default async function BankingPage() {
       <p style={{ color: '#9A8F83', marginBottom: '2rem', lineHeight: 1.6 }}>
         {t('subtitle')}
       </p>
-
-      {bank && (
-        <div className="p-5 rounded-2xl mb-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-          <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>{t('connectedTitle')}</p>
-          <p className="text-sm font-semibold mb-4" style={{ color: '#1C1208' }}>{bank.account_name}</p>
-          <Link
-            href="/dashboard/reconcile"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium"
-            style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}
-          >
-            <RefreshCw size={14} strokeWidth={2} />
-            {t('reconcileCta')}
-          </Link>
-        </div>
-      )}
 
       <div className="p-5 rounded-2xl mb-6 space-y-2" style={{ backgroundColor: '#E2EDE2', border: '1px solid #6B8E6E30' }}>
         <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{t('supportedBanks')}</p>
