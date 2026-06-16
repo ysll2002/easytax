@@ -32,6 +32,11 @@ const nextConfig: NextConfig = {
         destination: '/dashboard/individual/:path*',
         permanent: true,
       },
+      {
+        source: '/dashboard/reconcile',
+        destination: '/dashboard/individual/reconcile',
+        permanent: true,
+      },
     ];
   },
 };

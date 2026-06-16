@@ -12,15 +12,15 @@ export default function SidebarNav() {
     {
       label: t('personal'),
       items: [
-        { href: '/dashboard/individual',       label: t('selfAssessment'), icon: FileText },
-        { href: '/dashboard/reconcile', label: t('reconcile'),      icon: RefreshCw },
+        { href: '/dashboard/individual',            label: t('selfAssessment'), icon: FileText },
+        { href: '/dashboard/individual/reconcile', label: t('reconcile'),      icon: RefreshCw },
       ],
     },
     {
       label: t('company'),
       items: [
-        { href: '/dashboard/company',   label: t('companyTax'), icon: Building2 },
-        { href: '/dashboard/reconcile', label: t('reconcile'),  icon: RefreshCw },
+        { href: '/dashboard/company',           label: t('companyTax'), icon: Building2 },
+        { href: '/dashboard/company/reconcile', label: t('reconcile'),  icon: RefreshCw },
       ],
     },
     {

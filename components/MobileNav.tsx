@@ -12,7 +12,7 @@ export default function MobileNav() {
   const nav = [
     { href: '/dashboard/individual',       label: t('selfAssessShort'), icon: FileText },
     { href: '/dashboard/company',   label: t('companyShort'),    icon: Building2 },
-    { href: '/dashboard/reconcile', label: t('reconcile'),       icon: RefreshCw },
+    { href: '/dashboard/individual/reconcile', label: t('reconcile'),       icon: RefreshCw },
     { href: '/dashboard/profile',   label: t('profile'),         icon: User },
   ];
 

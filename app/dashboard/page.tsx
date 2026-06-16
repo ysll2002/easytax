@@ -53,7 +53,7 @@ export default async function DashboardHome() {
       {/* Quick access */}
       <div style={{ borderTop: '1px solid #E8E2DA', paddingTop: '1.5rem' }}>
         <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#9A8F83' }}>{t('quickAccess')}</p>
-        <Link href="/dashboard/reconcile" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', borderRadius: '2rem', fontSize: '0.875rem', fontWeight: 500, color: '#1C1208', backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+        <Link href="/dashboard/individual/reconcile" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', borderRadius: '2rem', fontSize: '0.875rem', fontWeight: 500, color: '#1C1208', backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
           <RefreshCw size={14} strokeWidth={1.8} />
           {t('reconcileTransactions')}
         </Link>

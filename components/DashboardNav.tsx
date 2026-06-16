@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 
 const nav = [
   { href: '/dashboard/individual',       label: 'Tax Filing',  icon: '📄' },
-  { href: '/dashboard/reconcile', label: 'Reconcile',   icon: '🔁' },
+  { href: '/dashboard/individual/reconcile', label: 'Reconcile',   icon: '🔁' },
   { href: '/dashboard/fph-test',  label: 'FPH Test',    icon: '🔒' },
   { href: '/dashboard/profile',   label: 'Profile',     icon: '👤' },
   { href: '/dashboard/settings',  label: 'Settings',    icon: '⚙️'  },
