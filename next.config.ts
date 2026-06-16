@@ -22,6 +22,36 @@ const nextConfig: NextConfig = {
         destination: '/terms',
         permanent: true,
       },
+      {
+        source: '/dashboard/tax',
+        destination: '/dashboard/individual',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/tax/:path*',
+        destination: '/dashboard/individual/:path*',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/individual/reconcile',
+        destination: '/dashboard/reconcile',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/company/reconcile',
+        destination: '/dashboard/reconcile',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/individual/banking',
+        destination: '/dashboard/banking',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/company/banking',
+        destination: '/dashboard/banking',
+        permanent: true,
+      },
     ];
   },
 };

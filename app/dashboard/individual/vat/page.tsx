@@ -117,7 +117,7 @@ export default function VatPage() {
           ? `HMRC has on record that your return for ${selected?.start} – ${selected?.end} was already submitted. No further action needed.`
           : `Your return for period ${selected?.start} – ${selected?.end} has been sent to HMRC via MTD.`}
       </p>
-      <Link href="/dashboard/tax" className="px-6 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="px-6 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
         Back to Tax Filing
       </Link>
     </div>
@@ -125,7 +125,7 @@ export default function VatPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/tax" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         VAT Return
       </h1>

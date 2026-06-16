@@ -131,7 +131,7 @@ export default function TasksWizard() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/tax" className="text-sm mb-8 inline-flex items-center gap-1" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-8 inline-flex items-center gap-1" style={{ color: '#9A8F83', textDecoration: 'none' }}>
         ← Back
       </Link>
 
@@ -215,7 +215,7 @@ export default function TasksWizard() {
                   {done ? (
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ backgroundColor: '#C4622D15', color: '#C4622D' }}>Submitted</span>
                   ) : (
-                    <Link href={`/dashboard/tax/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`}
+                    <Link href={`/dashboard/individual/quarter?start=${ob.periodStartDate}&end=${ob.periodEndDate}&key=${ob.periodKey}`}
                       className="flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full"
                       style={{ backgroundColor: overdue ? '#EF4444' : '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
                       Submit <ChevronRight size={12} />
@@ -238,7 +238,7 @@ export default function TasksWizard() {
             <CheckCircle2 size={16} /> Adjustments submitted
           </div>
         ) : (
-          <Link href="/dashboard/tax/adjustments"
+          <Link href="/dashboard/individual/adjustments"
             className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full"
             style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
             Review & Submit <ChevronRight size={14} />

@@ -37,7 +37,7 @@ export default function FphTestPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/tax" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         Fraud Prevention Headers
       </h1>

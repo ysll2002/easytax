@@ -173,7 +173,8 @@
       "passwordRuleLength": "Au moins 8 caractères",
       "mustAgreeShort": "Veuillez d'abord cocher la case ci-dessous",
       "trustSignal": "Chiffrement bancaire · Logiciel reconnu HMRC · Conforme RGPD",
-      "accountCreatedLogin": "Compte créé — connectez-vous pour continuer"
+      "accountCreatedLogin": "Compte créé — connectez-vous pour continuer",
+      "redirecting": "Redirection…"
     }
   },
   "dashboard": {
@@ -189,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "Société",
       "logout": "Déconnexion",
-      "homepage": "Accueil"
+      "homepage": "Accueil",
+      "bank": "Banque"
     },
     "home": {
       "welcome": "Bienvenue, {name}",
@@ -267,7 +269,10 @@
       "poweredBy": "Accès en lecture seule. Nous ne déplacerons jamais d'argent. Propulsé par Plaid.",
       "errorRetry": "Impossible de démarrer Plaid Link — réessayez.",
       "errorNetwork": "Erreur réseau.",
-      "errorGeneric": "Échec de connexion ({error})."
+      "errorGeneric": "Échec de connexion ({error}).",
+      "connectedTitle": "Compte connecté",
+      "reconcileCta": "Rapprocher les transactions →",
+      "connectAnother": "Connecter un autre compte →"
     },
     "profile": {
       "title": "Profil",

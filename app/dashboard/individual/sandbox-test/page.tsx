@@ -54,7 +54,7 @@ export default function SandboxTestPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/tax" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
         ← Back to Self Assessment
       </Link>
 

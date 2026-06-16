@@ -20,7 +20,7 @@ export default async function DashboardHome() {
 
       <div className="space-y-4 mb-8">
         {/* Self Assessment track */}
-        <Link href="/dashboard/tax" style={{ textDecoration: 'none', display: 'block' }}>
+        <Link href="/dashboard/individual" style={{ textDecoration: 'none', display: 'block' }}>
           <div className="p-5 sm:p-6 rounded-2xl flex items-center gap-5 transition-all hover:shadow-md" style={{ backgroundColor: '#1C1208', border: '1px solid #2E2418' }}>
             <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#C4622D' }}>
               <User size={22} color="#FDFCF8" strokeWidth={1.8} />

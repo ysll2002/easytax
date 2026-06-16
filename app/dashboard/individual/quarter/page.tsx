@@ -88,7 +88,7 @@ function QuarterForm() {
           <p className="text-sm mb-8" style={{ color: '#4A4035' }}>
             Your quarterly update has been sent to HMRC successfully.
           </p>
-          <Link href="/dashboard/tax/tasks"
+          <Link href="/dashboard/individual/tasks"
             className="inline-flex items-center gap-1.5 px-6 py-3 rounded-full font-semibold text-sm"
             style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
             Back to Filing Overview <ChevronRight size={14} />
@@ -100,7 +100,7 @@ function QuarterForm() {
 
   return (
     <div className="p-4 sm:p-8">
-      <Link href="/dashboard/tax/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
         ← Back to Filing Overview
       </Link>
 

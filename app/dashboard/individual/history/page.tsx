@@ -180,7 +180,7 @@ export default function HistoryPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/tax" className="text-sm mb-8 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-8 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
         ← Back
       </Link>
 
@@ -207,7 +207,7 @@ export default function HistoryPage() {
           <FileText size={40} strokeWidth={1.2} style={{ marginBottom: '1rem', opacity: 0.4 }} />
           <p className="font-medium" style={{ color: '#4A4035' }}>No submissions yet</p>
           <p className="text-sm mt-1">Your quarterly updates and final declarations will appear here.</p>
-          <Link href="/dashboard/tax/tasks"
+          <Link href="/dashboard/individual/tasks"
             className="mt-6 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold"
             style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
             Start Filing →

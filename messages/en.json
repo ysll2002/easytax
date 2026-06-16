@@ -173,7 +173,8 @@
       "passwordRuleLength": "At least 8 characters",
       "mustAgreeShort": "Please tick the agreement box below first",
       "trustSignal": "Bank-grade encryption · HMRC-recognised software · GDPR-compliant",
-      "accountCreatedLogin": "Account created — please log in to continue"
+      "accountCreatedLogin": "Account created — please log in to continue",
+      "redirecting": "Redirecting…"
     }
   },
   "dashboard": {
@@ -189,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "Company",
       "logout": "Log out",
-      "homepage": "Homepage"
+      "homepage": "Homepage",
+      "bank": "Bank"
     },
     "home": {
       "welcome": "Welcome, {name}",
@@ -267,7 +269,10 @@
       "poweredBy": "Read-only access. We can never move money. Powered by Plaid.",
       "errorRetry": "Could not start Plaid Link — please retry.",
       "errorNetwork": "Network error.",
-      "errorGeneric": "Connection failed ({error})."
+      "errorGeneric": "Connection failed ({error}).",
+      "connectedTitle": "Connected account",
+      "reconcileCta": "Reconcile transactions →",
+      "connectAnother": "Connect another account →"
     },
     "profile": {
       "title": "Profile",

@@ -36,7 +36,7 @@ export default async function ReconcilePage() {
                 {t('noBankBody')}
               </p>
               <Link
-                href="/dashboard/tax/banking"
+                href="/dashboard/banking"
                 className="inline-block px-5 py-2.5 rounded-full text-sm font-medium"
                 style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}
               >

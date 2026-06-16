@@ -173,7 +173,8 @@
       "passwordRuleLength": "8 أحرف على الأقل",
       "mustAgreeShort": "يرجى تحديد مربع الموافقة أدناه أولاً",
       "trustSignal": "تشفير بمستوى البنوك · برنامج معتمد من HMRC · متوافق مع GDPR",
-      "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة"
+      "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة",
+      "redirecting": "إعادة توجيه…"
     }
   },
   "dashboard": {
@@ -189,7 +190,8 @@
       "selfAssessShort": "Self Assess",
       "companyShort": "شركة",
       "logout": "تسجيل الخروج",
-      "homepage": "الرئيسية"
+      "homepage": "الرئيسية",
+      "bank": "البنك"
     },
     "home": {
       "welcome": "مرحباً، {name}",
@@ -267,7 +269,10 @@
       "poweredBy": "وصول للقراءة فقط. لا يمكننا تحريك الأموال أبداً. مدعوم من Plaid.",
       "errorRetry": "تعذّر بدء Plaid Link —— يرجى المحاولة مرة أخرى.",
       "errorNetwork": "خطأ في الشبكة.",
-      "errorGeneric": "فشل الربط ({error})."
+      "errorGeneric": "فشل الربط ({error}).",
+      "connectedTitle": "الحساب المتصل",
+      "reconcileCta": "تسوية المعاملات ←",
+      "connectAnother": "ربط حساب آخر ←"
     },
     "profile": {
       "title": "الملف الشخصي",

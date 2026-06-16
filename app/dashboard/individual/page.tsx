@@ -53,7 +53,7 @@ export default async function TaxPage() {
                   </p>
                 </div>
               </div>
-              <Link href="/dashboard/tax/hmrc"
+              <Link href="/dashboard/individual/hmrc"
                 className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-full font-semibold"
                 style={{ border: '1px solid #1C1208', color: '#1C1208', textDecoration: 'none', backgroundColor: 'transparent' }}>
                 <Edit2 size={12} /> {t('reconnect')}
@@ -64,7 +64,7 @@ export default async function TaxPage() {
               <p className="text-sm mb-3" style={{ color: '#4A4035' }}>
                 {t('step2Body')}
               </p>
-              <Link href="/dashboard/tax/hmrc"
+              <Link href="/dashboard/individual/hmrc"
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-semibold"
                 style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
                 {t('connectHmrc')} <ChevronRight size={14} />
@@ -83,14 +83,14 @@ export default async function TaxPage() {
               <TasksTimeline />
               <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid #F0EBE1' }}>
                 <ActionLink
-                  href="/dashboard/tax/banking"
+                  href="/dashboard/banking"
                   label={t('connectBank')}
                   desc={bank ? t('bankConnected', { name: bank.account_name }) : t('bankImport')}
                   done={!!bank}
                 />
                 {hmrc?.vrn && (
                   <ActionLink
-                    href="/dashboard/tax/vat"
+                    href="/dashboard/individual/vat"
                     label={t('vatReturn')}
                     desc={t('vatDesc', { vrn: hmrc.vrn })}
                   />
@@ -109,7 +109,7 @@ export default async function TaxPage() {
       {hasSA && (
         <div className="mt-6 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
           <History size={14} color="#9A8F83" />
-          <Link href="/dashboard/tax/history" style={{ color: '#9A8F83', textDecoration: 'none', fontSize: '0.875rem' }}>
+          <Link href="/dashboard/individual/history" style={{ color: '#9A8F83', textDecoration: 'none', fontSize: '0.875rem' }}>
             {t('filingHistory')}
           </Link>
         </div>

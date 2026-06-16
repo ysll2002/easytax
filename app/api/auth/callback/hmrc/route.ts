@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
   const error = searchParams.get('error');
 
   if (error || !code) {
-    return NextResponse.redirect(new URL('/dashboard/tax/hmrc?error=access_denied', req.url));
+    return NextResponse.redirect(new URL('/dashboard/individual/hmrc?error=access_denied', req.url));
   }
 
   const redirectUri = (process.env.HMRC_REDIRECT_URI ?? '').trim();
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
   if (!tokenRes.ok) {
     const body = await tokenRes.text().catch(() => '');
     const detail = encodeURIComponent(`redirect_uri sent: ${redirectUri} | HMRC: ${body.slice(0, 200)}`);
-    return NextResponse.redirect(new URL(`/dashboard/tax/hmrc?error=token_exchange&detail=${detail}&status=${tokenRes.status}`, req.url));
+    return NextResponse.redirect(new URL(`/dashboard/individual/hmrc?error=token_exchange&detail=${detail}&status=${tokenRes.status}`, req.url));
   }
 
   const tokens = await tokenRes.json();
@@ -86,8 +86,8 @@ export async function GET(req: NextRequest) {
 
   if (dbError) {
     const detail = encodeURIComponent(`DB error: ${dbError.message}`);
-    return NextResponse.redirect(new URL(`/dashboard/tax/hmrc?error=db&detail=${detail}`, req.url));
+    return NextResponse.redirect(new URL(`/dashboard/individual/hmrc?error=db&detail=${detail}`, req.url));
   }
 
-  return NextResponse.redirect(new URL('/dashboard/tax', req.url));
+  return NextResponse.redirect(new URL('/dashboard/individual', req.url));
 }

@@ -8,9 +8,10 @@ type Props = {
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
+  redirectAfter?: string;
 };
 
-export default function PlaidLinkButton({ className, style, children }: Props) {
+export default function PlaidLinkButton({ className, style, children, redirectAfter = '/dashboard/banking' }: Props) {
   const router = useRouter();
   const t = useTranslations('dashboard.banking');
   const [linkToken, setLinkToken] = useState<string | null>(null);
@@ -40,13 +41,13 @@ export default function PlaidLinkButton({ className, style, children }: Props) {
           body:    JSON.stringify({ public_token, institution: metadata.institution }),
         });
         if (!res.ok) throw new Error(`exchange_${res.status}`);
-        router.push('/dashboard/tax');
+        router.push(redirectAfter);
       } catch (e) {
         setError(e instanceof Error ? e.message : 'exchange_failed');
         setSubmitting(false);
       }
     },
-    [router],
+    [router, redirectAfter],
   );
 
   const { open, ready } = usePlaidLink({
