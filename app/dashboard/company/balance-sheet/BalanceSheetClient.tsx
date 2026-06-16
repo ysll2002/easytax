@@ -66,7 +66,7 @@ export default function BalanceSheetClient() {
       <div className="p-6 rounded-2xl mt-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
         <p className="font-semibold mb-2" style={{ color: '#1C1208' }}>Bank account required</p>
         <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>Connect your business bank account to generate a Balance Sheet.</p>
-        <Link href="/dashboard/company/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>Connect Bank →</Link>
+        <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>Connect Bank →</Link>
       </div>
     </div>
   );

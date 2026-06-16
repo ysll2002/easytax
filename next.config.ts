@@ -42,6 +42,16 @@ const nextConfig: NextConfig = {
         destination: '/dashboard/reconcile',
         permanent: true,
       },
+      {
+        source: '/dashboard/individual/banking',
+        destination: '/dashboard/banking',
+        permanent: true,
+      },
+      {
+        source: '/dashboard/company/banking',
+        destination: '/dashboard/banking',
+        permanent: true,
+      },
     ];
   },
 };

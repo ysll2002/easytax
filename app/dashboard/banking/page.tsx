@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 import { RefreshCw } from 'lucide-react';
 import PlaidLinkButton from '@/components/PlaidLinkButton';
 
-export default async function CompanyBankingPage() {
+export default async function BankingPage() {
   const session = await auth();
   const profileId = session!.user.profileId;
   const t = await getTranslations('dashboard.banking');
@@ -18,7 +18,7 @@ export default async function CompanyBankingPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
-      <Link href="/dashboard/company" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>{t('back')}</Link>
+      <Link href="/dashboard" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>{t('back')}</Link>
 
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
         {t('title')}
@@ -54,7 +54,7 @@ export default async function CompanyBankingPage() {
       <PlaidLinkButton
         className="w-full text-center py-3.5 rounded-xl font-medium text-sm"
         style={{ backgroundColor: '#1C1208', color: '#FDFCF8', border: 'none' }}
-        redirectAfter="/dashboard/company/banking"
+        redirectAfter="/dashboard/banking"
       >
         {bank ? t('connectAnother') : t('connect')}
       </PlaidLinkButton>

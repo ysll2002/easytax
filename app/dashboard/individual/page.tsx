@@ -83,7 +83,7 @@ export default async function TaxPage() {
               <TasksTimeline />
               <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid #F0EBE1' }}>
                 <ActionLink
-                  href="/dashboard/individual/banking"
+                  href="/dashboard/banking"
                   label={t('connectBank')}
                   desc={bank ? t('bankConnected', { name: bank.account_name }) : t('bankImport')}
                   done={!!bank}

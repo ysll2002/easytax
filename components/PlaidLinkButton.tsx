@@ -11,7 +11,7 @@ type Props = {
   redirectAfter?: string;
 };
 
-export default function PlaidLinkButton({ className, style, children, redirectAfter = '/dashboard/individual' }: Props) {
+export default function PlaidLinkButton({ className, style, children, redirectAfter = '/dashboard/banking' }: Props) {
   const router = useRouter();
   const t = useTranslations('dashboard.banking');
   const [linkToken, setLinkToken] = useState<string | null>(null);
