@@ -197,6 +197,8 @@ export async function submitQuarterlyUpdate(
     {
       method: 'POST',
       headers: { Accept: 'application/vnd.hmrc.5.0+json' },
+      // Self-Employment Business (MTD) v5.0: expense values are plain numbers
+      // (not { amount } objects), and field names differ from the older shape.
       body: JSON.stringify({
         periodDates: {
           periodStartDate: data.periodStartDate,
@@ -207,14 +209,14 @@ export async function submitQuarterlyUpdate(
           other:    data.other ?? 0,
         },
         periodExpenses: {
-          costOfGoods:           { amount: data.expenses.costOfGoods          ?? 0 },
-          staffCosts:            { amount: data.expenses.staffCosts           ?? 0 },
-          travelCosts:           { amount: data.expenses.travelCosts          ?? 0 },
-          premisesRunningCosts:  { amount: data.expenses.premisesRunningCosts ?? 0 },
-          adminCosts:            { amount: data.expenses.adminCosts           ?? 0 },
-          advertisingCosts:      { amount: data.expenses.advertisingCosts     ?? 0 },
-          professionalFees:      { amount: data.expenses.professionalFees     ?? 0 },
-          other:                 { amount: data.expenses.otherExpenses        ?? 0 },
+          costOfGoods:          data.expenses.costOfGoods          ?? 0,
+          wagesAndStaffCosts:   data.expenses.staffCosts           ?? 0,
+          carVanTravelExpenses: data.expenses.travelCosts          ?? 0,
+          premisesRunningCosts: data.expenses.premisesRunningCosts ?? 0,
+          adminCosts:           data.expenses.adminCosts           ?? 0,
+          advertisingCosts:     data.expenses.advertisingCosts     ?? 0,
+          professionalFees:     data.expenses.professionalFees     ?? 0,
+          otherExpenses:        data.expenses.otherExpenses        ?? 0,
         },
       }),
     },

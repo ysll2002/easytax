@@ -72,6 +72,9 @@ async function call(
 ): Promise<unknown> {
   const entry: ApiResult = { name, endpoint, method, status: null, ok: false };
   results.push(entry);
+  // HMRC sandbox throttles around 60 req/min per token. Space requests out
+  // by ~1.2s so the harness doesn't burn into 429 territory mid-run.
+  if (results.length > 1) await new Promise(r => setTimeout(r, 1200));
   try {
     const res = await fetch(`${BASE}${endpoint}`, {
       method,
@@ -209,14 +212,14 @@ export async function GET() {
           periodDates:    { periodStartDate: psStart, periodEndDate: psEnd },
           periodIncome:   { turnover: 5000, other: 0 },
           periodExpenses: {
-            costOfGoods:          { amount: 200 },
-            staffCosts:           { amount: 100 },
-            travelCosts:          { amount: 50 },
-            premisesRunningCosts: { amount: 300 },
-            adminCosts:           { amount: 80 },
-            advertisingCosts:     { amount: 120 },
-            professionalFees:     { amount: 250 },
-            other:                { amount: 150 },
+            costOfGoods:          200,
+            wagesAndStaffCosts:   100,
+            carVanTravelExpenses: 50,
+            premisesRunningCosts: 300,
+            adminCosts:           80,
+            advertisingCosts:     120,
+            professionalFees:     250,
+            otherExpenses:        150,
           },
         },
       },
