@@ -68,9 +68,11 @@ export default function AdjustmentsPage() {
   const [goodsOwnUse,     setGoodsOwnUse]     = useState('');
 
   // Other income
-  const [savingsInterest, setSavingsInterest] = useState('');
-  const [ukDividends,     setUkDividends]     = useState('');
-  const [otherDividends,  setOtherDividends]  = useState('');
+  const [savingsInterest,  setSavingsInterest]  = useState('');
+  const [foreignCountry,   setForeignCountry]   = useState('');
+  const [foreignAmount,    setForeignAmount]    = useState('');
+  const [foreignTax,       setForeignTax]       = useState('');
+  const [stockDividend,    setStockDividend]    = useState('');
 
   // Allowances & reliefs
   const [giftAid,          setGiftAid]         = useState('');
@@ -89,10 +91,28 @@ export default function AdjustmentsPage() {
         goodsAndServicesOwnUse: parseFloat(goodsOwnUse  || '0') || undefined,
       },
       savingsAccounts: savingsInterest ? [{ accountName: 'Savings', grossInterest: parseFloat(savingsInterest) }] : [],
-      dividends: {
-        ukDividends:      parseFloat(ukDividends    || '0') || undefined,
-        otherUkDividends: parseFloat(otherDividends || '0') || undefined,
-      },
+      dividends: (() => {
+        const fAmt   = parseFloat(foreignAmount || '0') || 0;
+        const fTax   = parseFloat(foreignTax    || '0') || 0;
+        const stock  = parseFloat(stockDividend || '0') || 0;
+        const out: {
+          foreignDividend?: { countryCode: string; amountBeforeTax: number; taxTakenOff?: number; foreignTaxCreditRelief?: boolean; taxableAmount: number }[];
+          stockDividend?: { customerReference: string; grossAmount: number };
+        } = {};
+        if (fAmt > 0 && foreignCountry.trim()) {
+          out.foreignDividend = [{
+            countryCode:            foreignCountry.trim().toUpperCase(),
+            amountBeforeTax:        fAmt,
+            taxTakenOff:            fTax > 0 ? fTax : undefined,
+            foreignTaxCreditRelief: fTax > 0 ? true : undefined,
+            taxableAmount:          fAmt,
+          }];
+        }
+        if (stock > 0) {
+          out.stockDividend = { customerReference: `EasyTax-${taxYear}`, grossAmount: stock };
+        }
+        return out;
+      })(),
       giftAid: { totalAmount: parseFloat(giftAid || '0') || undefined },
     };
 
@@ -156,15 +176,45 @@ export default function AdjustmentsPage() {
             hint="Total gross interest from bank/building society accounts before tax."
             value={savingsInterest} onChange={setSavingsInterest}
           />
+          <div className="rounded-xl p-4" style={{ backgroundColor: '#F5F0E6', border: '1px solid #E5DDD0' }}>
+            <p className="text-sm font-medium mb-1" style={{ color: '#1C1208' }}>Foreign dividends</p>
+            <p className="text-xs mb-3" style={{ color: '#9A8F83' }}>
+              Dividends from foreign shares or ETFs. UK dividends are reported automatically by HMRC and don&apos;t need to be added here.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <input
+                type="text" maxLength={3}
+                value={foreignCountry}
+                onChange={e => setForeignCountry(e.target.value)}
+                placeholder="Country (USA, FRA…)"
+                style={inputStyle}
+              />
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+                <input
+                  type="number" min="0" step="0.01"
+                  value={foreignAmount}
+                  onChange={e => setForeignAmount(e.target.value)}
+                  placeholder="Gross"
+                  style={{ ...inputStyle, paddingLeft: '1.75rem' }}
+                />
+              </div>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+                <input
+                  type="number" min="0" step="0.01"
+                  value={foreignTax}
+                  onChange={e => setForeignTax(e.target.value)}
+                  placeholder="Foreign tax"
+                  style={{ ...inputStyle, paddingLeft: '1.75rem' }}
+                />
+              </div>
+            </div>
+          </div>
           <AmountField
-            label="UK dividends"
-            hint="Dividends from UK company shares."
-            value={ukDividends} onChange={setUkDividends}
-          />
-          <AmountField
-            label="Other UK dividends"
-            hint="Dividends from UK unit trusts, OEICs, or investment trusts."
-            value={otherDividends} onChange={setOtherDividends}
+            label="Stock dividends"
+            hint="UK company gave you shares instead of a cash dividend (gross value)."
+            value={stockDividend} onChange={setStockDividend}
           />
         </Section>
 

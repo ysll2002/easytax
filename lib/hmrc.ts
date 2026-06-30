@@ -289,16 +289,33 @@ export async function submitSavingsIncome(nino: string, taxYear: string, account
   );
 }
 
+export type ForeignDividendEntry = {
+  countryCode:             string; // ISO 3166-1 alpha-3, e.g. "USA", "FRA"
+  amountBeforeTax:         number;
+  taxTakenOff?:            number;
+  foreignTaxCreditRelief?: boolean;
+  taxableAmount:           number;
+};
+
+export type DividendsIncomePayload = {
+  foreignDividend?: ForeignDividendEntry[];
+  stockDividend?:   { customerReference?: string; grossAmount: number };
+};
+
 export async function submitDividendsIncome(
   nino: string,
   taxYear: string,
-  data: { ukDividends?: number; otherUkDividends?: number },
+  data: DividendsIncomePayload,
   token: string,
 ) {
   return hmrcFetch(
-    `/individuals/income-received/dividends/${nino}/${taxYear}`,
+    `/individuals/dividends-income/${nino}/${taxYear}`,
     token,
-    { method: 'PUT', body: JSON.stringify(data) },
+    {
+      method:  'PUT',
+      headers: { Accept: 'application/vnd.hmrc.2.0+json' },
+      body:    JSON.stringify(data),
+    },
   );
 }
 
