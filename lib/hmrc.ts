@@ -188,16 +188,17 @@ export type QuarterlyData = {
 export async function submitQuarterlyUpdate(
   nino: string,
   businessId: string,
-  taxYear: string,
   data: QuarterlyData,
   token: string,
 ) {
   return hmrcFetch(
-    `/individuals/business/self-employment/${nino}/${businessId}/period-summaries?taxYear=${taxYear}`,
+    `/individuals/business/self-employment/${nino}/${businessId}/period`,
     token,
     {
-      method: 'PUT',
+      method: 'POST',
       headers: { Accept: 'application/vnd.hmrc.5.0+json' },
+      // Self-Employment Business (MTD) v5.0: expense values are plain numbers
+      // (not { amount } objects), and field names differ from the older shape.
       body: JSON.stringify({
         periodDates: {
           periodStartDate: data.periodStartDate,
@@ -208,14 +209,14 @@ export async function submitQuarterlyUpdate(
           other:    data.other ?? 0,
         },
         periodExpenses: {
-          costOfGoods:           { amount: data.expenses.costOfGoods          ?? 0 },
-          staffCosts:            { amount: data.expenses.staffCosts           ?? 0 },
-          travelCosts:           { amount: data.expenses.travelCosts          ?? 0 },
-          premisesRunningCosts:  { amount: data.expenses.premisesRunningCosts ?? 0 },
-          adminCosts:            { amount: data.expenses.adminCosts           ?? 0 },
-          advertisingCosts:      { amount: data.expenses.advertisingCosts     ?? 0 },
-          professionalFees:      { amount: data.expenses.professionalFees     ?? 0 },
-          other:                 { amount: data.expenses.otherExpenses        ?? 0 },
+          costOfGoods:          data.expenses.costOfGoods          ?? 0,
+          wagesAndStaffCosts:   data.expenses.staffCosts           ?? 0,
+          carVanTravelExpenses: data.expenses.travelCosts          ?? 0,
+          premisesRunningCosts: data.expenses.premisesRunningCosts ?? 0,
+          adminCosts:           data.expenses.adminCosts           ?? 0,
+          advertisingCosts:     data.expenses.advertisingCosts     ?? 0,
+          professionalFees:     data.expenses.professionalFees     ?? 0,
+          otherExpenses:        data.expenses.otherExpenses        ?? 0,
         },
       }),
     },
@@ -224,11 +225,18 @@ export async function submitQuarterlyUpdate(
 
 // ─── Tax Calculation ──────────────────────────────────────────────────────────
 
-export async function triggerCalculation(nino: string, taxYear: string, token: string) {
+export type CalculationType = 'in-year' | 'intent-to-finalise' | 'intent-to-amend';
+
+export async function triggerCalculation(
+  nino: string,
+  taxYear: string,
+  token: string,
+  calculationType: CalculationType = 'in-year',
+) {
   return hmrcFetch(
-    `/individuals/calculations/${nino}/self-assessment/${taxYear}`,
+    `/individuals/calculations/${nino}/self-assessment/${taxYear}/trigger/${calculationType}`,
     token,
-    { method: 'POST', body: JSON.stringify({ finalDeclaration: false }), headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
+    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
   );
 }
 
@@ -247,12 +255,11 @@ export async function getCalculation(
 
 // ─── Final Declaration ────────────────────────────────────────────────────────
 
+// In Individual Calculations API v8.0, the final declaration *is* a calculation
+// triggered with calculationType=intent-to-finalise. There is no separate
+// confirm endpoint — the trigger itself locks in the figures for the year.
 export async function submitFinalDeclaration(nino: string, taxYear: string, token: string) {
-  return hmrcFetch(
-    `/individuals/self-assessment/${nino}/${taxYear}/final-declaration`,
-    token,
-    { method: 'POST', body: '{}' },
-  );
+  return triggerCalculation(nino, taxYear, token, 'intent-to-finalise');
 }
 
 // ─── Annual Adjustments ───────────────────────────────────────────────────────
@@ -272,10 +279,16 @@ export async function submitAnnualAdjustments(
   data: AnnualAdjustments,
   token: string,
 ) {
+  // Self-Employment Business (MTD) v5.0 expects adjustments nested under
+  // an `adjustments` key, not flat at the top level.
   return hmrcFetch(
-    `/individuals/self-assessment/adjustments/${nino}/${businessId}/${taxYear}`,
+    `/individuals/business/self-employment/${nino}/${businessId}/annual/${taxYear}`,
     token,
-    { method: 'PUT', body: JSON.stringify(data) },
+    {
+      method:  'PUT',
+      headers: { Accept: 'application/vnd.hmrc.5.0+json' },
+      body:    JSON.stringify({ adjustments: data }),
+    },
   );
 }
 
