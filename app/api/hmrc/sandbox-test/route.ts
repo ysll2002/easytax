@@ -5,6 +5,9 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { cookies } from 'next/headers';
 import { createHash } from 'crypto';
 
+// 16+ sequential HMRC sandbox calls; default 10s isn't enough.
+export const maxDuration = 60;
+
 // Always target the sandbox — sandbox tokens are required
 const BASE = 'https://test-api.service.hmrc.gov.uk';
 
