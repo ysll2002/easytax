@@ -288,9 +288,10 @@ export async function GET() {
     await call(results, 'SA Assist – Generate Report', `/individuals/self-assessment/assist/reports/${nino}/${taxYear}/620490b4-06e3-4fef-a555-6fd0877dc7ca`, 'POST', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
     // ── 17. Individual Employment (v1.2) ─────────────────────────────────────
-    // Uses UTR (not NINO). HMRC docs use 2234567890 as the example sandbox UTR;
-    // 1234567890 fails SA UTR checksum validation.
-    const sandboxUtr = '2234567890';
+    // User-restricted: UTR in path MUST match the authenticated sandbox user.
+    // 7501553182 is the saUtr of test user GK649364B (returned by create-test-user
+    // when the sandbox account was set up).
+    const sandboxUtr = '7501553182';
     await call(results, 'Individual Employment – Annual Summary', `/individual-employment/sa/${sandboxUtr}/annual-summary/${taxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.2+json' });
 
     // ── 18. Individual Tax (v1.1) ────────────────────────────────────────────
