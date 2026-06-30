@@ -274,7 +274,8 @@ export async function GET() {
     await call(results, 'Savings Income – List UK Accounts', `/individuals/savings-income/uk-accounts/${nino}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
 
     // ── 13. Self Assessment Accounts (MTD v4.0) ──────────────────────────────
-    await call(results, 'SA Accounts – Balance & Transactions', `/accounts/self-assessment/${nino}/balance-and-transactions`, 'GET', token, fph, { accept: 'application/vnd.hmrc.4.0+json' });
+    // Endpoint requires either onlyOpenItems=true or date range; use former for a simple call.
+    await call(results, 'SA Accounts – Balance & Transactions', `/accounts/self-assessment/${nino}/balance-and-transactions?onlyOpenItems=true`, 'GET', token, fph, { accept: 'application/vnd.hmrc.4.0+json' });
 
     // ── 14. Individuals Disclosures (MTD v2.0) ───────────────────────────────
     await call(results, 'Individuals Disclosures', `/individuals/disclosures/${nino}/${taxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
