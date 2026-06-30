@@ -188,15 +188,14 @@ export type QuarterlyData = {
 export async function submitQuarterlyUpdate(
   nino: string,
   businessId: string,
-  taxYear: string,
   data: QuarterlyData,
   token: string,
 ) {
   return hmrcFetch(
-    `/individuals/business/self-employment/${nino}/${businessId}/period-summaries?taxYear=${taxYear}`,
+    `/individuals/business/self-employment/${nino}/${businessId}/period`,
     token,
     {
-      method: 'PUT',
+      method: 'POST',
       headers: { Accept: 'application/vnd.hmrc.5.0+json' },
       body: JSON.stringify({
         periodDates: {
@@ -224,11 +223,18 @@ export async function submitQuarterlyUpdate(
 
 // ─── Tax Calculation ──────────────────────────────────────────────────────────
 
-export async function triggerCalculation(nino: string, taxYear: string, token: string) {
+export type CalculationType = 'in-year' | 'intent-to-finalise' | 'intent-to-amend';
+
+export async function triggerCalculation(
+  nino: string,
+  taxYear: string,
+  token: string,
+  calculationType: CalculationType = 'in-year',
+) {
   return hmrcFetch(
-    `/individuals/calculations/${nino}/self-assessment/${taxYear}`,
+    `/individuals/calculations/${nino}/self-assessment/${taxYear}/trigger/${calculationType}`,
     token,
-    { method: 'POST', body: JSON.stringify({ finalDeclaration: false }), headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
+    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
   );
 }
 
@@ -247,12 +253,11 @@ export async function getCalculation(
 
 // ─── Final Declaration ────────────────────────────────────────────────────────
 
+// In Individual Calculations API v8.0, the final declaration *is* a calculation
+// triggered with calculationType=intent-to-finalise. There is no separate
+// confirm endpoint — the trigger itself locks in the figures for the year.
 export async function submitFinalDeclaration(nino: string, taxYear: string, token: string) {
-  return hmrcFetch(
-    `/individuals/self-assessment/${nino}/${taxYear}/final-declaration`,
-    token,
-    { method: 'POST', body: '{}' },
-  );
+  return triggerCalculation(nino, taxYear, token, 'intent-to-finalise');
 }
 
 // ─── Annual Adjustments ───────────────────────────────────────────────────────
@@ -272,10 +277,16 @@ export async function submitAnnualAdjustments(
   data: AnnualAdjustments,
   token: string,
 ) {
+  // Self-Employment Business (MTD) v5.0 expects adjustments nested under
+  // an `adjustments` key, not flat at the top level.
   return hmrcFetch(
-    `/individuals/self-assessment/adjustments/${nino}/${businessId}/${taxYear}`,
+    `/individuals/business/self-employment/${nino}/${businessId}/annual/${taxYear}`,
     token,
-    { method: 'PUT', body: JSON.stringify(data) },
+    {
+      method:  'PUT',
+      headers: { Accept: 'application/vnd.hmrc.5.0+json' },
+      body:    JSON.stringify({ adjustments: data }),
+    },
   );
 }
 

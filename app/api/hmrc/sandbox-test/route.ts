@@ -197,11 +197,12 @@ export async function GET() {
     const psEnd     = oblTaxYear >= '2023-24' ? periodEnd   : PERIOD_END;
 
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
+    // Self-Employment Business (MTD) v5.0: POST /period (no taxYear in URL).
     await call(
       results,
       'Period Summaries – Quarterly Update',
-      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period-summaries?taxYear=${psTaxYear}`,
-      'PUT', token, fph,
+      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/period`,
+      'POST', token, fph,
       {
         accept: 'application/vnd.hmrc.5.0+json',
         body: {
@@ -222,10 +223,27 @@ export async function GET() {
     );
 
     // ── 6. Annual Adjustments ────────────────────────────────────────────────
-    await call(results, 'Annual Adjustments', `/individuals/self-assessment/adjustments/${nino}/${resolvedBusinessId}/${psTaxYear}`, 'PUT', token, fph, { accept: 'application/vnd.hmrc.5.0+json', body: { overlapReliefUsed: 100, accountingAdjustment: 50 } });
+    // Self-Employment Business (MTD) v5.0: PUT /annual/{taxYear} with body wrapped under `adjustments`.
+    await call(
+      results,
+      'Annual Adjustments',
+      `/individuals/business/self-employment/${nino}/${resolvedBusinessId}/annual/${psTaxYear}`,
+      'PUT', token, fph,
+      {
+        accept: 'application/vnd.hmrc.5.0+json',
+        body: { adjustments: { overlapReliefUsed: 100, accountingAdjustment: 50 } },
+      },
+    );
 
     // ── 7. Calculation – Trigger ─────────────────────────────────────────────
-    const calcTrigger = await call(results, 'Calculation – Trigger', `/individuals/calculations/${nino}/self-assessment/${psTaxYear}`, 'POST', token, fph, { accept: 'application/vnd.hmrc.8.0+json', body: { finalDeclaration: false } });
+    // Individual Calculations API v8.0: POST .../trigger/{calculationType}. No body.
+    const calcTrigger = await call(
+      results,
+      'Calculation – Trigger (in-year)',
+      `/individuals/calculations/${nino}/self-assessment/${psTaxYear}/trigger/in-year`,
+      'POST', token, fph,
+      { accept: 'application/vnd.hmrc.8.0+json' },
+    );
 
     // ── 8. Calculation – Retrieve ────────────────────────────────────────────
     const calculationId = (calcTrigger as { calculationId?: string })?.calculationId;
@@ -289,8 +307,8 @@ export async function GET() {
     // upstream test backend has no row matching real-date queries.
     await call(results, 'VAT – Liabilities',         `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,             'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_LIABILITY' });
     await call(results, 'VAT – Payments',            `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,                'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_PAYMENT' });
-    await call(results, 'VAT – Penalties',           `/organisations/vat/${vrn}/penalties`,                                     'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'PENALTIES_LSP_AND_LPP' });
-    await call(results, 'VAT – Financial Details',   `/organisations/vat/${vrn}/financial-details?searchType=CHARGE`,           'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'FINANCIAL_DETAILS' });
+    // Penalties API + Financial Details are not in our production subscription scope
+    // (declared out of scope in 9 Jun 2026 email to Ciaran). Excluded from the harness.
 
     const passed  = results.filter(r => r.ok).length;
     const failed  = results.filter(r => !r.ok).length;

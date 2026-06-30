@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const token  = await getValidToken(profileId);
-    const result = await submitQuarterlyUpdate(nino, businessId, body.taxYear, body, token);
+    const result = await submitQuarterlyUpdate(nino, businessId, body, token);
 
     const totalExpenses = Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0);
     await supabase.from('sa_filings').insert({
