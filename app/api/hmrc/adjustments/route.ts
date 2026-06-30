@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     if (savingsAccounts?.length) {
       results.savings = await submitSavingsIncome(nino, taxYear, savingsAccounts, token);
     }
-    if (dividends?.ukDividends || dividends?.otherUkDividends) {
+    if (dividends?.foreignDividend?.length || dividends?.stockDividend) {
       results.dividends = await submitDividendsIncome(nino, taxYear, dividends, token);
     }
     if (giftAid?.totalAmount) {
