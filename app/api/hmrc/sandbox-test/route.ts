@@ -291,11 +291,13 @@ export async function GET() {
     // User-restricted: UTR in path MUST match the authenticated sandbox user.
     // 7501553182 is the saUtr of test user GK649364B (returned by create-test-user
     // when the sandbox account was set up).
-    const sandboxUtr = '7501553182';
-    await call(results, 'Individual Employment – Annual Summary', `/individual-employment/sa/${sandboxUtr}/annual-summary/${taxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.2+json' });
+    // Pre-MTD API — sandbox stub only carries data for the example year 2016-17.
+    const sandboxUtr     = '7501553182';
+    const legacyTaxYear  = '2016-17';
+    await call(results, 'Individual Employment – Annual Summary', `/individual-employment/sa/${sandboxUtr}/annual-summary/${legacyTaxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.2+json' });
 
     // ── 18. Individual Tax (v1.1) ────────────────────────────────────────────
-    await call(results, 'Individual Tax – Annual Summary', `/individual-tax/sa/${sandboxUtr}/annual-summary/${taxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.1+json' });
+    await call(results, 'Individual Tax – Annual Summary', `/individual-tax/sa/${sandboxUtr}/annual-summary/${legacyTaxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.1+json' });
 
     // ── 19+. VAT MTD ─────────────────────────────────────────────────────────
     // Use last 6 months to avoid DATE_RANGE_INVALID
