@@ -201,6 +201,9 @@ export async function GET() {
 
     // ── 5. Period Summaries (Quarterly Update) ───────────────────────────────
     // Self-Employment Business (MTD) v5.0: POST /period (no taxYear in URL).
+    // HMRC sandbox stub doesn't cover the current real tax year for this endpoint
+    // (returns RULE_TAX_YEAR_NOT_SUPPORTED), so pin to TY 2024-25 for evidence.
+    // Production code uses real obligation dates and is unaffected.
     await call(
       results,
       'Period Summaries – Quarterly Update',
@@ -209,7 +212,7 @@ export async function GET() {
       {
         accept: 'application/vnd.hmrc.5.0+json',
         body: {
-          periodDates:    { periodStartDate: psStart, periodEndDate: psEnd },
+          periodDates:    { periodStartDate: '2024-04-06', periodEndDate: '2024-07-05' },
           periodIncome:   { turnover: 5000, other: 0 },
           periodExpenses: {
             costOfGoods:          200,
