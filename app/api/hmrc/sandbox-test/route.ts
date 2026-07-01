@@ -269,7 +269,28 @@ export async function GET() {
     // ── 11. Business Source Adjustable Summary (BSAS MTD v7.0) ───────────────
     await call(results, 'Business Source Adjustable Summary', `/individuals/self-assessment/adjustable-summary/${nino}/${taxYear}?businessId=${resolvedBusinessId}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.7.0+json' });
 
-    // ── 14–18. VAT MTD ───────────────────────────────────────────────────────
+    // ── 12. Individuals Savings Income (MTD v2.0) ────────────────────────────
+    // List UK savings accounts — read-only, no body required.
+    await call(results, 'Savings Income – List UK Accounts', `/individuals/savings-income/uk-accounts/${nino}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
+
+    // ── 13. Self Assessment Accounts (MTD v4.0) ──────────────────────────────
+    // Endpoint requires either onlyOpenItems=true or date range; use former for a simple call.
+    await call(results, 'SA Accounts – Balance & Transactions', `/accounts/self-assessment/${nino}/balance-and-transactions?onlyOpenItems=true`, 'GET', token, fph, { accept: 'application/vnd.hmrc.4.0+json' });
+
+    // ── 14. Individuals Disclosures (MTD v2.0) ───────────────────────────────
+    await call(results, 'Individuals Disclosures', `/individuals/disclosures/${nino}/${taxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
+
+    // ── 15. Self Assessment Individual Details (MTD v2.0) ────────────────────
+    await call(results, 'SA Individual Details – ITSA Status', `/individuals/person/itsa-status/${nino}/${taxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.2.0+json' });
+
+    // ── 16. Self Assessment Assist (MTD v1.0) ────────────────────────────────
+    // Use sandbox-stub calculationId documented to return 204 "no messages".
+    await call(results, 'SA Assist – Generate Report', `/individuals/self-assessment/assist/reports/${nino}/${taxYear}/620490b4-06e3-4fef-a555-6fd0877dc7ca`, 'POST', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
+
+    // Individual Employment 1.2 + Individual Tax 1.1 were tested but dropped —
+    // pre-MTD legacy APIs with no sandbox stub data, not used in production code.
+
+    // ── 17+. VAT MTD ─────────────────────────────────────────────────────────
     // Use last 6 months to avoid DATE_RANGE_INVALID
     const to   = new Date().toISOString().slice(0, 10);
     const from = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
