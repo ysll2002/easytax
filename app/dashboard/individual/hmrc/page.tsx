@@ -15,8 +15,6 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
     'read:vat',
     'write:vat',
     'read:self-assessment-assist',
-    'read:individual-employment',
-    'read:individual-tax',
   ].join('+');
 
   const authUrl = `https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;

@@ -287,19 +287,10 @@ export async function GET() {
     // Use sandbox-stub calculationId documented to return 204 "no messages".
     await call(results, 'SA Assist – Generate Report', `/individuals/self-assessment/assist/reports/${nino}/${taxYear}/620490b4-06e3-4fef-a555-6fd0877dc7ca`, 'POST', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
-    // ── 17. Individual Employment (v1.2) ─────────────────────────────────────
-    // User-restricted: UTR in path MUST match the authenticated sandbox user.
-    // 7501553182 is the saUtr of test user GK649364B (returned by create-test-user
-    // when the sandbox account was set up).
-    // Pre-MTD API — sandbox stub only carries data for the example year 2016-17.
-    const sandboxUtr     = '7501553182';
-    const legacyTaxYear  = '2016-17';
-    await call(results, 'Individual Employment – Annual Summary', `/individual-employment/sa/${sandboxUtr}/annual-summary/${legacyTaxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.2+json' });
+    // Individual Employment 1.2 + Individual Tax 1.1 were tested but dropped —
+    // pre-MTD legacy APIs with no sandbox stub data, not used in production code.
 
-    // ── 18. Individual Tax (v1.1) ────────────────────────────────────────────
-    await call(results, 'Individual Tax – Annual Summary', `/individual-tax/sa/${sandboxUtr}/annual-summary/${legacyTaxYear}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.1+json' });
-
-    // ── 19+. VAT MTD ─────────────────────────────────────────────────────────
+    // ── 17+. VAT MTD ─────────────────────────────────────────────────────────
     // Use last 6 months to avoid DATE_RANGE_INVALID
     const to   = new Date().toISOString().slice(0, 10);
     const from = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
