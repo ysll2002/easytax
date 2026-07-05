@@ -54,7 +54,7 @@ export default function PLClient() {
     const { from, to } = periodDates(p);
     fetch(`/api/company/report?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}`)
       .then(r => r.json())
-      .then(d => { if (d.error) setError(d.error); else setData(d); })
+      .then(d => { if (d.error) setError(d.detail ? `${d.error}: ${d.detail}` : d.error); else setData(d); })
       .catch(() => setError('Failed to load data'))
       .finally(() => setLoading(false));
   }, []);
