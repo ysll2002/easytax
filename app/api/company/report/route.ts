@@ -68,9 +68,15 @@ export async function GET(req: NextRequest) {
       bankBalance = balRes.data.accounts?.[0]?.balances?.current ?? null;
     } catch { /* non-blocking */ }
   } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : String(err);
-    console.error('[plaid] report fetch failed:', msg);
-    return NextResponse.json({ error: 'fetch_failed', detail: msg }, { status: 502 });
+    // Plaid errors come through axios; the useful body is in err.response.data,
+    // not err.message (which is a generic "Request failed with status code N").
+    const axiosErr = err as { response?: { data?: { error_code?: string; error_message?: string; display_message?: string } }; message?: string };
+    const plaidBody = axiosErr.response?.data;
+    const detail = plaidBody?.error_code
+      ? `${plaidBody.error_code}: ${plaidBody.error_message ?? plaidBody.display_message ?? ''}`
+      : (err instanceof Error ? err.message : String(err));
+    console.error('[plaid] report fetch failed:', detail, plaidBody);
+    return NextResponse.json({ error: 'fetch_failed', detail }, { status: 502 });
   }
 
   // Compute P&L
