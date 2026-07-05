@@ -48,11 +48,14 @@ export async function GET(req: NextRequest) {
   let bankBalance: number | null = null;
 
   try {
+    // Fetch across all accounts on the Plaid item. Previously we filtered by a
+    // stored account_id, but that id can go stale (INVALID_FIELD) after
+    // reconnects. Simpler + more robust to let Plaid return the whole item.
     const txRes = await plaidClient.transactionsGet({
       access_token: bank.access_token,
       start_date:   startDate,
       end_date:     endDate,
-      options:      bank.account_id ? { account_ids: [bank.account_id], count: 500 } : { count: 500 },
+      options:      { count: 500 },
     });
     rawTx = (txRes.data.transactions ?? []).map(tx => ({
       description: tx.merchant_name ?? tx.name ?? 'Unknown',
@@ -61,11 +64,9 @@ export async function GET(req: NextRequest) {
     }));
 
     try {
-      const balRes = await plaidClient.accountsBalanceGet({
-        access_token: bank.access_token,
-        options:      bank.account_id ? { account_ids: [bank.account_id] } : undefined,
-      });
-      bankBalance = balRes.data.accounts?.[0]?.balances?.current ?? null;
+      const balRes = await plaidClient.accountsBalanceGet({ access_token: bank.access_token });
+      // Sum across all current balances on the item.
+      bankBalance = (balRes.data.accounts ?? []).reduce((s, a) => s + (a.balances?.current ?? 0), 0) || null;
     } catch { /* non-blocking */ }
   } catch (err: unknown) {
     // Plaid errors come through axios; the useful body is in err.response.data,
