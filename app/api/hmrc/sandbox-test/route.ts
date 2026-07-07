@@ -149,6 +149,11 @@ export async function GET() {
       if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
     } catch { /* ignore */ }
 
+    // Server-side profileId is always available here; the device cookie may not
+    // yet carry userId if the client-side collector hasn't seen the session.
+    // Force-authoritative override so FPH never falls back to placeholders.
+    if (!deviceData.userId) deviceData.userId = profileId;
+
     const vendorIp = await getVendorIp();
     const fph      = buildFphHeaders(deviceData, vendorIp);
 
