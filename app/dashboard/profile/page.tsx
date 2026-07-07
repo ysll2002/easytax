@@ -18,6 +18,31 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved]   = useState(false);
   const [error, setError]   = useState('');
+  const [exporting, setExporting] = useState(false);
+
+  async function handleExport() {
+    setExporting(true);
+    try {
+      const res = await fetch('/api/profile/export');
+      if (!res.ok) throw new Error('export_failed');
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      // Use the server-provided filename when present, fall back to a date-stamped name.
+      const cd = res.headers.get('Content-Disposition') ?? '';
+      const match = cd.match(/filename="([^"]+)"/);
+      a.download = match?.[1] ?? `easytax-export-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError('Export failed — please try again.');
+    } finally {
+      setExporting(false);
+    }
+  }
 
   useEffect(() => {
     fetch('/api/profile/tax-ids')
@@ -69,6 +94,24 @@ export default function ProfilePage() {
         </div>
         <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>{t('accountId')}</p>
         <p style={{ color: '#4A4035', fontSize: '0.875rem', fontFamily: 'monospace' }}>{user?.profileId ?? '—'}</p>
+      </div>
+
+      <div className="p-6 rounded-2xl mb-6" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
+        <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
+          Your data
+        </h2>
+        <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
+          Download a JSON archive of everything EasyTax holds on you — profile, tax IDs, HMRC filings, bank connections. Your business data is yours to keep and move.
+        </p>
+        <button
+          type="button"
+          onClick={handleExport}
+          disabled={exporting}
+          className="px-6 py-2.5 rounded-full text-sm font-medium"
+          style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: exporting ? 0.6 : 1, cursor: exporting ? 'wait' : 'pointer' }}
+        >
+          {exporting ? 'Preparing…' : 'Export my data'}
+        </button>
       </div>
 
       <form onSubmit={handleSave}>
