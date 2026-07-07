@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { auth } from '@/auth';
 import { createHash } from 'crypto';
 
 const BASE = process.env.HMRC_ENV === 'production'
@@ -73,11 +74,23 @@ async function fraudHeaders(): Promise<Record<string, string>> {
     if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
   } catch { /* ignore */ }
 
+  // The device cookie is written by client-side DeviceDataCollector — its userId
+  // is empty until the next-auth session has hydrated in the browser. Any HMRC
+  // call fired before that (or from the OAuth callback warmup, before the user
+  // navigates back) would otherwise ship placeholder values for
+  // Gov-Client-User-IDs / Gov-Vendor-License-IDs / Gov-Client-Multi-Factor.
+  // Fall back to the authoritative server-side session so the headers are always
+  // populated for authenticated requests.
+  if (!deviceData.userId) {
+    const session = await auth();
+    if (session?.user?.profileId) deviceData.userId = session.user.profileId;
+  }
+
   const vendorIp = await getVendorPublicIp();
   const clientIp = deviceData.ip ?? '';
   // MFA happens on HMRC's Government Gateway during OAuth — our software never
   // sees the factor itself. We report type=OTHER with a stable per-user reference
-  // so HMRC has an audit-friendly value.
+  // (sha256 of the profile id) so HMRC has an audit-friendly value.
   const mfaRef = deviceData.userId
     ? createHash('sha256').update(`mfa:${deviceData.userId}`).digest('hex').slice(0, 16)
     : 'unknown';

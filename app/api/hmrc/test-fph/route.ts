@@ -25,6 +25,14 @@ export async function GET() {
     if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
   } catch { /* ignore */ }
 
+  // Server session is authoritative for userId; the client cookie may not have
+  // it populated yet when this route runs. Ensures Gov-Client-User-IDs +
+  // Gov-Vendor-License-IDs + Multi-Factor unique-reference never fall back to
+  // placeholder / empty values.
+  if (!deviceData.userId && session.user?.profileId) {
+    deviceData.userId = session.user.profileId;
+  }
+
   const vendorIp = await getVendorIp();
   const clientIp = deviceData.ip ?? '';
 
