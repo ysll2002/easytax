@@ -66,6 +66,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
         <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />
         {children}
+        {/* HMRC MTD-ITSA production requirement: signpost users with unsupported
+            income types to the official HMRC compatible-software directory. */}
+        <footer style={{ padding: '2rem 1.5rem 3rem', borderTop: '1px solid #EEE4D3', marginTop: '3rem', color: '#9A8F83', fontSize: '0.75rem', lineHeight: 1.5 }}>
+          <p style={{ maxWidth: '52rem' }}>
+            EasyTax supports Self Assessment for UK sole-trader freelancers (Self-Employment income). If you have income from UK property, foreign property, or other sources EasyTax doesn&apos;t currently cover, find compatible software at{' '}
+            <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
+              target="_blank" rel="noopener noreferrer"
+              style={{ color: '#C4622D', textDecoration: 'underline' }}>
+              gov.uk — Find software compatible with Making Tax Digital for Income Tax
+            </a>.
+          </p>
+        </footer>
         {/* Mobile bottom spacer */}
         <div className="md:hidden" style={{ height: '72px' }} />
       </main>

@@ -265,6 +265,12 @@ export default function TasksWizard() {
                 <span style={{ color: '#C4622D', fontSize: '1.1rem' }}>£{calc.totalDue.toFixed(2)}</span>
               </div>
             )}
+            {/* HMRC MTD-ITSA production requirement (General #14a): in-year
+                calculations must be shown with an accuracy disclaimer. Wording
+                follows the example in the Software Approvals checklist. */}
+            <p className="text-xs mt-3 leading-relaxed" style={{ color: '#9A8F83' }}>
+              This calculation is only based on information HMRC has received about your income and expenses to {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}. This may change as further information is received about you during the tax year.
+            </p>
           </div>
         ) : (
           <>
