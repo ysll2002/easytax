@@ -88,6 +88,11 @@ export default async function TaxPage() {
                   desc={bank ? t('bankConnected', { name: bank.account_name }) : t('bankImport')}
                   done={!!bank}
                 />
+                <ActionLink
+                  href="/dashboard/individual/calculate"
+                  label="View my tax calculation"
+                  desc="Request an in-year Self Assessment calculation from HMRC anytime."
+                />
                 {hmrc?.vrn && (
                   <ActionLink
                     href="/dashboard/individual/vat"

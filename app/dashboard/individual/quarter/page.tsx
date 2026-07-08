@@ -2,7 +2,7 @@
 import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { TrendingUp, TrendingDown, CheckCircle2, ChevronRight, Info } from 'lucide-react';
+import { TrendingUp, TrendingDown, CheckCircle2, ChevronRight, Info, RefreshCw, Lock } from 'lucide-react';
 
 const EXPENSE_FIELDS = [
   { key: 'costOfGoods',          label: 'Cost of goods / materials',    hint: 'Stock, raw materials, direct costs' },
@@ -42,6 +42,34 @@ function QuarterForm() {
   const [submitted,  setSubmitted]  = useState(false);
   const [error,      setError]      = useState('');
   const [hinted,     setHinted]     = useState<string | null>(null);
+  const [pulling,    setPulling]    = useState(false);
+  const [pulledAt,   setPulledAt]   = useState<string | null>(null);
+  const canSubmit = pulledAt != null;
+
+  // HMRC MTD-ITSA production requirement (In-Year #6): quarterly submission
+  // data must be populated from the customer's digital record (reconciled bank
+  // transactions), not manually keyed on the submission screen. This handler
+  // pulls the pre-classified totals for the period; the input fields below are
+  // rendered read-only so corrections must be made in /dashboard/reconcile.
+  async function handlePull() {
+    if (!start || !end) { setError('Missing period dates in URL.'); return; }
+    setPulling(true); setError('');
+    try {
+      const res  = await fetch(`/api/individual/quarter-totals?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        setError(data.detail ?? data.error ?? 'Failed to pull totals from reconciliation.');
+        return;
+      }
+      setTurnover(String(data.turnover));
+      const next: Record<string, string> = {};
+      for (const f of EXPENSE_FIELDS) next[f.key] = String(data.expenses[f.key] ?? 0);
+      setExpenses(next);
+      setPulledAt(new Date().toISOString());
+    } finally {
+      setPulling(false);
+    }
+  }
 
   const totalExpenses = EXPENSE_FIELDS.reduce((sum, f) => sum + parseFloat(expenses[f.key] || '0'), 0);
   const income        = parseFloat(turnover || '0');
@@ -118,6 +146,32 @@ function QuarterForm() {
         <div className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
       )}
 
+      {/* Digital-record source notice — HMRC MTD-ITSA compliance banner. */}
+      <div className="mb-6 p-4 rounded-2xl flex items-start gap-3" style={{ backgroundColor: '#F5EDDC', border: '1px solid #E5CFA8' }}>
+        <Lock size={16} style={{ color: '#8B6F1F', marginTop: 3, flexShrink: 0 }} />
+        <div className="flex-1 text-xs" style={{ color: '#4A4035', lineHeight: 1.55 }}>
+          <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Figures come from your digital record.</p>
+          <p className="mb-2">
+            HMRC rules for Making Tax Digital require the numbers you submit here to be derived from your reconciled bank transactions, not typed in on the submission screen. To correct any category, edit the transaction in{' '}
+            <Link href="/dashboard/reconcile" style={{ color: '#C4622D', fontWeight: 600, textDecoration: 'underline' }}>Reconcile</Link>, then re-pull below.
+          </p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <button type="button" onClick={handlePull} disabled={pulling || !start || !end}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
+              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: pulling ? 0.6 : 1, cursor: pulling ? 'wait' : 'pointer', border: 'none' }}>
+              {pulling
+                ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />Pulling…</>
+                : <><RefreshCw size={12} />{pulledAt ? 'Re-pull from Reconciliation' : 'Pull from Reconciliation'}</>}
+            </button>
+            {pulledAt && (
+              <span className="text-[11px]" style={{ color: '#6B7F50' }}>
+                ✓ Populated {new Date(pulledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-start">
 
@@ -133,13 +187,13 @@ function QuarterForm() {
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold" style={{ color: '#9A8F83' }}>£</span>
                   <input
-                    type="number" min="0" step="0.01" required
-                    value={turnover} onChange={e => setTurnover(e.target.value)} placeholder="0.00"
-                    className="w-full pl-8 pr-4 py-3.5 rounded-xl text-base font-semibold"
-                    style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#FFFFFF', outline: 'none', color: '#1C1208' }}
+                    type="number" min="0" step="0.01" required readOnly
+                    value={turnover} placeholder="0.00"
+                    className="w-full pl-8 pr-4 py-3.5 rounded-xl text-base font-semibold cursor-not-allowed"
+                    style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#F5F0E6', outline: 'none', color: '#1C1208' }}
                   />
                 </div>
-                <p className="text-xs mt-1.5" style={{ color: '#9A8F83' }}>Total income received in this period, before expenses.</p>
+                <p className="text-xs mt-1.5" style={{ color: '#9A8F83' }}>Populated from Reconcile — edit transactions there to change.</p>
               </label>
             </div>
 
@@ -164,11 +218,11 @@ function QuarterForm() {
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
                       <input
-                        type="number" min="0" step="0.01"
-                        value={expenses[f.key] ?? ''} onChange={e => setExpenses(prev => ({ ...prev, [f.key]: e.target.value }))}
+                        type="number" min="0" step="0.01" readOnly
+                        value={expenses[f.key] ?? ''}
                         placeholder="0.00"
-                        className="w-full pl-7 pr-3 py-2.5 rounded-xl text-sm"
-                        style={{ border: '1px solid #DDD5C8', backgroundColor: '#FFFFFF', outline: 'none', color: '#1C1208' }}
+                        className="w-full pl-7 pr-3 py-2.5 rounded-xl text-sm cursor-not-allowed"
+                        style={{ border: '1px solid #DDD5C8', backgroundColor: '#F5F0E6', outline: 'none', color: '#1C1208' }}
                       />
                     </div>
                   </div>
@@ -176,12 +230,15 @@ function QuarterForm() {
               </div>
             </div>
 
-            <button type="submit" disabled={submitting}
+            <button type="submit" disabled={submitting || !canSubmit}
               className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold"
-              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: submitting ? 0.7 : 1, cursor: submitting ? 'wait' : 'pointer', border: 'none', fontSize: '0.95rem' }}>
+              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: (submitting || !canSubmit) ? 0.5 : 1, cursor: (submitting || !canSubmit) ? 'not-allowed' : 'pointer', border: 'none', fontSize: '0.95rem' }}
+              title={!canSubmit ? 'Pull figures from Reconciliation first — the submission cannot be typed manually.' : undefined}>
               {submitting
                 ? <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />Submitting to HMRC…</>
-                : <>Submit Quarterly Update <ChevronRight size={16} /></>}
+                : canSubmit
+                ? <>Submit Quarterly Update <ChevronRight size={16} /></>
+                : <>Pull figures first</>}
             </button>
           </div>
 
