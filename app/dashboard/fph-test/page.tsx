@@ -25,7 +25,7 @@ type FeedbackIssue = {
 };
 
 type FeedbackReport = {
-  summary: { apisQueried: number; observedRequests: number; errorCount: number; warningCount: number };
+  summary: { apisQueried: number; observedRequests: number; errorCount: number; warningCount: number; codeCounts?: Record<string, number> };
   issues: FeedbackIssue[];
   apis: { api: string; status: number | null; ok: boolean; error?: string; requests?: unknown[] }[];
   error?: string;
@@ -195,6 +195,13 @@ export default function FphTestPage() {
               <p className="text-sm mt-1" style={{ color: '#4A4035' }}>
                 {feedback.summary.observedRequests} recent requests inspected across {feedback.summary.apisQueried} APIs · {feedback.summary.warningCount} warnings
               </p>
+              {feedback.summary.codeCounts && Object.keys(feedback.summary.codeCounts).length > 0 && (
+                <div className="mt-3 pt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono" style={{ color: '#4A4035', borderTop: '1px solid #C4622D20' }}>
+                  {Object.entries(feedback.summary.codeCounts).sort((a, b) => b[1] - a[1]).map(([code, count]) => (
+                    <span key={code}>{code}: {count}</span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {feedback.issues.length > 0 && (

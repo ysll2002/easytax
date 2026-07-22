@@ -94,17 +94,36 @@ export async function GET() {
     }
   }
 
-  // Aggregate a compact summary — total requests observed, per-code counts,
-  // and a flat list of every distinct (api, header, error.code) tuple.
+  // Aggregate a compact summary — one issue per problematic header per
+  // request. HMRC's shape puts the classification at header.code (e.g.
+  // MISSING_HEADER, POTENTIALLY_INVALID_HEADER, INVALID_HEADER) with optional
+  // details in errors[]/warnings[]. Surface the header-level code as primary
+  // so a MISSING_HEADER acceptable-with-notification state is visible.
   type Issue = { api: string; endpoint: string; timestamp: string; header: string; code: string; message: string; kind: 'error' | 'warning' };
   const issues: Issue[] = [];
   let observedRequests = 0;
+  const codeCounts: Record<string, number> = {};
   for (const api of results) {
     for (const req of api.requests ?? []) {
       observedRequests += 1;
       for (const h of req.headers ?? []) {
-        for (const e of h.errors ?? []) issues.push({ api: api.api, endpoint: `${req.method} ${req.path}`, timestamp: req.requestTimestamp, header: h.header, code: e.code, message: e.message, kind: 'error' });
-        for (const w of h.warnings ?? []) issues.push({ api: api.api, endpoint: `${req.method} ${req.path}`, timestamp: req.requestTimestamp, header: h.header, code: w.code, message: w.message, kind: 'warning' });
+        const cls = h.code ?? '';
+        codeCounts[cls] = (codeCounts[cls] ?? 0) + 1;
+        if (cls === 'VALID_HEADER' || cls === 'TEST_SCENARIO_HEADER') continue;
+        const isError = cls === 'INVALID_HEADER';
+        const detail =
+          (h.errors && h.errors[0]?.message) ||
+          (h.warnings && h.warnings[0]?.message) ||
+          '';
+        issues.push({
+          api: api.api,
+          endpoint: `${req.method} ${req.path}`,
+          timestamp: req.requestTimestamp,
+          header: h.header,
+          code: cls || '(no code)',
+          message: detail,
+          kind: isError ? 'error' : 'warning',
+        });
       }
       for (const c of req.crossValidation ?? []) {
         for (const e of c.errors ?? []) issues.push({ api: api.api, endpoint: `${req.method} ${req.path}`, timestamp: req.requestTimestamp, header: c.headers.join('+'), code: e.code, message: e.message, kind: 'error' });
@@ -121,6 +140,7 @@ export async function GET() {
       observedRequests,
       errorCount,
       warningCount,
+      codeCounts,
     },
     issues,
     apis: results,
