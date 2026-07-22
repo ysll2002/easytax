@@ -31,14 +31,9 @@ async function getVendorIp(): Promise<string> {
 
 function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): Record<string, string> {
   const clientIp = deviceData.ip ?? '';
-  // The MFA challenge is performed by HMRC's Government Gateway during OAuth sign-in;
-  // our software does not handle the factor itself, so we report type=OTHER with a
-  // timestamp derived from the device session so HMRC has a verifiable reference.
-  const mfaRef = deviceData.userId
-    ? createHash('sha256').update(`mfa:${deviceData.userId}`).digest('hex').slice(0, 16)
-    : 'unknown';
-  const mfaTs  = deviceData.ipTs ?? new Date().toISOString();
-  const multiFactor = `type=OTHER&timestamp=${mfaTs}&unique-reference=${mfaRef}`;
+  // Gov-Client-Multi-Factor is intentionally omitted — see lib/hmrc.ts for the
+  // rationale (HMRC ticket 2026-NQM717: EasyTax has no in-app MFA; the Gov
+  // Gateway MFA is out of scope, sending a placeholder trips the validator).
   return {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
     'Gov-Client-Browser-JS-User-Agent': deviceData.userAgent ?? '',
@@ -50,7 +45,6 @@ function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): 
     'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs ?? new Date().toISOString(),
     'Gov-Client-Public-Port':           deviceData.port ?? '',
     'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
-    'Gov-Client-Multi-Factor':          multiFactor,
     'Gov-Vendor-Product-Name':          'EasyTax',
     'Gov-Vendor-Version':               'easytax=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
