@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   CheckCircle2, AlertCircle, Clock, ChevronRight,
-  FileText, Receipt, CreditCard, TrendingUp, CalendarClock, Info,
+  FileText, Receipt, CreditCard, TrendingUp, CalendarClock,
 } from 'lucide-react';
 import type { Task, TaskType, TaskStatus } from '@/app/api/hmrc/tasks/route';
 
@@ -171,28 +171,6 @@ export default function TasksPage() {
             </div>
           </div>
         )}
-      </div>
-
-      {/* HMRC MTD-ITSA production requirement (ticket 2026-NQM717): EasyTax
-          does not yet support end-of-year functionality. The full-width
-          callout below is shown above the task list so users are informed
-          in-context whenever they view their obligations. */}
-      <div className="mb-8 p-5 rounded-2xl flex gap-3 items-start" style={{ backgroundColor: '#FFF9F5', border: '1px solid #C4622D30' }}>
-        <div className="flex-shrink-0 mt-0.5"><Info size={18} color="#C4622D" /></div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>
-            End-of-year submission not supported in EasyTax
-          </p>
-          <p className="text-xs mb-2" style={{ color: '#4A4035', lineHeight: 1.55 }}>
-            EasyTax supports in-year quarterly updates for Making Tax Digital for Income Tax only. It does <strong>not</strong> support end-of-year functionality, including the Final Declaration (crystallisation). To complete your end-of-year submission you&apos;ll need to use additional HMRC-compatible software.
-          </p>
-          <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
-            target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-full"
-            style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
-            Find compatible software on gov.uk <ChevronRight size={12} />
-          </a>
-        </div>
       </div>
 
       {loading ? (
