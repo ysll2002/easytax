@@ -30,8 +30,6 @@ export default function TasksWizard() {
   const [error,        setError]        = useState('');
   const [calc,         setCalc]         = useState<CalcState>({ id: null });
   const [calcLoading,  setCalcLoading]  = useState(false);
-  const [declaring,    setDeclaring]    = useState(false);
-  const [declared,     setDeclared]     = useState(false);
   const [adjSubmitted, setAdjSubmitted] = useState(false);
 
   const taxYear = currentTaxYear();
@@ -52,13 +50,8 @@ export default function TasksWizard() {
   }, []);
 
   const quarterlyObs = obligations.filter(o => o.periodKey !== '#001');
-  const finalObs     = obligations.find(o => o.periodKey === '#001');
   const allFulfilled = quarterlyObs.length > 0 && quarterlyObs.every(o => o.status === 'Fulfilled');
   const submittedCount = quarterlyObs.filter(o => o.status === 'Fulfilled').length;
-
-  const taxYearEnd    = parseInt(startYear) + 1;
-  const payDeadline   = `31 Jan ${taxYearEnd + 1}`;
-  const balancingDate = `31 Jul ${taxYearEnd + 1}`;
 
   async function handleCalculate() {
     setCalcLoading(true);
@@ -92,25 +85,9 @@ export default function TasksWizard() {
     }
   }
 
-  async function handleFinalDeclaration() {
-    if (!confirm('This will submit your final Self Assessment to HMRC. Are you sure?')) return;
-    setDeclaring(true);
-    try {
-      const r = await fetch('/api/hmrc/final-declaration', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ taxYear }),
-      });
-      const d = await r.json();
-      if (d.error) setError(d.error);
-      else setDeclared(true);
-    } finally {
-      setDeclaring(false);
-    }
-  }
-
-  // Overall step: 1=quarters, 2=adjustments, 3=calculate, 4=declare, 5=pay
-  const currentStep = declared ? 5 : calc.id ? 4 : adjSubmitted ? 3 : allFulfilled ? 2 : 1;
+  // Overall step: 1=quarters, 2=adjustments, 3=calculate, 4=declare, 5=pay.
+  // Step 4/5 are locked (EOY not supported), so currentStep caps at 4.
+  const currentStep = calc.id ? 4 : adjSubmitted ? 3 : allFulfilled ? 2 : 1;
 
   const steps = [
     { n: 1, label: 'Quarterly updates' },
@@ -286,61 +263,40 @@ export default function TasksWizard() {
         )}
       </Section>
 
-      {/* Step 4: Final Declaration */}
-      <Section icon={<FileCheck size={18} />} title="Step 4 — Final Declaration" done={declared} active={currentStep === 4} locked={!allFulfilled || !adjSubmitted}>
-        <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
-          Confirm all figures are complete and correct, then submit your Self Assessment to HMRC.
-          {finalObs && ` Deadline: ${new Date(finalObs.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}.`}
-        </p>
-        {declared ? (
-          <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: '#6B8E6E' }}>
-            <CheckCircle2 size={16} /> Final Declaration submitted successfully
-          </div>
-        ) : (
-          <>
-            <button onClick={handleFinalDeclaration} disabled={declaring || !calc.id}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-full"
-              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: (declaring || !calc.id) ? 0.5 : 1, cursor: (declaring || !calc.id) ? 'not-allowed' : 'pointer', border: 'none' }}>
-              {declaring
-                ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" /> Submitting…</>
-                : <>Submit Final Declaration <ChevronRight size={14} /></>}
-            </button>
-            {!calc.id && <p className="text-xs mt-2" style={{ color: '#9A8F83' }}>Complete Step 3 first.</p>}
-          </>
-        )}
+      {/* Step 4: Final Declaration — NOT SUPPORTED (in-year only build).
+          HMRC MTD-ITSA production requirement: because EasyTax does not yet
+          support end-of-year functionality, this step is disabled and users
+          are signposted to the gov.uk compatible-software directory. */}
+      <Section icon={<FileCheck size={18} />} title="Step 4 — Final Declaration" done={false} active={false} locked>
+        <div className="p-4 rounded-xl" style={{ backgroundColor: '#FFF9F5', border: '1px solid #C4622D30' }}>
+          <p className="text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
+            End-of-year submission not supported in EasyTax
+          </p>
+          <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.5 }}>
+            EasyTax currently supports in-year quarterly updates only. The Final Declaration
+            (crystallisation) step at the end of the tax year is <strong>not</strong> available in
+            this software. To complete your Final Declaration you will need to use additional
+            HMRC-compatible software.
+          </p>
+          <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
+            target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
+            style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+            Find compatible software on gov.uk <ChevronRight size={12} />
+          </a>
+        </div>
       </Section>
 
-      {/* Step 5: Payment */}
-      <Section icon={<CreditCard size={18} />} title="Step 5 — Pay Your Tax" done={false} active={currentStep === 5} locked={!declared}>
-        {declared ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { label: 'Balancing payment', date: payDeadline },
-                { label: '1st payment on account', date: payDeadline },
-                { label: '2nd payment on account', date: balancingDate },
-              ].map(d => (
-                <div key={d.label} className="p-3 rounded-xl text-center" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-                  <p className="text-xs mb-1" style={{ color: '#9A8F83' }}>{d.label}</p>
-                  <p className="text-sm font-bold" style={{ color: '#1C1208' }}>{d.date}</p>
-                </div>
-              ))}
-            </div>
-            {calc.totalDue !== undefined && (
-              <div className="flex items-center justify-between p-4 rounded-xl" style={{ backgroundColor: '#FFF9F5', border: '1px solid #C4622D30' }}>
-                <p className="text-sm" style={{ color: '#9A8F83' }}>Estimated amount due</p>
-                <p style={{ fontSize: '1.4rem', fontWeight: 700, color: '#C4622D' }}>£{calc.totalDue.toFixed(2)}</p>
-              </div>
-            )}
-            <a href="https://www.gov.uk/pay-self-assessment-tax-bill" target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full"
-              style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8', textDecoration: 'none' }}>
-              Pay via HMRC.gov.uk <ChevronRight size={14} />
-            </a>
-          </div>
-        ) : (
-          <p className="text-sm" style={{ color: '#9A8F83' }}>Complete Steps 1–4 first, then we'll show your payment deadlines here.</p>
-        )}
+      {/* Step 5: Payment — locked because Final Declaration isn't supported yet. */}
+      <Section icon={<CreditCard size={18} />} title="Step 5 — Pay Your Tax" done={false} active={false} locked>
+        <p className="text-sm" style={{ color: '#9A8F83' }}>
+          Payment deadlines and totals will appear here once end-of-year functionality is available.
+          In the meantime, pay any Self Assessment tax you owe directly at{' '}
+          <a href="https://www.gov.uk/pay-self-assessment-tax-bill" target="_blank" rel="noopener noreferrer"
+            style={{ color: '#C4622D', textDecoration: 'underline' }}>
+            gov.uk — Pay your Self Assessment tax bill
+          </a>.
+        </p>
       </Section>
     </div>
   );
