@@ -65,7 +65,7 @@ export async function getValidToken(userId: string): Promise<string> {
 
 // ─── Fraud prevention headers ────────────────────────────────────────────────
 
-async function fraudHeaders(): Promise<Record<string, string>> {
+export async function fraudHeaders(): Promise<Record<string, string>> {
   const jar = await cookies();
   let deviceData: Record<string, string> = {};
   try {
