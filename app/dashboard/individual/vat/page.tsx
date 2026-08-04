@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { type VatObligation } from '@/lib/hmrc';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 type VatBoxes = {
   vatDueSales: number;
@@ -31,7 +32,7 @@ export default function VatPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('/api/hmrc/vat/obligations')
+    hmrcFetch('/api/hmrc/vat/obligations')
       .then(r => r.json())
       .then(d => {
         if (d.error) { setError(d.error); return; }
@@ -54,7 +55,7 @@ export default function VatPage() {
     setSubmitting(true);
     setError('');
     try {
-      const res = await fetch('/api/hmrc/vat/submit', {
+      const res = await hmrcFetch('/api/hmrc/vat/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

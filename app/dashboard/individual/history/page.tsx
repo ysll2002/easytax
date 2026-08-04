@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FileText, CheckCircle2, ChevronDown, ChevronUp, TrendingUp, TrendingDown, Calendar } from 'lucide-react';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 type Filing = {
   id: string;
@@ -165,7 +166,7 @@ export default function HistoryPage() {
   const [error,   setError]     = useState('');
 
   useEffect(() => {
-    fetch('/api/hmrc/history')
+    hmrcFetch('/api/hmrc/history')
       .then(r => r.json())
       .then(d => {
         if (d.error) setError(d.error);

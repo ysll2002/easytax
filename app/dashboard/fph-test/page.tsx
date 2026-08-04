@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 type FphResult = {
   status: number;
@@ -42,7 +43,7 @@ export default function FphTestPage() {
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch('/api/hmrc/test-fph');
+      const res = await hmrcFetch('/api/hmrc/test-fph');
       const data = await res.json();
       setResult(data);
     } catch {
@@ -57,7 +58,7 @@ export default function FphTestPage() {
     setFeedback(null);
     setFeedbackError('');
     try {
-      const res  = await fetch('/api/hmrc/fph-feedback');
+      const res  = await hmrcFetch('/api/hmrc/fph-feedback');
       const data = (await res.json()) as FeedbackReport;
       if (data.error) setFeedbackError(data.error);
       else setFeedback(data);

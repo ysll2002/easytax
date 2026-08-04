@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Calculator, ChevronRight } from 'lucide-react';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 function currentTaxYear() {
   const now = new Date();
@@ -25,7 +26,7 @@ export default function CalculatePage() {
   async function handleCalculate() {
     setError(''); setCalc(null); setLoading(true);
     try {
-      const r = await fetch('/api/hmrc/calculate', {
+      const r = await hmrcFetch('/api/hmrc/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ taxYear }),
@@ -36,7 +37,7 @@ export default function CalculatePage() {
       // times because HMRC computes asynchronously.
       for (let i = 0; i < 8; i++) {
         await new Promise(res => setTimeout(res, 1800));
-        const r2 = await fetch(`/api/hmrc/calculate?taxYear=${taxYear}&calculationId=${d.calculationId}`);
+        const r2 = await hmrcFetch(`/api/hmrc/calculate?taxYear=${taxYear}&calculationId=${d.calculationId}`);
         const d2 = await r2.json();
         if (d2.calculation) {
           const c = d2.calculation.taxCalculation;

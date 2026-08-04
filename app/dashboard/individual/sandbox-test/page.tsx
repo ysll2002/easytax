@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { CheckCircle2, XCircle, Loader2, Play } from 'lucide-react';
 import Link from 'next/link';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 type ApiResult = {
   name: string;
@@ -34,7 +35,7 @@ export default function SandboxTestPage() {
     setError('');
     setReport(null);
     try {
-      const res  = await fetch('/api/hmrc/sandbox-test');
+      const res  = await hmrcFetch('/api/hmrc/sandbox-test');
       const text = await res.text();
       let data: TestReport & { error?: string };
       try {

@@ -3,6 +3,7 @@ import { useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { TrendingUp, TrendingDown, CheckCircle2, ChevronRight, Info, RefreshCw, Lock } from 'lucide-react';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 const EXPENSE_FIELDS = [
   { key: 'costOfGoods',          label: 'Cost of goods / materials',    hint: 'Stock, raw materials, direct costs' },
@@ -85,7 +86,7 @@ function QuarterForm() {
     for (const f of EXPENSE_FIELDS) expObj[f.key] = parseFloat(expenses[f.key] || '0');
 
     try {
-      const res = await fetch('/api/hmrc/submit-quarter', {
+      const res = await hmrcFetch('/api/hmrc/submit-quarter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ taxYear, periodStartDate: start, periodEndDate: end, turnover: income, expenses: expObj }),
