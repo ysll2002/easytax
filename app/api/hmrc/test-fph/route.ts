@@ -1,59 +1,17 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { getValidToken } from '@/lib/hmrc';
-import { cookies } from 'next/headers';
-import { createHash } from 'crypto';
+import { getValidToken, fraudHeaders } from '@/lib/hmrc';
 
 const SANDBOX = 'https://test-api.service.hmrc.gov.uk';
 
-async function getVendorIp(): Promise<string> {
-  try {
-    const res = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(2000) });
-    const { ip } = await res.json();
-    return ip ?? '';
-  } catch { return ''; }
-}
-
+// Diagnostic endpoint — hits HMRC's own fraud-prevention-headers validator
+// with the exact headers our regular API paths would send, so we can see
+// what HMRC's rule engine returns without touching a real MTD endpoint.
 export async function GET() {
   const session = await auth();
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const jar = await cookies();
-  let deviceData: Record<string, string> = {};
-  try {
-    const raw = jar.get('hmrc_device')?.value;
-    if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
-  } catch { /* ignore */ }
-
-  // Server session is authoritative for userId; the client cookie may not have
-  // it populated yet when this route runs. Ensures Gov-Client-User-IDs and
-  // Gov-Vendor-License-IDs never fall back to placeholder / empty values.
-  if (!deviceData.userId && session.user?.profileId) {
-    deviceData.userId = session.user.profileId;
-  }
-
-  const vendorIp = await getVendorIp();
-  const clientIp = deviceData.ip ?? '';
-
-  const fphHeaders: Record<string, string> = {
-    'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
-    'Gov-Client-Browser-JS-User-Agent': deviceData.userAgent ?? '',
-    'Gov-Client-Device-ID':             deviceData.deviceId  ?? '',
-    'Gov-Client-Screens':               deviceData.screens   ?? '',
-    'Gov-Client-Timezone':              deviceData.timezone  ?? 'UTC+00:00',
-    'Gov-Client-Window-Size':           deviceData.window    ?? '',
-    'Gov-Client-Public-IP':             clientIp,
-    'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? new Date().toISOString(),
-    'Gov-Client-Public-Port':           deviceData.port      ?? '',
-    'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
-    'Gov-Vendor-Product-Name':          'EasyTax',
-    'Gov-Vendor-Version':               'easytax=0.1.0',
-    'Gov-Vendor-Public-IP':             vendorIp,
-    'Gov-Vendor-Forwarded':             clientIp && vendorIp ? `by=${vendorIp}&for=${clientIp}` : '',
-    'Gov-Vendor-License-IDs':           deviceData.userId
-      ? `easytax=${createHash('sha256').update(deviceData.userId).digest('hex')}`
-      : '',
-  };
+  const fphHeaders = await fraudHeaders();
 
   try {
     const token = await getValidToken(session.user.profileId);

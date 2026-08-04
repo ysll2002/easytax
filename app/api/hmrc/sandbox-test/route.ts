@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
-import { getValidToken } from '@/lib/hmrc';
+import { getValidToken, fraudHeaders } from '@/lib/hmrc';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { cookies } from 'next/headers';
-import { createHash } from 'crypto';
 
 // Full HMRC endpoint coverage harness — 40+ sequential sandbox calls.
 export const maxDuration = 120;
@@ -20,40 +18,6 @@ type ApiResult = {
   data?: unknown;
   error?: string;
 };
-
-async function getVendorIp(): Promise<string> {
-  try {
-    const res = await fetch('https://api.ipify.org?format=json', { signal: AbortSignal.timeout(2000) });
-    const { ip } = await res.json();
-    return ip ?? '';
-  } catch { return ''; }
-}
-
-function buildFphHeaders(deviceData: Record<string, string>, vendorIp: string): Record<string, string> {
-  const clientIp = deviceData.ip ?? '';
-  // Gov-Client-Multi-Factor is intentionally omitted — see lib/hmrc.ts for the
-  // rationale (HMRC ticket 2026-NQM717: EasyTax has no in-app MFA; the Gov
-  // Gateway MFA is out of scope, sending a placeholder trips the validator).
-  return {
-    'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
-    'Gov-Client-Browser-JS-User-Agent': deviceData.userAgent ?? '',
-    'Gov-Client-Device-ID':             deviceData.deviceId  ?? '',
-    'Gov-Client-Screens':               deviceData.screens   ?? '',
-    'Gov-Client-Timezone':              deviceData.timezone  ?? 'UTC+00:00',
-    'Gov-Client-Window-Size':           deviceData.window    ?? '',
-    'Gov-Client-Public-IP':             clientIp,
-    'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs ?? new Date().toISOString(),
-    'Gov-Client-Public-Port':           deviceData.port ?? '',
-    'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
-    'Gov-Vendor-Product-Name':          'EasyTax',
-    'Gov-Vendor-Version':               'easytax=0.1.0',
-    'Gov-Vendor-Public-IP':             vendorIp,
-    'Gov-Vendor-Forwarded':             clientIp && vendorIp ? `by=${vendorIp}&for=${clientIp}` : '',
-    'Gov-Vendor-License-IDs':           deviceData.userId
-      ? `easytax=${createHash('sha256').update(deviceData.userId).digest('hex')}`
-      : '',
-  };
-}
 
 async function call(
   results: ApiResult[],
@@ -139,20 +103,9 @@ export async function GET() {
     const PERIOD_START = `${yr}-04-06`;
     const PERIOD_END   = `${yr}-07-05`;
 
-    const jar = await cookies();
-    let deviceData: Record<string, string> = {};
-    try {
-      const raw = jar.get('hmrc_device')?.value;
-      if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
-    } catch { /* ignore */ }
-
-    // Server-side profileId is always available here; the device cookie may not
-    // yet carry userId if the client-side collector hasn't seen the session.
-    // Force-authoritative override so FPH never falls back to placeholders.
-    if (!deviceData.userId) deviceData.userId = profileId;
-
-    const vendorIp = await getVendorIp();
-    const fph      = buildFphHeaders(deviceData, vendorIp);
+    // Shared FPH builder from lib/hmrc.ts — same headers the real MTD paths
+    // send, so this harness surfaces whatever HMRC would actually see.
+    const fph = await fraudHeaders();
 
     const results: ApiResult[] = [];
 
