@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CheckCircle2, Clock, AlertCircle, ChevronRight, Calculator, FileCheck, CreditCard, SlidersHorizontal } from 'lucide-react';
 import { type Obligation } from '@/lib/hmrc';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 type CalcState = { id: string | null; incomeTax?: number; class4Nic?: number; totalDue?: number };
 
@@ -40,8 +41,8 @@ export default function TasksWizard() {
     if (params.get('adjustments') === 'done') setAdjSubmitted(true);
 
     Promise.all([
-      fetch('/api/hmrc/obligations').then(r => r.json()),
-      fetch('/api/hmrc/adjustments').then(r => r.json()),
+      hmrcFetch('/api/hmrc/obligations').then(r => r.json()),
+      hmrcFetch('/api/hmrc/adjustments').then(r => r.json()),
     ]).then(([obs, adj]) => {
       if (obs.error) setError(obs.error);
       else setObligations(obs.obligations ?? []);
@@ -57,7 +58,7 @@ export default function TasksWizard() {
     setCalcLoading(true);
     setError('');
     try {
-      const r = await fetch('/api/hmrc/calculate', {
+      const r = await hmrcFetch('/api/hmrc/calculate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ taxYear }),
@@ -67,7 +68,7 @@ export default function TasksWizard() {
 
       for (let i = 0; i < 6; i++) {
         await new Promise(res => setTimeout(res, 2000));
-        const r2 = await fetch(`/api/hmrc/calculate?taxYear=${taxYear}&calculationId=${d.calculationId}`);
+        const r2 = await hmrcFetch(`/api/hmrc/calculate?taxYear=${taxYear}&calculationId=${d.calculationId}`);
         const d2 = await r2.json();
         if (d2.calculation) {
           const c = d2.calculation.taxCalculation;

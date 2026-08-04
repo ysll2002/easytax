@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 function currentTaxYear() {
   const now = new Date();
@@ -117,7 +118,7 @@ export default function AdjustmentsPage() {
     };
 
     try {
-      const res = await fetch('/api/hmrc/adjustments', {
+      const res = await hmrcFetch('/api/hmrc/adjustments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

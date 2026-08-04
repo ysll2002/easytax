@@ -6,6 +6,7 @@ import {
   FileText, Receipt, CreditCard, TrendingUp, CalendarClock,
 } from 'lucide-react';
 import type { Task, TaskType, TaskStatus } from '@/app/api/hmrc/tasks/route';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 const TYPE_ICON: Record<TaskType, React.ElementType> = {
   quarterly_mtd:     TrendingUp,
@@ -130,7 +131,7 @@ export default function TasksPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('/api/hmrc/tasks')
+    hmrcFetch('/api/hmrc/tasks')
       .then(r => r.json())
       .then(d => { if (d.error) setError(d.error); else setTasks(d.tasks ?? []); })
       .catch(() => setError('Could not reach HMRC'))

@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { auth } from '@/auth';
-import { createHash } from 'crypto';
 
 const BASE = process.env.HMRC_ENV === 'production'
   ? 'https://api.service.hmrc.gov.uk'
@@ -75,11 +74,8 @@ async function fraudHeaders(): Promise<Record<string, string>> {
   } catch { /* ignore */ }
 
   // The device cookie is written by client-side DeviceDataCollector — its userId
-  // is empty until the next-auth session has hydrated in the browser. Any HMRC
-  // call fired before that (or from the OAuth callback warmup, before the user
-  // navigates back) would otherwise ship placeholder values for
-  // Gov-Client-User-IDs / Gov-Vendor-License-IDs / Gov-Client-Multi-Factor.
-  // Fall back to the authoritative server-side session so the headers are always
+  // is empty until the next-auth session has hydrated in the browser. Fall back
+  // to the authoritative server-side session so Gov-Client-User-IDs is always
   // populated for authenticated requests.
   if (!deviceData.userId) {
     const session = await auth();
@@ -96,26 +92,31 @@ async function fraudHeaders(): Promise<Record<string, string>> {
   // which HMRC explicitly places out of scope for this header. Sending a
   // placeholder type=OTHER trips the validator's POTENTIALLY_INVALID_HEADER
   // warning, so we omit the header entirely (HMRC ticket 2026-NQM717).
+  //
+  // Gov-Vendor-License-IDs is also intentionally omitted. EasyTax does not
+  // issue per-user licences (free to all), so any value we send would be a
+  // dummy/hash and HMRC's FPH review explicitly flagged that as prohibited.
 
-  return {
+  const raw: Record<string, string> = {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',
     'Gov-Client-Browser-JS-User-Agent': deviceData.userAgent ?? '',
     'Gov-Client-Device-ID':             deviceData.deviceId  ?? '',
     'Gov-Client-Screens':               deviceData.screens   ?? '',
-    'Gov-Client-Timezone':              deviceData.timezone  ?? 'UTC+00:00',
+    'Gov-Client-Timezone':              deviceData.timezone  ?? '',
     'Gov-Client-Window-Size':           deviceData.window    ?? '',
     'Gov-Client-Public-IP':             clientIp,
-    'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? new Date().toISOString(),
+    'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? '',
     'Gov-Client-Public-Port':           deviceData.port      ?? '',
     'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
     'Gov-Vendor-Product-Name':          'EasyTax',
     'Gov-Vendor-Version':               'easytax=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
     'Gov-Vendor-Forwarded':             clientIp && vendorIp ? `by=${vendorIp}&for=${clientIp}` : '',
-    'Gov-Vendor-License-IDs':           deviceData.userId
-      ? `easytax=${createHash('sha256').update(deviceData.userId).digest('hex')}`
-      : '',
   };
+
+  // HMRC's FPH review flagged empty-string headers as invalid — omit any
+  // whose value we couldn't fill so the request just doesn't advertise them.
+  return Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== ''));
 }
 
 async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
