@@ -1,22 +1,16 @@
 'use client';
 
-// Waits for DeviceDataCollector to have written the hmrc_device cookie
-// before returning. Any HMRC-bound fetch fired before that would otherwise
-// ship empty browser-side fraud-prevention headers (Gov-Client-Screens,
-// Gov-Client-Public-IP, etc.), which HMRC's FPH review explicitly flags.
-// Bails after `timeoutMs` so a broken collector doesn't wedge the page —
-// the server-side fraud-headers helper will still omit any headers whose
-// values it can't fill, rather than sending empty strings.
-async function waitForHmrcDevice(timeoutMs = 6000): Promise<void> {
-  if (typeof document === 'undefined') return;
-  const started = Date.now();
-  while (Date.now() - started < timeoutMs) {
-    if (document.cookie.split('; ').some(c => c.startsWith('hmrc_device='))) return;
-    await new Promise(r => setTimeout(r, 50));
-  }
-}
+import { collectDeviceData } from './device-data-client';
 
+// All HMRC-bound requests fired from the browser go through this wrapper. It
+// waits for the memoised device-data collection to resolve, then attaches the
+// collected values as X-EasyTax-Device-Data. The server-side fraudHeaders()
+// helper reads that header and populates the Gov-Client-* headers HMRC's FPH
+// review requires. This closes the earlier race where a request could fire
+// before the client had finished writing the hmrc_device cookie.
 export async function hmrcFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  await waitForHmrcDevice();
-  return fetch(input, init);
+  const data = await collectDeviceData();
+  const headers = new Headers(init?.headers);
+  headers.set('x-easytax-device-data', encodeURIComponent(JSON.stringify(data)));
+  return fetch(input, { ...init, headers });
 }

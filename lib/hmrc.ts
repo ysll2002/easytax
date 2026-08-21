@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { auth } from '@/auth';
 
@@ -66,17 +66,31 @@ export async function getValidToken(userId: string): Promise<string> {
 // ─── Fraud prevention headers ────────────────────────────────────────────────
 
 export async function fraudHeaders(): Promise<Record<string, string>> {
-  const jar = await cookies();
   let deviceData: Record<string, string> = {};
+
+  // Primary source: X-EasyTax-Device-Data request header set by the browser's
+  // hmrcFetch wrapper. This avoids the earlier cookie-write race — the client
+  // awaits collection before firing the request, so the header is always in
+  // sync with what the browser collected.
   try {
-    const raw = jar.get('hmrc_device')?.value;
-    if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
+    const h = await headers();
+    const headerRaw = h.get('x-easytax-device-data');
+    if (headerRaw) deviceData = JSON.parse(decodeURIComponent(headerRaw));
   } catch { /* ignore */ }
 
-  // The device cookie is written by client-side DeviceDataCollector — its userId
-  // is empty until the next-auth session has hydrated in the browser. Fall back
-  // to the authoritative server-side session so Gov-Client-User-IDs is always
-  // populated for authenticated requests.
+  // Fallback: legacy hmrc_device cookie, still written by device-data-client as
+  // a safety net for any server route hit without the header (e.g. direct curl).
+  if (Object.keys(deviceData).length === 0) {
+    try {
+      const jar = await cookies();
+      const raw = jar.get('hmrc_device')?.value;
+      if (raw) deviceData = JSON.parse(decodeURIComponent(raw));
+    } catch { /* ignore */ }
+  }
+
+  // userId comes from the authoritative server-side session — the client never
+  // needs to pass it (and historically the cookie's userId was often empty
+  // because next-auth hadn't hydrated yet when the collector ran).
   if (!deviceData.userId) {
     const session = await auth();
     if (session?.user?.profileId) deviceData.userId = session.user.profileId;
