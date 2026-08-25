@@ -5,12 +5,12 @@ import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 
 export const metadata: Metadata = {
-  title: 'FreeAgent Alternative — Free MTD ITSA Software for UK Sole Traders',
-  description: 'Looking for a FreeAgent alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC. Free to use — no monthly subscription, no card required.',
+  title: 'FreeAgent Alternative — MTD ITSA Software for UK Sole Traders, £24 per Filing',
+  description: 'Looking for a FreeAgent alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/freeagent-alternative' },
   openGraph: {
-    title: 'FreeAgent Alternative — Free MTD ITSA + Self Assessment + VAT',
-    description: 'FreeAgent charges £228+/year. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC for £0/year. No card required.',
+    title: 'FreeAgent Alternative — MTD ITSA + Self Assessment + VAT',
+    description: 'FreeAgent charges £228+/year on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC for £24 per submission — no subscription.',
     url: 'https://easytax.vip/freeagent-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'FreeAgent Alternative — Free MTD ITSA Software',
-    description: 'FreeAgent charges £228+/year. EasyTax does it for free.',
+    title: 'FreeAgent Alternative — MTD ITSA Software, £24 per Filing',
+    description: 'FreeAgent charges £228+/year. EasyTax charges £24 per submission, no subscription.',
   },
 };
 
@@ -28,8 +28,9 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; freeagent: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Price (annual)',                        easytax: '£0',        freeagent: 'From £228+VAT/yr',   note: 'FreeAgent standard plan billed monthly' },
-  { feature: 'No card required to sign up',           easytax: true,        freeagent: false },
+  { feature: 'Pricing model',                         easytax: '£24 per filing', freeagent: 'From £228+VAT/yr',   note: 'FreeAgent is a monthly subscription; EasyTax charges £20+VAT per HMRC submission' },
+  { feature: 'Typical annual cost',                   easytax: '~£120',       freeagent: '£228+',              note: 'Based on 4 quarterly updates + 1 final declaration' },
+  { feature: 'No card to sign up',                    easytax: true,        freeagent: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,        freeagent: true },
   { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,        freeagent: true },
   { feature: 'MTD VAT submission',                    easytax: true,        freeagent: true },
@@ -57,8 +58,8 @@ export default async function FreeAgentAlternative() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'FreeAgent Alternative — Free MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and FreeAgent for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for free.',
+    headline: 'FreeAgent Alternative — MTD ITSA Software for UK Sole Traders',
+    description: 'Side-by-side comparison of EasyTax and FreeAgent for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/freeagent-alternative',
@@ -76,23 +77,23 @@ export default async function FreeAgentAlternative() {
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> The free FreeAgent alternative
+              <Sparkles size={12} /> The no-subscription FreeAgent alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£228/year</em> for FreeAgent? EasyTax files the same returns for free.
+              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£228/year</em> for FreeAgent? EasyTax files the same returns for £24 each.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              FreeAgent is a fine product — but if you are a UK sole trader or landlord who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying for a lot of features you will never use. EasyTax covers all the HMRC filings for <strong style={{ color: '#6B8E6E' }}>£0/year</strong>.
+              FreeAgent is a fine product — but if you are a UK sole trader or landlord who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying for a lot of features you will never use. EasyTax covers all the same HMRC filings for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> — no monthly subscription, so you only pay when you actually file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£0 / year</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-                Get started — free →
+                Get started →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=FreeAgent%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
@@ -139,7 +140,7 @@ export default async function FreeAgentAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£0 / year</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>FreeAgent</p>
@@ -253,8 +254,8 @@ export default async function FreeAgentAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'Is EasyTax really free?',
-                  a: 'Yes — there is no monthly subscription. We charge zero subscription fees. The business model is built on becoming the default free option ahead of the 2026/2027 MTD ITSA mandates, not on per-user revenue.',
+                  q: 'How much does EasyTax cost?',
+                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. You only pay when you actually file. Users who sign up during the current early-access period lock in this founder price for life. There is no charge to connect your bank or HMRC accounts.',
                 },
                 {
                   q: 'I use FreeAgent for invoicing. What do I do?',
@@ -298,14 +299,14 @@ export default async function FreeAgentAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop paying £228/year just to stay HMRC-compliant.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for free.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for £24 a filing.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-                Get started — free →
+                Get started →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=FreeAgent%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Ask us a question

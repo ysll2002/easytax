@@ -3,6 +3,22 @@
     {
       "path": "/api/cron/daily-article",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/mtd-reminder",
+      "schedule": "0 8 22 7 *"
+    },
+    {
+      "path": "/api/cron/mtd-reminder",
+      "schedule": "0 8 22 10 *"
+    },
+    {
+      "path": "/api/cron/mtd-reminder",
+      "schedule": "0 8 22 1 *"
+    },
+    {
+      "path": "/api/cron/mtd-reminder",
+      "schedule": "0 8 21 4 *"
     }
   ]
 }

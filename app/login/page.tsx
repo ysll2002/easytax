@@ -122,7 +122,7 @@ export default function Login() {
                 <label htmlFor="password" className="block text-sm font-semibold" style={{ color: '#1C1208' }}>
                   {t('password')}
                 </label>
-                <Link href="#" className="text-xs" style={{ color: '#C4622D' }}>
+                <Link href="/forgot-password" className="text-xs" style={{ color: '#C4622D' }}>
                   {t('forgotPassword')}
                 </Link>
               </div>
