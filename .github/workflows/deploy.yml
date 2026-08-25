@@ -91,19 +91,15 @@ jobs:
             fi
           fi
 
-      - name: Pull Vercel environment
-        if: steps.preflight.outputs.ready == 'true'
-        run: vercel pull --yes --environment=preview --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
-
-      - name: Build
-        if: steps.preflight.outputs.ready == 'true'
-        run: vercel build --token="$VERCEL_TOKEN"
-
+      # Build on Vercel, not in CI. A local `vercel build` does not get the
+      # runtime environment variables (Supabase et al), and app/sitemap.ts
+      # queries Supabase during prerender, so the build fails without them.
+      # Uploading the source is also what the manual flow does.
       - name: Deploy preview
         id: deploy
         if: steps.preflight.outputs.ready == 'true'
         run: |
-          url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
+          url=$(vercel deploy --yes --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Point staging.easytax.vip at this deploy
@@ -164,16 +160,11 @@ jobs:
             fi
           fi
 
-      - name: Pull Vercel environment
-        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
-
-      - name: Build
-        run: vercel build --prod --token="$VERCEL_TOKEN"
-
+      # Build on Vercel, not in CI — see the note in the preview job.
       - name: Deploy to production
         id: deploy
         run: |
-          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
+          url=$(vercel deploy --prod --yes --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Summary
