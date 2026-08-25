@@ -17,12 +17,12 @@ function daysUntilBokioCloses(): number {
 }
 
 export const metadata: Metadata = {
-  title: 'Bokio Alternative — Free MTD ITSA Software for UK Sole Traders & Ltd Companies',
-  description: 'Bokio UK closes 7 July 2026. Migrate to EasyTax — free MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for UK sole traders, landlords and limited companies. £0/year, no card needed.',
+  title: 'Bokio Alternative — MTD ITSA Software for UK Sole Traders & Ltd Companies',
+  description: 'Bokio UK closes 7 July 2026. Migrate to EasyTax — MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for UK sole traders, landlords and limited companies. £20 + VAT (£24 inc. VAT) per submission, no subscription, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/bokio-alternative' },
   openGraph: {
-    title: 'Bokio Alternative — Free MTD ITSA + Self Assessment + VAT',
-    description: 'Bokio is closing 7 July 2026. EasyTax is the free MTD-ready alternative for UK sole traders, landlords and limited companies.',
+    title: 'Bokio Alternative — MTD ITSA + Self Assessment + VAT',
+    description: 'Bokio is closing 7 July 2026. EasyTax is the no-subscription MTD-ready alternative for UK sole traders, landlords and limited companies — £24 per submission.',
     url: 'https://easytax.vip/bokio-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bokio Alternative — Free MTD ITSA Software',
-    description: 'Bokio closes 7 July 2026. Migrate to EasyTax for free.',
+    title: 'Bokio Alternative — MTD ITSA Software, £24 per Filing',
+    description: 'Bokio closes 7 July 2026. Migrate to EasyTax — £24 per submission, no subscription.',
   },
 };
 
@@ -41,8 +41,9 @@ type Row = { feature: string; easytax: string | boolean; bokio: string | boolean
 
 const rows: Row[] = [
   { feature: 'Available in the UK',                  easytax: true,                    bokio: 'Closing 7 July 2026',  note: 'Bokio is winding down UK operations' },
-  { feature: 'Price (annual)',                       easytax: '£0',                    bokio: '£299.40 (£24.95/mo)' },
-  { feature: 'No card required to sign up',          easytax: true,                    bokio: false },
+  { feature: 'Pricing model',                        easytax: '£24 per filing',        bokio: 'Monthly subscription' },
+  { feature: 'Typical annual cost',                  easytax: '~£120',                 bokio: '£299.40 (£24.95/mo)' },
+  { feature: 'No card to sign up',                   easytax: true,                    bokio: false },
   { feature: 'MTD ITSA quarterly updates',           easytax: true,                    bokio: false,                  note: 'Bokio never built MTD ITSA' },
   { feature: 'Self Assessment (SA100, SA103, SA105)',easytax: true,                    bokio: false,                  note: 'Bokio did not file SA' },
   { feature: 'MTD VAT submission',                   easytax: true,                    bokio: true },
@@ -69,7 +70,7 @@ export default async function BokioAlternative() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Bokio Alternative — Free MTD ITSA Software for UK Sole Traders & Ltd Companies',
+    headline: 'Bokio Alternative — MTD ITSA Software for UK Sole Traders & Ltd Companies',
     description: 'Bokio UK is closing on 7 July 2026. Side-by-side comparison of EasyTax and Bokio for UK sole traders, landlords and limited companies.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
@@ -98,23 +99,23 @@ export default async function BokioAlternative() {
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> The free Bokio alternative
+              <Sparkles size={12} /> The no-subscription Bokio alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               Bokio is closing on <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to EasyTax in minutes.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC for <strong style={{ color: '#6B8E6E' }}>£0/year</strong> — and from April 2026 you legally have to file quarterly anyway.
+              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> with no monthly subscription — and from April 2026 you legally have to file quarterly anyway.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£0 / year</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready for April 2026</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-                Start migration — free →
+                Start migration →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=Bokio%20CSV%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Email us your Bokio CSV
@@ -161,7 +162,7 @@ export default async function BokioAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£0 / year</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Bokio</p>
@@ -243,7 +244,7 @@ export default async function BokioAlternative() {
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #6B8E6E30' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B8E6E' }}>Where EasyTax is better</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Free, forever. No card, no trial limit.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>No subscription. £24 per HMRC submission, nothing until you file.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Files Self Assessment, MTD ITSA quarterly updates, and CT600 directly to HMRC.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>AI categorisation and AI reconciliation chat.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Still here on 8 July 2026.</span></li>
@@ -274,8 +275,8 @@ export default async function BokioAlternative() {
               {[
                 { q: 'Is Bokio really shutting down in the UK?',
                   a: 'Yes. Bokio has announced it is winding down UK operations on ' + BOKIO_END_DATE_HUMAN + '. Existing customers were notified by email to export their data. Bokio has offered refunds for the unused portion of subscription time — worth claiming before you close the account.' },
-                { q: 'How is EasyTax free?',
-                  a: 'We charge zero subscription and zero per-filing fees. The business model is built on becoming the default free option ahead of the 2026/2027 MTD ITSA mandates, not on per-user revenue. We may add optional paid add-ons later (e.g. accountant collaboration) but core filing will stay free.' },
+                { q: 'How much does EasyTax cost?',
+                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription, no recurring fees. You only pay when you file. Users who sign up during our early-access period lock in this founder price for life. There is no charge to connect your accounts or use the dashboard.' },
                 { q: 'Will EasyTax import my Bokio data automatically?',
                   a: 'There is no Bokio API for migration, so we do it the manual-but-fast way: export your Clients / Invoices / Transactions CSVs from Bokio, email them to hello@easytax.vip, and we load them into your EasyTax account by hand within one working day. A self-serve CSV importer is coming later in 2026.' },
                 { q: 'I am VAT-registered. Does EasyTax file MTD VAT?',
@@ -306,14 +307,14 @@ export default async function BokioAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop watching the Bokio countdown.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Open a free EasyTax account.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Open an EasyTax account.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               Move your data when you&apos;re ready. We&apos;ll still be here on 8 July.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-                Get started — free →
+                Get started →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=Bokio%20CSV%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Email us your Bokio CSV

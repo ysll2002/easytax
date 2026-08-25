@@ -7,12 +7,12 @@ import { auth } from '@/auth';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Coconut Alternative — Free MTD ITSA Software for UK Sole Traders',
-  description: 'Looking for a free Coconut alternative? EasyTax offers MTD ITSA quarterly updates, Self Assessment, VAT and CT600 — £0/year, no card needed. Built for UK sole traders, landlords and limited companies.',
+  title: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
+  description: 'Looking for a Coconut alternative? EasyTax offers MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for £20 + VAT (£24 inc. VAT) per submission — no subscription, no card to sign up. Built for UK sole traders, landlords and limited companies.',
   alternates: { canonical: 'https://easytax.vip/coconut-alternative' },
   openGraph: {
-    title: 'Coconut Alternative — Free MTD ITSA Software for UK Sole Traders',
-    description: 'Free MTD ITSA software for sole traders, landlords and limited companies. £0/year.',
+    title: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
+    description: 'MTD ITSA software for sole traders, landlords and limited companies. £24 per submission, no subscription.',
     url: 'https://easytax.vip/coconut-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Coconut Alternative — Free MTD ITSA Software',
-    description: 'Free MTD ITSA software for sole traders, landlords and limited companies.',
+    title: 'Coconut Alternative — MTD ITSA Software, £24 per Filing',
+    description: 'MTD ITSA software for sole traders, landlords and limited companies. £24 per submission, no subscription.',
   },
 };
 
@@ -30,7 +30,8 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; coconut: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Price (annual)',                     easytax: '£0',           coconut: '£99.99 – £159.99' },
+  { feature: 'Pricing model',                      easytax: '£24 per filing', coconut: 'Annual subscription' },
+  { feature: 'Typical annual cost',                easytax: '~£120',          coconut: '£99.99 – £159.99' },
   { feature: 'No trial limit, no card needed',     easytax: true,           coconut: false,             note: 'Coconut is 14-day trial then paid' },
   { feature: 'MTD ITSA quarterly updates',         easytax: true,           coconut: true },
   { feature: 'Self Assessment (SA100)',            easytax: true,           coconut: true },
@@ -57,8 +58,8 @@ export default async function CoconutAlternative() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Coconut Alternative — Free MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Coconut for UK sole traders, landlords and limited companies looking for free MTD ITSA software.',
+    headline: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
+    description: 'Side-by-side comparison of EasyTax and Coconut for UK sole traders, landlords and limited companies looking for MTD ITSA software without a subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/coconut-alternative',
@@ -82,11 +83,11 @@ export default async function CoconutAlternative() {
               Looking for a <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Coconut alternative</em>?
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year. EasyTax does MTD ITSA, Self Assessment, VAT and CT600 for <strong style={{ color: '#6B8E6E' }}>£0/year</strong> — and we cover limited companies, which Coconut doesn&apos;t.
+              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year, billed whether you file or not. EasyTax charges <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per HMRC submission</strong> with no subscription — and we cover limited companies, which Coconut doesn&apos;t.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£0 / year</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No card needed</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No card to sign up</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
           </div>
@@ -103,7 +104,7 @@ export default async function CoconutAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£0 / year</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Coconut</p>
@@ -143,7 +144,7 @@ export default async function CoconutAlternative() {
               {[
                 {
                   title: 'It’s actually free — not a 14-day trial',
-                  body: 'Coconut’s free tier is a 14-day trial. After that you’re on £99.99 – £159.99/year. EasyTax is £0/year with no card required, no usage limits, no upsell.',
+                  body: 'Coconut’s free tier is a 14-day trial. After that you’re on £99.99 – £159.99/year whether you file or not. EasyTax has no subscription at all — you pay £20 + VAT (£24 inc. VAT) only when you actually submit to HMRC, and nothing to sign up.',
                 },
                 {
                   title: 'You can file company tax (CT600), not just sole trader',
@@ -203,12 +204,12 @@ export default async function CoconutAlternative() {
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
-                { q: 'How is EasyTax free?',                              a: 'We charge zero subscription and zero per-filing fees. Our business model is not built on user payments — it’s built on the value of helping more sole traders and small companies become MTD-ready before the 2026/2027 mandates.' },
+                { q: 'How much does EasyTax cost?',                       a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission. No monthly subscription — you only pay when you file. Early-access signups lock in this founder price for life. Connecting your bank and HMRC accounts is free.' },
                 { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax sends quarterly updates and final declarations to HMRC via the official MTD ITSA API. We use the HMRC-recognised software route.' },
                 { q: 'Can I migrate from Coconut?',                       a: 'Yes. Sign up free, connect your bank via Open Banking, and your transactions import automatically. There’s nothing to export from Coconut — you simply start fresh and we backfill from your bank.' },
                 { q: 'Does EasyTax support Self Assessment (SA100)?',     a: 'Yes — including SA100, employment income, self-employment (SA103), property income (SA105), and dividends. We file directly to HMRC.' },
                 { q: 'Does EasyTax support limited companies?',           a: 'Yes — that’s the biggest gap vs Coconut. EasyTax does VAT returns (MTD VAT), CT600 Corporation Tax, Balance Sheet, and P&L for UK limited companies.' },
-                { q: 'Will EasyTax stay free?',                           a: 'Yes. Core filing (Self Assessment, MTD ITSA, VAT, CT600) will remain free. We may add optional paid add-ons in the future (e.g. accountant collaboration, dedicated tax advice) but we will never charge for filing.' },
+                { q: 'Is the per-filing price locked in?',                 a: 'Yes. Users who sign up during the current early-access period lock in the £20+VAT founder price for life — even as we add features and the standard price increases. You pay nothing until you file.' },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm" style={{ color: '#1C1208' }}>
@@ -226,14 +227,14 @@ export default async function CoconutAlternative() {
         <section className="py-20 sm:py-24" style={{ backgroundColor: '#1C1208' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
-              Try EasyTax free.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>It really is £0.</em>
+              No subscription. Ever.<br />
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Pay only when you file.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card. No 14-day countdown. Built for UK sole traders, landlords, and limited companies.
+              No card to sign up. No 14-day countdown. £24 per HMRC submission, and nothing until you file. Built for UK sole traders, landlords, and limited companies.
             </p>
             <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
-              Start for free →
+              Get started →
             </Link>
           </div>
         </section>
