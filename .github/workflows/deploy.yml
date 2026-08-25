@@ -1,0 +1,155 @@
+name: Deploy
+
+# Preview deploys run automatically on every push to `staging` and re-point
+# staging.easytax.vip at the result. Production is manual only: run this
+# workflow from the Actions tab with target=production.
+#
+# Note: production deploys the `staging` branch by default, not `main`. That
+# matches the documented manual flow in CLAUDE.md, where `vercel deploy --prod`
+# ships the working directory (which is `staging`) and `main` is only synced
+# afterwards to record what went live.
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Which environment to deploy
+        type: choice
+        options: [preview, production]
+        default: preview
+        required: true
+      ref:
+        description: Branch or SHA to deploy
+        type: string
+        default: staging
+        required: true
+
+concurrency:
+  # Preview and production queue independently; never cancel a deploy midway.
+  group: deploy-${{ inputs.target || 'preview' }}
+  cancel-in-progress: false
+
+env:
+  VERCEL_SCOPE: lilingabriel-5465s-projects
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+jobs:
+  preview:
+    if: github.event_name == 'push' || inputs.target == 'preview'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `secrets` is not available to `if:` conditions, so gate on a step
+      # output instead. This keeps the run green (with a warning) rather than
+      # failing red before the secrets have been added.
+      - name: Check Vercel credentials
+        id: preflight
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Deploy skipped::Add VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID under Settings → Secrets and variables → Actions to enable deploys."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Vercel CLI
+        if: steps.preflight.outputs.ready == 'true'
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        if: steps.preflight.outputs.ready == 'true'
+        run: vercel pull --yes --environment=preview --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+
+      - name: Build
+        if: steps.preflight.outputs.ready == 'true'
+        run: vercel build --token="$VERCEL_TOKEN"
+
+      - name: Deploy preview
+        id: deploy
+        if: steps.preflight.outputs.ready == 'true'
+        run: |
+          url=$(vercel deploy --prebuilt --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Point staging.easytax.vip at this deploy
+        if: steps.preflight.outputs.ready == 'true'
+        run: vercel alias set "${{ steps.deploy.outputs.url }}" staging.easytax.vip --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+
+      - name: Summary
+        if: steps.preflight.outputs.ready == 'true'
+        run: |
+          {
+            echo "### Preview deployed"
+            echo ""
+            echo "- https://staging.easytax.vip"
+            echo "- ${{ steps.deploy.outputs.url }}"
+            echo ""
+            echo "Check the preview, then run this workflow again with \`target: production\` to go live."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  production:
+    if: github.event_name == 'workflow_dispatch' && inputs.target == 'production'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Add required reviewers to this environment in Settings → Environments
+    # to require an approval click before anything reaches easytax.vip.
+    environment:
+      name: production
+      url: https://easytax.vip
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Check Vercel credentials
+        id: preflight
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "::error title=Missing secrets::Add VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+
+      - name: Build
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy to production
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: |
+          {
+            echo "### Deployed to production"
+            echo ""
+            echo "- https://easytax.vip"
+            echo "- Deployed ref: \`${{ inputs.ref }}\` @ \`${{ github.sha }}\`"
+            echo "- ${{ steps.deploy.outputs.url }}"
+            echo ""
+            echo "Remember to sync \`main\`: \`git checkout main && git merge staging --no-ff && git push origin main\`"
+          } >> "$GITHUB_STEP_SUMMARY"
