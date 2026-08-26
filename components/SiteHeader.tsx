@@ -21,7 +21,7 @@ export default function SiteHeader() {
         {/* Desktop nav */}
         <nav className="hidden md:flex gap-8 text-sm font-medium">
           <Link href="/#features" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('howItWorks')}</Link>
-          <Link href="/#pricing"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('pricing')}</Link>
+          <Link href="/pricing"   style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('pricing')}</Link>
           <Link href="/#faq"      style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('faq')}</Link>
           <Link href="/timetable" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('timetable')}</Link>
           <Link href="/tax-tips"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('taxTips')}</Link>
@@ -63,7 +63,7 @@ export default function SiteHeader() {
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             {[
               { href: '/#features', label: t('howItWorks') },
-              { href: '/#pricing',  label: t('pricing') },
+              { href: '/pricing',   label: t('pricing') },
               { href: '/#faq',      label: t('faq') },
               { href: '/timetable', label: t('timetable') },
               { href: '/tax-tips',  label: t('taxTips') },
