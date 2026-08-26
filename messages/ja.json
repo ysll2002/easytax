@@ -15,19 +15,19 @@
     "announcement": {
       "live": "MTD ITSA が施行されました。",
       "deadline": "Q1 申告期限は 2026 年 8 月 5 日 ——",
-      "freeCallout": "EasyTax なら無料で対応。"
+      "freeCallout": "EasyTax なら数分で対応。"
     },
     "hero": {
       "pill": "最初の MTD ITSA 四半期申告まであと {days} 日",
       "title1": "MTD ITSA の時代へ。",
       "title2": "HMRC へ四半期申告",
-      "title3": "無料で。",
+      "title3": "1 回 £24 で。",
       "subtitle": "2026 年 4 月から、年収 5 万ポンドを超える自営業者と賃貸オーナーは HMRC に四半期ごとの更新を提出する必要があります。EasyTax なら数分で完了 —— Self Assessment、VAT、法人会計まで対応。",
-      "subtitleEmph": "年間 £0。",
-      "badgeFree": "年間 £0",
-      "badgeNoCard": "カード不要",
+      "subtitleEmph": "サブスクなし —— 申告したときだけのお支払い。",
+      "badgeFree": "サブスクなし",
+      "badgeNoCard": "登録にカード不要",
       "badgeHmrc": "HMRC 認定",
-      "ctaPrimary": "無料で MTD 対応を始める →",
+      "ctaPrimary": "MTD 対応を始める →",
       "ctaSecondary": "対応範囲を見る →"
     },
     "trust": {
@@ -72,21 +72,21 @@
       "title1": "5 分で申告、",
       "title2": "5 時間ではなく。",
       "body": "銀行と HMRC アカウントを一度だけ接続。EasyTax がデータを取得し、AI で分類して申告 —— Self Assessment、VAT、法人会計のいずれにも対応。",
-      "priceLabel": "無料",
-      "priceCaption": "サブスクなし、申告ごとの料金なし —— EasyTax は完全無料。",
+      "priceLabel": "£24 / 申告",
+      "priceCaption": "月額サブスクなし。HMRC への提出 1 回につき £24（VAT 込み）。早期アクセスで登録すると、この創業価格が生涯適用されます。",
       "cta": "申告を始める →",
       "step1Title": "アカウントを接続",
       "step1Desc": "Government Gateway ID とビジネス銀行口座を連携。記録を自動取得 —— 手入力不要。",
       "step2Title": "AI が重労働を担当",
       "step2Desc": "AI がすべての取引を分類し、控除可能経費を計算し、申告または法人会計を準備します。",
       "step3Title": "確認して提出",
-      "step3Desc": "わかりやすい要約を確認し、HMRC へ直接送信 —— 即時確認。完全無料。"
+      "step3Desc": "わかりやすい要約を確認し、HMRC へ直接送信 —— 即時確認。"
     },
     "faq": {
       "title1": "疑問に",
       "title2": "お答えします。",
       "q1Q": "EasyTax は有限会社に対応していますか？",
-      "q1A": "はい。EasyTax は個人事業主・フリーランス（Self Assessment、MTD ITSA）と有限会社（VAT 申告、CT600 法人税、貸借対照表、P&L）の両方に対応。すべて完全無料。",
+      "q1A": "はい。EasyTax は個人事業主・フリーランス（Self Assessment、MTD ITSA）と有限会社（VAT 申告、CT600 法人税、貸借対照表、P&L）の両方に対応。料金は HMRC への提出 1 回につき £24（VAT 込み）、月額サブスクはありません。早期アクセス登録者は £20 + VAT の創業価格が適用されます。",
       "q2Q": "対応している VAT スキームは？",
       "q2A": "Standard、Flat Rate、Annual VAT Accounting に対応し、MTD 対応 API で HMRC へ直接提出します。",
       "q3Q": "貸借対照表はどう生成されますか？",
@@ -110,8 +110,8 @@
     "finalCta": {
       "title1": "もう書類仕事に",
       "title2": "怯えないで。",
-      "subtitle": "英国のフリーランスと有限会社に無料。アカウントを接続し、数分で HMRC に申告。",
-      "button": "無料で始める →"
+      "subtitle": "英国のフリーランスと有限会社向け。アカウントを接続し、数分で HMRC に申告 —— 1 回 £24、サブスクなし。",
+      "button": "申告を始める →"
     },
     "footer": {
       "tagline": "EasyTax Ltd. ロンドン発。",
@@ -120,8 +120,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "EasyTax — 英国個人事業主・有限会社向け無料 MTD ITSA ソフトウェア",
-      "description": "英国の個人事業主、賃貸オーナー、有限会社向けの無料 MTD ITSA ソフトウェア。HMRC への四半期更新、Self Assessment、VAT、CT600 を申告。年間 £0 —— カード不要。"
+      "title": "EasyTax — 英国個人事業主・有限会社向け MTD ITSA ソフトウェア",
+      "description": "英国の個人事業主、賃貸オーナー、有限会社向けの MTD ITSA ソフトウェア。HMRC への四半期更新、Self Assessment、VAT、CT600 を申告。提出 1 回につき £24、サブスクなし —— 登録にカード不要。"
     }
   },
   "auth": {
