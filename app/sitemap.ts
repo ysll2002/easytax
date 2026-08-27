@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/coconut-alternative`,       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/freeagent-alternative`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/quickbooks-alternative`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${base}/sage-alternative`,           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/xero-alternative`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/timetable`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/tax-tips`,                  lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
