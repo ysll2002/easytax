@@ -338,10 +338,10 @@ export async function GET(req: NextRequest) {
 
     // ── Additional Directorship & Dividend Information (v2.0, TY 2025-26+) ───
     // HMRC (Gillian Tait, 2026-08-28) flagged 3 missing endpoints: 6/9 covered.
-    // Endpoint requires an employmentId from Individuals Employments Income –
-    // List. Sandbox has no seeded employments, so use the OAS sample UUID and
-    // the STATEFUL scenario so PUT → GET → DELETE stay consistent in-session.
-    // taxYearMinimum2025 in the OAS pins this to 2025-26 or later.
+    // taxYearMinimum2025 in the OAS pins this to 2025-26 or later. First run
+    // used STATEFUL + a fake employmentId → 404. Switched to DEFAULT (no
+    // scenario header): OAS says DEFAULT "Simulates success response" so the
+    // sandbox returns stub data regardless of the employmentId value.
     const dirTaxYear      = '2025-26';
     const dirEmploymentId = '4557ecb5-fd32-48cc-81f5-e6acd1099f3c';
     await call(
@@ -350,8 +350,7 @@ export async function GET(req: NextRequest) {
       `/individuals/dividends-income/directorship/${nino}/${dirTaxYear}/${dirEmploymentId}`,
       'PUT', token, fph,
       {
-        accept:   'application/vnd.hmrc.2.0+json',
-        scenario: 'STATEFUL',
+        accept: 'application/vnd.hmrc.2.0+json',
         body: {
           companyDirector:        true,
           closeCompany:           true,
@@ -368,14 +367,14 @@ export async function GET(req: NextRequest) {
       'Dividends – Directorship (Retrieve)',
       `/individuals/dividends-income/directorship/${nino}/${dirTaxYear}/${dirEmploymentId}`,
       'GET', token, fph,
-      { accept: 'application/vnd.hmrc.2.0+json', scenario: 'STATEFUL' },
+      { accept: 'application/vnd.hmrc.2.0+json' },
     );
     await call(
       results,
       'Dividends – Directorship (Delete)',
       `/individuals/dividends-income/directorship/${nino}/${dirTaxYear}/${dirEmploymentId}`,
       'DELETE', token, fph,
-      { accept: 'application/vnd.hmrc.2.0+json', scenario: 'STATEFUL' },
+      { accept: 'application/vnd.hmrc.2.0+json' },
     );
 
     // ── Individuals Reliefs v3.0 — full endpoint coverage ────────────────────
