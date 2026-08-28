@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken, fraudHeaders } from '@/lib/hmrc';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -58,13 +58,38 @@ async function call(
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   // Top-level catch so we always return valid JSON even if something crashes
   try {
-    const session = await auth();
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Two auth modes:
+    //  1. Interactive: normal user session, runs against the caller's own
+    //     HMRC connection (dashboard button).
+    //  2. Cron: Vercel cron with Authorization: Bearer $CRON_SECRET. Picks
+    //     the first hmrc_connections row so the harness stays "warm" against
+    //     HMRC's 30-day rolling test log even when nobody clicks the button.
+    const cronSecret = process.env.CRON_SECRET;
+    const authHeader = req.headers.get('authorization') ?? '';
+    const isCron     = cronSecret != null && authHeader === `Bearer ${cronSecret}`;
 
-    const profileId = session.user.profileId;
+    let profileId: string;
+    if (isCron) {
+      const { data: anyConn } = await supabase
+        .from('hmrc_connections')
+        .select('user_id')
+        .limit(1)
+        .maybeSingle();
+      if (!anyConn?.user_id) {
+        return NextResponse.json(
+          { error: 'Cron: no hmrc_connections row available to test with.' },
+          { status: 400 },
+        );
+      }
+      profileId = anyConn.user_id;
+    } else {
+      const session = await auth();
+      if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      profileId = session.user.profileId;
+    }
 
     let token: string;
     try {
