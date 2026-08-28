@@ -311,6 +311,48 @@ export async function GET() {
       { accept: 'application/vnd.hmrc.2.0+json' },
     );
 
+    // ── Additional Directorship & Dividend Information (v2.0, TY 2025-26+) ───
+    // HMRC (Gillian Tait, 2026-08-28) flagged 3 missing endpoints: 6/9 covered.
+    // Endpoint requires an employmentId from Individuals Employments Income –
+    // List. Sandbox has no seeded employments, so use the OAS sample UUID and
+    // the STATEFUL scenario so PUT → GET → DELETE stay consistent in-session.
+    // taxYearMinimum2025 in the OAS pins this to 2025-26 or later.
+    const dirTaxYear      = '2025-26';
+    const dirEmploymentId = '4557ecb5-fd32-48cc-81f5-e6acd1099f3c';
+    await call(
+      results,
+      'Dividends – Directorship (Create/Amend)',
+      `/individuals/dividends-income/directorship/${nino}/${dirTaxYear}/${dirEmploymentId}`,
+      'PUT', token, fph,
+      {
+        accept:   'application/vnd.hmrc.2.0+json',
+        scenario: 'STATEFUL',
+        body: {
+          companyDirector:        true,
+          closeCompany:           true,
+          directorshipCeasedDate: '2025-07-01',
+          companyName:            'Company One',
+          companyNumber:          '36488522',
+          shareholding:           20.99,
+          dividendReceived:       1024.99,
+        },
+      },
+    );
+    await call(
+      results,
+      'Dividends – Directorship (Retrieve)',
+      `/individuals/dividends-income/directorship/${nino}/${dirTaxYear}/${dirEmploymentId}`,
+      'GET', token, fph,
+      { accept: 'application/vnd.hmrc.2.0+json', scenario: 'STATEFUL' },
+    );
+    await call(
+      results,
+      'Dividends – Directorship (Delete)',
+      `/individuals/dividends-income/directorship/${nino}/${dirTaxYear}/${dirEmploymentId}`,
+      'DELETE', token, fph,
+      { accept: 'application/vnd.hmrc.2.0+json', scenario: 'STATEFUL' },
+    );
+
     // ── Individuals Reliefs v3.0 — full endpoint coverage ────────────────────
     // HMRC flagged: only charitable-giving PUT previously tested; requires all.
     // Loop the four typed reliefs (investment, other, foreign, pensions) × CRUD.
