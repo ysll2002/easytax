@@ -15,19 +15,19 @@
     "announcement": {
       "live": "MTD ITSA가 시행됩니다.",
       "deadline": "Q1 신고 마감 2026년 8월 5일 ——",
-      "freeCallout": "EasyTax는 무료로 처리해드립니다."
+      "freeCallout": "EasyTax는 몇 분이면 됩니다."
     },
     "hero": {
       "pill": "첫 MTD ITSA 분기 신고까지 {days}일 남음",
       "title1": "MTD ITSA 시대.",
       "title2": "HMRC에 분기 신고",
-      "title3": "무료로.",
+      "title3": "건당 £24로.",
       "subtitle": "2026년 4월부터 연 £50,000 이상 소득의 자영업자와 임대인은 HMRC에 분기별 업데이트를 보내야 합니다. EasyTax는 몇 분 만에 처리합니다 —— Self Assessment, VAT, 법인 회계까지.",
-      "subtitleEmph": "연 £0.",
-      "badgeFree": "연 £0",
-      "badgeNoCard": "카드 불필요",
+      "subtitleEmph": "구독 없음 —— 신고할 때만 결제합니다.",
+      "badgeFree": "구독 없음",
+      "badgeNoCard": "가입 시 카드 불필요",
       "badgeHmrc": "HMRC 인증",
-      "ctaPrimary": "무료로 MTD 준비하기 →",
+      "ctaPrimary": "MTD 준비하기 →",
       "ctaSecondary": "지원 범위 보기 →"
     },
     "trust": {
@@ -72,21 +72,21 @@
       "title1": "5분 만에 신고,",
       "title2": "5시간이 아니라.",
       "body": "은행과 HMRC 계정을 한 번만 연결하세요. EasyTax가 데이터를 가져오고 AI로 분류한 후 신고합니다 —— Self Assessment, VAT, 법인 회계 모두.",
-      "priceLabel": "무료",
-      "priceCaption": "구독 없음, 신고당 비용 없음 —— EasyTax는 완전히 무료입니다.",
+      "priceLabel": "£24 / 건",
+      "priceCaption": "월 구독료 없음. HMRC 제출 건당 £24(VAT 포함). 얼리 액세스로 가입하면 이 창업자 가격이 평생 적용됩니다.",
       "cta": "신고 시작 →",
       "step1Title": "계정 연결",
       "step1Desc": "Government Gateway ID와 비즈니스 은행 계좌를 연결. 기록을 자동으로 가져옵니다 —— 수동 입력 불필요.",
       "step2Title": "AI가 어려운 작업 처리",
       "step2Desc": "AI가 모든 거래를 분류하고, 공제 가능한 지출을 계산하며, 신고 또는 법인 회계를 준비합니다.",
       "step3Title": "검토 후 제출",
-      "step3Desc": "쉬운 요약을 확인하고 HMRC에 직접 제출 —— 즉시 확인. 완전 무료."
+      "step3Desc": "쉬운 요약을 확인하고 HMRC에 직접 제출 —— 즉시 확인."
     },
     "faq": {
       "title1": "질문에",
       "title2": "답해드립니다.",
       "q1Q": "EasyTax는 법인을 지원하나요?",
-      "q1A": "네. EasyTax는 자영업자/프리랜서(Self Assessment, MTD ITSA)와 법인(VAT 신고, CT600 법인세, 대차대조표, P&L) 모두 지원합니다. 모든 것이 완전 무료.",
+      "q1A": "네. EasyTax는 자영업자/프리랜서(Self Assessment, MTD ITSA)와 법인(VAT 신고, CT600 법인세, 대차대조표, P&L) 모두 지원합니다. 요금은 HMRC 제출 건당 £24(VAT 포함)이며 월 구독료는 없습니다. 얼리 액세스 가입자는 £20 + VAT 창업자 가격이 적용됩니다.",
       "q2Q": "지원하는 VAT 제도는?",
       "q2A": "Standard, Flat Rate, Annual VAT Accounting을 지원하며 MTD 호환 API로 HMRC에 직접 제출합니다.",
       "q3Q": "대차대조표는 어떻게 생성되나요?",
@@ -110,8 +110,8 @@
     "finalCta": {
       "title1": "더 이상 서류 작업을",
       "title2": "두려워하지 마세요.",
-      "subtitle": "영국 프리랜서와 법인을 위한 무료 서비스. 계정을 연결하고 몇 분 만에 HMRC에 신고하세요.",
-      "button": "무료로 시작 →"
+      "subtitle": "영국 프리랜서와 법인을 위한 서비스. 계정을 연결하고 몇 분 만에 HMRC에 신고하세요 —— 건당 £24, 구독 없음.",
+      "button": "신고 시작 →"
     },
     "footer": {
       "tagline": "EasyTax Ltd. 런던에서 만들었습니다.",
@@ -120,8 +120,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "EasyTax — 영국 자영업자 및 법인을 위한 무료 MTD ITSA 소프트웨어",
-      "description": "영국 자영업자, 임대인, 법인을 위한 무료 MTD ITSA 소프트웨어. HMRC에 분기 업데이트, Self Assessment, VAT, CT600을 신고. 연 £0 —— 카드 불필요."
+      "title": "EasyTax — 영국 자영업자 및 법인을 위한 MTD ITSA 소프트웨어",
+      "description": "영국 자영업자, 임대인, 법인을 위한 MTD ITSA 소프트웨어. HMRC에 분기 업데이트, Self Assessment, VAT, CT600을 신고. 제출 건당 £24, 구독 없음 —— 가입 시 카드 불필요."
     }
   },
   "auth": {
