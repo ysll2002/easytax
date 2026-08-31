@@ -4,17 +4,27 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';
 
-  const { data: articles } = await supabase
-    .from('tax_articles')
-    .select('slug, published_at')
-    .order('published_at', { ascending: false });
+  // Preview branch builds (agent/*, PR previews) don't have Supabase env vars
+  // set — they run in Vercel's Preview environment scope, where secrets are
+  // deliberately not exposed. Skip the article query rather than crashing the
+  // prerender, so the branch still ships a preview URL with the static pages.
+  const hasSupabase =
+    !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  const articleUrls: MetadataRoute.Sitemap = (articles ?? []).map(a => ({
-    url: `${base}/tax-tips/${a.slug}`,
-    lastModified: new Date(a.published_at),
-    changeFrequency: 'monthly',
-    priority: 0.6,
-  }));
+  let articleUrls: MetadataRoute.Sitemap = [];
+  if (hasSupabase) {
+    const { data: articles } = await supabase
+      .from('tax_articles')
+      .select('slug, published_at')
+      .order('published_at', { ascending: false });
+
+    articleUrls = (articles ?? []).map(a => ({
+      url: `${base}/tax-tips/${a.slug}`,
+      lastModified: new Date(a.published_at),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    }));
+  }
 
   return [
     { url: base,                                lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
