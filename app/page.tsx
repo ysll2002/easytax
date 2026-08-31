@@ -31,8 +31,46 @@ export default async function Home() {
   const Q1_DEADLINE = new Date('2026-08-05T23:59:59Z');
   const daysToQ1 = Math.max(0, Math.ceil((Q1_DEADLINE.getTime() - Date.now()) / 86_400_000));
 
+  const faqPairs = [
+    { q: t('faq.q1Q'), a: t('faq.q1A') },
+    { q: t('faq.q2Q'), a: t('faq.q2A') },
+    { q: t('faq.q3Q'), a: t('faq.q3A') },
+    { q: t('faq.q4Q'), a: t('faq.q4A') },
+    { q: t('faq.q5Q'), a: t('faq.q5A') },
+    { q: t('faq.q6Q'), a: t('faq.q6A') },
+  ];
+
+  const jsonLdFaq = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqPairs.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  };
+
+  const jsonLdSoftware = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'EasyTax',
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    url: 'https://easytax.vip',
+    description: 'MTD-compliant tax filing for UK sole traders and limited companies — MTD ITSA quarterly updates, Self Assessment, VAT returns, and CT600 Corporation Tax filed directly to HMRC.',
+    offers: {
+      '@type': 'Offer',
+      price: '24',
+      priceCurrency: 'GBP',
+      description: '£24 per HMRC submission (inc. VAT), no monthly subscription',
+    },
+    publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
+  };
+
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftware) }} />
 
       {/* ── MTD 2026 announcement bar ── */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
