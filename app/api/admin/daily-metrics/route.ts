@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { fetchGaMetrics, type GaMetrics } from '@/lib/ga';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -77,6 +78,17 @@ export async function GET(req: NextRequest) {
     if (filerErr) throw new Error(`sa_filings user_ids: ${filerErr.message}`);
     const uniqueFilers = new Set((filerRows ?? []).map(r => r.user_id)).size;
 
+    // Traffic + registration funnel from GA4. Supabase only sees users who
+    // made it as far as a profile row, so this is the only view of what
+    // happens above that. Degraded rather than fatal — a GA outage or a
+    // missing key must not take the Supabase metrics down with it.
+    let ga: GaMetrics;
+    try {
+      ga = await fetchGaMetrics();
+    } catch (err) {
+      ga = { configured: false, reason: err instanceof Error ? err.message : String(err) };
+    }
+
     return NextResponse.json({
       generated_at:            now.toISOString(),
       target_goal_gbp_per_month: 10_000,
@@ -90,6 +102,9 @@ export async function GET(req: NextRequest) {
         last_7d:    profiles7d,
         last_30d:   profiles30d,
       },
+      // Top of funnel: visitors, acquisition channels and where people drop
+      // off between landing on /register and a profile row existing.
+      ga,
       hmrc_connections: {
         total:      hmrcTotal,
         last_24h:   hmrc24h,
