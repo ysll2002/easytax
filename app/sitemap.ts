@@ -30,6 +30,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: base,                                lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
     { url: `${base}/pricing`,                   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/mtd-software`,              lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${base}/self-assessment-software`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/landlord-tax-software`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/bokio-alternative`,         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
     { url: `${base}/crunch-alternative`,        lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
