@@ -17,11 +17,25 @@ export type ArticleSummary = {
   published_at: string;
 };
 
+/** Vercel Preview builds (branch and PR deploys) run in the Preview
+ *  environment scope, where the Supabase secrets are deliberately not exposed.
+ *  `supabaseAdmin` throws on first access when they are absent, which fails the
+ *  whole build if it happens during `generateStaticParams` or a prerender.
+ *
+ *  Every reader below degrades to "no articles" instead, so a preview build
+ *  still produces a working deploy — the pages just render on demand once real
+ *  credentials are present. Production always has the vars set. */
+export function hasSupabaseEnv(): boolean {
+  return !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+}
+
 export async function getArticlePage(page: number): Promise<{
   articles: ArticleSummary[];
   total: number;
   totalPages: number;
 }> {
+  if (!hasSupabaseEnv()) return { articles: [], total: 0, totalPages: 1 };
+
   const from = (page - 1) * PAGE_SIZE;
 
   const { data, count } = await supabase
@@ -39,6 +53,11 @@ export async function getArticlePage(page: number): Promise<{
 }
 
 export async function getTotalPages(): Promise<number> {
+  // Returning 1 here makes generateStaticParams emit no params, so pages 2..N
+  // are rendered on demand rather than prerendered. Nothing 404s: dynamicParams
+  // defaults to true.
+  if (!hasSupabaseEnv()) return 1;
+
   const { count } = await supabase
     .from('tax_articles')
     .select('slug', { count: 'exact', head: true });
@@ -49,6 +68,8 @@ export async function getTotalPages(): Promise<number> {
  *  Gives every article page outbound internal links so the archive is
  *  crawlable from any entry point rather than only from the index. */
 export async function getRelatedArticles(excludeSlug: string, limit = 3): Promise<ArticleSummary[]> {
+  if (!hasSupabaseEnv()) return [];
+
   const { data } = await supabase
     .from('tax_articles')
     .select('title, slug, excerpt, published_at')

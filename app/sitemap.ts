@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { PAGE_SIZE } from './tax-tips/_lib/articles';
+import { PAGE_SIZE, hasSupabaseEnv } from './tax-tips/_lib/articles';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';
@@ -9,11 +9,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // set — they run in Vercel's Preview environment scope, where secrets are
   // deliberately not exposed. Skip the article query rather than crashing the
   // prerender, so the branch still ships a preview URL with the static pages.
-  const hasSupabase =
-    !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY;
-
+  // Shared with the Tax Tips readers so the two checks cannot drift apart.
   let articleUrls: MetadataRoute.Sitemap = [];
-  if (hasSupabase) {
+  if (hasSupabaseEnv()) {
     const { data: articles } = await supabase
       .from('tax_articles')
       .select('slug, published_at')
