@@ -4,6 +4,7 @@ import { signIn } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import { trackClient, getStoredAnonId } from '@/components/PageViewTracker';
 
 declare global {
   interface Window { gtag?: (...args: unknown[]) => void }
@@ -57,10 +58,18 @@ export default function Register() {
 
     setLoading(true);
     track('register_attempted', { method: 'email' });
+    trackClient('register_started', { method: 'email' });
     const res = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: form.name, email: form.email, password: form.password }),
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        // Lets the server-side register_completed event join back to this
+        // browser's earlier anonymous page views.
+        anonId: getStoredAnonId(),
+      }),
     });
     const data = await res.json();
 

@@ -9,7 +9,8 @@
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
     "register": "Registrarse",
-    "language": "Idioma"
+    "language": "Idioma",
+    "trust": "Confianza y seguridad"
   },
   "home": {
     "announcement": {
@@ -285,6 +286,14 @@
       "saving": "Guardando…",
       "save": "Guardar",
       "saved": "✓ Guardado"
+    },
+    "activation": {
+      "title": "Termina la configuración",
+      "progress": "{done} de {total} completado",
+      "hmrcTitle": "Conecta HMRC",
+      "hmrcDesc": "Vincula tu Government Gateway para obtener automáticamente tus obligaciones fiscales.",
+      "bankTitle": "Conecta tu banco",
+      "bankDesc": "Importa transacciones vía Open Banking: solo lectura, nunca podemos mover dinero."
     }
   }
 }

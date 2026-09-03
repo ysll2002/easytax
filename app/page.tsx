@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import NotifyMeForm from '@/components/NotifyMeForm';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -53,6 +54,9 @@ export default async function Home() {
   const jsonLdSoftware = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
+    // Same @id as the node emitted in app/layout.tsx — one entity, described
+    // once, so the two do not compete in search results.
+    '@id': 'https://easytax.vip/#software',
     name: 'EasyTax',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
@@ -364,6 +368,16 @@ export default async function Home() {
                 <Link href="/tax-tips" className="text-sm mt-2 inline-block" style={{ color: '#C4622D' }}>{t('tips.visit')}</Link>
               </div>
             )}
+          </div>
+        </section>
+
+        {/* ── Launch list ──
+            Registration is the only conversion the site offers today, and it
+            is a big ask while filing is not yet open. This catches the much
+            larger group who are interested but not ready to open an account. */}
+        <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
+          <div className="max-w-2xl mx-auto px-4 sm:px-6">
+            <NotifyMeForm source="home" />
           </div>
         </section>
 

@@ -2,12 +2,32 @@ import { auth } from '@/auth';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { ChevronRight, User, Building2, RefreshCw } from 'lucide-react';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import ActivationChecklist from '@/components/ActivationChecklist';
+
+/** Which setup steps this user has completed. Errors are treated as "not
+ *  connected": a failed lookup should show an extra nudge, never blank the
+ *  dashboard. */
+async function getActivationState(userId: string | undefined) {
+  if (!userId) return { hmrcConnected: false, bankConnected: false };
+
+  const [hmrc, bank] = await Promise.all([
+    supabase.from('hmrc_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
+    supabase.from('bank_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
+  ]);
+
+  return {
+    hmrcConnected: (hmrc.count ?? 0) > 0,
+    bankConnected: (bank.count ?? 0) > 0,
+  };
+}
 
 export default async function DashboardHome() {
   const session = await auth();
   const t = await getTranslations('dashboard.home');
   const name = session?.user.name ?? session?.user.email ?? 'there';
   const firstName = name.split(' ')[0];
+  const activation = await getActivationState(session?.user?.profileId);
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
@@ -17,6 +37,11 @@ export default async function DashboardHome() {
         </h1>
         <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>{t('question')}</p>
       </div>
+
+      <ActivationChecklist
+        hmrcConnected={activation.hmrcConnected}
+        bankConnected={activation.bankConnected}
+      />
 
       <div className="space-y-4 mb-8">
         {/* Self Assessment track */}

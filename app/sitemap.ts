@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { PAGE_SIZE } from './tax-tips/_lib/articles';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';
@@ -24,6 +25,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.6,
     }));
+
+    // Paginated index pages. These are what give the older articles an inbound
+    // internal link — listing the articles without them leaves most of the
+    // archive orphaned. Page 1 is /tax-tips, already listed below.
+    const totalPages = Math.ceil((articles?.length ?? 0) / PAGE_SIZE);
+    for (let n = 2; n <= totalPages; n++) {
+      articleUrls.push({
+        url: `${base}/tax-tips/page/${n}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.5,
+      });
+    }
   }
 
   return [
@@ -41,6 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/sage-alternative`,           lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/xero-alternative`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/taxscouts-alternative`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${base}/trust`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/timetable`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/tax-tips`,                  lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${base}/register`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },

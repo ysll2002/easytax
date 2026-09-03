@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import NotifyMeForm from '@/components/NotifyMeForm';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 
@@ -290,6 +291,17 @@ export default async function PricingPage() {
                 </details>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Launch list ── */}
+        <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
+          <div className="max-w-2xl mx-auto px-4 sm:px-6">
+            <NotifyMeForm
+              source="pricing"
+              heading="Not filing yet?"
+              blurb="Quarterly MTD ITSA updates open as soon as HMRC signs off our production access. Leave your email and we'll tell you the day it goes live — nothing else, unsubscribe in one click."
+            />
           </div>
         </section>
 

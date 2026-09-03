@@ -7,6 +7,7 @@ import Providers from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import ContactWidget from "@/components/ContactWidget";
+import PageViewTracker from "@/components/PageViewTracker";
 import { isRtl } from '@/i18n/routing';
 
 const playfair = Playfair_Display({
@@ -91,12 +92,25 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'SoftwareApplication',
+              // Shared @id with the node on the homepage so Google treats the
+              // two as one entity rather than two competing descriptions of
+              // the same app.
+              '@id': 'https://easytax.vip/#software',
               name: 'EasyTax',
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
               url: 'https://easytax.vip',
               description: 'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC for £24 per submission, no subscription.',
-              offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP', description: 'Free' },
+              // Was price '0' / "Free", which contradicted the £24 Offer on the
+              // homepage and pricing page. Conflicting Offer nodes on the same
+              // URL are a rich-result liability and read as a bait-and-switch
+              // to anyone who checks.
+              offers: {
+                '@type': 'Offer',
+                price: '24',
+                priceCurrency: 'GBP',
+                description: '£20 + VAT (£24 inc. VAT) per HMRC submission — no subscription, no card to sign up',
+              },
               featureList: [
                 'Self Assessment (SA100)',
                 'Making Tax Digital for Income Tax (MTD ITSA)',
@@ -122,6 +136,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
           <ContactWidget />
+          {/* Unlike GA/Vercel Analytics below, this runs in preview too: it is
+              the only way to verify tracking works before it reaches
+              easytax.vip. Rows carry the deploy environment (see /api/track)
+              so preview traffic is excluded from the funnel. */}
+          <PageViewTracker />
         </NextIntlClientProvider>
         {process.env.VERCEL_ENV === 'production' && <Analytics />}
         {process.env.VERCEL_ENV === 'production' && <GoogleAnalytics gaId="G-ZF21G9RTJW" />}

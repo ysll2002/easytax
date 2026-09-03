@@ -9,7 +9,8 @@
     "login": "登录",
     "logout": "退出",
     "register": "注册",
-    "language": "语言"
+    "language": "语言",
+    "trust": "安全与信任"
   },
   "home": {
     "announcement": {
@@ -285,6 +286,14 @@
       "saving": "保存中…",
       "save": "保存",
       "saved": "✓ 已保存"
+    },
+    "activation": {
+      "title": "完成设置",
+      "progress": "已完成 {done}/{total}",
+      "hmrcTitle": "连接 HMRC",
+      "hmrcDesc": "关联您的 Government Gateway，我们将自动获取您的报税义务。",
+      "bankTitle": "连接银行账户",
+      "bankDesc": "通过 Open Banking 导入交易记录——只读权限，我们无法转移任何资金。"
     }
   }
 }

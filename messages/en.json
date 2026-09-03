@@ -9,7 +9,8 @@
     "login": "Log in",
     "logout": "Log out",
     "register": "Register",
-    "language": "Language"
+    "language": "Language",
+    "trust": "Trust & Security"
   },
   "home": {
     "announcement": {
@@ -285,6 +286,14 @@
       "saving": "Saving…",
       "save": "Save",
       "saved": "✓ Saved"
+    },
+    "activation": {
+      "title": "Finish setting up",
+      "progress": "{done} of {total} done",
+      "hmrcTitle": "Connect HMRC",
+      "hmrcDesc": "Link your Government Gateway so we can fetch your tax obligations automatically.",
+      "bankTitle": "Connect your bank",
+      "bankDesc": "Import transactions via Open Banking — read-only, we can never move money."
     }
   }
 }

@@ -9,7 +9,8 @@
     "login": "ログイン",
     "logout": "ログアウト",
     "register": "登録",
-    "language": "言語"
+    "language": "言語",
+    "trust": "安全性と信頼"
   },
   "home": {
     "announcement": {
@@ -285,6 +286,14 @@
       "saving": "保存中…",
       "save": "保存",
       "saved": "✓ 保存しました"
+    },
+    "activation": {
+      "title": "設定を完了する",
+      "progress": "{total} 件中 {done} 件完了",
+      "hmrcTitle": "HMRC に接続",
+      "hmrcDesc": "Government Gateway を連携すると、納税義務を自動で取得します。",
+      "bankTitle": "銀行口座を接続",
+      "bankDesc": "オープンバンキングで取引明細を取り込みます。読み取り専用で、資金を動かすことはできません。"
     }
   }
 }

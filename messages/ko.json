@@ -9,7 +9,8 @@
     "login": "로그인",
     "logout": "로그아웃",
     "register": "회원가입",
-    "language": "언어"
+    "language": "언어",
+    "trust": "보안 및 신뢰"
   },
   "home": {
     "announcement": {
@@ -285,6 +286,14 @@
       "saving": "저장 중…",
       "save": "저장",
       "saved": "✓ 저장됨"
+    },
+    "activation": {
+      "title": "설정 마무리하기",
+      "progress": "{total}개 중 {done}개 완료",
+      "hmrcTitle": "HMRC 연결",
+      "hmrcDesc": "Government Gateway를 연결하면 납세 의무를 자동으로 가져옵니다.",
+      "bankTitle": "은행 계좌 연결",
+      "bankDesc": "오픈뱅킹으로 거래 내역을 가져옵니다. 읽기 전용이며 자금을 이체할 수 없습니다."
     }
   }
 }

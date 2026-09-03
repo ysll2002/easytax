@@ -1,16 +1,37 @@
+import type { Metadata } from 'next';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Calendar, ChevronLeft } from 'lucide-react';
+import { getRelatedArticles } from '../_lib/articles';
+import ArticleCta from '../_components/ArticleCta';
 
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const { data } = await supabase.from('tax_articles').select('title, excerpt').eq('slug', slug).single();
+  const { data } = await supabase
+    .from('tax_articles')
+    .select('title, excerpt, published_at')
+    .eq('slug', slug)
+    .single();
   if (!data) return {};
-  return { title: `${data.title} | EasyTax`, description: data.excerpt };
+
+  return {
+    title: `${data.title} | EasyTax`,
+    description: data.excerpt,
+    // Without this, every article inherited the site-wide canonical pointing
+    // at the homepage, telling Google these 109 pages were duplicates of it.
+    alternates: { canonical: `https://easytax.vip/tax-tips/${slug}` },
+    openGraph: {
+      type: 'article',
+      title: data.title,
+      description: data.excerpt,
+      url: `https://easytax.vip/tax-tips/${slug}`,
+      publishedTime: data.published_at,
+    },
+  };
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -23,8 +44,35 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   if (!article) notFound();
 
+  const related = await getRelatedArticles(slug, 3);
+
+  const jsonLdArticle = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.published_at,
+    dateModified: article.published_at,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://easytax.vip/tax-tips/${slug}` },
+    author:    { '@type': 'Organization', name: 'EasyTax', url: 'https://easytax.vip' },
+    publisher: { '@type': 'Organization', name: 'Finance Panda Limited', url: 'https://easytax.vip' },
+    isAccessibleForFree: true,
+  };
+
+  const jsonLdBreadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home',     item: 'https://easytax.vip' },
+      { '@type': 'ListItem', position: 2, name: 'Tax Tips', item: 'https://easytax.vip/tax-tips' },
+      { '@type': 'ListItem', position: 3, name: article.title, item: `https://easytax.vip/tax-tips/${slug}` },
+    ],
+  };
+
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }} />
       <SiteHeader />
 
       <main className="flex-grow">
@@ -52,6 +100,36 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             className="prose-article"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
+
+          {/* Article traffic previously had nowhere to go but back to the
+              index — no path to the product at all. */}
+          <ArticleCta slug={slug} />
+
+          {related.length > 0 && (
+            <section className="mt-12 pt-8" style={{ borderTop: '1px solid #E8E2DA' }}>
+              <h2
+                className="mb-4"
+                style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.15rem', fontWeight: 700, color: '#1C1208' }}
+              >
+                Keep reading
+              </h2>
+              <div className="space-y-3">
+                {related.map(r => (
+                  <Link key={r.slug} href={`/tax-tips/${r.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
+                    <div
+                      className="p-4 rounded-xl transition-all hover:shadow-md"
+                      style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}
+                    >
+                      <p className="text-sm font-semibold mb-1" style={{ color: '#1C1208', lineHeight: 1.4 }}>
+                        {r.title}
+                      </p>
+                      <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{r.excerpt}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
 
           <div className="mt-12 pt-8" style={{ borderTop: '1px solid #E8E2DA' }}>
             <p className="text-xs mb-4" style={{ color: '#9A8F83' }}>

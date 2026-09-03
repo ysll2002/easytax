@@ -22,6 +22,70 @@ async function countSince(
   return count ?? 0;
 }
 
+/** Counts production analytics_events by name since `sinceIso`.
+ *
+ *  Returns an empty map rather than throwing when the table is missing, so the
+ *  endpoint keeps serving the core counts if the 20260903 migration has not
+ *  been run yet. */
+async function eventCounts(sinceIso: string): Promise<Record<string, number>> {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('name, props')
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return {};
+
+  const out: Record<string, number> = {};
+  for (const row of data ?? []) {
+    // Preview and local traffic is stamped by /api/track; exclude it so the
+    // reported funnel reflects easytax.vip only.
+    const env = (row.props as { env?: string } | null)?.env;
+    if (env !== 'production') continue;
+    out[row.name] = (out[row.name] ?? 0) + 1;
+  }
+  return out;
+}
+
+/** Unique visitors (by anon_id) who saw at least one page in the window —
+ *  the top of the funnel that row counts alone cannot show. */
+async function uniqueVisitors(sinceIso: string): Promise<number | null> {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('anon_id, props')
+    .eq('name', 'page_view')
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return null;
+
+  const ids = new Set<string>();
+  for (const row of data ?? []) {
+    if ((row.props as { env?: string } | null)?.env !== 'production') continue;
+    if (row.anon_id) ids.add(row.anon_id);
+  }
+  return ids.size;
+}
+
+async function launchSubscriberCounts(since7d: string, since30d: string) {
+  const { data, error } = await supabase
+    .from('launch_subscribers')
+    .select('segment, created_at');
+
+  if (error) return null;
+
+  const rows = data ?? [];
+  const bySegment: Record<string, number> = {};
+  for (const r of rows) bySegment[r.segment ?? 'unspecified'] = (bySegment[r.segment ?? 'unspecified'] ?? 0) + 1;
+
+  return {
+    total:      rows.length,
+    last_7d:    rows.filter(r => r.created_at >= since7d).length,
+    last_30d:   rows.filter(r => r.created_at >= since30d).length,
+    by_segment: bySegment,
+  };
+}
+
 export async function GET(req: NextRequest) {
   const expected = process.env.AGENT_METRICS_KEY;
   if (!expected) {
@@ -77,6 +141,21 @@ export async function GET(req: NextRequest) {
     if (filerErr) throw new Error(`sa_filings user_ids: ${filerErr.message}`);
     const uniqueFilers = new Set((filerRows ?? []).map(r => r.user_id)).size;
 
+    // Behavioural funnel. All of these degrade to empty/null when the
+    // 20260903 migration has not been applied, so the endpoint never 500s
+    // just because instrumentation is not live yet.
+    const [events7d, events30d, visitors7d, visitors30d, launchList] = await Promise.all([
+      eventCounts(since7d),
+      eventCounts(since30d),
+      uniqueVisitors(since7d),
+      uniqueVisitors(since30d),
+      launchSubscriberCounts(since7d, since30d),
+    ]);
+
+    const instrumented = visitors7d !== null;
+    const rate = (num: number, den: number | null) =>
+      den && den > 0 ? +(num / den).toFixed(3) : null;
+
     return NextResponse.json({
       generated_at:            now.toISOString(),
       target_goal_gbp_per_month: 10_000,
@@ -110,6 +189,40 @@ export async function GET(req: NextRequest) {
         last_30d_final:     filings30dFinal,
         unique_filers:      uniqueFilers,
       },
+      // Behavioural funnel from analytics_events. `instrumented: false` means
+      // the migration has not been run — treat every field below as unknown
+      // rather than as zero.
+      funnel: {
+        instrumented,
+        note: instrumented
+          ? 'production traffic only; visitors are unique anon_id values'
+          : 'analytics_events table missing — run supabase/migrations/20260903_growth_instrumentation.sql',
+        last_7d: {
+          unique_visitors:     visitors7d,
+          page_views:          events7d['page_view']            ?? 0,
+          register_started:    events7d['register_started']     ?? 0,
+          register_completed:  events7d['register_completed']   ?? 0,
+          launch_subscribed:   events7d['launch_subscribed']    ?? 0,
+          trust_viewed:        events7d['trust_viewed']         ?? 0,
+          article_cta_click:   events7d['article_cta_click']    ?? 0,
+          activation_cta_click:events7d['activation_cta_click'] ?? 0,
+          visitor_to_register: rate(events7d['register_completed'] ?? 0, visitors7d),
+          // Drop-off between opening the register form and completing it.
+          register_completion: rate(events7d['register_completed'] ?? 0, events7d['register_started'] ?? 0),
+        },
+        last_30d: {
+          unique_visitors:     visitors30d,
+          page_views:          events30d['page_view']          ?? 0,
+          register_completed:  events30d['register_completed']  ?? 0,
+          launch_subscribed:   events30d['launch_subscribed']   ?? 0,
+          visitor_to_register: rate(events30d['register_completed'] ?? 0, visitors30d),
+        },
+      },
+
+      // Launch waitlist — the addressable pipeline to convert on the day HMRC
+      // production approval lands. null until the migration is run.
+      launch_list: launchList,
+
       // Pre-revenue: HMRC production approval pending, no Stripe integration
       // yet. Once revenue lands, wire it in here so the agent can compute
       // distance-to-goal.
