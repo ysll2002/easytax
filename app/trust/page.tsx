@@ -186,14 +186,36 @@ export default function TrustPage() {
               </h2>
             </div>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA' }}>
-              {[
-                ['Legal entity',       'Finance Panda Limited, trading as EasyTax'],
-                ['Registered',         'England and Wales'],
-                ['Based',              'London, United Kingdom'],
-                ['Data protection',    'Data controller under UK GDPR — ICO registration pending'],
-                ['Privacy questions',  'privacy@easytax.vip'],
-                ['Anything else',      'hello@easytax.vip'],
-              ].map(([k, v], i) => (
+              {([
+                { k: 'Legal entity',      v: 'Finance Panda Limited, trading as EasyTax' },
+                { k: 'Registered',        v: 'England and Wales' },
+                { k: 'Based',             v: 'London, United Kingdom' },
+                // The reference is shown in full on purpose: it is the one
+                // claim on this page a visitor can independently verify, by
+                // searching the ICO's public register. Deliberately does not
+                // quote the expiry date — that would silently become a lie the
+                // day it lapsed, whereas the register always shows live status.
+                {
+                  k: 'Data protection',
+                  v: (
+                    <>
+                      Registered data controller under UK GDPR — ICO reference{' '}
+                      <strong>ZA540758</strong>. Verify it on the{' '}
+                      <a
+                        href="https://ico.org.uk/register/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#C4622D' }}
+                      >
+                        ICO public register
+                      </a>
+                      .
+                    </>
+                  ),
+                },
+                { k: 'Privacy questions', v: 'privacy@easytax.vip' },
+                { k: 'Anything else',     v: 'hello@easytax.vip' },
+              ] satisfies { k: string; v: React.ReactNode }[]).map(({ k, v }, i) => (
                 <div
                   key={k}
                   className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 px-4 sm:px-5 py-3.5"

@@ -43,7 +43,7 @@ export default function Privacy() {
               ['Company name', 'Finance Panda Limited'],
               ['Registered address', 'London, United Kingdom'],
               ['Email', 'privacy@easytax.vip'],
-              ['ICO registration', 'Pending'],
+              ['ICO registration', 'ZA540758'],
             ]} />
             <P>
               This Privacy Policy explains what personal data we collect, why we collect it, the legal basis for processing it, how long we keep it, and your rights under the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.
