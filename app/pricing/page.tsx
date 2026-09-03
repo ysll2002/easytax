@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
-import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
+import SiteFooter from '@/components/SiteFooter';
+import LaunchWaitlist from '@/components/LaunchWaitlist';
+import { Check, X, Sparkles, ArrowRight, Lock } from 'lucide-react';
 import { auth } from '@/auth';
 
 export const metadata: Metadata = {
@@ -194,6 +196,25 @@ export default async function PricingPage() {
           </div>
         </section>
 
+        {/* ── Founder-price reservation (pre-launch pipeline) ── */}
+        <section className="pb-16 sm:pb-20">
+          <div className="max-w-lg mx-auto px-4 sm:px-6">
+            <div className="rounded-3xl p-6 sm:p-8" style={{ backgroundColor: '#1C1208', border: '1px solid #2E2418' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <Lock size={14} color="#C4622D" />
+                <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#9A8F83' }}>Lock in £24 per filing, for life</p>
+              </div>
+              <h2 style={{ fontFamily: display, fontSize: '1.4rem', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.25, marginBottom: '0.75rem' }}>
+                Not ready to sign up yet? Reserve the founder price with just your email.
+              </h2>
+              <p className="text-sm mb-5" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+                HMRC is completing its production review of EasyTax. We&apos;ll send you exactly one email when live filing opens — and your £20 + VAT rate is held whether the public price rises or not.
+              </p>
+              <LaunchWaitlist source="pricing" tone="dark" />
+            </div>
+          </div>
+        </section>
+
         {/* ── Annual cost comparison ── */}
         <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -310,18 +331,7 @@ export default async function PricingPage() {
 
       </main>
 
-      {/* ── Footer ── */}
-      <footer className="py-8 sm:py-10" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <p className="text-xs" style={{ color: '#9A8F83' }}>© 2026 Finance Panda Limited. All rights reserved.</p>
-          <div className="flex gap-5 text-xs" style={{ color: '#9A8F83' }}>
-            <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy</Link>
-            <Link href="/terms"   style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms</Link>
-            <Link href="/freeagent-alternative" style={{ color: '#9A8F83', textDecoration: 'none' }}>vs FreeAgent</Link>
-            <Link href="/xero-alternative"      style={{ color: '#9A8F83', textDecoration: 'none' }}>vs Xero</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

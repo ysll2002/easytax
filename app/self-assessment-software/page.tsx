@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 
@@ -500,6 +501,8 @@ export default async function SelfAssessmentSoftware() {
         </section>
 
       </main>
+
+      <SiteFooter />
     </div>
   );
 }

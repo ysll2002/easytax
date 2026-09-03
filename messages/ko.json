@@ -4,6 +4,7 @@
     "pricing": "요금",
     "faq": "자주 묻는 질문",
     "timetable": "신고 일정",
+    "mtdChecker": "MTD 진단",
     "taxTips": "세무 팁",
     "dashboard": "대시보드",
     "login": "로그인",
@@ -14,11 +15,11 @@
   "home": {
     "announcement": {
       "live": "MTD ITSA가 시행됩니다.",
-      "deadline": "Q1 신고 마감 2026년 8월 5일 ——",
+      "deadline": "Q{q} 신고 마감 {date} ——",
       "freeCallout": "EasyTax는 몇 분이면 됩니다."
     },
     "hero": {
-      "pill": "첫 MTD ITSA 분기 신고까지 {days}일 남음",
+      "pill": "다음 MTD ITSA 분기 신고까지 {days}일 남음",
       "title1": "MTD ITSA 시대.",
       "title2": "HMRC에 분기 신고",
       "title3": "건당 £24로.",
@@ -28,7 +29,8 @@
       "badgeNoCard": "가입 시 카드 불필요",
       "badgeHmrc": "HMRC 인증",
       "ctaPrimary": "MTD 준비하기 →",
-      "ctaSecondary": "지원 범위 보기 →"
+      "ctaSecondary": "지원 범위 보기 →",
+      "checkerLink": "MTD가 나에게 적용되는지 모르겠다면? 30초 만에 확인 →"
     },
     "trust": {
       "hmrc": "HMRC 인증",

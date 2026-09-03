@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 
@@ -118,6 +119,10 @@ export default async function MtdSoftware() {
                 Ask us a question
               </a>
             </div>
+            <p className="text-sm mt-5" style={{ color: '#4A4035' }}>
+              Not sure whether MTD ITSA applies to you yet?{' '}
+              <Link href="/mtd-checker" style={{ color: '#C4622D', fontWeight: 600 }}>Check in 30 seconds →</Link>
+            </p>
           </div>
         </section>
 
@@ -387,17 +392,7 @@ export default async function MtdSoftware() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div style={{ fontFamily: display, fontSize: '1.1rem', color: '#4A4035' }}>
-            EasyTax Ltd. Built in London.
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

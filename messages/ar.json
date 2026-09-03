@@ -4,6 +4,7 @@
     "pricing": "الأسعار",
     "faq": "الأسئلة الشائعة",
     "timetable": "جدول الإقرار",
+    "mtdChecker": "فحص MTD",
     "taxTips": "نصائح ضريبية",
     "dashboard": "لوحة التحكم",
     "login": "تسجيل الدخول",
@@ -14,11 +15,11 @@
   "home": {
     "announcement": {
       "live": "MTD ITSA أصبح ساري المفعول.",
-      "deadline": "موعد تحديث Q1 في 5 أغسطس 2026 —",
+      "deadline": "موعد تحديث Q{q} في {date} —",
       "freeCallout": "EasyTax يقوم بذلك في دقائق."
     },
     "hero": {
-      "pill": "{days} يوماً حتى أول تحديث ربعي MTD ITSA",
+      "pill": "{days} يوماً حتى تحديثك الربعي القادم في MTD ITSA",
       "title1": "MTD ITSA وصل.",
       "title2": "قدّم إلى HMRC ربعياً",
       "title3": "بـ 24£ لكل إقرار.",
@@ -28,7 +29,8 @@
       "badgeNoCard": "بدون بطاقة للتسجيل",
       "badgeHmrc": "معتمد من HMRC",
       "ctaPrimary": "استعد لـ MTD ←",
-      "ctaSecondary": "اطلع على ما نغطيه ←"
+      "ctaSecondary": "اطلع على ما نغطيه ←",
+      "checkerLink": "غير متأكد إن كان MTD ينطبق عليك؟ تحقق خلال 30 ثانية ←"
     },
     "trust": {
       "hmrc": "معتمد HMRC",

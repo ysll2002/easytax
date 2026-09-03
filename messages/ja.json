@@ -4,6 +4,7 @@
     "pricing": "料金",
     "faq": "よくある質問",
     "timetable": "申告スケジュール",
+    "mtdChecker": "MTD 診断",
     "taxTips": "税務情報",
     "dashboard": "ダッシュボード",
     "login": "ログイン",
@@ -14,11 +15,11 @@
   "home": {
     "announcement": {
       "live": "MTD ITSA が施行されました。",
-      "deadline": "Q1 申告期限は 2026 年 8 月 5 日 ——",
+      "deadline": "Q{q} 申告期限は {date} ——",
       "freeCallout": "EasyTax なら数分で対応。"
     },
     "hero": {
-      "pill": "最初の MTD ITSA 四半期申告まであと {days} 日",
+      "pill": "次の MTD ITSA 四半期申告まであと {days} 日",
       "title1": "MTD ITSA の時代へ。",
       "title2": "HMRC へ四半期申告",
       "title3": "1 回 £24 で。",
@@ -28,7 +29,8 @@
       "badgeNoCard": "登録にカード不要",
       "badgeHmrc": "HMRC 認定",
       "ctaPrimary": "MTD 対応を始める →",
-      "ctaSecondary": "対応範囲を見る →"
+      "ctaSecondary": "対応範囲を見る →",
+      "checkerLink": "MTD が自分に適用されるか不明？30 秒でチェック →"
     },
     "trust": {
       "hmrc": "HMRC 認定",

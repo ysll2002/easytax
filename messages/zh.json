@@ -4,6 +4,7 @@
     "pricing": "价格",
     "faq": "常见问题",
     "timetable": "申报日程",
+    "mtdChecker": "MTD 自测",
     "taxTips": "报税小贴士",
     "dashboard": "控制台",
     "login": "登录",
@@ -14,11 +15,11 @@
   "home": {
     "announcement": {
       "live": "MTD ITSA 已经生效。",
-      "deadline": "Q1 季度申报截止 2026 年 8 月 5 日 ——",
+      "deadline": "Q{q} 季度申报截止 {date} ——",
       "freeCallout": "EasyTax 几分钟搞定。"
     },
     "hero": {
-      "pill": "距离你第一次 MTD ITSA 季度申报还有 {days} 天",
+      "pill": "距离你下一次 MTD ITSA 季度申报还有 {days} 天",
       "title1": "MTD ITSA 来了。",
       "title2": "向 HMRC 季度申报",
       "title3": "每次 £24。",
@@ -28,7 +29,8 @@
       "badgeNoCard": "注册无需信用卡",
       "badgeHmrc": "HMRC 认证",
       "ctaPrimary": "开始 MTD 申报 →",
-      "ctaSecondary": "查看支持范围 →"
+      "ctaSecondary": "查看支持范围 →",
+      "checkerLink": "不确定 MTD 是否适用于你？30 秒查一下 →"
     },
     "trust": {
       "hmrc": "HMRC 认证",

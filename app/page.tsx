@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
+import { getNextDeadline, formatDeadlineDate } from '@/lib/mtd-deadlines';
 
 export const revalidate = 3600;
 
@@ -21,6 +23,7 @@ export default async function Home() {
   const session = await auth();
   const ctaHref = session ? '/dashboard' : '/register';
   const t = await getTranslations('home');
+  const locale = await getLocale();
 
   const { data: latestArticles } = await supabase
     .from('tax_articles')
@@ -28,8 +31,11 @@ export default async function Home() {
     .order('published_at', { ascending: false })
     .limit(3);
 
-  const Q1_DEADLINE = new Date('2026-08-05T23:59:59Z');
-  const daysToQ1 = Math.max(0, Math.ceil((Q1_DEADLINE.getTime() - Date.now()) / 86_400_000));
+  // Rolling next MTD ITSA quarterly deadline (page revalidates hourly, so the
+  // countdown never sticks at "0 days" the way the old hard-coded date did).
+  const nextDeadline = getNextDeadline();
+  const daysToNext = nextDeadline.daysLeft;
+  const nextDeadlineLabel = formatDeadlineDate(nextDeadline.due, locale);
 
   const faqPairs = [
     { q: t('faq.q1Q'), a: t('faq.q1A') },
@@ -75,7 +81,7 @@ export default async function Home() {
       {/* ── MTD 2026 announcement bar ── */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span> {t('announcement.deadline')} <span style={{ color: '#6B8E6E' }}>{t('announcement.freeCallout')}</span>
+          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span> {t('announcement.deadline', { q: nextDeadline.quarter, date: nextDeadlineLabel })} <span style={{ color: '#6B8E6E' }}>{t('announcement.freeCallout')}</span>
         </p>
       </div>
 
@@ -92,7 +98,7 @@ export default async function Home() {
               <div className="flex-1 min-w-0">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
                   <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  {t('hero.pill', { days: daysToQ1 })}
+                  {t('hero.pill', { days: daysToNext })}
                 </div>
 
                 <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
@@ -125,6 +131,11 @@ export default async function Home() {
                     {t('hero.ctaSecondary')}
                   </a>
                 </div>
+                <p className="text-sm mt-4">
+                  <Link href="/mtd-checker" className="inline-flex items-center gap-1.5 py-1" style={{ color: '#C4622D', textDecoration: 'none', fontWeight: 500 }}>
+                    <CheckCircle2 size={14} /> {t('hero.checkerLink')}
+                  </Link>
+                </p>
               </div>
 
               <div className="hidden lg:block flex-shrink-0" style={{ width: '480px' }}>
@@ -385,18 +396,7 @@ export default async function Home() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', color: '#4A4035' }}>
-            {t('footer.tagline')}
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">{t('footer.privacy')}</Link>
-            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">{t('footer.terms')}</Link>
-            <Link href="#" className="hover:text-[#C4622D] transition-colors">{t('footer.twitter')}</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

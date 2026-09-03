@@ -4,6 +4,7 @@
     "pricing": "Pricing",
     "faq": "FAQ",
     "timetable": "Timetable",
+    "mtdChecker": "MTD checker",
     "taxTips": "Tax Tips",
     "dashboard": "Dashboard",
     "login": "Log in",
@@ -14,11 +15,11 @@
   "home": {
     "announcement": {
       "live": "MTD ITSA is live.",
-      "deadline": "Q1 update due 5 Aug 2026 —",
+      "deadline": "Q{q} update due {date} —",
       "freeCallout": "EasyTax does it in minutes."
     },
     "hero": {
-      "pill": "{days} days until your first MTD ITSA quarterly update",
+      "pill": "{days} days until your next MTD ITSA quarterly update",
       "title1": "MTD ITSA is here.",
       "title2": "File quarterly to HMRC",
       "title3": "for £24 a filing.",
@@ -28,7 +29,8 @@
       "badgeNoCard": "No card to sign up",
       "badgeHmrc": "HMRC-recognised",
       "ctaPrimary": "Get MTD-ready →",
-      "ctaSecondary": "See what we cover →"
+      "ctaSecondary": "See what we cover →",
+      "checkerLink": "Not sure if MTD applies to you? Check in 30 seconds →"
     },
     "trust": {
       "hmrc": "HMRC Recognised",

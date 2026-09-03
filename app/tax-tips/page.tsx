@@ -1,6 +1,7 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Calendar } from 'lucide-react';
 
 export const metadata = {
@@ -67,17 +68,7 @@ export default async function TaxTipsPage() {
         </section>
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '2rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1rem', color: '#4A4035' }}>
-            EasyTax Ltd. Built in London.
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

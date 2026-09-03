@@ -77,6 +77,25 @@ export async function GET(req: NextRequest) {
     if (filerErr) throw new Error(`sa_filings user_ids: ${filerErr.message}`);
     const uniqueFilers = new Set((filerRows ?? []).map(r => r.user_id)).size;
 
+    // Launch waitlist (pre-revenue pipeline, shipped 2026-09-03). The table may
+    // not exist yet — report null rather than failing the whole payload.
+    let waitlist: { total: number; last_24h: number; last_7d: number; by_source: Record<string, number> } | null = null;
+    try {
+      const [{ count: wlTotal, error: e1 }, { count: wl24, error: e2 }, { count: wl7, error: e3 }, { data: wlRows, error: e4 }] = await Promise.all([
+        supabase.from('launch_waitlist').select('*', { count: 'exact', head: true }),
+        supabase.from('launch_waitlist').select('*', { count: 'exact', head: true }).gte('created_at', since24h),
+        supabase.from('launch_waitlist').select('*', { count: 'exact', head: true }).gte('created_at', since7d),
+        supabase.from('launch_waitlist').select('source'),
+      ]);
+      if (!e1 && !e2 && !e3 && !e4) {
+        const bySource: Record<string, number> = {};
+        for (const r of wlRows ?? []) bySource[r.source ?? 'other'] = (bySource[r.source ?? 'other'] ?? 0) + 1;
+        waitlist = { total: wlTotal ?? 0, last_24h: wl24 ?? 0, last_7d: wl7 ?? 0, by_source: bySource };
+      }
+    } catch {
+      waitlist = null;
+    }
+
     return NextResponse.json({
       generated_at:            now.toISOString(),
       target_goal_gbp_per_month: 10_000,
@@ -110,6 +129,8 @@ export async function GET(req: NextRequest) {
         last_30d_final:     filings30dFinal,
         unique_filers:      uniqueFilers,
       },
+      // null until the launch_waitlist table exists (see docs/agent/2026-09-03-daily-plan.md)
+      waitlist,
       // Pre-revenue: HMRC production approval pending, no Stripe integration
       // yet. Once revenue lands, wire it in here so the agent can compute
       // distance-to-goal.

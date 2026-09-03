@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { Resend } from 'resend';
 
-// MTD ITSA quarterly deadlines: 5 Aug, 5 Nov, 5 Feb, 5 May
-// This cron fires 14 days before each deadline.
+// MTD ITSA quarterly deadlines: 7 Aug, 7 Nov, 7 Feb, 7 May (the 7th of the
+// month after each quarter ends — see lib/mtd-deadlines.ts).
+// This cron fires about two weeks before each deadline (vercel.json).
 
 const MTD_DEADLINES: Record<string, { quarter: string; deadline: string }> = {
-  '7-22': { quarter: 'Q1 (6 Apr – 5 Jul)', deadline: '5 August' },
-  '10-22': { quarter: 'Q2 (6 Jul – 5 Oct)', deadline: '5 November' },
-  '1-22': { quarter: 'Q3 (6 Oct – 5 Jan)', deadline: '5 February' },
-  '4-21': { quarter: 'Q4 (6 Jan – 5 Apr)', deadline: '5 May' },
+  '7-22': { quarter: 'Q1 (6 Apr – 5 Jul)', deadline: '7 August' },
+  '10-22': { quarter: 'Q2 (6 Jul – 5 Oct)', deadline: '7 November' },
+  '1-22': { quarter: 'Q3 (6 Oct – 5 Jan)', deadline: '7 February' },
+  '4-21': { quarter: 'Q4 (6 Jan – 5 Apr)', deadline: '7 May' },
 };
 
 function todayDeadlineKey(): string | null {
@@ -66,7 +67,7 @@ export async function GET(req: NextRequest) {
         <tr>
           <td style="padding:40px">
             <p style="margin:0 0 8px;font-size:22px;font-weight:700;color:#1C1208;font-family:Georgia,serif">
-              Hi ${firstName}, your MTD update is due in 14 days.
+              Hi ${firstName}, your MTD update is due in about two weeks.
             </p>
             <p style="margin:0 0 8px;font-size:15px;color:#4A4035;line-height:1.6">
               Your <strong>${quarter}</strong> MTD ITSA quarterly update must be submitted to HMRC by <strong>${deadline}</strong>.

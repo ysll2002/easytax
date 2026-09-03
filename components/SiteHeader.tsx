@@ -24,6 +24,7 @@ export default function SiteHeader() {
           <Link href="/pricing"   style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('pricing')}</Link>
           <Link href="/#faq"      style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('faq')}</Link>
           <Link href="/timetable" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('timetable')}</Link>
+          <Link href="/mtd-checker" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('mtdChecker')}</Link>
           <Link href="/tax-tips"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('taxTips')}</Link>
         </nav>
 
@@ -66,6 +67,7 @@ export default function SiteHeader() {
               { href: '/pricing',   label: t('pricing') },
               { href: '/#faq',      label: t('faq') },
               { href: '/timetable', label: t('timetable') },
+              { href: '/mtd-checker', label: t('mtdChecker') },
               { href: '/tax-tips',  label: t('taxTips') },
             ].map(item => (
               <Link key={item.href} href={item.href} onClick={() => setOpen(false)}

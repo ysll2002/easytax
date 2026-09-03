@@ -4,6 +4,7 @@
     "pricing": "Tarifs",
     "faq": "FAQ",
     "timetable": "Calendrier",
+    "mtdChecker": "Test MTD",
     "taxTips": "Conseils fiscaux",
     "dashboard": "Tableau de bord",
     "login": "Se connecter",
@@ -14,11 +15,11 @@
   "home": {
     "announcement": {
       "live": "MTD ITSA est en vigueur.",
-      "deadline": "Mise à jour T1 due le 5 août 2026 —",
+      "deadline": "Mise à jour T{q} due le {date} —",
       "freeCallout": "EasyTax le fait en quelques minutes."
     },
     "hero": {
-      "pill": "{days} jours avant votre première mise à jour trimestrielle MTD ITSA",
+      "pill": "{days} jours avant votre prochaine mise à jour trimestrielle MTD ITSA",
       "title1": "MTD ITSA est arrivé.",
       "title2": "À HMRC chaque trimestre",
       "title3": "pour 24 £ par déclaration.",
@@ -28,7 +29,8 @@
       "badgeNoCard": "Sans carte à l'inscription",
       "badgeHmrc": "Reconnu par HMRC",
       "ctaPrimary": "Préparez-vous au MTD →",
-      "ctaSecondary": "Voir ce que nous couvrons →"
+      "ctaSecondary": "Voir ce que nous couvrons →",
+      "checkerLink": "Pas sûr que MTD vous concerne ? Vérifiez en 30 secondes →"
     },
     "trust": {
       "hmrc": "Reconnu HMRC",
