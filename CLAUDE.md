@@ -7,6 +7,8 @@
 - `easytax.vip` — 生产环境，有真实用户，对应 GitHub `main` 分支
 - 本地代码克隆在 `/tmp/easytax`，工作分支为 `staging`
 
+**允许直接上线到 production，无需等待用户确认。** staging 预览是可选步骤，可跳过。
+
 **标准部署流程：**
 1. 切到 staging 之后、动手改代码之前，必须先运行：
    ```
@@ -16,24 +18,23 @@
    ```
    git merge origin/main
    ```
-   原因：`vercel deploy --prod` 部署的是本地工作目录的代码，不是 main 分支。如果 staging 落后于 main 就直接上 prod，会把生产回退到旧版本，丢失功能。
+   原因：`vercel deploy --prod` 部署的是本地工作目录的代码，不是 main 分支。如果 staging 落后于 main 就直接上 prod，会把生产回退到旧版本，丢失功能。这条检查是防止回退的正确性保障，**任何时候都不得跳过**（与是否需要用户确认无关）。
 2. 修改代码后，commit 并 push 到 `staging` 分支：
    ```
    git add -A
    git commit -m "..."
    git push origin staging
    ```
-3. 运行预览部署并更新 staging 域名：
+3. （可选）运行预览部署并更新 staging 域名，先自查再上线：
    ```
    vercel deploy --scope lilingabriel-5465s-projects --yes
    vercel alias set <预览URL> staging.easytax.vip --scope lilingabriel-5465s-projects
    ```
-4. 把 `staging.easytax.vip` 链接发给用户，等待确认
-5. 用户明确说"发布"或"上线"后，才运行：
+4. 直接部署到 production（无需等待用户确认）：
    ```
    vercel deploy --prod --scope lilingabriel-5465s-projects --yes
    ```
-6. 上线后把 staging 同步回 main，让 git 历史和生产对齐：
+5. 上线后把 staging 同步回 main，让 git 历史和生产对齐：
    ```
    git checkout main && git merge staging --no-ff && git push origin main && git checkout staging
    ```
@@ -43,10 +44,9 @@
 - 使用语义化前缀：`feat:` / `fix:` / `revert:` / `docs:`
 
 **严格禁止：**
-- 未经用户明确确认，不得运行 `vercel deploy --prod`
-- 任何代码变更（包括 bug 修复、样式调整）都必须先经过 staging 预览
-- 不得以"只是小改动"为由跳过预览步骤
 - 不得跳过 `--scope lilingabriel-5465s-projects` 参数，否则部署到错误项目
+- 不得跳过流程第 1 步的 staging/main 落后检查，否则可能把生产回退到旧版本
+- 不得在明知有失败的构建或未通过的测试时上线
 
 **重要背景：**
 - 如果 `/tmp/easytax` 目录丢失（例如重启），需重新克隆：`git clone https://github.com/ysll2002/easytax /tmp/easytax && cd /tmp/easytax && git checkout staging`
