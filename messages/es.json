@@ -4,6 +4,7 @@
     "pricing": "Precios",
     "faq": "Preguntas",
     "timetable": "Calendario",
+    "deadlineChecker": "Comprobador de plazos",
     "taxTips": "Consejos fiscales",
     "dashboard": "Panel",
     "login": "Iniciar sesión",
@@ -19,7 +20,7 @@
       "freeCallout": "EasyTax lo hace en minutos."
     },
     "hero": {
-      "pill": "Faltan {days} días para tu primera actualización trimestral de MTD ITSA",
+      "pill": "Próxima actualización trimestral de MTD ITSA: {date} — faltan {days} días",
       "title1": "MTD ITSA ya llegó.",
       "title2": "A HMRC cada trimestre",
       "title3": "por £24 cada declaración.",
@@ -27,12 +28,12 @@
       "subtitleEmph": "Sin suscripción — solo pagas cuando presentas.",
       "badgeFree": "Sin suscripción",
       "badgeNoCard": "Sin tarjeta para registrarte",
-      "badgeHmrc": "Reconocido por HMRC",
+      "badgeHmrc": "Basado en las API de HMRC",
       "ctaPrimary": "Prepárate para MTD →",
       "ctaSecondary": "Ver qué cubrimos →"
     },
     "trust": {
-      "hmrc": "Reconocido por HMRC",
+      "hmrc": "API MTD de HMRC",
       "security": "Seguridad bancaria",
       "fast": "Presenta en 5 minutos",
       "ai": "Con IA",
@@ -173,7 +174,7 @@
       "passwordHide": "Ocultar",
       "passwordRuleLength": "Al menos 8 caracteres",
       "mustAgreeShort": "Marca primero la casilla de acuerdo a continuación",
-      "trustSignal": "Cifrado bancario · Software reconocido por HMRC · Conforme con RGPD",
+      "trustSignal": "Cifrado bancario · Basado en las API de HMRC · Conforme con RGPD",
       "accountCreatedLogin": "Cuenta creada — inicia sesión para continuar",
       "redirecting": "Redirigiendo…"
     }

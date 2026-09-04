@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
+import DemoBanner from '@/components/DemoBanner';
 
 interface ActionItem {
   id: string;
@@ -13,12 +15,19 @@ interface ActionItem {
   completed: boolean;
 }
 
+// Sample data. This page is a product preview, not a live account — see the
+// banner at the top. Deadlines still come from lib/mtd-dates so the example
+// never shows a date that has already passed.
+const NEXT_QUARTER = nextQuarterDeadline();
+
 const MOCK_ACTIONS: ActionItem[] = [
   {
     id: '1',
     type: 'urgent',
-    title: 'MTD ITSA Q1 Quarterly Update',
-    description: 'First MTD ITSA quarter (6 Apr – 5 Jul 2026) is due 5 Aug 2026. Send your Q1 update to HMRC.',
+    title: `MTD ITSA ${NEXT_QUARTER?.key ?? 'quarterly'} Update`,
+    description: NEXT_QUARTER
+      ? `The ${NEXT_QUARTER.key} period (${NEXT_QUARTER.periodLabel}) is due ${NEXT_QUARTER.deadlineLabel} — ${daysUntil(NEXT_QUARTER.deadline)} days away.`
+      : 'Send your quarterly update to HMRC.',
     cta: 'Send Update',
     ctaLink: '/dashboard/individual/quarter',
     completed: false,
@@ -85,9 +94,9 @@ export default function Actions() {
       <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#FDFCF8' }}>
         <div className="w-14 h-14 rounded-full border-4 animate-spin mb-6" style={{ borderColor: '#DDD5C8', borderTopColor: '#C4622D' }} />
         <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-          Analysing your tax profile
+          Building a sample action plan
         </h2>
-        <p style={{ color: '#9A8F83' }}>Checking deadlines and obligations with HMRC...</p>
+        <p style={{ color: '#9A8F83' }}>Loading the sample action plan…</p>
       </div>
     );
   }
@@ -95,6 +104,8 @@ export default function Actions() {
   return (
     <div className="min-h-screen py-16 px-4" style={{ backgroundColor: '#FDFCF8' }}>
       <div className="max-w-2xl mx-auto">
+
+        <DemoBanner />
 
         <div className="mb-12">
           <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', color: '#C4622D', fontWeight: 700, fontSize: '1.25rem', display: 'inline-block', marginBottom: '2rem' }}>
@@ -104,7 +115,7 @@ export default function Actions() {
             Your Action Plan
           </h1>
           <p style={{ color: '#9A8F83' }}>
-            Based on your HMRC data, here is your prioritised to-do list.
+            A worked example of the action plan EasyTax builds once your account is connected.
           </p>
         </div>
 

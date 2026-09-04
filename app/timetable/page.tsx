@@ -80,6 +80,17 @@ export default function TimetablePage() {
 
       <main className="flex-grow max-w-3xl mx-auto px-6 py-16 w-full">
 
+        {/* Cross-link to the interactive tool: this page lists every date, the
+            checker narrows them to the ones that apply to the reader. */}
+        <div className="mb-10 p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4" style={{ backgroundColor: '#F0EBE1', border: '1px solid #C4622D30' }}>
+          <p className="text-sm m-0 flex-1" style={{ color: '#4A4035' }}>
+            Not sure which of these apply to you? The deadline checker works it out from your income.
+          </p>
+          <Link href="/mtd-deadline-checker" className="inline-flex items-center justify-center px-5 rounded-full text-sm font-semibold whitespace-nowrap" style={{ minHeight: 44, backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+            Check my deadlines →
+          </Link>
+        </div>
+
         {/* What is MTD section */}
         <div className="mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>

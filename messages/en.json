@@ -4,6 +4,7 @@
     "pricing": "Pricing",
     "faq": "FAQ",
     "timetable": "Timetable",
+    "deadlineChecker": "Deadline Checker",
     "taxTips": "Tax Tips",
     "dashboard": "Dashboard",
     "login": "Log in",
@@ -19,7 +20,7 @@
       "freeCallout": "EasyTax does it in minutes."
     },
     "hero": {
-      "pill": "{days} days until your first MTD ITSA quarterly update",
+      "pill": "Next MTD ITSA quarterly update: {date} — {days} days to go",
       "title1": "MTD ITSA is here.",
       "title2": "File quarterly to HMRC",
       "title3": "for £24 a filing.",
@@ -27,12 +28,12 @@
       "subtitleEmph": "No subscription — you only pay when you file.",
       "badgeFree": "No subscription",
       "badgeNoCard": "No card to sign up",
-      "badgeHmrc": "HMRC-recognised",
+      "badgeHmrc": "Built on HMRC APIs",
       "ctaPrimary": "Get MTD-ready →",
       "ctaSecondary": "See what we cover →"
     },
     "trust": {
-      "hmrc": "HMRC Recognised",
+      "hmrc": "HMRC MTD API",
       "security": "Bank-grade Security",
       "fast": "File in 5 Minutes",
       "ai": "AI-powered",
@@ -173,7 +174,7 @@
       "passwordHide": "Hide",
       "passwordRuleLength": "At least 8 characters",
       "mustAgreeShort": "Please tick the agreement box below first",
-      "trustSignal": "Bank-grade encryption · HMRC-recognised software · GDPR-compliant",
+      "trustSignal": "Bank-grade encryption · Built on HMRC APIs · GDPR-compliant",
       "accountCreatedLogin": "Account created — please log in to continue",
       "redirecting": "Redirecting…"
     }

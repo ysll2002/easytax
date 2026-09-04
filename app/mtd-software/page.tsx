@@ -6,11 +6,11 @@ import { auth } from '@/auth';
 
 export const metadata: Metadata = {
   title: 'MTD ITSA Software for UK Sole Traders & Landlords — EasyTax, £24 per Filing',
-  description: 'EasyTax is HMRC-recognised MTD ITSA software for UK sole traders, self-employed and landlords. File quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT per submission. No monthly subscription.',
+  description: 'EasyTax is MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT per submission. No monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/mtd-software' },
   openGraph: {
     title: 'MTD ITSA Software — EasyTax, £24 per Filing, No Subscription',
-    description: 'HMRC-recognised Making Tax Digital software for sole traders and landlords. Quarterly updates, Self Assessment, VAT, CT600 — £24 per filing, no monthly fee.',
+    description: 'Making Tax Digital software built on the HMRC MTD API for sole traders and landlords. Quarterly updates, Self Assessment, VAT, CT600 — £24 per filing, no monthly fee.',
     url: 'https://easytax.vip/mtd-software',
     type: 'article',
     locale: 'en_GB',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'MTD ITSA Software — EasyTax, £24 per Filing',
-    description: 'HMRC-recognised Making Tax Digital software. No subscription — pay only when you file.',
+    description: 'Making Tax Digital software built on the HMRC MTD API. No subscription — pay only when you file.',
   },
 };
 
@@ -35,7 +35,7 @@ export default async function MtdSoftware() {
     name: 'EasyTax',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
-    description: 'HMRC-recognised MTD ITSA software for UK sole traders, self-employed and landlords. File Making Tax Digital quarterly updates, Self Assessment, VAT and CT600 directly to HMRC.',
+    description: 'MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File Making Tax Digital quarterly updates, Self Assessment, VAT and CT600 directly to HMRC.',
     url: 'https://easytax.vip',
     offers: {
       '@type': 'Offer',
@@ -96,17 +96,17 @@ export default async function MtdSoftware() {
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> HMRC-recognised MTD ITSA software
+              <Sparkles size={12} /> MTD ITSA software built on the HMRC MTD API
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               MTD software for UK sole traders and landlords — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>£24 per filing, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>HMRC-recognised Making Tax Digital software</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription. No card to sign up.
+              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription. No card to sign up.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No subscription</span>
             </div>
@@ -372,7 +372,7 @@ export default async function MtdSoftware() {
               MTD ITSA software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>per filing</em>, not per month.
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card required. Set up in under 5 minutes. HMRC-recognised.
+              No card required. Set up in under 5 minutes. Built on the HMRC MTD API.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>

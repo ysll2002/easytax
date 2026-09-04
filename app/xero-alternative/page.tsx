@@ -87,7 +87,7 @@ export default async function XeroAlternative() {
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>£24 per filing</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No monthly subscription</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
@@ -219,7 +219,7 @@ export default async function XeroAlternative() {
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',
-                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax is HMRC-recognised for MTD ITSA quarterly updates and the final declaration.',
+                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>

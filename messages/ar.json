@@ -4,6 +4,7 @@
     "pricing": "الأسعار",
     "faq": "الأسئلة الشائعة",
     "timetable": "جدول الإقرار",
+    "deadlineChecker": "أداة المواعيد النهائية",
     "taxTips": "نصائح ضريبية",
     "dashboard": "لوحة التحكم",
     "login": "تسجيل الدخول",
@@ -19,7 +20,7 @@
       "freeCallout": "EasyTax يقوم بذلك في دقائق."
     },
     "hero": {
-      "pill": "{days} يوماً حتى أول تحديث ربعي MTD ITSA",
+      "pill": "التحديث الربعي التالي لـ MTD ITSA: {date} — متبقٍ {days} يوماً",
       "title1": "MTD ITSA وصل.",
       "title2": "قدّم إلى HMRC ربعياً",
       "title3": "بـ 24£ لكل إقرار.",
@@ -27,12 +28,12 @@
       "subtitleEmph": "بدون اشتراك — تدفع فقط عند التقديم.",
       "badgeFree": "بدون اشتراك",
       "badgeNoCard": "بدون بطاقة للتسجيل",
-      "badgeHmrc": "معتمد من HMRC",
+      "badgeHmrc": "مبني على واجهات HMRC البرمجية",
       "ctaPrimary": "استعد لـ MTD ←",
       "ctaSecondary": "اطلع على ما نغطيه ←"
     },
     "trust": {
-      "hmrc": "معتمد HMRC",
+      "hmrc": "واجهة HMRC MTD",
       "security": "أمان مصرفي",
       "fast": "قدّم في 5 دقائق",
       "ai": "مدعوم بالذكاء الاصطناعي",
@@ -173,7 +174,7 @@
       "passwordHide": "إخفاء",
       "passwordRuleLength": "8 أحرف على الأقل",
       "mustAgreeShort": "يرجى تحديد مربع الموافقة أدناه أولاً",
-      "trustSignal": "تشفير بمستوى البنوك · برنامج معتمد من HMRC · متوافق مع GDPR",
+      "trustSignal": "تشفير بمستوى البنوك · مبني على واجهات HMRC البرمجية · متوافق مع GDPR",
       "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة",
       "redirecting": "إعادة توجيه…"
     }

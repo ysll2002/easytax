@@ -57,7 +57,7 @@ export default async function LandlordTaxSoftware() {
   const faqItems = [
     {
       q: 'When does MTD ITSA apply to landlords?',
-      a: 'From 6 April 2026, landlords whose total property income (plus any self-employment income) exceeds £50,000 per year must use MTD-compatible software to file quarterly updates to HMRC. The threshold drops to £30,000 from 6 April 2027. If you are above the threshold, you are already required to file quarterly — EasyTax is HMRC-recognised for this.',
+      a: 'From 6 April 2026, landlords whose total property income (plus any self-employment income) exceeds £50,000 per year must use MTD-compatible software to file quarterly updates to HMRC. The threshold drops to £30,000 from 6 April 2027. If you are above the threshold, you are already required to file quarterly — EasyTax is built on the HMRC MTD API for this.',
     },
     {
       q: 'What is an SA105 and does EasyTax file it?',
@@ -129,7 +129,7 @@ export default async function LandlordTaxSoftware() {
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA105 property supplement</span>
             </div>
@@ -151,7 +151,7 @@ export default async function LandlordTaxSoftware() {
               MTD ITSA is mandatory for landlords from April 2026
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Making Tax Digital for Income Tax Self Assessment (MTD ITSA) requires UK landlords and sole traders to send quarterly income and expense updates to HMRC digitally — in addition to the existing annual Self Assessment. If your total property income (plus any self-employment income) exceeds the threshold, you must use HMRC-recognised software like EasyTax.
+              Making Tax Digital for Income Tax Self Assessment (MTD ITSA) requires UK landlords and sole traders to send quarterly income and expense updates to HMRC digitally — in addition to the existing annual Self Assessment. If your total property income (plus any self-employment income) exceeds the threshold, you must use Software like EasyTax, which connects to the HMRC MTD API,.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[

@@ -4,6 +4,7 @@
     "pricing": "料金",
     "faq": "よくある質問",
     "timetable": "申告スケジュール",
+    "deadlineChecker": "期限チェッカー",
     "taxTips": "税務情報",
     "dashboard": "ダッシュボード",
     "login": "ログイン",
@@ -19,7 +20,7 @@
       "freeCallout": "EasyTax なら数分で対応。"
     },
     "hero": {
-      "pill": "最初の MTD ITSA 四半期申告まであと {days} 日",
+      "pill": "次回の MTD ITSA 四半期申告：{date}（あと {days} 日）",
       "title1": "MTD ITSA の時代へ。",
       "title2": "HMRC へ四半期申告",
       "title3": "1 回 £24 で。",
@@ -27,12 +28,12 @@
       "subtitleEmph": "サブスクなし —— 申告したときだけのお支払い。",
       "badgeFree": "サブスクなし",
       "badgeNoCard": "登録にカード不要",
-      "badgeHmrc": "HMRC 認定",
+      "badgeHmrc": "HMRC API 連携",
       "ctaPrimary": "MTD 対応を始める →",
       "ctaSecondary": "対応範囲を見る →"
     },
     "trust": {
-      "hmrc": "HMRC 認定",
+      "hmrc": "HMRC MTD API",
       "security": "銀行レベルのセキュリティ",
       "fast": "5 分で申告",
       "ai": "AI 搭載",
@@ -173,7 +174,7 @@
       "passwordHide": "非表示",
       "passwordRuleLength": "8文字以上",
       "mustAgreeShort": "下の同意ボックスにチェックを入れてください",
-      "trustSignal": "銀行レベルの暗号化 · HMRC公認ソフトウェア · GDPR準拠",
+      "trustSignal": "銀行レベルの暗号化 · HMRC API 連携 · GDPR準拠",
       "accountCreatedLogin": "アカウントが作成されました — 続行するにはログインしてください",
       "redirecting": "リダイレクト中…"
     }

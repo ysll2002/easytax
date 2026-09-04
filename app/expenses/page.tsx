@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import DemoBanner from '@/components/DemoBanner';
 
 interface Transaction {
   id: string;
@@ -12,6 +13,8 @@ interface Transaction {
   status: 'pending' | 'approved' | 'rejected';
 }
 
+// Sample data — see DemoBanner. These are illustrative transactions, not a
+// real bank feed.
 const MOCK_TRANSACTIONS: Transaction[] = [
   { id: '1', date: '2026-03-01', merchant: 'Apple Store', amount: 1299.00, category: 'Equipment', confidence: 'high', status: 'pending' },
   { id: '2', date: '2026-03-02', merchant: 'Starbucks', amount: 4.50, category: 'Subsistence', confidence: 'low', status: 'pending' },
@@ -44,12 +47,14 @@ export default function Expenses() {
             ← Back to Actions
           </Link>
           <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: '#F5EDDC', color: '#C9963D' }}>
-            AI Categorisation Active
+            Sample data
           </span>
         </div>
       </nav>
 
       <main className="max-w-4xl mx-auto px-6 pt-10">
+
+        <DemoBanner>The transactions below are examples, not a real bank feed.</DemoBanner>
 
         <div className="mb-8">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
@@ -57,7 +62,7 @@ export default function Expenses() {
           </h1>
           <p style={{ color: '#9A8F83' }}>
             {pendingCount > 0
-              ? <>Our AI flagged <strong style={{ color: '#1C1208' }}>{pendingCount}</strong> transactions. Approving these could save you approx <strong style={{ color: '#1C1208' }}>£{(approvedTotal * 0.2).toFixed(2)}</strong> in tax.</>
+              ? <>In this example, EasyTax has flagged <strong style={{ color: '#1C1208' }}>{pendingCount}</strong> transactions for review. Approved expenses here total <strong style={{ color: '#1C1208' }}>£{approvedTotal.toFixed(2)}</strong>.</>
               : 'All transactions reviewed.'}
           </p>
         </div>

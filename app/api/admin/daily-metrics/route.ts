@@ -67,6 +67,104 @@ async function uniqueVisitors(sinceIso: string): Promise<number | null> {
   return ids.size;
 }
 
+/** Traffic broken down by landing page and by acquisition channel.
+ *
+ *  Why: the site has 15+ marketing pages and the aggregate funnel cannot say
+ *  which of them does anything. Without this you cannot tell whether the next
+ *  landing page is worth writing, or which existing one deserves the backlinks.
+ *
+ *  Returns null when the table is missing, matching the other helpers. */
+async function trafficBreakdown(sinceIso: string) {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('name, path, anon_id, referrer, utm_source, utm_medium, props')
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return null;
+
+  const views   = new Map<string, { views: number; visitors: Set<string> }>();
+  const convert = new Map<string, number>();
+  const sources = new Map<string, { views: number; visitors: Set<string> }>();
+
+  // Events that represent a visitor doing something we actually want, keyed to
+  // the page they did it on. Lets us rank pages by outcome, not just traffic.
+  const CONVERSIONS = new Set([
+    'register_started',
+    'register_completed',
+    'launch_subscribed',
+    'checker_completed',
+    'activation_cta_click',
+    'article_cta_click',
+  ]);
+
+  /** Bare host, so utm-tagged and deep-linked referrals from the same site
+   *  collapse into one row. 'direct' when there is no referrer. */
+  const channelOf = (referrer: string | null, utmSource: string | null): string => {
+    if (utmSource) return utmSource.toLowerCase();
+    if (!referrer) return 'direct';
+    try {
+      const host = new URL(referrer).hostname.replace(/^www\./, '');
+      return host === 'easytax.vip' ? 'internal' : host;
+    } catch {
+      return 'unknown';
+    }
+  };
+
+  for (const row of data ?? []) {
+    if ((row.props as { env?: string } | null)?.env !== 'production') continue;
+
+    if (row.name === 'page_view') {
+      const path = row.path ?? '(unknown)';
+      const entry = views.get(path) ?? { views: 0, visitors: new Set<string>() };
+      entry.views += 1;
+      if (row.anon_id) entry.visitors.add(row.anon_id);
+      views.set(path, entry);
+
+      const channel = channelOf(row.referrer, row.utm_source);
+      const src = sources.get(channel) ?? { views: 0, visitors: new Set<string>() };
+      src.views += 1;
+      if (row.anon_id) src.visitors.add(row.anon_id);
+      sources.set(channel, src);
+    } else if (CONVERSIONS.has(row.name)) {
+      const path = row.path ?? '(unknown)';
+      convert.set(path, (convert.get(path) ?? 0) + 1);
+    }
+  }
+
+  const byPath = [...views.entries()]
+    .map(([path, v]) => ({
+      path,
+      page_views:      v.views,
+      unique_visitors: v.visitors.size,
+      conversions:     convert.get(path) ?? 0,
+    }))
+    .sort((a, b) => b.unique_visitors - a.unique_visitors || b.page_views - a.page_views)
+    .slice(0, 25);
+
+  const byChannel = [...sources.entries()]
+    .map(([channel, v]) => ({ channel, page_views: v.views, unique_visitors: v.visitors.size }))
+    .sort((a, b) => b.unique_visitors - a.unique_visitors || b.page_views - a.page_views)
+    .slice(0, 15);
+
+  // Pages that exist but drew nothing in the window. Usually the more
+  // actionable list: it is where the effort went and the traffic did not.
+  const seen = new Set(views.keys());
+  const silent = MARKETING_PAGES.filter(p => !seen.has(p));
+
+  return { by_path: byPath, by_channel: byChannel, pages_with_no_traffic: silent };
+}
+
+/** Public marketing routes, so the breakdown can name the ones drawing zero
+ *  traffic rather than silently omitting them. Keep in step with app/sitemap.ts. */
+const MARKETING_PAGES = [
+  '/', '/pricing', '/mtd-software', '/mtd-deadline-checker', '/self-assessment-software',
+  '/landlord-tax-software', '/timetable', '/tax-tips', '/trust',
+  '/bokio-alternative', '/coconut-alternative', '/crunch-alternative', '/freeagent-alternative',
+  '/kashflow-alternative', '/quickbooks-alternative', '/sage-alternative', '/taxscouts-alternative',
+  '/xero-alternative',
+];
+
 async function launchSubscriberCounts(since7d: string, since30d: string) {
   const { data, error } = await supabase
     .from('launch_subscribers')
@@ -144,13 +242,16 @@ export async function GET(req: NextRequest) {
     // Behavioural funnel. All of these degrade to empty/null when the
     // 20260903 migration has not been applied, so the endpoint never 500s
     // just because instrumentation is not live yet.
-    const [events7d, events30d, visitors7d, visitors30d, launchList] = await Promise.all([
-      eventCounts(since7d),
-      eventCounts(since30d),
-      uniqueVisitors(since7d),
-      uniqueVisitors(since30d),
-      launchSubscriberCounts(since7d, since30d),
-    ]);
+    const [events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d] =
+      await Promise.all([
+        eventCounts(since7d),
+        eventCounts(since30d),
+        uniqueVisitors(since7d),
+        uniqueVisitors(since30d),
+        launchSubscriberCounts(since7d, since30d),
+        trafficBreakdown(since7d),
+        trafficBreakdown(since30d),
+      ]);
 
     const instrumented = visitors7d !== null;
     const rate = (num: number, den: number | null) =>
@@ -197,6 +298,14 @@ export async function GET(req: NextRequest) {
         note: instrumented
           ? 'production traffic only; visitors are unique anon_id values'
           : 'analytics_events table missing — run supabase/migrations/20260903_growth_instrumentation.sql',
+        // Which pages and channels actually produce visitors and actions.
+        // `conversions` counts register/launch-list/checker/CTA events fired
+        // on that page. `pages_with_no_traffic` lists marketing routes that
+        // drew nothing in the window.
+        attribution: {
+          last_7d:  traffic7d,
+          last_30d: traffic30d,
+        },
         last_7d: {
           unique_visitors:     visitors7d,
           page_views:          events7d['page_view']            ?? 0,

@@ -28,6 +28,8 @@ export const EVENTS = {
   trustViewed:         'trust_viewed',
   activationCtaClick:  'activation_cta_click',
   articleCtaClick:     'article_cta_click',
+  checkerStarted:      'checker_started',
+  checkerCompleted:    'checker_completed',
 } as const;
 
 let warned = false;

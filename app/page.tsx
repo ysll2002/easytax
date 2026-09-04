@@ -6,6 +6,7 @@ import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, F
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { getTranslations } from 'next-intl/server';
+import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 
 export const revalidate = 3600;
 
@@ -29,8 +30,11 @@ export default async function Home() {
     .order('published_at', { ascending: false })
     .limit(3);
 
-  const Q1_DEADLINE = new Date('2026-08-05T23:59:59Z');
-  const daysToQ1 = Math.max(0, Math.ceil((Q1_DEADLINE.getTime() - Date.now()) / 86_400_000));
+  // Rolls forward on its own. The previous hardcoded 5 Aug 2026 date was both
+  // wrong (the statutory deadline is the 7th) and, once Q1 passed, frozen at
+  // "0 days" — see lib/mtd-dates.ts.
+  const nextDeadline = nextQuarterDeadline();
+  const daysToNext = nextDeadline ? daysUntil(nextDeadline.deadline) : 0;
 
   const faqPairs = [
     { q: t('faq.q1Q'), a: t('faq.q1A') },
@@ -94,10 +98,12 @@ export default async function Home() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  {t('hero.pill', { days: daysToQ1 })}
-                </div>
+                {nextDeadline && (
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                    {t('hero.pill', { days: daysToNext, date: nextDeadline.deadlineLabel })}
+                  </div>
+                )}
 
                 <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
                   {t('hero.title1')}<br />
@@ -375,7 +381,7 @@ export default async function Home() {
             Registration is the only conversion the site offers today, and it
             is a big ask while filing is not yet open. This catches the much
             larger group who are interested but not ready to open an account. */}
-        <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
+        <section id="notify" className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8', scrollMarginTop: '1rem' }}>
           <div className="max-w-2xl mx-auto px-4 sm:px-6">
             <NotifyMeForm source="home" />
           </div>

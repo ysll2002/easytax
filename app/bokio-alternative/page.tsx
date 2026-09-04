@@ -109,7 +109,7 @@ export default async function BokioAlternative() {
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready for April 2026</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
@@ -286,7 +286,7 @@ export default async function BokioAlternative() {
                 { q: 'Can I keep my existing invoice number sequence (e.g. INV-2024-0042)?',
                   a: 'Yes. After we import your invoice history, your next invoice continues the existing sequence rather than restarting. Tell us your preference in the migration email.' },
                 { q: 'What about MTD ITSA — when do I need it?',
-                  a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. EasyTax is HMRC-recognised for MTD ITSA quarterly updates and the final declaration.' },
+                  a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.' },
                 { q: 'Which UK banks does the auto-import work with?',
                   a: 'Every major UK retail and business bank supported by Open Banking: Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide, Mettle and most others. Read-only access only — EasyTax can never move money.' },
               ].map((item) => (

@@ -6,19 +6,19 @@
     },
     {
       "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 22 7 *"
+      "schedule": "0 8 24 7 *"
     },
     {
       "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 22 10 *"
+      "schedule": "0 8 24 10 *"
     },
     {
       "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 22 1 *"
+      "schedule": "0 8 24 1 *"
     },
     {
       "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 21 4 *"
+      "schedule": "0 8 23 4 *"
     },
     {
       "path": "/api/hmrc/sandbox-test",

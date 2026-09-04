@@ -23,6 +23,8 @@ const ALLOWED = new Set([
   'trust_viewed',
   'activation_cta_click',
   'article_cta_click',
+  'checker_started',
+  'checker_completed',
 ]);
 
 const MAX_STR = 512;

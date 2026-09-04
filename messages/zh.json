@@ -4,6 +4,7 @@
     "pricing": "价格",
     "faq": "常见问题",
     "timetable": "申报日程",
+    "deadlineChecker": "截止日期查询",
     "taxTips": "报税小贴士",
     "dashboard": "控制台",
     "login": "登录",
@@ -19,7 +20,7 @@
       "freeCallout": "EasyTax 几分钟搞定。"
     },
     "hero": {
-      "pill": "距离你第一次 MTD ITSA 季度申报还有 {days} 天",
+      "pill": "下一次 MTD ITSA 季度申报：{date}，还有 {days} 天",
       "title1": "MTD ITSA 来了。",
       "title2": "向 HMRC 季度申报",
       "title3": "每次 £24。",
@@ -27,12 +28,12 @@
       "subtitleEmph": "无订阅 —— 只在申报时付费。",
       "badgeFree": "无订阅",
       "badgeNoCard": "注册无需信用卡",
-      "badgeHmrc": "HMRC 认证",
+      "badgeHmrc": "基于 HMRC 官方 API",
       "ctaPrimary": "开始 MTD 申报 →",
       "ctaSecondary": "查看支持范围 →"
     },
     "trust": {
-      "hmrc": "HMRC 认证",
+      "hmrc": "HMRC MTD 接口",
       "security": "银行级安全",
       "fast": "5 分钟完成申报",
       "ai": "AI 智能",
@@ -173,7 +174,7 @@
       "passwordHide": "隐藏",
       "passwordRuleLength": "至少 8 个字符",
       "mustAgreeShort": "请先勾选下方的同意框",
-      "trustSignal": "银行级加密 · HMRC 认可软件 · 符合 GDPR",
+      "trustSignal": "银行级加密 · 基于 HMRC 官方 API · 符合 GDPR",
       "accountCreatedLogin": "账户已创建 — 请登录以继续",
       "redirecting": "跳转中…"
     }

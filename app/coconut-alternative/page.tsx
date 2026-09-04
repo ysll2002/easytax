@@ -205,7 +205,7 @@ export default async function CoconutAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 { q: 'How much does EasyTax cost?',                       a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission. No monthly subscription — you only pay when you file. Early-access signups lock in this founder price for life. Connecting your bank and HMRC accounts is free.' },
-                { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax sends quarterly updates and final declarations to HMRC via the official MTD ITSA API. We use the HMRC-recognised software route.' },
+                { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax sends quarterly updates and final declarations to HMRC via the official MTD ITSA API. We are completing HMRC production approval before live submissions are enabled.' },
                 { q: 'Can I migrate from Coconut?',                       a: 'Yes. Sign up free, connect your bank via Open Banking, and your transactions import automatically. There’s nothing to export from Coconut — you simply start fresh and we backfill from your bank.' },
                 { q: 'Does EasyTax support Self Assessment (SA100)?',     a: 'Yes — including SA100, employment income, self-employment (SA103), property income (SA105), and dividends. We file directly to HMRC.' },
                 { q: 'Does EasyTax support limited companies?',           a: 'Yes — that’s the biggest gap vs Coconut. EasyTax does VAT returns (MTD VAT), CT600 Corporation Tax, Balance Sheet, and P&L for UK limited companies.' },

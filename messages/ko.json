@@ -4,6 +4,7 @@
     "pricing": "요금",
     "faq": "자주 묻는 질문",
     "timetable": "신고 일정",
+    "deadlineChecker": "마감일 확인",
     "taxTips": "세무 팁",
     "dashboard": "대시보드",
     "login": "로그인",
@@ -19,7 +20,7 @@
       "freeCallout": "EasyTax는 몇 분이면 됩니다."
     },
     "hero": {
-      "pill": "첫 MTD ITSA 분기 신고까지 {days}일 남음",
+      "pill": "다음 MTD ITSA 분기 신고: {date} — {days}일 남음",
       "title1": "MTD ITSA 시대.",
       "title2": "HMRC에 분기 신고",
       "title3": "건당 £24로.",
@@ -27,12 +28,12 @@
       "subtitleEmph": "구독 없음 —— 신고할 때만 결제합니다.",
       "badgeFree": "구독 없음",
       "badgeNoCard": "가입 시 카드 불필요",
-      "badgeHmrc": "HMRC 인증",
+      "badgeHmrc": "HMRC API 기반",
       "ctaPrimary": "MTD 준비하기 →",
       "ctaSecondary": "지원 범위 보기 →"
     },
     "trust": {
-      "hmrc": "HMRC 인증",
+      "hmrc": "HMRC MTD API",
       "security": "은행 수준 보안",
       "fast": "5분 안에 신고",
       "ai": "AI 기반",
@@ -173,7 +174,7 @@
       "passwordHide": "숨기기",
       "passwordRuleLength": "최소 8자",
       "mustAgreeShort": "아래 동의 상자에 먼저 체크해 주세요",
-      "trustSignal": "은행 수준 암호화 · HMRC 공인 소프트웨어 · GDPR 준수",
+      "trustSignal": "은행 수준 암호화 · HMRC API 기반 · GDPR 준수",
       "accountCreatedLogin": "계정이 생성되었습니다 — 계속하려면 로그인하세요",
       "redirecting": "리디렉션 중…"
     }
