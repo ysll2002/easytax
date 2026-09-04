@@ -4,13 +4,16 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Calendar, ChevronLeft } from 'lucide-react';
-import { getRelatedArticles } from '../_lib/articles';
+import { getRelatedArticles, hasSupabaseEnv } from '../_lib/articles';
 import ArticleCta from '../_components/ArticleCta';
 
 export const revalidate = 3600;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
+  // Preview deployments have no Supabase credentials; supabaseAdmin throws
+  // without them. Degrade to default metadata rather than failing the render.
+  if (!hasSupabaseEnv()) return {};
   const { data } = await supabase
     .from('tax_articles')
     .select('title, excerpt, published_at')
@@ -36,6 +39,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  // See generateMetadata above: without Supabase there is no article to show,
+  // and a 404 is a far better answer than a server-side exception.
+  if (!hasSupabaseEnv()) notFound();
+
   const { data: article } = await supabase
     .from('tax_articles')
     .select('*')

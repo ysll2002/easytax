@@ -5,6 +5,7 @@ import NotifyMeForm from '@/components/NotifyMeForm';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
 import { getTranslations } from 'next-intl/server';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 
@@ -24,11 +25,20 @@ export default async function Home() {
   const ctaHref = session ? '/dashboard' : '/register';
   const t = await getTranslations('home');
 
-  const { data: latestArticles } = await supabase
-    .from('tax_articles')
-    .select('title, slug, excerpt, published_at')
-    .order('published_at', { ascending: false })
-    .limit(3);
+  // Vercel Preview deployments do not get the Supabase secrets, and
+  // supabaseAdmin throws on first use without them — which took the whole
+  // homepage down with a server-side exception on every preview, staging
+  // included. The articles strip is decoration; a missing one renders the
+  // empty state. Same guard as app/sitemap.ts and the Tax Tips pages.
+  const latestArticles = hasSupabaseEnv()
+    ? (
+        await supabase
+          .from('tax_articles')
+          .select('title, slug, excerpt, published_at')
+          .order('published_at', { ascending: false })
+          .limit(3)
+      ).data
+    : null;
 
   // Rolls forward on its own. The previous hardcoded 5 Aug 2026 date was both
   // wrong (the statutory deadline is the 7th) and, once Q1 passed, frozen at
