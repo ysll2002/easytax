@@ -10,16 +10,18 @@
     "logout": "Se déconnecter",
     "register": "S'inscrire",
     "language": "Langue",
-    "trust": "Confiance et sécurité"
+    "trust": "Confiance et sécurité",
+    "mtdChecker": "Vérificateur MTD"
   },
   "home": {
     "announcement": {
       "live": "MTD ITSA est en vigueur.",
-      "deadline": "Mise à jour T1 due le 5 août 2026 —",
+      "deadline": "Prochaine échéance le {date} —",
       "freeCallout": "EasyTax le fait en quelques minutes."
     },
     "hero": {
-      "pill": "{days} jours avant votre première mise à jour trimestrielle MTD ITSA",
+      "pill": "{days} jours avant votre prochaine échéance HMRC",
+      "pillToday": "Votre prochaine échéance HMRC est aujourd’hui",
       "title1": "MTD ITSA est arrivé.",
       "title2": "À HMRC chaque trimestre",
       "title3": "pour 24 £ par déclaration.",
@@ -27,12 +29,12 @@
       "subtitleEmph": "Sans abonnement — vous ne payez qu'au moment de déclarer.",
       "badgeFree": "Sans abonnement",
       "badgeNoCard": "Sans carte à l'inscription",
-      "badgeHmrc": "Reconnu par HMRC",
+      "badgeHmrc": "Basé sur l’API MTD de HMRC",
       "ctaPrimary": "Préparez-vous au MTD →",
       "ctaSecondary": "Voir ce que nous couvrons →"
     },
     "trust": {
-      "hmrc": "Reconnu HMRC",
+      "hmrc": "Basé sur l’API MTD de HMRC",
       "security": "Sécurité bancaire",
       "fast": "Déclarez en 5 minutes",
       "ai": "Propulsé par IA",
@@ -115,10 +117,9 @@
       "button": "Commencer à déclarer →"
     },
     "footer": {
-      "tagline": "EasyTax Ltd. Conçu à Londres.",
+      "tagline": "Finance Panda Limited, opérant sous le nom EasyTax.",
       "privacy": "Confidentialité",
-      "terms": "Conditions",
-      "twitter": "Twitter"
+      "terms": "Conditions"
     },
     "meta": {
       "title": "EasyTax — Logiciel MTD ITSA pour indépendants et sociétés au Royaume-Uni",
@@ -173,7 +174,7 @@
       "passwordHide": "Masquer",
       "passwordRuleLength": "Au moins 8 caractères",
       "mustAgreeShort": "Veuillez d'abord cocher la case ci-dessous",
-      "trustSignal": "Chiffrement bancaire · Logiciel reconnu HMRC · Conforme RGPD",
+      "trustSignal": "Chiffrement bancaire · Basé sur l’API MTD de HMRC · Conforme RGPD",
       "accountCreatedLogin": "Compte créé — connectez-vous pour continuer",
       "redirecting": "Redirection…"
     }

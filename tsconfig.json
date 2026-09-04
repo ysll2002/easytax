@@ -6,6 +6,10 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // `npm test` runs the .mts tests through Node's type stripping, which
+    // resolves imports literally and so needs the '.ts' extension spelled out.
+    // Safe alongside noEmit: nothing here is compiled to JS by tsc.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",

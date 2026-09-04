@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import Link from 'next/link';
+import { MTD_DEADLINES, formatDeadlineDate, nextDeadline } from '@/lib/mtd-deadlines';
 
 export const metadata: Metadata = {
   title: 'MTD Deadlines 2026–2028 — Making Tax Digital Timetable',
@@ -13,67 +15,14 @@ export const metadata: Metadata = {
   },
 };
 
-const deadlines = [
-  {
-    date: '6 April 2026',
-    title: 'Start keeping digital records',
-    desc: 'Begin using compatible software to keep digital records of your income and expenses.',
-    highlight: false,
-    isStart: true,
-  },
-  {
-    date: '7 August 2026',
-    title: '1st Quarterly Update deadline',
-    desc: 'Send your Quarterly Update for the period 6 April to 5 July 2026.',
-    highlight: false,
-  },
-  {
-    date: '7 November 2026',
-    title: '2nd Quarterly Update deadline',
-    desc: 'Send your Quarterly Update for the period 6 April to 5 October 2026.',
-    highlight: false,
-  },
-  {
-    date: '31 January 2027',
-    title: 'Self-Assessment Tax Return (2025/26)',
-    desc: 'Deadline to submit a Self-Assessment Tax Return in the usual way for the previous 2025/26 tax year.',
-    highlight: true,
-  },
-  {
-    date: '7 February 2027',
-    title: '3rd Quarterly Update deadline',
-    desc: 'Send your Quarterly Update for the period 6 April 2026 to 5 January 2027.',
-    highlight: false,
-  },
-  {
-    date: '7 May 2027',
-    title: '4th Quarterly Update deadline',
-    desc: 'Send your Quarterly Update for the period 6 April 2026 to 5 April 2027.',
-    highlight: false,
-  },
-  {
-    date: '7 August 2027',
-    title: '1st Quarterly Update deadline (2027/28)',
-    desc: 'Send your Quarterly Update for the period 6 April to 5 July 2027. Eligible people with gross income £30,000+ begin using MTD.',
-    highlight: false,
-    note: 'Income £30,000+ threshold begins',
-  },
-  {
-    date: '7 November 2027',
-    title: '2nd Quarterly Update deadline (2027/28)',
-    desc: 'Send your Quarterly Update for the period 6 April to 5 October 2027.',
-    highlight: false,
-  },
-  {
-    date: '31 January 2028',
-    title: 'MTD Tax Return & payment deadline (2026/27)',
-    desc: 'Deadline to submit your MTD Tax Return and pay your income tax for 2026/27.',
-    highlight: false,
-    isFinal: true,
-  },
-];
+
+// Statically rendered, so without a revalidate the "next up" marker would be
+// frozen at whatever the next deadline was on the day of the build.
+export const revalidate = 3600;
 
 export default function TimetablePage() {
+  const upcoming = nextDeadline();
+
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#FDFCF8', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
       <SiteHeader />
@@ -140,7 +89,7 @@ export default function TimetablePage() {
           <div style={{ position: 'absolute', left: 19, top: 12, bottom: 12, width: 2, backgroundColor: '#E8E2DA' }} />
 
           <div className="space-y-0">
-            {deadlines.map((d, i) => (
+            {MTD_DEADLINES.map((d, i) => (
               <div key={i} className="flex gap-6 pb-8 relative">
                 {/* Dot */}
                 <div style={{ flexShrink: 0, position: 'relative', zIndex: 1 }}>
@@ -159,7 +108,10 @@ export default function TimetablePage() {
                 {/* Content */}
                 <div className="flex-1 pt-1.5">
                   <p className="text-xs font-bold mb-1" style={{ color: d.highlight ? '#DC2626' : '#9A8F83', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
-                    {d.date}
+                    {formatDeadlineDate(d.date)}
+                    {d.date === upcoming?.date && (
+                      <span style={{ color: '#C4622D', marginLeft: '0.6rem' }}>· next up</span>
+                    )}
                   </p>
                   <div className="p-4 rounded-xl" style={{
                     backgroundColor: d.highlight ? '#FEF2F2' : d.isStart ? '#F0F5F0' : d.isFinal ? '#F5EDDC' : '#FFFFFF',
@@ -197,15 +149,7 @@ export default function TimetablePage() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FDFCF8', padding: '2rem 0', marginTop: '4rem' }}>
-        <div className="max-w-3xl mx-auto px-6 flex justify-between items-center text-sm" style={{ color: '#9A8F83' }}>
-          <span>© {new Date().getFullYear()} Finance Panda Limited, trading as EasyTax.</span>
-          <div className="flex gap-4">
-            <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy</Link>
-            <Link href="/terms"   style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

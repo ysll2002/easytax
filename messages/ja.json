@@ -10,16 +10,18 @@
     "logout": "ログアウト",
     "register": "登録",
     "language": "言語",
-    "trust": "安全性と信頼"
+    "trust": "安全性と信頼",
+    "mtdChecker": "MTD 判定ツール"
   },
   "home": {
     "announcement": {
       "live": "MTD ITSA が施行されました。",
-      "deadline": "Q1 申告期限は 2026 年 8 月 5 日 ——",
+      "deadline": "次の期限は {date} ——",
       "freeCallout": "EasyTax なら数分で対応。"
     },
     "hero": {
-      "pill": "最初の MTD ITSA 四半期申告まであと {days} 日",
+      "pill": "次の HMRC 申告期限まであと {days} 日",
+      "pillToday": "次の HMRC 申告期限は本日です",
       "title1": "MTD ITSA の時代へ。",
       "title2": "HMRC へ四半期申告",
       "title3": "1 回 £24 で。",
@@ -27,12 +29,12 @@
       "subtitleEmph": "サブスクなし —— 申告したときだけのお支払い。",
       "badgeFree": "サブスクなし",
       "badgeNoCard": "登録にカード不要",
-      "badgeHmrc": "HMRC 認定",
+      "badgeHmrc": "HMRC の MTD API を利用",
       "ctaPrimary": "MTD 対応を始める →",
       "ctaSecondary": "対応範囲を見る →"
     },
     "trust": {
-      "hmrc": "HMRC 認定",
+      "hmrc": "HMRC の MTD API を利用",
       "security": "銀行レベルのセキュリティ",
       "fast": "5 分で申告",
       "ai": "AI 搭載",
@@ -115,10 +117,9 @@
       "button": "申告を始める →"
     },
     "footer": {
-      "tagline": "EasyTax Ltd. ロンドン発。",
+      "tagline": "Finance Panda Limited（屋号 EasyTax）。",
       "privacy": "プライバシー",
-      "terms": "利用規約",
-      "twitter": "Twitter"
+      "terms": "利用規約"
     },
     "meta": {
       "title": "EasyTax — 英国個人事業主・有限会社向け MTD ITSA ソフトウェア",
@@ -173,7 +174,7 @@
       "passwordHide": "非表示",
       "passwordRuleLength": "8文字以上",
       "mustAgreeShort": "下の同意ボックスにチェックを入れてください",
-      "trustSignal": "銀行レベルの暗号化 · HMRC公認ソフトウェア · GDPR準拠",
+      "trustSignal": "銀行レベルの暗号化 · HMRC の MTD API を利用 · GDPR準拠",
       "accountCreatedLogin": "アカウントが作成されました — 続行するにはログインしてください",
       "redirecting": "リダイレクト中…"
     }

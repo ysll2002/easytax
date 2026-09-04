@@ -10,16 +10,18 @@
     "logout": "退出",
     "register": "注册",
     "language": "语言",
-    "trust": "安全与信任"
+    "trust": "安全与信任",
+    "mtdChecker": "MTD 适用查询"
   },
   "home": {
     "announcement": {
       "live": "MTD ITSA 已经生效。",
-      "deadline": "Q1 季度申报截止 2026 年 8 月 5 日 ——",
+      "deadline": "下一个截止日 {date} ——",
       "freeCallout": "EasyTax 几分钟搞定。"
     },
     "hero": {
-      "pill": "距离你第一次 MTD ITSA 季度申报还有 {days} 天",
+      "pill": "距离你下一个 HMRC 申报截止日还有 {days} 天",
+      "pillToday": "你的下一个 HMRC 申报截止日就是今天",
       "title1": "MTD ITSA 来了。",
       "title2": "向 HMRC 季度申报",
       "title3": "每次 £24。",
@@ -27,12 +29,12 @@
       "subtitleEmph": "无订阅 —— 只在申报时付费。",
       "badgeFree": "无订阅",
       "badgeNoCard": "注册无需信用卡",
-      "badgeHmrc": "HMRC 认证",
+      "badgeHmrc": "基于 HMRC MTD 接口构建",
       "ctaPrimary": "开始 MTD 申报 →",
       "ctaSecondary": "查看支持范围 →"
     },
     "trust": {
-      "hmrc": "HMRC 认证",
+      "hmrc": "基于 HMRC MTD 接口",
       "security": "银行级安全",
       "fast": "5 分钟完成申报",
       "ai": "AI 智能",
@@ -115,10 +117,9 @@
       "button": "开始申报 →"
     },
     "footer": {
-      "tagline": "EasyTax Ltd. 伦敦出品。",
+      "tagline": "Finance Panda Limited（以 EasyTax 名义经营）。",
       "privacy": "隐私",
-      "terms": "条款",
-      "twitter": "Twitter"
+      "terms": "条款"
     },
     "meta": {
       "title": "EasyTax — 英国个体户与有限公司的 MTD ITSA 软件",
@@ -173,7 +174,7 @@
       "passwordHide": "隐藏",
       "passwordRuleLength": "至少 8 个字符",
       "mustAgreeShort": "请先勾选下方的同意框",
-      "trustSignal": "银行级加密 · HMRC 认可软件 · 符合 GDPR",
+      "trustSignal": "银行级加密 · 基于 HMRC MTD 接口构建 · 符合 GDPR",
       "accountCreatedLogin": "账户已创建 — 请登录以继续",
       "redirecting": "跳转中…"
     }

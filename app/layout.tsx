@@ -65,14 +65,17 @@ export const metadata: Metadata = {
     url: 'https://easytax.vip',
     siteName: 'EasyTax',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — £24 per submission, no subscription.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'EasyTax — MTD ITSA software' }],
+    description: 'Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — £24 per submission, no subscription.',
+    // No `images` here on purpose. It used to point at /og-image.png, which
+    // does not exist in public/ and returned the 404 page, so every share of
+    // every URL rendered a broken preview. Leaving it unset lets the
+    // app/opengraph-image.tsx file convention supply a generated card that
+    // cannot go missing.
   },
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — £24 per submission.',
-    images: ['/og-image.png'],
+    description: 'Quarterly HMRC updates, Self Assessment, VAT and CT600 — £24 per submission.',
   },
   alternates: { canonical: 'https://easytax.vip' },
   verification: { google: 'GZdrRpA0y85OwCBOYVWYrdxur7Jur44AfjMbeH8MliE' },

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
@@ -242,12 +243,7 @@ export default function Terms() {
         </div>
       </main>
 
-      <footer style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FDFCF8', padding: '2rem 0', marginTop: '4rem' }}>
-        <div className="max-w-4xl mx-auto px-6 flex justify-between items-center text-sm" style={{ color: '#9A8F83' }}>
-          <span>© {new Date().getFullYear()} Finance Panda Limited. Built in London.</span>
-          <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy Policy</Link>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

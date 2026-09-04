@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import NotifyMeForm from '@/components/NotifyMeForm';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
+import { nextDeadline, daysUntil, formatDeadlineDate } from '@/lib/mtd-deadlines';
 
 export const revalidate = 3600;
 
@@ -22,6 +24,7 @@ export default async function Home() {
   const session = await auth();
   const ctaHref = session ? '/dashboard' : '/register';
   const t = await getTranslations('home');
+  const locale = await getLocale();
 
   const { data: latestArticles } = await supabase
     .from('tax_articles')
@@ -29,8 +32,14 @@ export default async function Home() {
     .order('published_at', { ascending: false })
     .limit(3);
 
-  const Q1_DEADLINE = new Date('2026-08-05T23:59:59Z');
-  const daysToQ1 = Math.max(0, Math.ceil((Q1_DEADLINE.getTime() - Date.now()) / 86_400_000));
+  // Was a hard-coded `new Date('2026-08-05')`, which meant that from 6 August
+  // 2026 the hero read "0 days until your first MTD ITSA quarterly update" and
+  // the banner advertised a deadline in the past. It was also the wrong date —
+  // the first quarterly deadline is 7 August, as /timetable said all along.
+  // Both now roll forward on their own from the shared calendar.
+  const deadline = nextDeadline();
+  const daysToDeadline = deadline ? daysUntil(deadline.date) : null;
+  const deadlineLabel = deadline ? formatDeadlineDate(deadline.date, locale) : null;
 
   const faqPairs = [
     { q: t('faq.q1Q'), a: t('faq.q1A') },
@@ -76,10 +85,12 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftware) }} />
 
-      {/* ── MTD 2026 announcement bar ── */}
+      {/* ── MTD announcement bar ── */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span> {t('announcement.deadline')} <span style={{ color: '#6B8E6E' }}>{t('announcement.freeCallout')}</span>
+          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span>
+          {deadlineLabel && <> {t('announcement.deadline', { date: deadlineLabel })}</>}{' '}
+          <span style={{ color: '#6B8E6E' }}>{t('announcement.freeCallout')}</span>
         </p>
       </div>
 
@@ -94,10 +105,15 @@ export default async function Home() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
-                  {t('hero.pill', { days: daysToQ1 })}
-                </div>
+                {deadline && daysToDeadline !== null && (
+                  <Link href="/mtd-checker" className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1', textDecoration: 'none' }}>
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                    {daysToDeadline === 0
+                      ? t('hero.pillToday')
+                      : t('hero.pill', { days: daysToDeadline })}
+                    {' · '}{deadlineLabel}
+                  </Link>
+                )}
 
                 <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
                   {t('hero.title1')}<br />
@@ -148,18 +164,33 @@ export default async function Home() {
         <section style={{ borderTop: '1px solid #E8E2DA', borderBottom: '1px solid #E8E2DA', backgroundColor: '#F8F5F0', padding: '1.75rem 0' }}>
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10">
+              {/* The first item used to read "HMRC Recognised". EasyTax is not
+                  on HMRC's recognised list — production approval is still
+                  pending, which /trust says in as many words. The homepage
+                  claiming otherwise contradicted our own trust page and made a
+                  claim we cannot support during an active HMRC review, so it
+                  now states what is true and links to the full status. */}
               {[
-                { Icon: CheckCircle2, label: t('trust.hmrc'),     color: '#059669' },
-                { Icon: ShieldCheck,  label: t('trust.security'), color: '#FF6B35' },
+                { Icon: CheckCircle2, label: t('trust.hmrc'),     color: '#059669', href: '/trust' },
+                { Icon: ShieldCheck,  label: t('trust.security'), color: '#FF6B35', href: '/trust' },
                 { Icon: Clock,        label: t('trust.fast'),     color: '#7C3AED' },
                 { Icon: Sparkles,     label: t('trust.ai'),       color: '#C9963D' },
                 { Icon: Building2,    label: t('trust.company'),  color: '#1C1208' },
-              ].map(({ Icon, label, color }) => (
-                <div key={label} className="flex items-center gap-2">
-                  <Icon size={16} color={color} strokeWidth={2} />
-                  <span className="text-sm font-medium" style={{ color: '#4A4035' }}>{label}</span>
-                </div>
-              ))}
+              ].map(({ Icon, label, color, href }) => {
+                const inner = (
+                  <>
+                    <Icon size={16} color={color} strokeWidth={2} />
+                    <span className="text-sm font-medium" style={{ color: '#4A4035' }}>{label}</span>
+                  </>
+                );
+                return href ? (
+                  <Link key={label} href={href} className="flex items-center gap-2" style={{ textDecoration: 'none' }}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <div key={label} className="flex items-center gap-2">{inner}</div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -399,18 +430,7 @@ export default async function Home() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', color: '#4A4035' }}>
-            {t('footer.tagline')}
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">{t('footer.privacy')}</Link>
-            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">{t('footer.terms')}</Link>
-            <Link href="#" className="hover:text-[#C4622D] transition-colors">{t('footer.twitter')}</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

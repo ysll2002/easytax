@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 
 export const metadata: Metadata = {
   title: 'Self Assessment Software UK — EasyTax, £24 per Filing, MTD ITSA Ready',
-  description: 'EasyTax is HMRC-recognised self assessment software for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC for £20 + VAT per submission. No monthly subscription.',
+  description: 'EasyTax is MTD-ready self assessment software for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC for £20 + VAT per submission. No monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/self-assessment-software' },
   openGraph: {
     title: 'Self Assessment Software UK — EasyTax, £24 per Filing',
-    description: 'HMRC-recognised self assessment software for sole traders. SA100, SA103, SA105, and MTD ITSA quarterly updates — £24 per filing, no subscription.',
+    description: 'MTD-ready self assessment software for sole traders. SA100, SA103, SA105, and MTD ITSA quarterly updates — £24 per filing, no subscription.',
     url: 'https://easytax.vip/self-assessment-software',
     type: 'article',
     locale: 'en_GB',
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Self Assessment Software UK — EasyTax, £24 per Filing',
-    description: 'HMRC-recognised self assessment software. No subscription — pay only when you file.',
+    description: 'MTD-ready self assessment software. No subscription — pay only when you file.',
   },
 };
 
@@ -35,7 +36,7 @@ export default async function SelfAssessmentSoftware() {
     name: 'EasyTax',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
-    description: 'HMRC-recognised self assessment software for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC.',
+    description: 'MTD-ready self assessment software for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC.',
     url: 'https://easytax.vip',
     offers: {
       '@type': 'Offer',
@@ -61,7 +62,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'What is self assessment software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Self assessment software is a tool that lets UK taxpayers file their Self Assessment tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. It typically guides you through the return, calculates your tax liability, and submits the data via HMRC\'s API. HMRC-recognised software like EasyTax can also handle supplementary pages such as SA103 (self-employment) and SA105 (UK property income).',
+          text: 'Self assessment software is a tool that lets UK taxpayers file their Self Assessment tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. It typically guides you through the return, calculates your tax liability, and submits the data via HMRC\'s API. MTD-compatible software like EasyTax can also handle supplementary pages such as SA103 (self-employment) and SA105 (UK property income).',
         },
       },
       {
@@ -151,17 +152,17 @@ export default async function SelfAssessmentSoftware() {
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> HMRC-recognised self assessment software
+              <Sparkles size={12} /> MTD-ready self assessment software
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               Self assessment software for UK sole traders — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>£24 per filing, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>HMRC-recognised self assessment software</strong> built for UK sole traders, the self-employed, and landlords. File your SA100 (plus SA103 and SA105 supplementary pages), quarterly MTD ITSA updates, VAT returns and CT600 directly to HMRC — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription. No card to start.
+              EasyTax is <strong style={{ color: '#1C1208' }}>MTD-ready self assessment software</strong> built for UK sole traders, the self-employed, and landlords. File your SA100 (plus SA103 and SA105 supplementary pages), quarterly MTD ITSA updates, VAT returns and CT600 directly to HMRC — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription. No card to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on HMRC&apos;s MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA103 · SA105 included</span>
             </div>
@@ -436,7 +437,7 @@ export default async function SelfAssessmentSoftware() {
               {[
                 {
                   q: 'What is self assessment software?',
-                  a: 'Self assessment software is a tool that lets UK taxpayers file their SA tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. HMRC-recognised software like EasyTax can also handle supplementary pages such as SA103 (self-employment) and SA105 (property income), and submit quarterly MTD ITSA updates.',
+                  a: 'Self assessment software is a tool that lets UK taxpayers file their SA tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. MTD-compatible software like EasyTax can also handle supplementary pages such as SA103 (self-employment) and SA105 (property income), and submit quarterly MTD ITSA updates.',
                 },
                 {
                   q: 'Do I need self assessment software if I already use HMRC\'s website?',
@@ -486,7 +487,7 @@ export default async function SelfAssessmentSoftware() {
               Self assessment software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>per filing</em>, not per year.
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card required. SA100 · SA103 · SA105 · MTD ITSA. HMRC-recognised.
+              No card required. SA100 · SA103 · SA105 · MTD ITSA. Built on the HMRC MTD API.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
@@ -500,6 +501,8 @@ export default async function SelfAssessmentSoftware() {
         </section>
 
       </main>
+
+      <SiteFooter />
     </div>
   );
 }

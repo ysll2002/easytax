@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 
@@ -87,7 +88,7 @@ export default async function XeroAlternative() {
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>£24 per filing</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No monthly subscription</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on HMRC&apos;s MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
@@ -219,7 +220,7 @@ export default async function XeroAlternative() {
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',
-                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax is HMRC-recognised for MTD ITSA quarterly updates and the final declaration.',
+                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax files MTD ITSA quarterly updates and the final declaration through the official HMRC MTD API. HMRC production approval is pending — see our trust page for live status.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -255,15 +256,7 @@ export default async function XeroAlternative() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div style={{ fontFamily: display, fontSize: '1.1rem', color: '#4A4035' }}>EasyTax Ltd. Built in London.</div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

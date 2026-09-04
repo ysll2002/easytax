@@ -10,16 +10,18 @@
     "logout": "Cerrar sesión",
     "register": "Registrarse",
     "language": "Idioma",
-    "trust": "Confianza y seguridad"
+    "trust": "Confianza y seguridad",
+    "mtdChecker": "Verificador MTD"
   },
   "home": {
     "announcement": {
       "live": "MTD ITSA ya está en vigor.",
-      "deadline": "Actualización Q1 hasta el 5 ago 2026 —",
+      "deadline": "Próxima fecha límite {date} —",
       "freeCallout": "EasyTax lo hace en minutos."
     },
     "hero": {
-      "pill": "Faltan {days} días para tu primera actualización trimestral de MTD ITSA",
+      "pill": "Faltan {days} días para tu próxima fecha límite de HMRC",
+      "pillToday": "Tu próxima fecha límite de HMRC es hoy",
       "title1": "MTD ITSA ya llegó.",
       "title2": "A HMRC cada trimestre",
       "title3": "por £24 cada declaración.",
@@ -27,12 +29,12 @@
       "subtitleEmph": "Sin suscripción — solo pagas cuando presentas.",
       "badgeFree": "Sin suscripción",
       "badgeNoCard": "Sin tarjeta para registrarte",
-      "badgeHmrc": "Reconocido por HMRC",
+      "badgeHmrc": "Construido sobre la API MTD de HMRC",
       "ctaPrimary": "Prepárate para MTD →",
       "ctaSecondary": "Ver qué cubrimos →"
     },
     "trust": {
-      "hmrc": "Reconocido por HMRC",
+      "hmrc": "Sobre la API MTD de HMRC",
       "security": "Seguridad bancaria",
       "fast": "Presenta en 5 minutos",
       "ai": "Con IA",
@@ -115,10 +117,9 @@
       "button": "Empezar a presentar →"
     },
     "footer": {
-      "tagline": "EasyTax Ltd. Hecho en Londres.",
+      "tagline": "Finance Panda Limited, que opera como EasyTax.",
       "privacy": "Privacidad",
-      "terms": "Términos",
-      "twitter": "Twitter"
+      "terms": "Términos"
     },
     "meta": {
       "title": "EasyTax — Software MTD ITSA para autónomos y sociedades del Reino Unido",
@@ -173,7 +174,7 @@
       "passwordHide": "Ocultar",
       "passwordRuleLength": "Al menos 8 caracteres",
       "mustAgreeShort": "Marca primero la casilla de acuerdo a continuación",
-      "trustSignal": "Cifrado bancario · Software reconocido por HMRC · Conforme con RGPD",
+      "trustSignal": "Cifrado bancario · Construido sobre la API MTD de HMRC · Conforme con RGPD",
       "accountCreatedLogin": "Cuenta creada — inicia sesión para continuar",
       "redirecting": "Redirigiendo…"
     }

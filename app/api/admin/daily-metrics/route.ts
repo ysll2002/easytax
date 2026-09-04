@@ -70,19 +70,27 @@ async function uniqueVisitors(sinceIso: string): Promise<number | null> {
 async function launchSubscriberCounts(since7d: string, since30d: string) {
   const { data, error } = await supabase
     .from('launch_subscribers')
-    .select('segment, created_at');
+    .select('segment, source, created_at');
 
   if (error) return null;
 
   const rows = data ?? [];
   const bySegment: Record<string, number> = {};
-  for (const r of rows) bySegment[r.segment ?? 'unspecified'] = (bySegment[r.segment ?? 'unspecified'] ?? 0) + 1;
+  // Which surface captured the address. The capture used to exist only on /,
+  // /pricing and /trust; it now also runs in the site-wide footer and on
+  // /mtd-checker, and this is how we tell which of those actually works.
+  const bySource: Record<string, number> = {};
+  for (const r of rows) {
+    bySegment[r.segment ?? 'unspecified'] = (bySegment[r.segment ?? 'unspecified'] ?? 0) + 1;
+    bySource[r.source ?? 'unknown'] = (bySource[r.source ?? 'unknown'] ?? 0) + 1;
+  }
 
   return {
     total:      rows.length,
     last_7d:    rows.filter(r => r.created_at >= since7d).length,
     last_30d:   rows.filter(r => r.created_at >= since30d).length,
     by_segment: bySegment,
+    by_source:  bySource,
   };
 }
 
@@ -206,7 +214,14 @@ export async function GET(req: NextRequest) {
           trust_viewed:        events7d['trust_viewed']         ?? 0,
           article_cta_click:   events7d['article_cta_click']    ?? 0,
           activation_cta_click:events7d['activation_cta_click'] ?? 0,
+          // /mtd-checker: how many visitors got an answer, and how many of
+          // those went on to do something. `checker_to_subscribe` is the one
+          // that says whether the tool earns its place.
+          checker_completed:   events7d['checker_completed']    ?? 0,
+          checker_cta_click:   events7d['checker_cta_click']    ?? 0,
+          checker_completion:  rate(events7d['checker_completed'] ?? 0, visitors7d),
           visitor_to_register: rate(events7d['register_completed'] ?? 0, visitors7d),
+          visitor_to_subscribe:rate(events7d['launch_subscribed'] ?? 0, visitors7d),
           // Drop-off between opening the register form and completing it.
           register_completion: rate(events7d['register_completed'] ?? 0, events7d['register_started'] ?? 0),
         },
@@ -215,7 +230,9 @@ export async function GET(req: NextRequest) {
           page_views:          events30d['page_view']          ?? 0,
           register_completed:  events30d['register_completed']  ?? 0,
           launch_subscribed:   events30d['launch_subscribed']   ?? 0,
+          checker_completed:   events30d['checker_completed']   ?? 0,
           visitor_to_register: rate(events30d['register_completed'] ?? 0, visitors30d),
+          visitor_to_subscribe:rate(events30d['launch_subscribed'] ?? 0, visitors30d),
         },
       },
 

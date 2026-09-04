@@ -10,16 +10,18 @@
     "logout": "Log out",
     "register": "Register",
     "language": "Language",
-    "trust": "Trust & Security"
+    "trust": "Trust & Security",
+    "mtdChecker": "MTD checker"
   },
   "home": {
     "announcement": {
       "live": "MTD ITSA is live.",
-      "deadline": "Q1 update due 5 Aug 2026 —",
+      "deadline": "Next deadline {date} —",
       "freeCallout": "EasyTax does it in minutes."
     },
     "hero": {
-      "pill": "{days} days until your first MTD ITSA quarterly update",
+      "pill": "{days} days until your next HMRC deadline",
+      "pillToday": "Your next HMRC deadline is today",
       "title1": "MTD ITSA is here.",
       "title2": "File quarterly to HMRC",
       "title3": "for £24 a filing.",
@@ -27,12 +29,12 @@
       "subtitleEmph": "No subscription — you only pay when you file.",
       "badgeFree": "No subscription",
       "badgeNoCard": "No card to sign up",
-      "badgeHmrc": "HMRC-recognised",
+      "badgeHmrc": "Built on HMRC's MTD API",
       "ctaPrimary": "Get MTD-ready →",
       "ctaSecondary": "See what we cover →"
     },
     "trust": {
-      "hmrc": "HMRC Recognised",
+      "hmrc": "Built on HMRC's MTD API",
       "security": "Bank-grade Security",
       "fast": "File in 5 Minutes",
       "ai": "AI-powered",
@@ -115,10 +117,9 @@
       "button": "Start filing →"
     },
     "footer": {
-      "tagline": "EasyTax Ltd. Built in London.",
+      "tagline": "Finance Panda Limited, trading as EasyTax.",
       "privacy": "Privacy",
-      "terms": "Terms",
-      "twitter": "Twitter"
+      "terms": "Terms"
     },
     "meta": {
       "title": "EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies",
@@ -173,7 +174,7 @@
       "passwordHide": "Hide",
       "passwordRuleLength": "At least 8 characters",
       "mustAgreeShort": "Please tick the agreement box below first",
-      "trustSignal": "Bank-grade encryption · HMRC-recognised software · GDPR-compliant",
+      "trustSignal": "Bank-grade encryption · Built on HMRC's MTD API · GDPR-compliant",
       "accountCreatedLogin": "Account created — please log in to continue",
       "redirecting": "Redirecting…"
     }

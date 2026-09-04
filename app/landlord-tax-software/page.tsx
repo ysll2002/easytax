@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 
@@ -57,7 +58,7 @@ export default async function LandlordTaxSoftware() {
   const faqItems = [
     {
       q: 'When does MTD ITSA apply to landlords?',
-      a: 'From 6 April 2026, landlords whose total property income (plus any self-employment income) exceeds £50,000 per year must use MTD-compatible software to file quarterly updates to HMRC. The threshold drops to £30,000 from 6 April 2027. If you are above the threshold, you are already required to file quarterly — EasyTax is HMRC-recognised for this.',
+      a: 'From 6 April 2026, landlords whose total property income (plus any self-employment income) exceeds £50,000 per year must use MTD-compatible software to file quarterly updates to HMRC. The threshold drops to £30,000 from 6 April 2027. If you are above the threshold, you are already required to file quarterly, and EasyTax is built on the official HMRC MTD API to do it.',
     },
     {
       q: 'What is an SA105 and does EasyTax file it?',
@@ -129,7 +130,7 @@ export default async function LandlordTaxSoftware() {
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>HMRC-recognised</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on HMRC&apos;s MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA105 property supplement</span>
             </div>
@@ -151,7 +152,7 @@ export default async function LandlordTaxSoftware() {
               MTD ITSA is mandatory for landlords from April 2026
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Making Tax Digital for Income Tax Self Assessment (MTD ITSA) requires UK landlords and sole traders to send quarterly income and expense updates to HMRC digitally — in addition to the existing annual Self Assessment. If your total property income (plus any self-employment income) exceeds the threshold, you must use HMRC-recognised software like EasyTax.
+              Making Tax Digital for Income Tax Self Assessment (MTD ITSA) requires UK landlords and sole traders to send quarterly income and expense updates to HMRC digitally — in addition to the existing annual Self Assessment. If your total property income (plus any self-employment income) exceeds the threshold, you must use MTD-compatible software like EasyTax.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
@@ -336,17 +337,7 @@ export default async function LandlordTaxSoftware() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div style={{ fontFamily: display, fontSize: '1.1rem', color: '#4A4035' }}>
-            EasyTax Ltd. Built in London.
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

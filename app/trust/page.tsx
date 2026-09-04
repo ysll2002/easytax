@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import SiteFooter from '@/components/SiteFooter';
 import NotifyMeForm from '@/components/NotifyMeForm';
 import TrackEvent from '@/components/TrackEvent';
 import { ShieldCheck, Lock, Landmark, Eye, CreditCard, Building2, XCircle, CheckCircle2 } from 'lucide-react';
@@ -279,18 +280,7 @@ export default function TrustPage() {
         </section>
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '2rem 0' }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-xs" style={{ color: '#9A8F83' }}>
-            © {new Date().getFullYear()} Finance Panda Limited. Built in London.
-          </p>
-          <div className="flex gap-5 text-xs" style={{ color: '#9A8F83' }}>
-            <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy</Link>
-            <Link href="/terms" style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms</Link>
-            <Link href="/pricing" style={{ color: '#9A8F83', textDecoration: 'none' }}>Pricing</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

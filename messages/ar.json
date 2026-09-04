@@ -10,16 +10,18 @@
     "logout": "تسجيل الخروج",
     "register": "إنشاء حساب",
     "language": "اللغة",
-    "trust": "الأمان والثقة"
+    "trust": "الأمان والثقة",
+    "mtdChecker": "أداة فحص MTD"
   },
   "home": {
     "announcement": {
       "live": "MTD ITSA أصبح ساري المفعول.",
-      "deadline": "موعد تحديث Q1 في 5 أغسطس 2026 —",
+      "deadline": "الموعد النهائي القادم {date} —",
       "freeCallout": "EasyTax يقوم بذلك في دقائق."
     },
     "hero": {
-      "pill": "{days} يوماً حتى أول تحديث ربعي MTD ITSA",
+      "pill": "{days} يوماً حتى موعدك النهائي القادم مع HMRC",
+      "pillToday": "موعدك النهائي القادم مع HMRC هو اليوم",
       "title1": "MTD ITSA وصل.",
       "title2": "قدّم إلى HMRC ربعياً",
       "title3": "بـ 24£ لكل إقرار.",
@@ -27,12 +29,12 @@
       "subtitleEmph": "بدون اشتراك — تدفع فقط عند التقديم.",
       "badgeFree": "بدون اشتراك",
       "badgeNoCard": "بدون بطاقة للتسجيل",
-      "badgeHmrc": "معتمد من HMRC",
+      "badgeHmrc": "مبني على واجهة HMRC MTD",
       "ctaPrimary": "استعد لـ MTD ←",
       "ctaSecondary": "اطلع على ما نغطيه ←"
     },
     "trust": {
-      "hmrc": "معتمد HMRC",
+      "hmrc": "مبني على واجهة HMRC MTD",
       "security": "أمان مصرفي",
       "fast": "قدّم في 5 دقائق",
       "ai": "مدعوم بالذكاء الاصطناعي",
@@ -115,10 +117,9 @@
       "button": "ابدأ التقديم ←"
     },
     "footer": {
-      "tagline": "EasyTax Ltd. صُمم في لندن.",
+      "tagline": "شركة Finance Panda Limited، وتعمل باسم EasyTax.",
       "privacy": "الخصوصية",
-      "terms": "الشروط",
-      "twitter": "Twitter"
+      "terms": "الشروط"
     },
     "meta": {
       "title": "EasyTax — برنامج MTD ITSA للعاملين لحسابهم الخاص والشركات المحدودة في المملكة المتحدة",
@@ -173,7 +174,7 @@
       "passwordHide": "إخفاء",
       "passwordRuleLength": "8 أحرف على الأقل",
       "mustAgreeShort": "يرجى تحديد مربع الموافقة أدناه أولاً",
-      "trustSignal": "تشفير بمستوى البنوك · برنامج معتمد من HMRC · متوافق مع GDPR",
+      "trustSignal": "تشفير بمستوى البنوك · مبني على واجهة HMRC MTD · متوافق مع GDPR",
       "accountCreatedLogin": "تم إنشاء الحساب — يرجى تسجيل الدخول للمتابعة",
       "redirecting": "إعادة توجيه…"
     }
