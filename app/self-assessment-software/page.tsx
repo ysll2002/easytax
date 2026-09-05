@@ -93,7 +93,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'Is EasyTax recognised by HMRC for self assessment?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. EasyTax (by Finance Panda Limited) is registered with HMRC as a software supplier. We use the official HMRC Self Assessment and MTD ITSA APIs to submit filings directly. You receive an HMRC acknowledgment and submission ID as proof of receipt.',
+          text: 'Not yet. EasyTax (by Finance Panda Limited) is built directly against HMRC\'s official Self Assessment and MTD ITSA APIs and works fully against HMRC\'s sandbox, but we are still going through HMRC\'s production approval process — which every vendor must complete before it can send live submissions. You can create an account and set everything up today; live filing switches on when approval completes.',
         },
       },
       {
@@ -452,7 +452,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   q: 'Is EasyTax recognised by HMRC for self assessment?',
-                  a: 'Yes. EasyTax (by Finance Panda Limited) is registered with HMRC as a software supplier. We use the official HMRC Self Assessment and MTD ITSA APIs. You receive an HMRC acknowledgment and submission ID as proof.',
+                  a: 'Not yet. EasyTax (by Finance Panda Limited) is built directly against HMRC\'s official Self Assessment and MTD ITSA APIs and works fully against HMRC\'s sandbox, but we are still going through HMRC\'s production approval process — which every vendor must complete before it can send live submissions. You can create an account and set everything up today; live filing switches on when approval completes.',
                 },
                 {
                   q: 'What is MTD ITSA and how does it affect my self assessment?',

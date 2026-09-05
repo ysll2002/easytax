@@ -4,10 +4,16 @@ name: Deploy
 # staging.easytax.vip at the result. Production is manual only: run this
 # workflow from the Actions tab with target=production.
 #
-# Note: production deploys the `staging` branch by default, not `main`. That
-# matches the documented manual flow in CLAUDE.md, where `vercel deploy --prod`
-# ships the working directory (which is `staging`) and `main` is only synced
-# afterwards to record what went live.
+# Production deploys `main` and nothing else. The `guard` step below hard-fails
+# any other ref, so "deploy this branch straight to prod" is not reachable even
+# by mistake.
+#
+# Why the guard exists: on 2026-09-05 production was found to be running an
+# unmerged `claude/*` branch that was two commits ahead of both `main` and
+# `staging`. Deploying `staging` at that moment would have silently deleted a
+# live page. The rule that prevents a recurrence is one-directional — everything
+# reaches production through `main` — and a rule that is only written down in
+# CLAUDE.md is one an automated run can talk itself out of. This one is enforced.
 
 on:
   push:
@@ -21,7 +27,7 @@ on:
         default: preview
         required: true
       ref:
-        description: Branch or SHA to deploy
+        description: Branch or SHA to deploy (production ignores this and always deploys main)
         type: string
         default: staging
         required: true
@@ -128,9 +134,22 @@ jobs:
       name: production
       url: https://easytax.vip
     steps:
+      # Production ships `main`, whatever the dispatcher typed. Failing loudly
+      # beats silently deploying something else, so a non-main ref stops the run
+      # here rather than being quietly rewritten.
+      - name: Refuse to deploy anything but main
+        run: |
+          ref='${{ inputs.ref }}'
+          if [ -n "$ref" ] && [ "$ref" != "main" ]; then
+            echo "::error title=Production deploys main only::Asked to deploy '$ref'. Everything reaches production through main: open a PR into main, merge it, then run this workflow with ref=main."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          # Pinned, not ${{ inputs.ref }} — the guard above has already
+          # established that the only acceptable value is main.
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -173,8 +192,9 @@ jobs:
             echo "### Deployed to production"
             echo ""
             echo "- https://easytax.vip"
-            echo "- Deployed ref: \`${{ inputs.ref }}\` @ \`${{ github.sha }}\`"
+            echo "- Deployed ref: \`main\` @ \`${{ github.sha }}\`"
             echo "- ${{ steps.deploy.outputs.url }}"
             echo ""
-            echo "Remember to sync \`main\`: \`git checkout main && git merge staging --no-ff && git push origin main\`"
+            echo "\`main\` is what was deployed, so there is nothing to sync afterwards."
+            echo "To bring \`staging\` back in line for review: \`git push origin main:staging\`."
           } >> "$GITHUB_STEP_SUMMARY"
