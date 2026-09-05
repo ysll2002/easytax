@@ -64,18 +64,7 @@ export async function getTotalPages(): Promise<number> {
   return Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
 }
 
-/** Up to `limit` other articles, newest first, excluding the one being read.
- *  Gives every article page outbound internal links so the archive is
- *  crawlable from any entry point rather than only from the index. */
-export async function getRelatedArticles(excludeSlug: string, limit = 3): Promise<ArticleSummary[]> {
-  if (!hasSupabaseEnv()) return [];
-
-  const { data } = await supabase
-    .from('tax_articles')
-    .select('title, slug, excerpt, published_at')
-    .neq('slug', excludeSlug)
-    .order('published_at', { ascending: false })
-    .limit(limit);
-
-  return (data ?? []) as ArticleSummary[];
-}
+// The "up to N other articles" reader that used to live here returned the
+// newest articles regardless of subject. It is superseded by
+// getRelatedByTopic() in ./topic-articles, which prefers articles sharing a
+// topic and falls back to the newest — same guarantee, better links.

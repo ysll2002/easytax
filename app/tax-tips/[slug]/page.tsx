@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Calendar, ChevronLeft } from 'lucide-react';
-import { getRelatedArticles, hasSupabaseEnv } from '../_lib/articles';
+import { hasSupabaseEnv } from '../_lib/articles';
+import { getRelatedByTopic, publishedTopicsForTitle } from '../_lib/topic-articles';
 import ArticleCta from '../_components/ArticleCta';
 
 export const revalidate = 3600;
@@ -51,7 +52,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   if (!article) notFound();
 
-  const related = await getRelatedArticles(slug, 3);
+  const [related, topics] = await Promise.all([
+    getRelatedByTopic(slug, article.title, 3),
+    publishedTopicsForTitle(article.title),
+  ]);
 
   const jsonLdArticle = {
     '@context': 'https://schema.org',
@@ -99,9 +103,40 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             {article.title}
           </h1>
 
-          <p className="text-lg leading-relaxed mb-8 pb-8" style={{ color: '#4A4035', borderBottom: '1px solid #E8E2DA' }}>
+          <p className="text-lg leading-relaxed mb-6" style={{ color: '#4A4035' }}>
             {article.excerpt}
           </p>
+
+          {/* Topic chips. A reader who arrived here from search gets a route to
+              the dozen other guides on the same subject, and the article gains
+              an outbound link to a topically related hub rather than only to
+              the flat, chronological index. */}
+          {topics.length > 0 && (
+            <nav className="mb-8 pb-8" style={{ borderBottom: '1px solid #E8E2DA' }} aria-label="Topics">
+              <ul className="list-none p-0 m-0 flex flex-wrap items-center gap-2">
+                <li className="text-xs mr-1" style={{ color: '#9A8F83' }}>In this topic:</li>
+                {topics.map(t => (
+                  <li key={t.slug}>
+                    <Link
+                      href={`/tax-tips/topics/${t.slug}`}
+                      className="inline-flex items-center rounded-full px-3 text-xs"
+                      style={{
+                        minHeight: 32,
+                        backgroundColor: '#F0EBE1',
+                        border: '1px solid #DDD5C8',
+                        color: '#4A4035',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {t.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
+
+          {topics.length === 0 && <div className="mb-8 pb-8" style={{ borderBottom: '1px solid #E8E2DA' }} />}
 
           <div
             className="prose-article"

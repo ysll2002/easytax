@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ArticleIndex from './_components/ArticleIndex';
 import { getArticlePage } from './_lib/articles';
+import { getPublishedTopics } from './_lib/topic-articles';
 
 export const metadata: Metadata = {
   title: 'Tax Tips & Insights | EasyTax',
@@ -12,6 +13,11 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function TaxTipsPage() {
-  const { articles, total, totalPages } = await getArticlePage(1);
-  return <ArticleIndex articles={articles} page={1} totalPages={totalPages} total={total} />;
+  const [{ articles, total, totalPages }, topics] = await Promise.all([
+    getArticlePage(1),
+    getPublishedTopics(),
+  ]);
+  return (
+    <ArticleIndex articles={articles} page={1} totalPages={totalPages} total={total} topics={topics} />
+  );
 }

@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { ArticleSummary } from '../_lib/articles';
+import type { TopicWithCount } from '../_lib/topic-articles';
+import ArticleCardList from './ArticleCardList';
 
 const display = 'var(--font-display), Playfair Display, Georgia, serif';
 
@@ -88,11 +90,16 @@ export default function ArticleIndex({
   page,
   totalPages,
   total,
+  /** Published topic hubs, shown as chips above the list. Omitted on the
+   *  paginated pages, where the chips would repeat on every page without
+   *  adding a new crawl path. */
+  topics = [],
 }: {
   articles: ArticleSummary[];
   page: number;
   totalPages: number;
   total: number;
+  topics?: TopicWithCount[];
 }) {
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
@@ -135,6 +142,34 @@ export default function ArticleIndex({
               </p>
             </div>
 
+            {topics.length > 0 && (
+              <nav className="mb-10" aria-label="Article topics">
+                <h2 className="text-sm font-semibold mb-3" style={{ color: '#1C1208' }}>
+                  Browse by topic
+                </h2>
+                <ul className="list-none p-0 m-0 flex flex-wrap gap-2">
+                  {topics.map(t => (
+                    <li key={t.slug}>
+                      <Link
+                        href={`/tax-tips/topics/${t.slug}`}
+                        className="inline-flex items-center rounded-full px-4 text-sm"
+                        style={{
+                          minHeight: 44,
+                          backgroundColor: '#F0EBE1',
+                          border: '1px solid #DDD5C8',
+                          color: '#4A4035',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        {t.label}
+                        <span className="ml-2 text-xs" style={{ color: '#9A8F83' }}>{t.count}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
+
             {articles.length === 0 ? (
               <div className="py-20 text-center" style={{ color: '#9A8F83' }}>
                 <p className="text-lg font-medium mb-2">First article coming tomorrow at 8am.</p>
@@ -142,35 +177,7 @@ export default function ArticleIndex({
               </div>
             ) : (
               <>
-                <div className="space-y-4">
-                  {articles.map(a => (
-                    <Link key={a.slug} href={`/tax-tips/${a.slug}`} style={{ textDecoration: 'none' }}>
-                      <div
-                        className="p-5 sm:p-6 rounded-2xl transition-all hover:shadow-md"
-                        style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}
-                      >
-                        <div className="flex items-center gap-1.5 mb-2">
-                          <Calendar size={12} color="#9A8F83" />
-                          <span className="text-xs" style={{ color: '#9A8F83' }}>
-                            {new Date(a.published_at).toLocaleDateString('en-GB', {
-                              day: 'numeric',
-                              month: 'long',
-                              year: 'numeric',
-                            })}
-                          </span>
-                        </div>
-                        <h2
-                          className="font-bold mb-2"
-                          style={{ fontFamily: display, fontSize: '1.1rem', color: '#1C1208', lineHeight: 1.35 }}
-                        >
-                          {a.title}
-                        </h2>
-                        <p className="text-sm leading-relaxed" style={{ color: '#4A4035' }}>{a.excerpt}</p>
-                        <p className="text-sm font-medium mt-3" style={{ color: '#C4622D' }}>Read more →</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                <ArticleCardList articles={articles} />
 
                 <Pagination page={page} totalPages={totalPages} />
               </>

@@ -24,7 +24,9 @@ export default function SiteHeader() {
           <Link href="/pricing"   style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('pricing')}</Link>
           <Link href="/#faq"      style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('faq')}</Link>
           <Link href="/timetable" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('timetable')}</Link>
-          <Link href="/mtd-deadline-checker" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('deadlineChecker')}</Link>
+          {/* The hub rather than a single tool: it links every calculator and
+              keeps the nav from growing an entry per tool. */}
+          <Link href="/tools" style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('tools')}</Link>
           <Link href="/tax-tips"  style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('taxTips')}</Link>
           <Link href="/trust"     style={{ color: '#9A8F83', textDecoration: 'none' }} className="hover:text-[#1C1208] transition-colors">{t('trust')}</Link>
         </nav>
@@ -68,7 +70,7 @@ export default function SiteHeader() {
               { href: '/pricing',   label: t('pricing') },
               { href: '/#faq',      label: t('faq') },
               { href: '/timetable', label: t('timetable') },
-              { href: '/mtd-deadline-checker', label: t('deadlineChecker') },
+              { href: '/tools',     label: t('tools') },
               { href: '/tax-tips',  label: t('taxTips') },
               { href: '/trust',     label: t('trust') },
             ].map(item => (

@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { PAGE_SIZE, hasSupabaseEnv } from './tax-tips/_lib/articles';
+import { getPublishedTopics } from './tax-tips/_lib/topic-articles';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';
@@ -11,7 +12,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // prerender, so the branch still ships a preview URL with the static pages.
   // Shared with the Tax Tips readers so the two checks cannot drift apart.
   let articleUrls: MetadataRoute.Sitemap = [];
+  let topicUrls: MetadataRoute.Sitemap = [];
   if (hasSupabaseEnv()) {
+    // Only the hubs that actually publish (see MIN_ARTICLES_PER_TOPIC) — a
+    // sitemap entry for a topic that renders no articles is a thin page we
+    // would be inviting a crawler to index.
+    topicUrls = (await getPublishedTopics()).map(t => ({
+      url: `${base}/tax-tips/topics/${t.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }));
+
     const { data: articles } = await supabase
       .from('tax_articles')
       .select('slug, published_at')
@@ -42,7 +54,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: base,                                lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
     { url: `${base}/pricing`,                   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/mtd-software`,              lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    // Free tools. The hub and its three calculators are the pages most likely
+    // to earn links from outside, so they sit at the top of the priority band.
+    { url: `${base}/tools`,                     lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
     { url: `${base}/mtd-deadline-checker`,      lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
+    { url: `${base}/self-assessment-penalty-calculator`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${base}/payments-on-account-calculator`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/self-assessment-software`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/landlord-tax-software`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/bokio-alternative`,         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
@@ -57,10 +74,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/trust`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/timetable`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/tax-tips`,                  lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
+    { url: `${base}/tax-tips/topics`,           lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${base}/register`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/login`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
     { url: `${base}/privacy`,                   lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
     { url: `${base}/terms`,                     lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
+    ...topicUrls,
     ...articleUrls,
   ];
 }

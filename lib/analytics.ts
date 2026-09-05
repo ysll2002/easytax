@@ -30,6 +30,12 @@ export const EVENTS = {
   articleCtaClick:     'article_cta_click',
   checkerStarted:      'checker_started',
   checkerCompleted:    'checker_completed',
+  // Free tools. The specific tool travels in props.tool, not in the name.
+  toolsHubViewed:      'tools_hub_viewed',
+  toolStarted:         'tool_started',
+  toolCompleted:       'tool_completed',
+  toolCtaClick:        'tool_cta_click',
+  topicHubViewed:      'topic_hub_viewed',
 } as const;
 
 let warned = false;

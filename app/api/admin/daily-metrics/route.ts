@@ -96,6 +96,8 @@ async function trafficBreakdown(sinceIso: string) {
     'checker_completed',
     'activation_cta_click',
     'article_cta_click',
+    'tool_completed',
+    'tool_cta_click',
   ]);
 
   /** Bare host, so utm-tagged and deep-linked referrals from the same site
@@ -155,15 +157,115 @@ async function trafficBreakdown(sinceIso: string) {
   return { by_path: byPath, by_channel: byChannel, pages_with_no_traffic: silent };
 }
 
+/** The free tools, keyed by the `tool` prop their events carry. The page path
+ *  is what page_view records; the key is what tool_started / tool_completed
+ *  record, and the two have to be joined in toolFunnel() to get a funnel per
+ *  tool. Declared above MARKETING_PAGES, which spreads TOOL_PAGES. */
+const TOOLS: { key: string; path: string }[] = [
+  { key: 'mtd_deadline',        path: '/mtd-deadline-checker' },
+  { key: 'sa_penalty',          path: '/self-assessment-penalty-calculator' },
+  { key: 'payments_on_account', path: '/payments-on-account-calculator' },
+];
+
+const TOOL_PAGES = ['/tools', ...TOOLS.map(t => t.path)];
+
 /** Public marketing routes, so the breakdown can name the ones drawing zero
  *  traffic rather than silently omitting them. Keep in step with app/sitemap.ts. */
 const MARKETING_PAGES = [
-  '/', '/pricing', '/mtd-software', '/mtd-deadline-checker', '/self-assessment-software',
-  '/landlord-tax-software', '/timetable', '/tax-tips', '/trust',
+  '/', '/pricing', '/mtd-software', '/self-assessment-software',
+  '/landlord-tax-software', '/timetable', '/tax-tips', '/tax-tips/topics', '/trust',
+  ...TOOL_PAGES,
   '/bokio-alternative', '/coconut-alternative', '/crunch-alternative', '/freeagent-alternative',
   '/kashflow-alternative', '/quickbooks-alternative', '/sage-alternative', '/taxscouts-alternative',
   '/xero-alternative',
 ];
+
+/**
+ * Per-tool funnel: page view -> engaged with the form -> got an answer -> hit
+ * a CTA. Aggregate event counts cannot answer "is the penalty calculator
+ * pulling its weight?", which is the question each new tool has to earn its
+ * place against.
+ *
+ * The deadline checker predates the generic tool events and still emits
+ * `checker_started` / `checker_completed`, so both spellings are folded in
+ * here rather than rewriting a shipped, working component.
+ */
+async function toolFunnel(sinceIso: string) {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('name, path, anon_id, props')
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return null;
+
+  const blank = () => ({ views: new Set<string>(), page_views: 0, started: 0, completed: 0, cta_clicks: 0 });
+  const byTool = new Map(TOOLS.map(t => [t.key, blank()]));
+  const pathToKey = new Map(TOOLS.map(t => [t.path, t.key]));
+
+  let hubViews = 0;
+  const topicViews = new Map<string, number>();
+
+  for (const row of data ?? []) {
+    const props = (row.props ?? {}) as { env?: string; tool?: string; topic?: string };
+    if (props.env !== 'production') continue;
+
+    if (row.name === 'page_view') {
+      const key = row.path ? pathToKey.get(row.path) : undefined;
+      if (key) {
+        const e = byTool.get(key)!;
+        e.page_views += 1;
+        if (row.anon_id) e.views.add(row.anon_id);
+      }
+      continue;
+    }
+
+    if (row.name === 'tools_hub_viewed') { hubViews += 1; continue; }
+
+    if (row.name === 'topic_hub_viewed') {
+      const t = props.topic ?? '(unknown)';
+      topicViews.set(t, (topicViews.get(t) ?? 0) + 1);
+      continue;
+    }
+
+    // The deadline checker's original event names carry no `tool` prop.
+    const key =
+      props.tool ??
+      (row.name === 'checker_started' || row.name === 'checker_completed' ? 'mtd_deadline' : undefined);
+    const entry = key ? byTool.get(key) : undefined;
+    if (!entry) continue;
+
+    if (row.name === 'tool_started'   || row.name === 'checker_started')   entry.started    += 1;
+    if (row.name === 'tool_completed' || row.name === 'checker_completed') entry.completed  += 1;
+    if (row.name === 'tool_cta_click')                                     entry.cta_clicks += 1;
+  }
+
+  const ratio = (num: number, den: number) => (den > 0 ? +(num / den).toFixed(3) : null);
+
+  return {
+    hub_views: hubViews,
+    by_tool: TOOLS.map(t => {
+      const e = byTool.get(t.key)!;
+      return {
+        tool:            t.key,
+        path:            t.path,
+        page_views:      e.page_views,
+        unique_visitors: e.views.size,
+        started:         e.started,
+        completed:       e.completed,
+        cta_clicks:      e.cta_clicks,
+        // Did people engage with the form at all, and did they get an answer?
+        start_rate:      ratio(e.started, e.views.size),
+        completion_rate: ratio(e.completed, e.started),
+        // The number that decides whether a free tool is worth keeping.
+        cta_rate:        ratio(e.cta_clicks, e.completed),
+      };
+    }),
+    topic_hub_views: [...topicViews.entries()]
+      .map(([topic, views]) => ({ topic, views }))
+      .sort((a, b) => b.views - a.views),
+  };
+}
 
 async function launchSubscriberCounts(since7d: string, since30d: string) {
   const { data, error } = await supabase
@@ -198,6 +300,7 @@ export async function GET(req: NextRequest) {
   const since24h = new Date(now.getTime() - 24  * 60 * 60 * 1000).toISOString();
   const since7d  = new Date(now.getTime() - 7   * 24 * 60 * 60 * 1000).toISOString();
   const since30d = new Date(now.getTime() - 30  * 24 * 60 * 60 * 1000).toISOString();
+  const sincePrev14d = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString();
 
   try {
     const [
@@ -242,16 +345,30 @@ export async function GET(req: NextRequest) {
     // Behavioural funnel. All of these degrade to empty/null when the
     // 20260903 migration has not been applied, so the endpoint never 500s
     // just because instrumentation is not live yet.
-    const [events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d] =
-      await Promise.all([
-        eventCounts(since7d),
-        eventCounts(since30d),
-        uniqueVisitors(since7d),
-        uniqueVisitors(since30d),
-        launchSubscriberCounts(since7d, since30d),
-        trafficBreakdown(since7d),
-        trafficBreakdown(since30d),
-      ]);
+    const [
+      events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
+      tools7d, tools30d, eventsPrev7d, visitorsPrev7d,
+    ] = await Promise.all([
+      eventCounts(since7d),
+      eventCounts(since30d),
+      uniqueVisitors(since7d),
+      uniqueVisitors(since30d),
+      launchSubscriberCounts(since7d, since30d),
+      trafficBreakdown(since7d),
+      trafficBreakdown(since30d),
+      toolFunnel(since7d),
+      toolFunnel(since30d),
+      // The 7 days before last, so a week-on-week read is possible without
+      // having stored a snapshot. Both windows are computed the same way, so
+      // the comparison is like for like.
+      eventCounts(sincePrev14d),
+      uniqueVisitors(sincePrev14d),
+    ]);
+
+    // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
+    // figures above actually cover 14 days. Subtracting the last 7 leaves the
+    // 7 before it.
+    const prev7d = (name: string) => (eventsPrev7d[name] ?? 0) - (events7d[name] ?? 0);
 
     const instrumented = visitors7d !== null;
     const rate = (num: number, den: number | null) =>
@@ -326,6 +443,26 @@ export async function GET(req: NextRequest) {
           launch_subscribed:   events30d['launch_subscribed']   ?? 0,
           visitor_to_register: rate(events30d['register_completed'] ?? 0, visitors30d),
         },
+
+        // The 7 days before last, for a week-on-week read without a stored
+        // snapshot. These are event counts, which subtract cleanly; unique
+        // visitors do not, so the 14-day figure is reported as itself rather
+        // than differenced.
+        previous_7d: {
+          page_views:         prev7d('page_view'),
+          register_completed: prev7d('register_completed'),
+          launch_subscribed:  prev7d('launch_subscribed'),
+          tool_completed:     prev7d('tool_completed'),
+          unique_visitors_last_14d: visitorsPrev7d,
+        },
+      },
+
+      // Free tools, one funnel each: page view -> engaged -> got an answer ->
+      // clicked through. This is what decides whether a tool earned its place;
+      // `tools.by_tool[].cta_rate` is the number to watch after a week.
+      tools: {
+        last_7d:  tools7d,
+        last_30d: tools30d,
       },
 
       // Launch waitlist — the addressable pipeline to convert on the day HMRC
