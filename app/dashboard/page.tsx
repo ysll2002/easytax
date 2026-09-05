@@ -9,17 +9,28 @@ import ActivationChecklist from '@/components/ActivationChecklist';
  *  connected": a failed lookup should show an extra nudge, never blank the
  *  dashboard. */
 async function getActivationState(userId: string | undefined) {
-  if (!userId) return { hmrcConnected: false, bankConnected: false };
+  const disconnected = { hmrcConnected: false, bankConnected: false };
+  if (!userId) return disconnected;
 
-  const [hmrc, bank] = await Promise.all([
-    supabase.from('hmrc_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
-    supabase.from('bank_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
-  ]);
+  // The try/catch is the part that makes the comment above true. Supabase
+  // reports a failed *query* in the returned `error`, but supabaseAdmin also
+  // *throws* when the credentials are absent entirely (see lib/supabase-admin),
+  // and an unhandled throw here takes the whole dashboard down with a
+  // server-side exception rather than showing the setup nudge.
+  try {
+    const [hmrc, bank] = await Promise.all([
+      supabase.from('hmrc_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
+      supabase.from('bank_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
+    ]);
 
-  return {
-    hmrcConnected: (hmrc.count ?? 0) > 0,
-    bankConnected: (bank.count ?? 0) > 0,
-  };
+    return {
+      hmrcConnected: (hmrc.count ?? 0) > 0,
+      bankConnected: (bank.count ?? 0) > 0,
+    };
+  } catch (err) {
+    console.error('[dashboard] activation lookup failed', err);
+    return disconnected;
+  }
 }
 
 export default async function DashboardHome() {
