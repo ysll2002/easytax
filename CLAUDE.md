@@ -3,50 +3,54 @@
 ## Deployment Rules
 
 **环境说明：**
-- `staging.easytax.vip` — 预览/测试环境，对应 GitHub `staging` 分支
-- `easytax.vip` — 生产环境，有真实用户，对应 GitHub `main` 分支
-- 本地代码克隆在 `/tmp/easytax`，工作分支为 `staging`
+- `easytax.vip` — 生产环境，有真实用户。**只从 GitHub `main` 分支部署，没有例外。**
+- `staging.easytax.vip` — 预览/测试环境，跟随 GitHub `staging` 分支（每次 push 自动部署）
+- 本地代码克隆在 `/tmp/easytax`
 
-**允许直接上线到 production，无需等待用户确认。** staging 预览是可选步骤，可跳过。
+**唯一的上线路径：`分支 → PR → main → production`**
 
-**标准部署流程：**
-1. 切到 staging 之后、动手改代码之前，必须先运行：
+`main` 是生产环境的唯一真相来源。任何代码要上线，必须先通过 PR 合并进 `main`，再从 `main` 部署。
+
+**标准流程：**
+1. 从最新的 `main` 切出工作分支：
    ```
-   git fetch origin && git log staging..origin/main --oneline
+   git fetch origin && git checkout -b <分支名> origin/main
    ```
-   只要这条命令有输出，说明 main 比 staging 多了 commit（即生产已经领先于 staging），**必须先把 main merge 进 staging 并解决冲突**才能继续：
+2. 改代码，本地验证（**构建必须通过**）：
    ```
-   git merge origin/main
+   npx tsc --noEmit && npm run build
    ```
-   原因：`vercel deploy --prod` 部署的是本地工作目录的代码，不是 main 分支。如果 staging 落后于 main 就直接上 prod，会把生产回退到旧版本，丢失功能。这条检查是防止回退的正确性保障，**任何时候都不得跳过**（与是否需要用户确认无关）。
-2. 修改代码后，commit 并 push 到 `staging` 分支：
+3. commit 并 push 到你自己的分支（**不要直接 push 到 main 或 staging**）：
    ```
-   git add -A
-   git commit -m "..."
-   git push origin staging
+   git push -u origin <分支名>
    ```
-3. （可选）运行预览部署并更新 staging 域名，先自查再上线：
+4. （可选）需要在 staging 域名上人工验收时，用 GitHub Actions 的 Deploy workflow，
+   `target=preview`、`ref=<你的分支>`，它会部署预览并把 staging.easytax.vip 指过去。
+5. 开 PR 合并进 `main`。
+6. 从 `main` 部署 production —— 在 Actions 里跑 Deploy workflow，`target=production`、`ref=main`。
+   workflow 里有硬性校验：**ref 不是 `main` 就直接失败**，不会部署。
+7. 让 staging 分支跟上（可选，只是为了让预览环境和线上一致）：
    ```
-   vercel deploy --scope lilingabriel-5465s-projects --yes
-   vercel alias set <预览URL> staging.easytax.vip --scope lilingabriel-5465s-projects
-   ```
-4. 直接部署到 production（无需等待用户确认）：
-   ```
-   vercel deploy --prod --scope lilingabriel-5465s-projects --yes
-   ```
-5. 上线后把 staging 同步回 main，让 git 历史和生产对齐：
-   ```
-   git checkout main && git merge staging --no-ff && git push origin main && git checkout staging
+   git push origin main:staging
    ```
 
 **代码提交规范：**
-- commit message 必须包含 `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
 - 使用语义化前缀：`feat:` / `fix:` / `revert:` / `docs:`
+- commit message 结尾带 `Co-Authored-By:` 署名（用实际执行的模型，不要写死某个版本号）
 
 **严格禁止：**
+- **不得绕过 PR 直接 push 到 `main`**
+- **不得从 `main` 以外的任何分支部署 production**（包括 `staging`、`claude/*`、`agent/*`）
 - 不得跳过 `--scope lilingabriel-5465s-projects` 参数，否则部署到错误项目
-- 不得跳过流程第 1 步的 staging/main 落后检查，否则可能把生产回退到旧版本
 - 不得在明知有失败的构建或未通过的测试时上线
+
+**为什么是这套规则（2026-09-05 的教训）：**
+当时 production 上跑的是一个**没有合并的 `claude/*` 分支**，比 `main` 和 `staging` 都多 2 个 commit。
+那一刻只要有人把 `staging` 发到 prod，就会静默删掉一个线上页面。
+根因是「部署的是任意 ref」而不是「部署 main」——旧流程里 `vercel deploy --prod` 发的是本地工作目录，
+GitHub Actions 发的是传进去的 ref，两者都可以是任何分支，于是 git 历史和线上长期对不上。
+现在方向是单向的：所有东西都经 `main` 进入生产，并且这条规则由 workflow 强制执行，
+而不是只写在文档里——只写在文档里的规则，自动化跑起来是会给自己找理由绕过去的。
 
 **重要背景：**
 - 如果 `/tmp/easytax` 目录丢失（例如重启），需重新克隆：`git clone https://github.com/ysll2002/easytax /tmp/easytax && cd /tmp/easytax && git checkout staging`

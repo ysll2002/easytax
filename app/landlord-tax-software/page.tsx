@@ -339,7 +339,7 @@ export default async function LandlordTaxSoftware() {
       <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div style={{ fontFamily: display, fontSize: '1.1rem', color: '#4A4035' }}>
-            EasyTax Ltd. Built in London.
+            Finance Panda Limited. Built in London.
           </div>
           <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
             <Link href="/privacy">Privacy</Link>
