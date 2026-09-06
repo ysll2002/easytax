@@ -287,6 +287,46 @@ async function launchSubscriberCounts(since7d: string, since30d: string) {
   };
 }
 
+/** How much production data the event table actually holds.
+ *
+ *  This exists because the `last_7d` / `last_30d` labels below are a trap. They
+ *  are computed as "since now minus N days", but `analytics_events` only began
+ *  recording on 2026-09-03 — so on 2026-09-06 all three windows returned the
+ *  same numbers, and a 2.7-day figure was read and reported as a 30-day one.
+ *  The labels were accurate about the query and silent about the data, which is
+ *  the kind of number that gets believed.
+ *
+ *  Reporting the real window makes the truncation impossible to miss. Note this
+ *  measures *this* table only — signups, HMRC connections and filings come from
+ *  tables with full history and are not affected. */
+async function dataWindow() {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('created_at')
+    .eq('props->>env', 'production')
+    .order('created_at', { ascending: true })
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    return { instrumented_since: null, days_of_data: 0, warning: 'No production events recorded yet.' };
+  }
+
+  const earliest = data[0].created_at as string;
+  const days = (Date.now() - new Date(earliest).getTime()) / 86_400_000;
+
+  return {
+    instrumented_since: earliest,
+    days_of_data: Math.round(days * 100) / 100,
+    warning:
+      days < 30
+        ? `Event tracking started ${days.toFixed(1)} days ago. Every window below that is longer ` +
+          `— last_7d, last_30d, previous_7d, and the pages_with_no_traffic lists — is truncated to ` +
+          `those ${days.toFixed(1)} days. "No traffic in 30 days" here means "no traffic in ` +
+          `${days.toFixed(1)} days". Compare against GA only over a matching range.`
+        : null,
+  };
+}
+
 /** The editorial review queue and the stored snapshot count.
  *
  *  Both are what the weekly review reads to judge F1 and F5, and both live
@@ -368,7 +408,7 @@ export async function GET(req: NextRequest) {
     // just because instrumentation is not live yet.
     const [
       events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
-      tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial,
+      tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window,
     ] = await Promise.all([
       eventCounts(since7d),
       eventCounts(since30d),
@@ -385,6 +425,7 @@ export async function GET(req: NextRequest) {
       eventCounts(sincePrev14d),
       uniqueVisitors(sincePrev14d),
       editorialState(since7d),
+      dataWindow(),
     ]);
 
     // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
