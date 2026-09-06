@@ -129,8 +129,12 @@ export default function ArticleIndex({
                 <em style={{ color: '#C4622D', fontStyle: 'italic' }}>about the tax.</em>
               </h1>
               <p style={{ color: '#9A8F83', fontSize: '1.05rem', maxWidth: '520px' }}>
-                Practical UK tax guidance for freelancers and self-employed professionals — a new
-                article every morning.
+                Practical UK tax guidance for freelancers and self-employed professionals —
+                AI-drafted from HMRC guidance, checked by a person before it goes up.{' '}
+                <Link href="/editorial-standards" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                  How we write these
+                </Link>
+                .
                 {total > 0 && (
                   <>
                     {' '}

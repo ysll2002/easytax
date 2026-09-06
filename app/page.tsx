@@ -90,10 +90,17 @@ export default async function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftware) }} />
 
-      {/* ── MTD 2026 announcement bar ── */}
+      {/* ── MTD announcement bar ──
+          The date here used to be hardcoded as "Q1 update due 5 Aug 2026". It
+          was both wrong (the statutory date is the 7th, per lib/mtd-dates.ts)
+          and, by September, in the past — a tax product showing a stale
+          statutory deadline on its homepage. It now comes from the same
+          computed source as the hero pill, so it cannot drift again. */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span> {t('announcement.deadline')} <span style={{ color: '#6B8E6E' }}>{t('announcement.freeCallout')}</span>
+          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span>{' '}
+          {nextDeadline && <>{t('announcement.nextUpdate', { date: nextDeadline.deadlineLabel })} </>}
+          <span style={{ color: '#6B8E6E' }}>{t('announcement.status')}</span>
         </p>
       </div>
 

@@ -1,5 +1,6 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv, type ArticleSummary } from './articles';
+import { selectPublished } from './review';
 import {
   TOPICS,
   MIN_ARTICLES_PER_TOPIC,
@@ -16,10 +17,14 @@ async function allArticles(): Promise<ArticleSummary[]> {
   // Same degradation as the rest of the Tax Tips readers: preview builds have
   // no Supabase credentials, and an empty archive must not fail the build.
   if (!hasSupabaseEnv()) return [];
-  const { data } = await supabase
-    .from('tax_articles')
-    .select('title, slug, excerpt, published_at')
-    .order('published_at', { ascending: false });
+  // Drafts must not reach the hubs either: a topic hub that counts unreviewed
+  // articles towards MIN_ARTICLES_PER_TOPIC would publish a hub whose links
+  // 404, and the on-article chips are built from the same list.
+  const { data } = await selectPublished(gated => {
+    const q = supabase.from('tax_articles').select('title, slug, excerpt, published_at');
+    return (gated ? q.eq('review_status', 'published') : q)
+      .order('published_at', { ascending: false });
+  });
   return (data ?? []) as ArticleSummary[];
 }
 

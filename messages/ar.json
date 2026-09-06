@@ -16,9 +16,9 @@
   },
   "home": {
     "announcement": {
-      "live": "MTD ITSA أصبح ساري المفعول.",
-      "deadline": "موعد تحديث Q1 في 5 أغسطس 2026 —",
-      "freeCallout": "EasyTax يقوم بذلك في دقائق."
+      "live": "بدأ نظام Making Tax Digital.",
+      "nextUpdate": "الإقرار الربعي التالي: {date}.",
+      "status": "أدوات المواعيد مجانية الآن — وسيُفتح التقديم عند موافقة HMRC."
     },
     "hero": {
       "pill": "التحديث الربعي التالي لـ MTD ITSA: {date} — متبقٍ {days} يوماً",
@@ -35,9 +35,9 @@
     },
     "trust": {
       "hmrc": "واجهة HMRC MTD",
-      "security": "أمان مصرفي",
-      "fast": "قدّم في 5 دقائق",
-      "ai": "مدعوم بالذكاء الاصطناعي",
+      "security": "وصول بنكي للقراءة فقط",
+      "fast": "تسجيل ICO رقم ZA540758",
+      "ai": "Finance Panda Limited",
       "company": "الشركات المحدودة"
     },
     "services": {

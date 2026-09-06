@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { trackClient } from '@/components/PageViewTracker';
+import DeadlineScheduleForm from '@/components/DeadlineScheduleForm';
 
 // Conversion path for article traffic.
 //
@@ -26,30 +27,37 @@ export default function ArticleCta({ slug }: { slug: string }) {
           marginBottom: '0.5rem',
         }}
       >
-        Filing this yourself?
+        When does this apply to you?
       </p>
-      <p className="text-sm mb-4" style={{ color: '#4A4035', lineHeight: 1.65 }}>
-        EasyTax sends MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600 straight to
-        HMRC. £20 + VAT per submission, no monthly subscription, and no card to create an account.
+      <p className="text-sm mb-5" style={{ color: '#4A4035', lineHeight: 1.65 }}>
+        Making Tax Digital replaces one annual return with four quarterly updates and a final
+        declaration. Find out which tax year that starts for you, and we will send you the dates.
       </p>
 
-      <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+      {/* A reader who arrived from search has a question, not an intention to
+          sign up — and filing is not open yet, so "create a free account" asks
+          them to do something that does nothing for them today. The dates are
+          something we can actually give them now. */}
+      <DeadlineScheduleForm
+        source={`article:${slug}`}
+        heading="Get your MTD deadlines by email"
+        blurb="Enter your qualifying income and we will work out which tax year brings you into MTD, your four quarterly dates and your final declaration date."
+      />
+
+      <div className="flex flex-col sm:flex-row gap-3 sm:items-center mt-5">
         <Link
-          href="/register"
-          onClick={() => trackClient('article_cta_click', { slug, target: 'register' })}
+          href="/tools"
+          onClick={() => trackClient('article_cta_click', { slug, target: 'tools' })}
           className="inline-flex items-center justify-center gap-2"
           style={{
-            backgroundColor: '#C4622D',
-            color: '#FDFCF8',
+            color: '#4A4035',
             textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            padding: '0.75rem 1.5rem',
-            borderRadius: '50px',
+            fontSize: '0.85rem',
+            fontWeight: 500,
             minHeight: '44px',
           }}
         >
-          Create a free account <ArrowRight size={15} />
+          Free tax calculators <ArrowRight size={14} />
         </Link>
 
         <Link

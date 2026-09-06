@@ -16,9 +16,9 @@
   },
   "home": {
     "announcement": {
-      "live": "MTD ITSA が施行されました。",
-      "deadline": "Q1 申告期限は 2026 年 8 月 5 日 ——",
-      "freeCallout": "EasyTax なら数分で対応。"
+      "live": "Making Tax Digital が始まりました。",
+      "nextUpdate": "次回の四半期申告：{date}。",
+      "status": "期限ツールは無料で利用可能 — 申告機能は HMRC の承認後に開始します。"
     },
     "hero": {
       "pill": "次回の MTD ITSA 四半期申告：{date}（あと {days} 日）",
@@ -35,9 +35,9 @@
     },
     "trust": {
       "hmrc": "HMRC MTD API",
-      "security": "銀行レベルのセキュリティ",
-      "fast": "5 分で申告",
-      "ai": "AI 搭載",
+      "security": "銀行口座は読み取り専用",
+      "fast": "ICO 登録番号 ZA540758",
+      "ai": "Finance Panda Limited",
       "company": "法人対応"
     },
     "services": {

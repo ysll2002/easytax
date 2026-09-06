@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { PAGE_SIZE, hasSupabaseEnv } from './tax-tips/_lib/articles';
 import { getPublishedTopics } from './tax-tips/_lib/topic-articles';
+import { selectPublished } from './tax-tips/_lib/review';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';
@@ -24,14 +25,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    const { data: articles } = await supabase
-      .from('tax_articles')
-      .select('slug, published_at')
-      .order('published_at', { ascending: false });
+    // Published only. An article awaiting review is deliberately not indexable,
+    // so inviting a crawler to it would defeat the gate.
+    const { data: articles } = await selectPublished(gated => {
+      const q = supabase.from('tax_articles').select('slug, published_at, reviewed_at');
+      return (gated ? q.eq('review_status', 'published') : q)
+        .order('published_at', { ascending: false });
+    });
 
+    // `lastmod` should be the last time the page's content actually changed.
+    // For a reviewed article that is the review date, which is also the date
+    // shown to the reader — the two must not disagree.
     articleUrls = (articles ?? []).map(a => ({
       url: `${base}/tax-tips/${a.slug}`,
-      lastModified: new Date(a.published_at),
+      lastModified: new Date(a.reviewed_at ?? a.published_at),
       changeFrequency: 'monthly',
       priority: 0.6,
     }));
@@ -72,6 +79,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/xero-alternative`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/taxscouts-alternative`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/trust`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    // Named as the author URL in every article's JSON-LD, so it has to be
+    // crawlable for the authorship claim to resolve to anything.
+    { url: `${base}/editorial-standards`,       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/timetable`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/tax-tips`,                  lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${base}/tax-tips/topics`,           lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },

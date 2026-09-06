@@ -16,9 +16,9 @@
   },
   "home": {
     "announcement": {
-      "live": "MTD ITSA est en vigueur.",
-      "deadline": "Mise à jour T1 due le 5 août 2026 —",
-      "freeCallout": "EasyTax le fait en quelques minutes."
+      "live": "Making Tax Digital a commencé.",
+      "nextUpdate": "Prochaine déclaration trimestrielle : {date}.",
+      "status": "Outils d’échéances gratuits — le dépôt ouvrira dès l’approbation du HMRC."
     },
     "hero": {
       "pill": "Prochaine mise à jour trimestrielle MTD ITSA : {date} — encore {days} jours",
@@ -35,9 +35,9 @@
     },
     "trust": {
       "hmrc": "API MTD de HMRC",
-      "security": "Sécurité bancaire",
-      "fast": "Déclarez en 5 minutes",
-      "ai": "Propulsé par IA",
+      "security": "Accès bancaire en lecture seule",
+      "fast": "Enregistrement ICO ZA540758",
+      "ai": "Finance Panda Limited",
       "company": "Sociétés limitées"
     },
     "services": {

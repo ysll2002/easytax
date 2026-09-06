@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
-import NotifyMeForm from '@/components/NotifyMeForm';
+import DeadlineScheduleForm from '@/components/DeadlineScheduleForm';
 import TrackEvent from '@/components/TrackEvent';
 import { ShieldCheck, Lock, Landmark, Eye, CreditCard, Building2, XCircle, CheckCircle2 } from 'lucide-react';
 
@@ -267,14 +267,26 @@ export default function TrustPage() {
           </div>
         </section>
 
-        {/* ── Launch list ── */}
+        {/* ── Next step ──
+            A third of the visitors we get read this page, and none of them did
+            anything afterwards. It ended on a form offering a message at an
+            unknown future date — nothing you can hold. Someone who has just
+            read how we handle their data has earned something concrete for it,
+            and the same address is still the list we email on approval day. */}
         <section className="pb-16 sm:pb-20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6">
-            <NotifyMeForm
+            <DeadlineScheduleForm
               source="trust"
-              heading="Tell me when filing opens"
-              blurb="We'll email you the day HMRC production approval completes and live submissions are enabled. That's the only reason we'll write — unsubscribe in one click."
+              heading="Something useful, before you trust us with anything"
+              blurb="No account, no card, no bank connection. Tell us your qualifying income and we'll email you your Making Tax Digital dates — and, once, the day HMRC approval completes and filing opens."
             />
+            <p className="text-xs mt-4 text-center" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+              We also publish{' '}
+              <Link href="/editorial-standards" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                how our tax guides are written and checked
+              </Link>
+              , including which ones no one has reviewed yet.
+            </p>
           </div>
         </section>
       </main>

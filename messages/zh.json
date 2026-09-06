@@ -16,9 +16,9 @@
   },
   "home": {
     "announcement": {
-      "live": "MTD ITSA 已经生效。",
-      "deadline": "Q1 季度申报截止 2026 年 8 月 5 日 ——",
-      "freeCallout": "EasyTax 几分钟搞定。"
+      "live": "数字化税务（MTD）已开始。",
+      "nextUpdate": "下一次季度申报：{date}。",
+      "status": "截止日期工具现已免费开放 —— HMRC 批准后即可提交申报。"
     },
     "hero": {
       "pill": "下一次 MTD ITSA 季度申报：{date}，还有 {days} 天",
@@ -35,9 +35,9 @@
     },
     "trust": {
       "hmrc": "HMRC MTD 接口",
-      "security": "银行级安全",
-      "fast": "5 分钟完成申报",
-      "ai": "AI 智能",
+      "security": "只读银行账户权限",
+      "fast": "ICO 注册号 ZA540758",
+      "ai": "Finance Panda Limited",
       "company": "支持有限公司"
     },
     "services": {
