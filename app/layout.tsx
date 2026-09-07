@@ -75,7 +75,17 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   alternates: { canonical: 'https://easytax.vip' },
-  verification: { google: 'GZdrRpA0y85OwCBOYVWYrdxur7Jur44AfjMbeH8MliE' },
+  verification: {
+    google: 'GZdrRpA0y85OwCBOYVWYrdxur7Jur44AfjMbeH8MliE',
+    // Bing is one of only two search referrers the site sees at all, and it is
+    // where IndexNow submissions can be seen landing. Read from the environment
+    // so verifying the property is a Vercel env var rather than a code change
+    // and a deploy: set BING_SITE_VERIFICATION to the content value Bing
+    // Webmaster Tools gives you.
+    ...(process.env.BING_SITE_VERIFICATION
+      ? { other: { 'msvalidate.01': process.env.BING_SITE_VERIFICATION } }
+      : {}),
+  },
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

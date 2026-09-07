@@ -16,9 +16,9 @@
   },
   "home": {
     "announcement": {
-      "live": "MTD ITSA ya está en vigor.",
-      "deadline": "Actualización Q1 hasta el 5 ago 2026 —",
-      "freeCallout": "EasyTax lo hace en minutos."
+      "live": "Making Tax Digital ya ha comenzado.",
+      "nextUpdate": "Próxima declaración trimestral: {date}.",
+      "status": "Herramientas de plazos gratis — la presentación se abrirá cuando HMRC nos apruebe."
     },
     "hero": {
       "pill": "Próxima actualización trimestral de MTD ITSA: {date} — faltan {days} días",
@@ -35,9 +35,9 @@
     },
     "trust": {
       "hmrc": "API MTD de HMRC",
-      "security": "Seguridad bancaria",
-      "fast": "Presenta en 5 minutos",
-      "ai": "Con IA",
+      "security": "Acceso bancario de solo lectura",
+      "fast": "Registro ICO ZA540758",
+      "ai": "Finance Panda Limited",
       "company": "Sociedades limitadas"
     },
     "services": {

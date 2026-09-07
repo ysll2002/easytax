@@ -1,4 +1,5 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { selectPublished } from './review';
 
 // Shared data access for the Tax Tips index and its paginated pages.
 //
@@ -38,11 +39,14 @@ export async function getArticlePage(page: number): Promise<{
 
   const from = (page - 1) * PAGE_SIZE;
 
-  const { data, count } = await supabase
-    .from('tax_articles')
-    .select('title, slug, excerpt, published_at', { count: 'exact' })
-    .order('published_at', { ascending: false })
-    .range(from, from + PAGE_SIZE - 1);
+  const { data, count } = await selectPublished(gated => {
+    const q = supabase
+      .from('tax_articles')
+      .select('title, slug, excerpt, published_at', { count: 'exact' });
+    return (gated ? q.eq('review_status', 'published') : q)
+      .order('published_at', { ascending: false })
+      .range(from, from + PAGE_SIZE - 1);
+  });
 
   const total = count ?? 0;
   return {
@@ -58,9 +62,10 @@ export async function getTotalPages(): Promise<number> {
   // defaults to true.
   if (!hasSupabaseEnv()) return 1;
 
-  const { count } = await supabase
-    .from('tax_articles')
-    .select('slug', { count: 'exact', head: true });
+  const { count } = await selectPublished(gated => {
+    const q = supabase.from('tax_articles').select('slug', { count: 'exact', head: true });
+    return gated ? q.eq('review_status', 'published') : q;
+  });
   return Math.max(1, Math.ceil((count ?? 0) / PAGE_SIZE));
 }
 

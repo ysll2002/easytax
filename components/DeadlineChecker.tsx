@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { CalendarClock, CheckCircle2, Info, ArrowRight } from 'lucide-react';
 import { trackClient } from './PageViewTracker';
+import DeadlineScheduleForm from './DeadlineScheduleForm';
 import {
   quartersForTaxYear,
   finalDeclarationFor,
@@ -158,6 +159,7 @@ function Result({ mandatedFrom, income }: { mandatedFrom: number | null; income:
     const lowest = thresholdForTaxYear(2028);
     return (
       <Panel tone="neutral" icon={<Info size={20} style={{ color: '#4A4035' }} />}
+             income={income}
              title="You are not in MTD for Income Tax — for now">
         <p>
           At {formatGbp(income)} of qualifying income you are below every threshold announced so
@@ -184,6 +186,7 @@ function Result({ mandatedFrom, income }: { mandatedFrom: number | null; income:
     <Panel
       tone="active"
       icon={<CheckCircle2 size={20} style={{ color: '#3F7D5C' }} />}
+      income={income}
       title={
         alreadyStarted
           ? `You are in MTD for Income Tax now (since April ${mandatedFrom})`
@@ -263,11 +266,15 @@ function Panel({
   tone,
   icon,
   title,
+  income,
   children,
 }: {
   tone: 'active' | 'neutral';
   icon: React.ReactNode;
   title: string;
+  /** Carried through to the capture form below the result, so the visitor is
+   *  not asked for a figure they have already given us. */
+  income: number;
   children: React.ReactNode;
 }) {
   return (
@@ -297,28 +304,32 @@ function Panel({
       <div className="text-sm leading-relaxed space-y-3" style={{ color: '#4A4035' }}>
         {children}
       </div>
+      {/* The moment someone finishes the checker is the highest-intent moment
+          on the site: they have just told us their income and been told they
+          have deadlines. Previously we spent it on a link to another page's
+          waitlist. Now they can have the dates in their inbox without leaving,
+          and the income they already typed is carried over rather than asked
+          for again. */}
       <div className="mt-7 pt-6" style={{ borderTop: '1px solid #F0EBE1' }}>
-        <p className="text-sm mb-4" style={{ color: '#4A4035' }}>
+        <DeadlineScheduleForm
+          source="checker"
+          defaultIncome={Math.round(income)}
+          heading="Keep these dates"
+          blurb="We will email you this schedule now, and remind you before each deadline. No account, and one-click unsubscribe."
+        />
+
+        <p className="text-sm mt-5 mb-3" style={{ color: '#4A4035' }}>
           EasyTax files these updates for £20 + VAT each, with no subscription. Our HMRC production
-          access is still being approved, so we cannot take live submissions yet — join the list and
-          we will tell you the day it opens.
+          access is still being approved, so we cannot take live submissions yet — the email above
+          is also how we will tell you the day it opens.
         </p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Link
-            href="/#notify"
-            className="inline-flex items-center justify-center gap-2 px-6 rounded-full text-sm font-semibold"
-            style={{ minHeight: 48, backgroundColor: '#1C1208', color: '#FDFCF8' }}
-          >
-            Tell me when filing opens
-          </Link>
-          <Link
-            href="/timetable"
-            className="inline-flex items-center justify-center gap-2 px-6 rounded-full text-sm font-medium"
-            style={{ minHeight: 48, border: '1px solid #DDD5C8', color: '#4A4035' }}
-          >
-            See the full MTD timetable
-          </Link>
-        </div>
+        <Link
+          href="/timetable"
+          className="inline-flex items-center justify-center gap-2 px-6 rounded-full text-sm font-medium"
+          style={{ minHeight: 48, border: '1px solid #DDD5C8', color: '#4A4035' }}
+        >
+          See the full MTD timetable
+        </Link>
       </div>
     </div>
   );

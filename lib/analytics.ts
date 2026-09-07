@@ -36,6 +36,11 @@ export const EVENTS = {
   toolCompleted:       'tool_completed',
   toolCtaClick:        'tool_cta_click',
   topicHubViewed:      'topic_hub_viewed',
+  editorialViewed:     'editorial_standards_viewed',
+  // Deadline-schedule capture. The address is given for something deliverable
+  // today, so it is counted separately from the plain launch waitlist.
+  scheduleRequested:   'schedule_requested',
+  scheduleSent:        'schedule_sent',
 } as const;
 
 let warned = false;

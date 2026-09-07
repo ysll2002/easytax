@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import TrackEvent from '@/components/TrackEvent';
-import NotifyMeForm from '@/components/NotifyMeForm';
+import DeadlineScheduleForm from '@/components/DeadlineScheduleForm';
 import SiteFooter from '@/components/SiteFooter';
 import { TOOLS } from '@/lib/tools';
 
@@ -173,7 +173,7 @@ export default function ToolsPage() {
         </section>
 
         <section className="mt-12" id="notify">
-          <NotifyMeForm source="tools" />
+          <DeadlineScheduleForm source="tools" />
         </section>
 
         <p className="text-xs leading-relaxed mt-12" style={{ color: '#9A8F83' }}>

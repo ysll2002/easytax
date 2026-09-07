@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { sendArticleReviewEmail } from '@/lib/email';
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -23,7 +24,14 @@ const SEED_TOPICS = [
   'Balance Sheet basics for small UK limited companies: what you need to include',
 ];
 
-async function generateArticle(topic: string): Promise<{ title: string; excerpt: string; content: string }> {
+export type GeneratedSource = { label: string; url?: string };
+
+async function generateArticle(topic: string): Promise<{
+  title: string;
+  excerpt: string;
+  content: string;
+  sources?: GeneratedSource[];
+}> {
   const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
   const msg = await client.messages.create({
@@ -38,17 +46,99 @@ Today is ${today}. Write a practical, informative article about the following to
 
 Make it specific to UK tax rules, accurate, and actionable. Write for the most relevant audience (freelancers/sole traders OR limited company directors, depending on the topic).
 
+Ground every rate, threshold, deadline and legal claim in a source you can name — an HMRC manual or guidance page, or the specific UK statute. If you are not confident a figure is current, say so in the article rather than stating it flatly.
+
 Return ONLY valid JSON (no markdown, no code blocks) in this exact format:
 {
   "title": "A clear, engaging headline (max 80 characters)",
   "excerpt": "2-3 sentence summary of the article",
-  "content": "Full article HTML using only <h2>, <p>, <ul>, <li>, <strong> tags. 500-700 words. Practical and specific."
+  "content": "Full article HTML using only <h2>, <p>, <ul>, <li>, <strong> tags. 500-700 words. Practical and specific.",
+  "sources": [
+    { "label": "Name of the HMRC manual page, guidance page or statute relied on", "url": "https://www.gov.uk/... or https://www.legislation.gov.uk/..." }
+  ]
 }`,
     }],
   });
 
   const raw = (msg.content[0] as { type: string; text: string }).text.trim();
   return JSON.parse(raw);
+}
+
+/** Keeps only well-formed `{label, url?}` entries, capped so a talkative model
+ *  cannot write an unbounded blob into the row. Returns null rather than an
+ *  empty array so the column stays honestly empty when nothing was cited. */
+function normaliseSources(raw: unknown): GeneratedSource[] | null {
+  if (!Array.isArray(raw)) return null;
+  const out: GeneratedSource[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue;
+    const { label, url } = item as { label?: unknown; url?: unknown };
+    if (typeof label !== 'string' || !label.trim()) continue;
+    out.push({
+      label: label.trim().slice(0, 200),
+      ...(typeof url === 'string' && /^https?:\/\//i.test(url) ? { url: url.slice(0, 500) } : {}),
+    });
+    if (out.length === 8) break;
+  }
+  return out.length > 0 ? out : null;
+}
+
+type DraftRow = {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  published_at: string;
+  sources: GeneratedSource[] | null;
+};
+
+/**
+ * Inserts a generated article as a draft.
+ *
+ * Falls back to the pre-review-gate shape if `review_status`/`sources` do not
+ * exist yet — i.e. this code deployed before the 20260906 migration ran. The
+ * fallback publishes immediately, which is exactly what happened before, so
+ * the worst case of a deploy/migration race is a day of the old behaviour
+ * rather than a lost article or a failed cron.
+ */
+async function insertDraft(row: DraftRow): Promise<string | null> {
+  const { error } = await supabase.from('tax_articles').insert({
+    title:         row.title,
+    slug:          row.slug,
+    excerpt:       row.excerpt,
+    content:       row.content,
+    published_at:  row.published_at,
+    review_status: 'draft',
+    sources:       row.sources,
+  });
+
+  if (!error) return null;
+
+  if (error.code === '42703' || error.code === 'PGRST204') {
+    console.warn(
+      '[daily-article] review_status/sources missing — run the 20260906 migration. ' +
+        'Falling back to publishing immediately.',
+    );
+    const { error: legacyError } = await supabase.from('tax_articles').insert({
+      title:        row.title,
+      slug:         row.slug,
+      excerpt:      row.excerpt,
+      content:      row.content,
+      published_at: row.published_at,
+    });
+    return legacyError?.message ?? null;
+  }
+
+  return error.message;
+}
+
+async function notifyReviewQueue(drafts: { title: string; slug: string }[]): Promise<void> {
+  const { count } = await supabase
+    .from('tax_articles')
+    .select('slug', { count: 'exact', head: true })
+    .eq('review_status', 'draft');
+
+  await sendArticleReviewEmail(drafts, count ?? drafts.length);
 }
 
 export async function GET(req: NextRequest) {
@@ -109,18 +199,34 @@ Reply with ONLY the topic sentence, no explanation.`,
       const article = await generateArticle(topics[i]);
       const slug = toSlug(article.title, isSeeding ? new Date(pubDate).toISOString().slice(0, 10) : today);
 
-      const { error } = await supabase.from('tax_articles').insert({
+      const error = await insertDraft({
         title: article.title,
         slug,
         excerpt: article.excerpt,
         content: article.content,
         published_at: pubDate,
+        sources: normaliseSources(article.sources),
       });
 
-      results.push({ topic: topics[i], title: article.title, slug, error: error?.message ?? null });
+      results.push({ topic: topics[i], title: article.title, slug, error });
     }
 
-    return NextResponse.json({ ok: true, generated: results.length, results });
+    const created = results.filter(r => !r.error);
+    if (created.length > 0) {
+      // The drafts are invisible until someone acts on them, so a silent queue
+      // is a queue that never empties. Fire-and-forget: a mail failure must not
+      // fail the cron and lose the generated article.
+      void notifyReviewQueue(created.map(r => ({ title: r.title, slug: r.slug }))).catch(err => {
+        console.error('[daily-article] review notification failed', err);
+      });
+    }
+
+    return NextResponse.json({
+      ok: true,
+      generated: results.length,
+      status: 'draft — awaiting review at /api/admin/article-review',
+      results,
+    });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: msg }, { status: 500 });
