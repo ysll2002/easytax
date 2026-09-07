@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import SiteHeader from '@/components/SiteHeader';
 import Link from 'next/link';
+import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'MTD Deadlines 2026–2028 — Making Tax Digital Timetable',
@@ -208,15 +209,7 @@ export default function TimetablePage() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FDFCF8', padding: '2rem 0', marginTop: '4rem' }}>
-        <div className="max-w-3xl mx-auto px-6 flex justify-between items-center text-sm" style={{ color: '#9A8F83' }}>
-          <span>© {new Date().getFullYear()} Finance Panda Limited, trading as EasyTax.</span>
-          <div className="flex gap-4">
-            <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy</Link>
-            <Link href="/terms"   style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

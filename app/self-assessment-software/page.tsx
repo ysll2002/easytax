@@ -3,6 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
+import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Self Assessment Software UK — EasyTax, £24 per Filing, MTD ITSA Ready',
@@ -500,6 +501,7 @@ export default async function SelfAssessmentSoftware() {
         </section>
 
       </main>
+      <SiteFooter />
     </div>
   );
 }

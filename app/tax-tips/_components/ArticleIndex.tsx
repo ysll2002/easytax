@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { ArticleSummary } from '../_lib/articles';
 import type { TopicWithCount } from '../_lib/topic-articles';
 import ArticleCardList from './ArticleCardList';
+import SiteFooter from '@/components/SiteFooter';
 
 const display = 'var(--font-display), Playfair Display, Georgia, serif';
 
@@ -186,18 +187,7 @@ export default function ArticleIndex({
         </section>
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '2rem 0' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div style={{ fontFamily: display, fontSize: '1rem', color: '#9A8F83' }}>
-            Finance Panda Limited. Built in London.
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#9A8F83' }}>
-            <Link href="/trust" className="hover:text-[#C4622D] transition-colors" style={{ color: '#9A8F83', textDecoration: 'none' }}>Trust</Link>
-            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy</Link>
-            <Link href="/terms" className="hover:text-[#C4622D] transition-colors" style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { trackClient } from '@/components/PageViewTracker';
+import NotifyMeForm from '@/components/NotifyMeForm';
 
 // Conversion path for article traffic.
 //
@@ -66,6 +67,21 @@ export default function ArticleCta({ slug }: { slug: string }) {
         >
           <ShieldCheck size={14} /> How we handle your data
         </Link>
+      </div>
+
+      {/* The lower-commitment ask, offered in the same block as the account
+          one. Filing is not open yet, so "create an account" is the wrong
+          size of request for someone who arrived from a search result and has
+          never heard of us — and the archive is where nearly all of our
+          indexable surface area is. The address is the asset that survives
+          until approval lands. */}
+      <div className="mt-5 pt-5" style={{ borderTop: '1px solid #DDD5C8' }}>
+        <NotifyMeForm
+          source="article"
+          variant="compact"
+          heading="Not filing yet?"
+          blurb="HMRC production approval is still pending. Leave your email and we will tell you the day filing opens — nothing else, unsubscribe in one click."
+        />
       </div>
     </aside>
   );

@@ -125,6 +125,17 @@
     "meta": {
       "title": "EasyTax — Software MTD ITSA para autónomos y sociedades del Reino Unido",
       "description": "Software MTD ITSA para autónomos, arrendadores y sociedades limitadas del Reino Unido. Envía actualizaciones trimestrales a HMRC, presenta Self Assessment, IVA y CT600. £24 por envío, sin suscripción — sin tarjeta para registrarte."
+    },
+    "toolsStrip": {
+      "kicker": "Gratis · sin cuenta",
+      "title1": "Obtén la respuesta",
+      "title2": "antes de registrarte",
+      "subtitle": "Tres calculadoras que funcionan por completo en tu navegador. Nada de lo que escribes se nos envía ni se guarda.",
+      "cta": "Ver todas las herramientas gratuitas",
+      "dMtd": "Averigua si MTD te afecta y cuándo vencen tus declaraciones trimestrales.",
+      "dPenalty": "Desglosa lo que cuesta una declaración fuera de plazo y desde qué fecha corre cada cargo.",
+      "dPoa": "Consulta el pago final más los dos anticipos que HMRC añade encima.",
+      "openTool": "Abrir la calculadora"
     }
   },
   "auth": {
@@ -297,5 +308,27 @@
       "bankTitle": "Conecta tu banco",
       "bankDesc": "Importa transacciones vía Open Banking: solo lectura, nunca podemos mover dinero."
     }
+  },
+  "footer": {
+    "product": "Producto",
+    "tools": "Herramientas gratuitas",
+    "guides": "Guías",
+    "compare": "Comparar",
+    "company": "Empresa",
+    "mtdSoftware": "Software MTD",
+    "saSoftware": "Software de Self Assessment",
+    "landlordSoftware": "Software fiscal para arrendadores",
+    "allTools": "Todas las herramientas",
+    "penaltyCalculator": "Calculadora de sanciones",
+    "poaCalculator": "Calculadora de pagos a cuenta",
+    "browseTopics": "Explorar por tema",
+    "aboutUs": "Sobre nosotros",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "vs": "EasyTax frente a {name}",
+    "tagline": "Finance Panda Limited. Hecho en Londres.",
+    "disclaimer": "EasyTax es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no son asesoramiento fiscal. Nuestro acceso de producción a HMRC sigue en proceso de aprobación.",
+    "notifyHeading": "Presenta el primero",
+    "notifyBlurb": "Te escribiremos el día que se abran las declaraciones MTD; nada más, y puedes darte de baja con un clic."
   }
 }

@@ -3,6 +3,8 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PaymentsOnAccountCalculator from '@/components/PaymentsOnAccountCalculator';
 import { RULES_REVIEWED, HMRC_POA_URL, POA_THRESHOLD } from '@/lib/payments-on-account';
+import SiteFooter from '@/components/SiteFooter';
+import ToolCrossLinks from '@/components/ToolCrossLinks';
 
 export const metadata: Metadata = {
   title: 'Payments on Account Calculator — why your January tax bill is 50% bigger',
@@ -255,7 +257,9 @@ export default function PaymentsOnAccountPage() {
           </Link>
           .
         </p>
+        <ToolCrossLinks current="payments_on_account" />
       </main>
+      <SiteFooter />
     </div>
   );
 }

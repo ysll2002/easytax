@@ -125,6 +125,17 @@
     "meta": {
       "title": "EasyTax — 英国个体户与有限公司的 MTD ITSA 软件",
       "description": "面向英国个体户、房东和有限公司的 MTD ITSA 软件。向 HMRC 季度上报、申报 Self Assessment、VAT 和 CT600。每次提交 £24，无订阅 —— 注册无需信用卡。"
+    },
+    "toolsStrip": {
+      "kicker": "免费 · 无需注册",
+      "title1": "先得到答案",
+      "title2": "再决定是否注册",
+      "subtitle": "三个完全在你浏览器中运行的计算器。你输入的任何内容都不会发送给我们，也不会被保存。",
+      "cta": "查看全部免费工具",
+      "dMtd": "确认 MTD 是否适用于你，以及季度申报的截止日期。",
+      "dPenalty": "逐项列出迟交申报的成本，以及每笔罚款的起算日期。",
+      "dPoa": "查看应补税款，以及 HMRC 额外加收的两笔预缴款。",
+      "openTool": "打开计算器"
     }
   },
   "auth": {
@@ -297,5 +308,27 @@
       "bankTitle": "连接银行账户",
       "bankDesc": "通过 Open Banking 导入交易记录——只读权限，我们无法转移任何资金。"
     }
+  },
+  "footer": {
+    "product": "产品",
+    "tools": "免费工具",
+    "guides": "指南",
+    "compare": "对比",
+    "company": "公司",
+    "mtdSoftware": "MTD 报税软件",
+    "saSoftware": "自评估报税软件",
+    "landlordSoftware": "房东税务软件",
+    "allTools": "全部免费工具",
+    "penaltyCalculator": "罚款计算器",
+    "poaCalculator": "预缴税款计算器",
+    "browseTopics": "按主题浏览",
+    "aboutUs": "关于我们",
+    "privacy": "隐私",
+    "terms": "条款",
+    "vs": "EasyTax 对比 {name}",
+    "tagline": "Finance Panda Limited. 伦敦出品。",
+    "disclaimer": "EasyTax 是 Finance Panda Limited 的产品。免费工具仅提供 HMRC 公开规则的一般信息，不构成税务建议。我们的 HMRC 生产环境接入仍在审批中。",
+    "notifyHeading": "第一时间开始申报",
+    "notifyBlurb": "MTD 申报开放当天我们会发邮件通知你——不发其他内容，一键退订。"
   }
 }

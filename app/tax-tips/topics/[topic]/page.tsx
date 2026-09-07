@@ -6,6 +6,7 @@ import TrackEvent from '@/components/TrackEvent';
 import ArticleCardList from '../../_components/ArticleCardList';
 import { topicBySlug } from '../../_lib/topics';
 import { getArticlesForTopic, getPublishedTopics } from '../../_lib/topic-articles';
+import SiteFooter from '@/components/SiteFooter';
 
 const BASE = 'https://easytax.vip';
 
@@ -158,6 +159,7 @@ export default async function TopicPage({ params }: { params: Promise<Params> })
           </section>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 }
