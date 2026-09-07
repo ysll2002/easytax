@@ -486,6 +486,14 @@ export async function GET(req: NextRequest) {
         note: instrumented
           ? 'production traffic only; visitors are unique anon_id values'
           : 'analytics_events table missing — run supabase/migrations/20260903_growth_instrumentation.sql',
+        // How much data the windows below actually cover. dataWindow() was
+        // being computed and then never emitted, so `funnel.data_window` did
+        // not exist in the payload — which meant daysOfData() in
+        // lib/growth-targets.ts fell through to its default of 7 and divided a
+        // four-day count by seven, under-reporting every rate by ~43%. That is
+        // the exact bug this block was written to prevent, so it has to be in
+        // the response, not just in the function list.
+        data_window: window,
         // Which pages and channels actually produce visitors and actions.
         // `conversions` counts register/launch-list/checker/CTA events fired
         // on that page. `pages_with_no_traffic` lists marketing routes that
