@@ -20,11 +20,16 @@ export default function NotifyMeForm({
   source,
   heading = 'Be first to file',
   blurb = 'MTD ITSA filing opens as soon as HMRC signs off our production access. Leave your email and we will tell you the day it goes live — no other mail, unsubscribe in one click.',
+  variant = 'card',
 }: {
   /** Which page captured the address, e.g. 'home' or 'pricing'. */
   source: string;
   heading?: string;
   blurb?: string;
+  /** `card` is the full block with the segment select. `compact` drops the
+   *  select and stacks to a single row — it is what goes in the footer and
+   *  mid-article, where the ask has to be small enough not to interrupt. */
+  variant?: 'card' | 'compact';
 }) {
   const [email, setEmail]     = useState('');
   const [segment, setSegment] = useState('');
@@ -76,6 +81,76 @@ export default function NotifyMeForm({
       setMessage('Network error. Please try again.');
     }
   };
+
+  // Compact: no segment select, one row on desktop, stacked on mobile. Always
+  // rendered on a light surface — the footer gives it its own cream card
+  // rather than the component carrying a second colour scheme.
+  if (variant === 'compact') {
+    if (state === 'done') {
+      return (
+        <div
+          className="p-4 rounded-xl flex items-start gap-2.5"
+          style={{ backgroundColor: '#F0EBE1', border: '1px solid #6B8E6E40' }}
+        >
+          <Check size={16} color="#6B8E6E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
+          <p className="text-sm" style={{ color: '#1C1208', lineHeight: 1.5 }}>{message}</p>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className="flex items-center gap-2 mb-1.5">
+          <Bell size={15} color="#C4622D" strokeWidth={2} className="flex-shrink-0" />
+          <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>{heading}</p>
+        </div>
+        <p className="text-xs mb-3" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{blurb}</p>
+
+        <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            aria-label="Email address"
+            className="flex-1 min-w-0"
+            style={{
+              padding: '0.7rem 0.9rem',
+              borderRadius: '0.75rem',
+              border: '1px solid #DDD5C8',
+              backgroundColor: '#FDFCF8',
+              color: '#1C1208',
+              fontSize: '0.9rem',
+              minHeight: '44px',
+            }}
+          />
+          <button
+            type="submit"
+            disabled={state === 'loading'}
+            className="flex-shrink-0"
+            style={{
+              padding: '0.7rem 1.4rem',
+              borderRadius: '50px',
+              border: 'none',
+              backgroundColor: state === 'loading' ? '#C4622D99' : '#C4622D',
+              color: '#FDFCF8',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              cursor: state === 'loading' ? 'default' : 'pointer',
+              minHeight: '44px',
+            }}
+          >
+            {state === 'loading' ? 'Adding you…' : 'Notify me'}
+          </button>
+        </form>
+
+        {state === 'error' && (
+          <p className="text-xs mt-2" role="alert" style={{ color: '#B3261E' }}>{message}</p>
+        )}
+      </div>
+    );
+  }
 
   if (state === 'done') {
     return (

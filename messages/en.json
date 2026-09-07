@@ -125,6 +125,17 @@
     "meta": {
       "title": "EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies",
       "description": "MTD ITSA software for UK sole traders, landlords and limited companies. Send quarterly updates to HMRC, file Self Assessment, VAT returns and CT600. £24 per submission, no subscription — no card needed to sign up."
+    },
+    "toolsStrip": {
+      "kicker": "Free · no account needed",
+      "title1": "Get an answer",
+      "title2": "before you sign up",
+      "subtitle": "Three calculators that run entirely in your browser. Nothing you type is sent to us or stored anywhere.",
+      "cta": "See all free tools",
+      "dMtd": "Find out whether MTD applies to you, and when your quarterly updates are due.",
+      "dPenalty": "Itemise what a late return costs, with the date each charge starts.",
+      "dPoa": "See the balancing payment plus the advance instalments HMRC adds on top.",
+      "openTool": "Open the calculator"
     }
   },
   "auth": {
@@ -297,5 +308,27 @@
       "bankTitle": "Connect your bank",
       "bankDesc": "Import transactions via Open Banking — read-only, we can never move money."
     }
+  },
+  "footer": {
+    "product": "Product",
+    "tools": "Free Tools",
+    "guides": "Guides",
+    "compare": "Compare",
+    "company": "Company",
+    "mtdSoftware": "MTD Software",
+    "saSoftware": "Self Assessment Software",
+    "landlordSoftware": "Landlord Tax Software",
+    "allTools": "All free tools",
+    "penaltyCalculator": "Penalty Calculator",
+    "poaCalculator": "Payments on Account Calculator",
+    "browseTopics": "Browse by topic",
+    "aboutUs": "About us",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "vs": "EasyTax vs {name}",
+    "tagline": "Finance Panda Limited. Built in London.",
+    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. Our HMRC production access is still going through approval.",
+    "notifyHeading": "Be first to file",
+    "notifyBlurb": "We will email you the day MTD filing opens — nothing else, unsubscribe in one click."
   }
 }

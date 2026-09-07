@@ -3,6 +3,8 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import DeadlineChecker from '@/components/DeadlineChecker';
 import { quartersForTaxYear, finalDeclarationFor } from '@/lib/mtd-dates';
+import SiteFooter from '@/components/SiteFooter';
+import ToolCrossLinks from '@/components/ToolCrossLinks';
 
 export const metadata: Metadata = {
   title: 'MTD Deadline Checker — Am I in Making Tax Digital, and when are my deadlines?',
@@ -210,7 +212,9 @@ export default function DeadlineCheckerPage() {
           </Link>
           .
         </p>
+        <ToolCrossLinks current="mtd_deadline" />
       </main>
+      <SiteFooter />
     </div>
   );
 }

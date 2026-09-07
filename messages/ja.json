@@ -125,6 +125,17 @@
     "meta": {
       "title": "EasyTax — 英国個人事業主・有限会社向け MTD ITSA ソフトウェア",
       "description": "英国の個人事業主、賃貸オーナー、有限会社向けの MTD ITSA ソフトウェア。HMRC への四半期更新、Self Assessment、VAT、CT600 を申告。提出 1 回につき £24、サブスクなし —— 登録にカード不要。"
+    },
+    "toolsStrip": {
+      "kicker": "無料・登録不要",
+      "title1": "登録の前に",
+      "title2": "答えを確かめる",
+      "subtitle": "3つの計算ツールはすべてブラウザ内で動作します。入力した内容が当社に送信されることも、保存されることもありません。",
+      "cta": "無料ツールをすべて見る",
+      "dMtd": "MTD の対象かどうか、四半期申告の期限はいつかを確認できます。",
+      "dPenalty": "申告が遅れた場合の費用を項目ごとに、各加算の起算日とあわせて表示します。",
+      "dPoa": "精算額に加えて、HMRC が上乗せする2回の予定納税額を確認できます。",
+      "openTool": "計算ツールを開く"
     }
   },
   "auth": {
@@ -297,5 +308,27 @@
       "bankTitle": "銀行口座を接続",
       "bankDesc": "オープンバンキングで取引明細を取り込みます。読み取り専用で、資金を動かすことはできません。"
     }
+  },
+  "footer": {
+    "product": "プロダクト",
+    "tools": "無料ツール",
+    "guides": "ガイド",
+    "compare": "比較",
+    "company": "会社情報",
+    "mtdSoftware": "MTD ソフトウェア",
+    "saSoftware": "自己申告ソフトウェア",
+    "landlordSoftware": "賃貸オーナー向け税務ソフト",
+    "allTools": "すべての無料ツール",
+    "penaltyCalculator": "加算税計算ツール",
+    "poaCalculator": "予定納税計算ツール",
+    "browseTopics": "トピックから探す",
+    "aboutUs": "私たちについて",
+    "privacy": "プライバシー",
+    "terms": "利用規約",
+    "vs": "EasyTax と {name} の比較",
+    "tagline": "Finance Panda Limited. ロンドン発。",
+    "disclaimer": "EasyTax は Finance Panda Limited のプロダクトです。無料ツールは HMRC が公表する規則の一般的な情報を示すものであり、税務アドバイスではありません。HMRC の本番アクセスは現在承認手続き中です。",
+    "notifyHeading": "誰よりも早く申告を",
+    "notifyBlurb": "MTD 申告が開始された日にメールでお知らせします。それ以外の配信はなく、ワンクリックで解除できます。"
   }
 }

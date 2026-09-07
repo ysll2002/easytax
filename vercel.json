@@ -5,6 +5,10 @@
       "schedule": "0 8 * * *"
     },
     {
+      "path": "/api/cron/indexnow",
+      "schedule": "30 8 * * *"
+    },
+    {
       "path": "/api/cron/mtd-reminder",
       "schedule": "0 8 24 7 *"
     },

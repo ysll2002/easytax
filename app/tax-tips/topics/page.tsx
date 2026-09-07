@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { getPublishedTopics } from '../_lib/topic-articles';
+import SiteFooter from '@/components/SiteFooter';
 
 const BASE = 'https://easytax.vip';
 
@@ -114,6 +115,7 @@ export default async function TopicsIndexPage() {
           </p>
         )}
       </main>
+      <SiteFooter />
     </div>
   );
 }

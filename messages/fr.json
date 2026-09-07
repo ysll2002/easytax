@@ -125,6 +125,17 @@
     "meta": {
       "title": "EasyTax — Logiciel MTD ITSA pour indépendants et sociétés au Royaume-Uni",
       "description": "Logiciel MTD ITSA pour auto-entrepreneurs, propriétaires et sociétés limitées au Royaume-Uni. Envoyez les mises à jour trimestrielles au HMRC, déposez Self Assessment, TVA et CT600. 24 £ par déclaration, sans abonnement — sans carte à l'inscription."
+    },
+    "toolsStrip": {
+      "kicker": "Gratuit · sans compte",
+      "title1": "Obtenez la réponse",
+      "title2": "avant de vous inscrire",
+      "subtitle": "Trois calculateurs qui fonctionnent entièrement dans votre navigateur. Rien de ce que vous saisissez ne nous est transmis ni conservé.",
+      "cta": "Voir tous les outils gratuits",
+      "dMtd": "Déterminez si MTD vous concerne et à quelles dates vos déclarations trimestrielles sont dues.",
+      "dPenalty": "Détaillez le coût d'une déclaration tardive et la date de départ de chaque pénalité.",
+      "dPoa": "Voyez le solde à payer ainsi que les deux acomptes que HMRC ajoute par-dessus.",
+      "openTool": "Ouvrir le calculateur"
     }
   },
   "auth": {
@@ -297,5 +308,27 @@
       "bankTitle": "Connecter votre banque",
       "bankDesc": "Importez vos transactions via l'Open Banking — lecture seule, nous ne pouvons jamais déplacer d'argent."
     }
+  },
+  "footer": {
+    "product": "Produit",
+    "tools": "Outils gratuits",
+    "guides": "Guides",
+    "compare": "Comparer",
+    "company": "Entreprise",
+    "mtdSoftware": "Logiciel MTD",
+    "saSoftware": "Logiciel Self Assessment",
+    "landlordSoftware": "Logiciel fiscal pour bailleurs",
+    "allTools": "Tous les outils gratuits",
+    "penaltyCalculator": "Calculateur de pénalités",
+    "poaCalculator": "Calculateur d'acomptes",
+    "browseTopics": "Parcourir par thème",
+    "aboutUs": "À propos",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "vs": "EasyTax face à {name}",
+    "tagline": "Finance Panda Limited. Conçu à Londres.",
+    "disclaimer": "EasyTax est un produit de Finance Panda Limited. Les outils gratuits donnent des informations générales sur les règles publiées par HMRC et ne constituent pas un conseil fiscal. Notre accès de production HMRC est encore en cours d'approbation.",
+    "notifyHeading": "Déclarez en premier",
+    "notifyBlurb": "Nous vous écrirons le jour où la déclaration MTD ouvrira — rien d'autre, désinscription en un clic."
   }
 }

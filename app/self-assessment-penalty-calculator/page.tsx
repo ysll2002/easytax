@@ -8,6 +8,8 @@ import {
   DAILY_MAX,
   TAX_GEARED_MINIMUM,
 } from '@/lib/sa-penalties';
+import SiteFooter from '@/components/SiteFooter';
+import ToolCrossLinks from '@/components/ToolCrossLinks';
 
 export const metadata: Metadata = {
   title: 'Self Assessment Late Filing Penalty Calculator — what HMRC will charge you',
@@ -262,7 +264,9 @@ export default function PenaltyCalculatorPage() {
           </Link>
           .
         </p>
+        <ToolCrossLinks current="sa_penalty" />
       </main>
+      <SiteFooter />
     </div>
   );
 }

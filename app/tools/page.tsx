@@ -3,6 +3,8 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import TrackEvent from '@/components/TrackEvent';
 import NotifyMeForm from '@/components/NotifyMeForm';
+import SiteFooter from '@/components/SiteFooter';
+import { TOOLS } from '@/lib/tools';
 
 // A hub for the free calculators.
 //
@@ -40,33 +42,6 @@ export const metadata: Metadata = {
     description: 'Three free calculators for UK sole traders, landlords and small companies.',
   },
 };
-
-const TOOLS = [
-  {
-    href: '/mtd-deadline-checker',
-    name: 'MTD deadline checker',
-    question: 'Am I in Making Tax Digital, and when are my deadlines?',
-    blurb:
-      'Enter your income and get the tax year you come into MTD for Income Tax, all four quarterly update deadlines and your final declaration date.',
-    for: 'Sole traders and landlords',
-  },
-  {
-    href: '/self-assessment-penalty-calculator',
-    name: 'Late filing penalty calculator',
-    question: 'What will HMRC charge me for a late tax return?',
-    blurb:
-      'The £100 fixed penalty, £10 daily charges, the 6 and 12 month penalties and the 5% late payment charges — itemised, with the date each one starts.',
-    for: 'Anyone who has missed 31 January',
-  },
-  {
-    href: '/payments-on-account-calculator',
-    name: 'Payments on account calculator',
-    question: 'What will actually leave my account in January?',
-    blurb:
-      'Your balancing payment plus the two advance instalments HMRC adds towards next year, on the dates they are actually taken.',
-    for: 'First-time Self Assessment filers',
-  },
-];
 
 export default function ToolsPage() {
   const jsonLdList = {
@@ -210,6 +185,7 @@ export default function ToolsPage() {
           .
         </p>
       </main>
+      <SiteFooter />
     </div>
   );
 }

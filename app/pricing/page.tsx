@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import NotifyMeForm from '@/components/NotifyMeForm';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
+import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Pricing — MTD ITSA Filing Software, £24 per Submission | EasyTax',
@@ -323,17 +324,7 @@ export default async function PricingPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="py-8 sm:py-10" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <p className="text-xs" style={{ color: '#9A8F83' }}>© 2026 Finance Panda Limited. All rights reserved.</p>
-          <div className="flex gap-5 text-xs" style={{ color: '#9A8F83' }}>
-            <Link href="/privacy" style={{ color: '#9A8F83', textDecoration: 'none' }}>Privacy</Link>
-            <Link href="/terms"   style={{ color: '#9A8F83', textDecoration: 'none' }}>Terms</Link>
-            <Link href="/freeagent-alternative" style={{ color: '#9A8F83', textDecoration: 'none' }}>vs FreeAgent</Link>
-            <Link href="/xero-alternative"      style={{ color: '#9A8F83', textDecoration: 'none' }}>vs Xero</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

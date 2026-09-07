@@ -2,12 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import NotifyMeForm from '@/components/NotifyMeForm';
-import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User } from 'lucide-react';
+import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
 import { getTranslations } from 'next-intl/server';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
+import SiteFooter from '@/components/SiteFooter';
 
 export const revalidate = 3600;
 
@@ -24,6 +25,8 @@ export default async function Home() {
   const session = await auth();
   const ctaHref = session ? '/dashboard' : '/register';
   const t = await getTranslations('home');
+  const tn = await getTranslations('nav');
+  const tf = await getTranslations('footer');
 
   // Vercel Preview deployments do not get the Supabase secrets, and
   // supabaseAdmin throws on first use without them — which took the whole
@@ -310,6 +313,57 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* ── Free tools ──
+            The three calculators had 2 page views between them in 30 days and
+            the hub had none, because nothing outside the nav pointed at them.
+            They are also the only thing the site can give a stranger before
+            HMRC approval lands, so they belong above the FAQ rather than
+            behind a nav item. */}
+        <section id="tools" className="py-16 sm:py-24" style={{ backgroundColor: '#FDFCF8', borderTop: '1px solid #E8E2DA' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#6B8E6E15', color: '#6B8E6E', border: '1px solid #6B8E6E40' }}>
+                  {t('toolsStrip.kicker')}
+                </div>
+                <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2 }}>
+                  {t('toolsStrip.title1')}<br />
+                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('toolsStrip.title2')}</em>
+                </h2>
+                <p className="mt-3 text-sm max-w-xl" style={{ color: '#9A8F83', lineHeight: 1.7 }}>
+                  {t('toolsStrip.subtitle')}
+                </p>
+              </div>
+              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                {t('toolsStrip.cta')} →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+              {[
+                { href: '/mtd-deadline-checker',               Icon: Calendar,       name: tn('deadlineChecker'),   desc: t('toolsStrip.dMtd') },
+                { href: '/self-assessment-penalty-calculator', Icon: AlertTriangle,  name: tf('penaltyCalculator'), desc: t('toolsStrip.dPenalty') },
+                { href: '/payments-on-account-calculator',     Icon: Wallet,         name: tf('poaCalculator'),     desc: t('toolsStrip.dPoa') },
+              ].map(({ href, Icon, name, desc }) => (
+                <Link key={href} href={href} style={{ textDecoration: 'none' }}>
+                  <div className="h-full p-6 rounded-2xl transition-all hover:shadow-md flex flex-col" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#F0EBE1' }}>
+                      <Icon size={18} color="#C4622D" strokeWidth={1.9} />
+                    </div>
+                    <h3 className="font-bold mb-2" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.05rem', color: '#1C1208', lineHeight: 1.35 }}>
+                      {name}
+                    </h3>
+                    <p className="text-xs leading-relaxed flex-1 mb-4" style={{ color: '#9A8F83' }}>{desc}</p>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: '#C4622D' }}>
+                      {t('toolsStrip.openTool')} <ArrowRight size={13} />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* ── FAQ ── */}
         <section id="faq" className="py-20 sm:py-28" style={{ backgroundColor: '#FDFCF8' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
@@ -415,18 +469,7 @@ export default async function Home() {
 
       </main>
 
-      <footer style={{ borderTop: '1px solid #2E2418', backgroundColor: '#1C1208', padding: '3rem 0' }}>
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', color: '#4A4035' }}>
-            {t('footer.tagline')}
-          </div>
-          <div className="flex gap-6 text-sm" style={{ color: '#4A4035' }}>
-            <Link href="/privacy" className="hover:text-[#C4622D] transition-colors">{t('footer.privacy')}</Link>
-            <Link href="/terms" className="hover:text-[#C4622D] transition-colors">{t('footer.terms')}</Link>
-            <Link href="#" className="hover:text-[#C4622D] transition-colors">{t('footer.twitter')}</Link>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

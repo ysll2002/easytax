@@ -270,7 +270,7 @@ async function toolFunnel(sinceIso: string) {
 async function launchSubscriberCounts(since7d: string, since30d: string) {
   const { data, error } = await supabase
     .from('launch_subscribers')
-    .select('segment, created_at');
+    .select('segment, source, created_at');
 
   if (error) return null;
 
@@ -278,11 +278,19 @@ async function launchSubscriberCounts(since7d: string, since30d: string) {
   const bySegment: Record<string, number> = {};
   for (const r of rows) bySegment[r.segment ?? 'unspecified'] = (bySegment[r.segment ?? 'unspecified'] ?? 0) + 1;
 
+  // Which placement earned the address. The form now sits in the site-wide
+  // footer ('footer') and at the foot of every article ('article') as well as
+  // in the original three page blocks — without this split there is no way to
+  // tell which placement is doing the work.
+  const bySource: Record<string, number> = {};
+  for (const r of rows) bySource[r.source ?? 'unknown'] = (bySource[r.source ?? 'unknown'] ?? 0) + 1;
+
   return {
     total:      rows.length,
     last_7d:    rows.filter(r => r.created_at >= since7d).length,
     last_30d:   rows.filter(r => r.created_at >= since30d).length,
     by_segment: bySegment,
+    by_source:  bySource,
   };
 }
 
