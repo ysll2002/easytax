@@ -93,6 +93,7 @@ async function trafficBreakdown(sinceIso: string) {
     'register_started',
     'register_completed',
     'launch_subscribed',
+    'schedule_requested',
     'checker_completed',
     'activation_cta_click',
     'article_cta_click',
@@ -294,6 +295,66 @@ async function launchSubscriberCounts(since7d: string, since30d: string) {
   };
 }
 
+/** How much production data the event table actually holds.
+ *
+ *  This exists because the `last_7d` / `last_30d` labels below are a trap. They
+ *  are computed as "since now minus N days", but `analytics_events` only began
+ *  recording on 2026-09-03 — so on 2026-09-06 all three windows returned the
+ *  same numbers, and a 2.7-day figure was read and reported as a 30-day one.
+ *  The labels were accurate about the query and silent about the data, which is
+ *  the kind of number that gets believed.
+ *
+ *  Reporting the real window makes the truncation impossible to miss. Note this
+ *  measures *this* table only — signups, HMRC connections and filings come from
+ *  tables with full history and are not affected. */
+async function dataWindow() {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('created_at')
+    .eq('props->>env', 'production')
+    .order('created_at', { ascending: true })
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    return { instrumented_since: null, days_of_data: 0, warning: 'No production events recorded yet.' };
+  }
+
+  const earliest = data[0].created_at as string;
+  const days = (Date.now() - new Date(earliest).getTime()) / 86_400_000;
+
+  return {
+    instrumented_since: earliest,
+    days_of_data: Math.round(days * 100) / 100,
+    warning:
+      days < 30
+        ? `Event tracking started ${days.toFixed(1)} days ago. Every window below that is longer ` +
+          `— last_7d, last_30d, previous_7d, and the pages_with_no_traffic lists — is truncated to ` +
+          `those ${days.toFixed(1)} days. "No traffic in 30 days" here means "no traffic in ` +
+          `${days.toFixed(1)} days". Compare against GA only over a matching range.`
+        : null,
+  };
+}
+
+/** The editorial review queue and the stored snapshot count.
+ *
+ *  Both are what the weekly review reads to judge F1 and F5, and both live
+ *  behind the 20260906 migration — so a missing table or column returns null
+ *  rather than failing the whole metrics call. */
+async function editorialState(since7d: string) {
+  const [drafts, published, snapshots] = await Promise.all([
+    supabase.from('tax_articles').select('slug', { count: 'exact', head: true }).eq('review_status', 'draft'),
+    supabase.from('tax_articles').select('slug', { count: 'exact', head: true }).eq('review_status', 'published'),
+    supabase.from('growth_snapshots').select('id', { count: 'exact', head: true }).gte('created_at', since7d),
+  ]);
+
+  return {
+    editorial: drafts.error || published.error
+      ? null
+      : { drafts_awaiting_review: drafts.count ?? 0, published: published.count ?? 0 },
+    growth_snapshots: snapshots.error ? null : { last_7d: snapshots.count ?? 0 },
+  };
+}
+
 export async function GET(req: NextRequest) {
   const expected = process.env.AGENT_METRICS_KEY;
   if (!expected) {
@@ -355,7 +416,7 @@ export async function GET(req: NextRequest) {
     // just because instrumentation is not live yet.
     const [
       events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
-      tools7d, tools30d, eventsPrev7d, visitorsPrev7d,
+      tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window,
     ] = await Promise.all([
       eventCounts(since7d),
       eventCounts(since30d),
@@ -371,6 +432,8 @@ export async function GET(req: NextRequest) {
       // the comparison is like for like.
       eventCounts(sincePrev14d),
       uniqueVisitors(sincePrev14d),
+      editorialState(since7d),
+      dataWindow(),
     ]);
 
     // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
@@ -437,6 +500,12 @@ export async function GET(req: NextRequest) {
           register_started:    events7d['register_started']     ?? 0,
           register_completed:  events7d['register_completed']   ?? 0,
           launch_subscribed:   events7d['launch_subscribed']    ?? 0,
+          // The deadline-schedule capture that replaced the launch waitlist as
+          // the primary ask. Counted separately because the two are different
+          // bargains: one delivers something now, the other promises later.
+          schedule_requested:  events7d['schedule_requested']   ?? 0,
+          schedule_sent:       events7d['schedule_sent']        ?? 0,
+          editorial_viewed:    events7d['editorial_standards_viewed'] ?? 0,
           trust_viewed:        events7d['trust_viewed']         ?? 0,
           article_cta_click:   events7d['article_cta_click']    ?? 0,
           activation_cta_click:events7d['activation_cta_click'] ?? 0,
@@ -449,6 +518,7 @@ export async function GET(req: NextRequest) {
           page_views:          events30d['page_view']          ?? 0,
           register_completed:  events30d['register_completed']  ?? 0,
           launch_subscribed:   events30d['launch_subscribed']   ?? 0,
+          schedule_requested:  events30d['schedule_requested']  ?? 0,
           visitor_to_register: rate(events30d['register_completed'] ?? 0, visitors30d),
         },
 
@@ -460,6 +530,7 @@ export async function GET(req: NextRequest) {
           page_views:         prev7d('page_view'),
           register_completed: prev7d('register_completed'),
           launch_subscribed:  prev7d('launch_subscribed'),
+          schedule_requested: prev7d('schedule_requested'),
           tool_completed:     prev7d('tool_completed'),
           unique_visitors_last_14d: visitorsPrev7d,
         },
@@ -476,6 +547,15 @@ export async function GET(req: NextRequest) {
       // Launch waitlist — the addressable pipeline to convert on the day HMRC
       // production approval lands. null until the migration is run.
       launch_list: launchList,
+
+      // Editorial review gate: how many generated drafts are waiting for a
+      // person, and how many articles are actually live. A queue that only
+      // grows means the gate has become a bottleneck rather than a standard.
+      editorial: editorial.editorial,
+
+      // Stored daily snapshots, which is what makes the weekly review a
+      // comparison rather than a reading.
+      growth_snapshots: editorial.growth_snapshots,
 
       // Pre-revenue: HMRC production approval pending, no Stripe integration
       // yet. Once revenue lands, wire it in here so the agent can compute

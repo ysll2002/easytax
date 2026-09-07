@@ -8,6 +8,8 @@ import { hasSupabaseEnv } from '../_lib/articles';
 import { getRelatedByTopic, publishedTopicsForTitle } from '../_lib/topic-articles';
 import ArticleCta from '../_components/ArticleCta';
 import SiteFooter from '@/components/SiteFooter';
+import ArticleProvenance, { ArticleSources } from '../_components/ArticleProvenance';
+import { selectPublished } from '../_lib/review';
 
 export const revalidate = 3600;
 
@@ -16,11 +18,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   // Preview deployments have no Supabase credentials; supabaseAdmin throws
   // without them. Degrade to default metadata rather than failing the render.
   if (!hasSupabaseEnv()) return {};
-  const { data } = await supabase
-    .from('tax_articles')
-    .select('title, excerpt, published_at')
-    .eq('slug', slug)
-    .single();
+  const { data } = await selectPublished(gated => {
+    const q = supabase.from('tax_articles').select('title, excerpt, published_at');
+    return (gated ? q.eq('review_status', 'published') : q).eq('slug', slug).single();
+  });
   if (!data) return {};
 
   return {
@@ -45,11 +46,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   // and a 404 is a far better answer than a server-side exception.
   if (!hasSupabaseEnv()) notFound();
 
-  const { data: article } = await supabase
-    .from('tax_articles')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  // An article awaiting review is not a page yet. 404 rather than render it:
+  // a draft that is reachable by URL will be found, linked and indexed, which
+  // is the exact thing the gate exists to prevent.
+  const { data: article } = await selectPublished(gated => {
+    const q = supabase.from('tax_articles').select('*');
+    return (gated ? q.eq('review_status', 'published') : q).eq('slug', slug).single();
+  });
 
   if (!article) notFound();
 
@@ -58,16 +61,41 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     publishedTopicsForTitle(article.title),
   ]);
 
+  // Authorship, review state and method, stated in the markup as well as on
+  // the page. The previous version named "EasyTax" as author with no URL that
+  // explained who or what that was, and repeated publishedAt as dateModified
+  // so every article looked untouched since the day a cron emitted it.
   const jsonLdArticle = {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: article.title,
     description: article.excerpt,
     datePublished: article.published_at,
-    dateModified: article.published_at,
+    dateModified: article.reviewed_at ?? article.published_at,
+    inLanguage: 'en-GB',
     mainEntityOfPage: { '@type': 'WebPage', '@id': `https://easytax.vip/tax-tips/${slug}` },
-    author:    { '@type': 'Organization', name: 'EasyTax', url: 'https://easytax.vip' },
-    publisher: { '@type': 'Organization', name: 'Finance Panda Limited', url: 'https://easytax.vip' },
+    author: {
+      '@type': 'Organization',
+      name: 'EasyTax editorial team',
+      url: 'https://easytax.vip/editorial-standards',
+    },
+    publisher: {
+      '@type': 'Organization',
+      '@id': 'https://easytax.vip/#organization',
+      name: 'Finance Panda Limited',
+      url: 'https://easytax.vip',
+    },
+    // Stated only when it is true. An unreviewed article claiming a reviewer
+    // would be the worst of both worlds.
+    ...(article.reviewed_at
+      ? {
+          reviewedBy: {
+            '@type': 'Organization',
+            name: 'EasyTax editorial team',
+            url: 'https://easytax.vip/editorial-standards',
+          },
+        }
+      : {}),
     isAccessibleForFree: true,
   };
 
@@ -139,10 +167,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
           {topics.length === 0 && <div className="mb-8 pb-8" style={{ borderBottom: '1px solid #E8E2DA' }} />}
 
+          <ArticleProvenance
+            publishedAt={article.published_at}
+            reviewedAt={article.reviewed_at ?? null}
+            reviewedBy={article.reviewed_by ?? null}
+          />
+
           <div
             className="prose-article"
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
+
+          <ArticleSources sources={article.sources} />
 
           {/* Article traffic previously had nowhere to go but back to the
               index — no path to the product at all. */}

@@ -16,9 +16,9 @@
   },
   "home": {
     "announcement": {
-      "live": "MTD ITSA가 시행됩니다.",
-      "deadline": "Q1 신고 마감 2026년 8월 5일 ——",
-      "freeCallout": "EasyTax는 몇 분이면 됩니다."
+      "live": "Making Tax Digital가 시작되었습니다.",
+      "nextUpdate": "다음 분기 신고: {date}.",
+      "status": "마감일 도구는 지금 무료 — 신고 기능은 HMRC 승인 후 열립니다."
     },
     "hero": {
       "pill": "다음 MTD ITSA 분기 신고: {date} — {days}일 남음",
@@ -35,9 +35,9 @@
     },
     "trust": {
       "hmrc": "HMRC MTD API",
-      "security": "은행 수준 보안",
-      "fast": "5분 안에 신고",
-      "ai": "AI 기반",
+      "security": "읽기 전용 은행 연결",
+      "fast": "ICO 등록번호 ZA540758",
+      "ai": "Finance Panda Limited",
       "company": "법인 지원"
     },
     "services": {
