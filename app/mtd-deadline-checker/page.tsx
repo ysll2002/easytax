@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import DeadlineChecker from '@/components/DeadlineChecker';
 import { quartersForTaxYear, finalDeclarationFor } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
+import CalendarSubscribe from '@/components/CalendarSubscribe';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
 
 export const metadata: Metadata = {
@@ -193,6 +194,12 @@ export default function DeadlineCheckerPage() {
             ))}
           </div>
         </section>
+
+        {/* The checker tells you which deadlines apply; this is how you keep
+            them. Directly after the result is the moment that matters. */}
+        <div className="mt-12">
+          <CalendarSubscribe placement="mtd_deadline_checker" />
+        </div>
 
         <p className="text-xs leading-relaxed mt-12" style={{ color: '#9A8F83' }}>
           This tool gives general information about HMRC&apos;s published MTD for Income Tax rules

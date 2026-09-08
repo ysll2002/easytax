@@ -198,7 +198,7 @@ export default async function CrunchAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or landlord who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially once HMRC MTD ITSA becomes mandatory.
+              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or landlord who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially now that HMRC MTD ITSA is mandatory.
             </p>
           </div>
         </section>

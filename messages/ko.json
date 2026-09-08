@@ -14,6 +14,13 @@
     "language": "언어",
     "trust": "보안 및 신뢰"
   },
+  "mtdBar": {
+    "live": "MTD ITSA가 시행 중입니다.",
+    "preMandate": "MTD ITSA는 2026년 4월 6일에 시작됩니다.",
+    "due": "{quarter} 분기 신고({period}) 마감일은 {date}",
+    "daysLeft": "{days}일 남음",
+    "cta": "마감일 확인하기"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital가 시작되었습니다.",
@@ -321,6 +328,7 @@
     "allTools": "모든 무료 도구",
     "penaltyCalculator": "가산세 계산기",
     "poaCalculator": "중간예납 계산기",
+    "taxCalendar": "세무 마감일 캘린더",
     "browseTopics": "주제별 보기",
     "aboutUs": "회사 소개",
     "privacy": "개인정보",

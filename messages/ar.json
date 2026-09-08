@@ -14,6 +14,13 @@
     "language": "اللغة",
     "trust": "الأمان والثقة"
   },
+  "mtdBar": {
+    "live": "أصبح نظام MTD ITSA ساري المفعول.",
+    "preMandate": "يبدأ نظام MTD ITSA في 6 أبريل 2026.",
+    "due": "تحديث {quarter} ({period}) مستحق في {date}",
+    "daysLeft": "بقي {days} يومًا",
+    "cta": "تحقق من مواعيدك النهائية"
+  },
   "home": {
     "announcement": {
       "live": "بدأ نظام Making Tax Digital.",
@@ -321,6 +328,7 @@
     "allTools": "كل الأدوات المجانية",
     "penaltyCalculator": "حاسبة الغرامات",
     "poaCalculator": "حاسبة الدفعات المقدمة",
+    "taxCalendar": "تقويم المواعيد الضريبية",
     "browseTopics": "تصفح حسب الموضوع",
     "aboutUs": "من نحن",
     "privacy": "الخصوصية",

@@ -62,7 +62,7 @@ export default async function MtdSoftware() {
         name: 'What is MTD ITSA software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'MTD ITSA software is a digital tool recognised by HMRC that lets sole traders and landlords submit quarterly income and expense updates — and an end-of-year final declaration — as required by Making Tax Digital for Income Tax Self Assessment. From April 2026, this is mandatory for those earning over £50,000.',
+          text: 'MTD ITSA software is a digital tool recognised by HMRC that lets sole traders and landlords submit quarterly income and expense updates — and an end-of-year final declaration — as required by Making Tax Digital for Income Tax Self Assessment. This has been mandatory since 6 April 2026 for those earning over £50,000.',
         },
       },
       {
@@ -202,7 +202,7 @@ export default async function MtdSoftware() {
               Who needs MTD ITSA software?
             </h2>
             <p className="text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              From April 2026, MTD-compatible software is required by law if you fall into any of these categories.
+              Since 6 April 2026, MTD-compatible software has been required by law if you fall into any of these categories.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
