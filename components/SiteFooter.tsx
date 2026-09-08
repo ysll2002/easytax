@@ -103,6 +103,10 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
               { href: '/self-assessment-penalty-calculator',     label: t('penaltyCalculator') },
               { href: '/payments-on-account-calculator',         label: t('poaCalculator') },
               { href: '/timetable',                              label: nav('timetable') },
+              // The .ics feed. Linked here as well as on the two deadline
+              // pages, because it is the one thing on the site a visitor can
+              // take away and keep while filing is still closed.
+              { href: '/calendar/uk-tax-deadlines.ics',           label: t('taxCalendar') },
             ]}
           />
           <Column

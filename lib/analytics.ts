@@ -41,6 +41,10 @@ export const EVENTS = {
   // today, so it is counted separately from the plain launch waitlist.
   scheduleRequested:   'schedule_requested',
   scheduleSent:        'schedule_sent',
+  // Recorded server-side by the .ics route. Not in /api/track's allowlist on
+  // purpose: nothing in the browser should be able to forge a subscription.
+  calendarFetched:     'calendar_fetched',
+  calendarCtaClick:    'calendar_cta_click',
 } as const;
 
 let warned = false;

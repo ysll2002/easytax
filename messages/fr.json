@@ -14,6 +14,13 @@
     "language": "Langue",
     "trust": "Confiance et sécurité"
   },
+  "mtdBar": {
+    "live": "MTD ITSA est en vigueur.",
+    "preMandate": "MTD ITSA débute le 6 avril 2026.",
+    "due": "Mise à jour {quarter} ({period}) à envoyer avant le {date}",
+    "daysLeft": "{days} jours restants",
+    "cta": "Vérifiez vos échéances"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital a commencé.",
@@ -321,6 +328,7 @@
     "allTools": "Tous les outils gratuits",
     "penaltyCalculator": "Calculateur de pénalités",
     "poaCalculator": "Calculateur d'acomptes",
+    "taxCalendar": "Calendrier des échéances fiscales",
     "browseTopics": "Parcourir par thème",
     "aboutUs": "À propos",
     "privacy": "Confidentialité",

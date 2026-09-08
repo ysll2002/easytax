@@ -14,6 +14,13 @@
     "language": "Language",
     "trust": "Trust & Security"
   },
+  "mtdBar": {
+    "live": "MTD ITSA is live.",
+    "preMandate": "MTD ITSA starts 6 April 2026.",
+    "due": "{quarter} update ({period}) due {date}",
+    "daysLeft": "{days} days left",
+    "cta": "Check your deadlines"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital has started.",
@@ -321,6 +328,7 @@
     "allTools": "All free tools",
     "penaltyCalculator": "Penalty Calculator",
     "poaCalculator": "Payments on Account Calculator",
+    "taxCalendar": "Tax deadline calendar",
     "browseTopics": "Browse by topic",
     "aboutUs": "About us",
     "privacy": "Privacy",

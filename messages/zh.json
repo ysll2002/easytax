@@ -14,6 +14,13 @@
     "language": "语言",
     "trust": "安全与信任"
   },
+  "mtdBar": {
+    "live": "MTD ITSA 已正式生效。",
+    "preMandate": "MTD ITSA 将于 2026 年 4 月 6 日生效。",
+    "due": "{quarter} 季度申报（{period}）截止日期为 {date}",
+    "daysLeft": "剩余 {days} 天",
+    "cta": "查看你的截止日期"
+  },
   "home": {
     "announcement": {
       "live": "数字化税务（MTD）已开始。",
@@ -321,6 +328,7 @@
     "allTools": "全部免费工具",
     "penaltyCalculator": "罚款计算器",
     "poaCalculator": "预缴税款计算器",
+    "taxCalendar": "税务截止日期日历",
     "browseTopics": "按主题浏览",
     "aboutUs": "关于我们",
     "privacy": "隐私",

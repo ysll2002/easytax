@@ -34,6 +34,9 @@ const ALLOWED = new Set([
   'tool_completed',
   'tool_cta_click',
   'topic_hub_viewed',
+  // The click on "add to calendar". The subscription itself is recorded
+  // server-side by the .ics route and is deliberately not forgeable from here.
+  'calendar_cta_click',
 ]);
 
 const MAX_STR = 512;

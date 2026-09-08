@@ -10,6 +10,37 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// ── What counts as a visit ────────────────────────────────────────────────
+//
+// The 2026-09-08 numbers reported 34 unique visitors. Six of them were on
+// `/55251a02303938bd113be2863f9c7b6c.txt` — the IndexNow key file. A static
+// .txt runs no JavaScript, so those rows can only have come from the window
+// between the code deploying and the file existing, when that URL rendered the
+// Next 404 page, which carries the tracker like every other page. Six crawlers
+// checking whether the key was live became six "unique visitors", 18% of the
+// week's total.
+//
+// Another ten page views were `/dashboard/individual/sandbox-test` and
+// `/dashboard/fph-test` — our own HMRC sandbox fixtures, exercised by a cron.
+//
+// None of that is traffic, and all of it was inflating the number every
+// decision in this project is made against. It is excluded here rather than
+// deleted, and the exclusions are reported alongside the totals: a filter you
+// cannot see is how a metric quietly starts lying in the other direction.
+
+const NON_CONTENT_PREFIXES = ['/dashboard', '/api', '/onboarding', '/payment', '/actions'];
+
+/** True for paths that represent a person looking at a public page. */
+export function isPublicContentPath(path: string | null | undefined): boolean {
+  if (!path || !path.startsWith('/')) return false;
+  if (NON_CONTENT_PREFIXES.some(p => path === p || path.startsWith(`${p}/`))) return false;
+  // A dot in the final segment means a file — .txt, .xml, .ics, .png. Real
+  // pages on this site never have one.
+  const last = path.split('/').pop() ?? '';
+  if (last.includes('.')) return false;
+  return true;
+}
+
 async function countSince(
   table: 'profiles' | 'hmrc_connections' | 'bank_connections' | 'sa_filings',
   column: 'created_at' | 'connected_at',
@@ -30,7 +61,7 @@ async function countSince(
 async function eventCounts(sinceIso: string): Promise<Record<string, number>> {
   const { data, error } = await supabase
     .from('analytics_events')
-    .select('name, props')
+    .select('name, path, props')
     .gte('created_at', sinceIso)
     .limit(50_000);
 
@@ -42,6 +73,9 @@ async function eventCounts(sinceIso: string): Promise<Record<string, number>> {
     // reported funnel reflects easytax.vip only.
     const env = (row.props as { env?: string } | null)?.env;
     if (env !== 'production') continue;
+    // Crawler hits on static files and our own dashboard fixtures are not
+    // page views. See isPublicContentPath.
+    if (row.name === 'page_view' && !isPublicContentPath(row.path)) continue;
     out[row.name] = (out[row.name] ?? 0) + 1;
   }
   return out;
@@ -52,7 +86,7 @@ async function eventCounts(sinceIso: string): Promise<Record<string, number>> {
 async function uniqueVisitors(sinceIso: string): Promise<number | null> {
   const { data, error } = await supabase
     .from('analytics_events')
-    .select('anon_id, props')
+    .select('anon_id, path, props')
     .eq('name', 'page_view')
     .gte('created_at', sinceIso)
     .limit(50_000);
@@ -62,6 +96,7 @@ async function uniqueVisitors(sinceIso: string): Promise<number | null> {
   const ids = new Set<string>();
   for (const row of data ?? []) {
     if ((row.props as { env?: string } | null)?.env !== 'production') continue;
+    if (!isPublicContentPath(row.path)) continue;
     if (row.anon_id) ids.add(row.anon_id);
   }
   return ids.size;
@@ -114,10 +149,22 @@ async function trafficBreakdown(sinceIso: string) {
     }
   };
 
+  // What the filter removed, so the exclusion is auditable rather than a
+  // silent shrink in the headline number.
+  const excluded = new Map<string, { views: number; visitors: Set<string> }>();
+
   for (const row of data ?? []) {
     if ((row.props as { env?: string } | null)?.env !== 'production') continue;
 
     if (row.name === 'page_view') {
+      if (!isPublicContentPath(row.path)) {
+        const key = row.path ?? '(unknown)';
+        const ex = excluded.get(key) ?? { views: 0, visitors: new Set<string>() };
+        ex.views += 1;
+        if (row.anon_id) ex.visitors.add(row.anon_id);
+        excluded.set(key, ex);
+        continue;
+      }
       const path = row.path ?? '(unknown)';
       const entry = views.get(path) ?? { views: 0, visitors: new Set<string>() };
       entry.views += 1;
@@ -155,7 +202,26 @@ async function trafficBreakdown(sinceIso: string) {
   const seen = new Set(views.keys());
   const silent = MARKETING_PAGES.filter(p => !seen.has(p));
 
-  return { by_path: byPath, by_channel: byChannel, pages_with_no_traffic: silent };
+  const excludedIds = new Set<string>();
+  for (const v of excluded.values()) for (const id of v.visitors) excludedIds.add(id);
+
+  return {
+    by_path: byPath,
+    by_channel: byChannel,
+    pages_with_no_traffic: silent,
+    excluded_non_content: {
+      note:
+        'Page views on paths that are not public pages — static files hit by crawlers ' +
+        '(a 404 renders the tracker), our own /dashboard sandbox fixtures, and API routes. ' +
+        'Removed from every count above and from last_7d / last_30d.',
+      page_views:      [...excluded.values()].reduce((n, v) => n + v.views, 0),
+      unique_visitors: excludedIds.size,
+      by_path: [...excluded.entries()]
+        .map(([path, v]) => ({ path, page_views: v.views, unique_visitors: v.visitors.size }))
+        .sort((a, b) => b.page_views - a.page_views)
+        .slice(0, 10),
+    },
+  };
 }
 
 /** The free tools, keyed by the `tool` prop their events carry. The page path

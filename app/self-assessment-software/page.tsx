@@ -70,7 +70,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'Do I need self assessment software if I already use HMRC\'s website?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'For now, you can still file directly on HMRC\'s website. However, from April 2026, Making Tax Digital for Income Tax (MTD ITSA) becomes mandatory for sole traders and landlords earning over £50,000 — and HMRC\'s own web portal will not be an MTD-compatible route. You will need recognised software like EasyTax to send quarterly updates and your annual final declaration.',
+          text: 'It depends which tax year. Your 2025/26 return is still an ordinary Self Assessment return and can still be filed on HMRC\'s website — it is due by 31 January 2027. But from 2026/27 onwards, if your combined self-employment and property income was over £50,000, you have been inside Making Tax Digital for Income Tax since 6 April 2026. Quarterly updates have to go through MTD-compatible software, and HMRC\'s own web portal is not one — which is what recognised software like EasyTax is for.',
         },
       },
       {
@@ -189,7 +189,7 @@ export default async function SelfAssessmentSoftware() {
             <div className="grid sm:grid-cols-3 gap-4">
               {[
                 { label: 'Annual SA filing', title: 'SA100 + supplementary pages', body: 'File your full Self Assessment return — SA100 main form, SA103 (self-employment), SA105 (property income) — directly to HMRC via the official API.' },
-                { label: 'From April 2026', title: 'MTD ITSA quarterly updates', body: 'For those earning over £50,000, quarterly income and expense submissions become mandatory. EasyTax handles both the quarterly cycle and the annual final declaration.' },
+                { label: 'Since April 2026', title: 'MTD ITSA quarterly updates', body: 'For those earning over £50,000, quarterly income and expense submissions are now mandatory. EasyTax handles both the quarterly cycle and the annual final declaration.' },
                 { label: 'Already mandatory', title: 'MTD VAT', body: 'If you are VAT-registered above £90,000 turnover, MTD VAT is already required. EasyTax files VAT returns directly to HMRC alongside your SA.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -441,7 +441,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   q: 'Do I need self assessment software if I already use HMRC\'s website?',
-                  a: 'For now, you can still file directly on HMRC\'s website. However, from April 2026, Making Tax Digital for Income Tax becomes mandatory for sole traders and landlords earning over £50,000 — and HMRC\'s web portal will not be an MTD-compatible route. You will need recognised software like EasyTax.',
+                  a: 'It depends which tax year. Your 2025/26 return is still an ordinary Self Assessment return and can still be filed on HMRC\'s website, by 31 January 2027. But from 2026/27 onwards, if your combined self-employment and property income was over £50,000, you have been inside Making Tax Digital for Income Tax since 6 April 2026 — quarterly updates must go through MTD-compatible software, and HMRC\'s web portal is not one.',
                 },
                 {
                   q: 'How much does EasyTax self assessment software cost?',

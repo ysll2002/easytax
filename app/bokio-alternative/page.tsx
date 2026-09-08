@@ -106,12 +106,12 @@ export default async function BokioAlternative() {
               Bokio is closing on <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to EasyTax in minutes.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> with no monthly subscription — and from April 2026 you legally have to file quarterly anyway.
+              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> with no monthly subscription — and since April 2026 you are legally required to file quarterly anyway.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready for April 2026</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready — mandatory since April 2026</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
@@ -132,7 +132,7 @@ export default async function BokioAlternative() {
               Two deadlines, one move.
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Whichever Bokio alternative you pick, you are not just replacing Bokio. From <strong>April 2026</strong>, HMRC will require every UK sole trader or landlord earning over <strong>£50,000</strong> to file <strong>quarterly</strong> updates through MTD-compatible software. From April 2027, the threshold drops to £30,000. EasyTax is built for that mandate from day one.
+              Whichever Bokio alternative you pick, you are not just replacing Bokio. Since <strong>April 2026</strong>, HMRC has required every UK sole trader or landlord earning over <strong>£50,000</strong> to file <strong>quarterly</strong> updates through MTD-compatible software. From April 2027, the threshold drops to £30,000. EasyTax is built for that mandate from day one.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -218,7 +218,7 @@ export default async function BokioAlternative() {
                 },
                 {
                   title: 'File your first MTD ITSA quarterly update',
-                  body: 'When April 2026 hits, your first quarterly window opens. EasyTax submits directly to HMRC via the official MTD ITSA API.',
+                  body: 'The quarterly cycle is already running — the first update was due 7 August 2026. EasyTax submits directly to HMRC via the official MTD ITSA API.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">

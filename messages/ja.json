@@ -14,6 +14,13 @@
     "language": "言語",
     "trust": "安全性と信頼"
   },
+  "mtdBar": {
+    "live": "MTD ITSA は施行されています。",
+    "preMandate": "MTD ITSA は 2026 年 4 月 6 日に開始します。",
+    "due": "{quarter} 四半期申告（{period}）の期限は {date}",
+    "daysLeft": "残り {days} 日",
+    "cta": "期限を確認する"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital が始まりました。",
@@ -321,6 +328,7 @@
     "allTools": "すべての無料ツール",
     "penaltyCalculator": "加算税計算ツール",
     "poaCalculator": "予定納税計算ツール",
+    "taxCalendar": "税務期限カレンダー",
     "browseTopics": "トピックから探す",
     "aboutUs": "私たちについて",
     "privacy": "プライバシー",

@@ -101,6 +101,16 @@ export default function PageViewTracker() {
     // every page is counted twice.
     if (lastPath.current === pathname) return;
     lastPath.current = pathname;
+
+    // A request for a file that does not exist renders the 404 page, which
+    // carries this tracker — so a crawler checking for /robots.txt or an
+    // IndexNow key file was recording itself as a visitor on a path no page
+    // ever lived at. Six of one week's 34 "unique visitors" came in this way.
+    // A dot in the last path segment means a file, and no real page here has
+    // one.
+    const last = pathname.split('/').pop() ?? '';
+    if (last.includes('.')) return;
+
     trackClient('page_view');
   }, [pathname]);
 
