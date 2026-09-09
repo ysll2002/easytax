@@ -84,10 +84,18 @@ export async function GET(req: NextRequest) {
     audience: plan.totals,
     warnings: plan.warnings,
     segments: plan.plans.map(p => {
-      const sample = p.eligible[0]
-        ? renderEmail(p.eligible[0], base)
-        : null;
+      // renderEmail throws when no signing secret is configured, because an
+      // email without a working opt-out is not one we will build. In a dry run
+      // that is a finding to report, not a 500 that hides the rest of the plan.
+      let sample: ReturnType<typeof renderEmail> | null = null;
+      let sampleError: string | null = null;
+      try {
+        sample = p.eligible[0] ? renderEmail(p.eligible[0], base) : null;
+      } catch (err) {
+        sampleError = err instanceof Error ? err.message : String(err);
+      }
       return {
+        sample_error: sampleError,
         segment: p.segment,
         campaign: p.campaign,
         subject: p.subject,
@@ -217,6 +225,21 @@ export async function POST(req: NextRequest) {
 
   if (target.eligible.length === 0) {
     return NextResponse.json({ ok: true, sent: 0, note: 'Nobody is eligible.' });
+  }
+
+  // Prove the whole email can be built — unsubscribe link included — before
+  // claiming a single row. Discovering halfway through the loop that no signing
+  // secret is configured would leave twenty addresses marked sent that were
+  // never sent, and the dedupe guard would then refuse to retry them.
+  try {
+    renderEmail(target.eligible[0]);
+  } catch (err) {
+    return NextResponse.json(
+      {
+        error: `Cannot build the email: ${err instanceof Error ? err.message : String(err)}. Nothing was sent.`,
+      },
+      { status: 503 },
+    );
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
