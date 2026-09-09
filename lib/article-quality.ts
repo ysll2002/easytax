@@ -63,7 +63,7 @@ export const STANDARD = {
  * there is no allowlist of "safe" attributes to get wrong later.
  */
 export function sanitiseArticleHtml(html: string): string {
-  return html
+  const cleaned = html
     // Elements whose *content* is also dangerous have to go as a unit; unwrapping
     // <script> would leave the script body as text, which is worse than useless.
     .replace(/<(script|style|iframe|object|embed|template)\b[\s\S]*?<\/\1\s*>/gi, '')
@@ -75,11 +75,23 @@ export function sanitiseArticleHtml(html: string): string {
     })
     // An unclosed or stray '<' that was not part of a tag would otherwise sit in
     // the output and can start swallowing markup in a forgiving parser.
-    .replace(/<(?![a-zA-Z/])/g, '&lt;')
-    // Wrapped after sanitising, not before: this markup is ours, so the class
-    // survives the attribute-stripping above. A rates table can be four columns
-    // wide and the page must not scroll sideways on a phone because of it, so
-    // the overflow belongs to the table's own container.
+    .replace(/<(?![a-zA-Z/])/g, '&lt;');
+
+  // Wrapped after sanitising, not before: this markup is ours, so the class
+  // survives the attribute-stripping above. A rates table can be four columns
+  // wide and the page must not scroll sideways on a phone because of it, so the
+  // overflow belongs to the table's own container.
+  //
+  // Only when the tags balance. An unclosed <table> would otherwise gain an
+  // opening <div> with no closing one, and an unbalanced wrapper is a worse
+  // page than an unwrapped table — the browser closes it at the article
+  // container, taking the rest of the layout with it. A malformed table is the
+  // model's mistake; making it a layout bug would be ours.
+  const open = (cleaned.match(/<table>/g) ?? []).length;
+  const close = (cleaned.match(/<\/table>/g) ?? []).length;
+  if (open === 0 || open !== close) return cleaned;
+
+  return cleaned
     .replace(/<table>/g, '<div class="prose-article-scroll"><table>')
     .replace(/<\/table>/g, '</table></div>');
 }
