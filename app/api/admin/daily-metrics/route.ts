@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { EVENTS } from '@/lib/analytics';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -28,7 +29,15 @@ export const dynamic = 'force-dynamic';
 // deleted, and the exclusions are reported alongside the totals: a filter you
 // cannot see is how a metric quietly starts lying in the other direction.
 
-const NON_CONTENT_PREFIXES = ['/dashboard', '/api', '/onboarding', '/payment', '/actions'];
+// `/login`, `/register` and the password-reset pages were counted as content
+// until 2026-09-09. They are not: nobody arrives at a login form from a search
+// result, and eight of the first sixty-eight production page views were on
+// them — a tenth of the traffic, all of it people who were already customers,
+// filed under "did the marketing work".
+const NON_CONTENT_PREFIXES = [
+  '/dashboard', '/api', '/onboarding', '/payment', '/actions',
+  '/login', '/register', '/forgot-password', '/reset-password',
+];
 
 /** True for paths that represent a person looking at a public page. */
 export function isPublicContentPath(path: string | null | undefined): boolean {
@@ -39,6 +48,59 @@ export function isPublicContentPath(path: string | null | undefined): boolean {
   const last = path.split('/').pop() ?? '';
   if (last.includes('.')) return false;
   return true;
+}
+
+/**
+ * Which instrumented events have never fired in production, ever.
+ *
+ * This exists because of a specific failure. On 2026-09-09 the archive of
+ * production events contained exactly two names: `page_view` and
+ * `trust_viewed`. Every other event in lib/analytics.ts — `tool_started`,
+ * `tool_completed`, `checker_started`, `launch_subscribed`,
+ * `activation_cta_click`, `schedule_requested`, all of them — had never
+ * happened. Three consecutive rounds set targets against those counters
+ * ("≥ 3 checker_started", "≥ 10 tool page views", "≥ 4 launch subscribers")
+ * and each read its result as a small number rather than as a flat zero.
+ *
+ * A zero and a small number are not the same finding: one says the feature is
+ * underperforming, the other says nobody has ever touched it, and in a funnel
+ * of 68 page views those look identical in a table. So they are separated
+ * here, unmissably, and computed over all of history rather than the window —
+ * "never, since instrumentation began" is the claim that matters.
+ *
+ * `dev_only` is the sharper version of the same point: the event fires, but
+ * only on a developer's machine. Fourteen `tool_completed` events existed on
+ * 2026-09-09 and all fourteen were stamped `env: development`.
+ */
+async function eventReality(names: string[]): Promise<{
+  never_fired: string[];
+  dev_only: string[];
+  ever_fired_in_production: Record<string, number>;
+  environment_split: Record<string, number>;
+} | null> {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('name, props')
+    .limit(50_000);
+
+  if (error) return null;
+
+  const prod: Record<string, number> = {};
+  const dev: Record<string, number> = {};
+  const envs: Record<string, number> = {};
+  for (const row of data ?? []) {
+    const env = (row.props as { env?: string } | null)?.env ?? '(unstamped)';
+    envs[env] = (envs[env] ?? 0) + 1;
+    const bucket = env === 'production' ? prod : dev;
+    bucket[row.name] = (bucket[row.name] ?? 0) + 1;
+  }
+
+  return {
+    never_fired: names.filter(n => !prod[n] && !dev[n]),
+    dev_only: names.filter(n => !prod[n] && dev[n]),
+    ever_fired_in_production: prod,
+    environment_split: envs,
+  };
 }
 
 async function countSince(
@@ -421,23 +483,33 @@ async function editorialState(since7d: string) {
   };
 }
 
-export async function GET(req: NextRequest) {
-  const expected = process.env.AGENT_METRICS_KEY;
-  if (!expected) {
-    return NextResponse.json({ error: 'AGENT_METRICS_KEY not configured' }, { status: 503 });
-  }
-  const key = req.nextUrl.searchParams.get('key');
-  if (!key || key !== expected) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
-  }
-
+/**
+ * Assembles the whole metrics payload.
+ *
+ * Exported so callers inside the deployment can have the numbers without an
+ * HTTP round trip to themselves. `/api/cron/growth-snapshot` used to reach
+ * `/api/admin/weekly-review`, which reached this route, over the deployment's
+ * own public URL — three functions and two self-fetches to write one row a day.
+ * `growth_snapshots` was still empty two days after that shipped, and a
+ * self-fetch is the part of that chain that can fail without leaving a trace we
+ * can read: Vercel deployment protection answers an internal request to the
+ * public hostname with an SSO redirect, so `res.json()` gets a login page and
+ * the failure looks like a metrics outage rather than a routing problem.
+ *
+ * An in-process call cannot be intercepted by anything, has no second timeout,
+ * and turns a silent empty table into a stack trace.
+ *
+ * Only route handlers named for HTTP methods are treated as endpoints by Next,
+ * so this export adds no new public surface.
+ */
+export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
   const now      = new Date();
   const since24h = new Date(now.getTime() - 24  * 60 * 60 * 1000).toISOString();
   const since7d  = new Date(now.getTime() - 7   * 24 * 60 * 60 * 1000).toISOString();
   const since30d = new Date(now.getTime() - 30  * 24 * 60 * 60 * 1000).toISOString();
   const sincePrev14d = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString();
 
-  try {
+  {
     const [
       profilesTotal,     profiles24h,     profiles7d,     profiles30d,
       hmrcTotal,         hmrc24h,         hmrc7d,         hmrc30d,
@@ -482,7 +554,7 @@ export async function GET(req: NextRequest) {
     // just because instrumentation is not live yet.
     const [
       events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
-      tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window,
+      tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window, reality,
     ] = await Promise.all([
       eventCounts(since7d),
       eventCounts(since30d),
@@ -500,6 +572,7 @@ export async function GET(req: NextRequest) {
       uniqueVisitors(sincePrev14d),
       editorialState(since7d),
       dataWindow(),
+      eventReality(Object.values(EVENTS)),
     ]);
 
     // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
@@ -511,7 +584,7 @@ export async function GET(req: NextRequest) {
     const rate = (num: number, den: number | null) =>
       den && den > 0 ? +(num / den).toFixed(3) : null;
 
-    return NextResponse.json({
+    return {
       generated_at:            now.toISOString(),
       target_goal_gbp_per_month: 10_000,
       env: {
@@ -560,6 +633,15 @@ export async function GET(req: NextRequest) {
         // the exact bug this block was written to prevent, so it has to be in
         // the response, not just in the function list.
         data_window: window,
+        // Read this before reading any number below it.
+        //
+        // `never_fired` is the list of instrumented events that have not
+        // happened once in the entire history of the table, in any
+        // environment. `dev_only` is the list that has happened only on a
+        // developer's machine. An entry in either list means the corresponding
+        // figure in last_7d / last_30d is not a low number — it is nothing at
+        // all, and no target set against it has been tested yet.
+        reality_check: reality ?? { note: 'analytics_events unavailable' },
         // Which pages and channels actually produce visitors and actions.
         // `conversions` counts register/launch-list/checker/CTA events fired
         // on that page. `pages_with_no_traffic` lists marketing routes that
@@ -641,7 +723,22 @@ export async function GET(req: NextRequest) {
         distance_to_goal:    10_000,
         status:              'pre-revenue (HMRC production approval pending)',
       },
-    });
+    };
+  }
+}
+
+export async function GET(req: NextRequest) {
+  const expected = process.env.AGENT_METRICS_KEY;
+  if (!expected) {
+    return NextResponse.json({ error: 'AGENT_METRICS_KEY not configured' }, { status: 503 });
+  }
+  const key = req.nextUrl.searchParams.get('key');
+  if (!key || key !== expected) {
+    return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+  }
+
+  try {
+    return NextResponse.json(await buildMetricsPayload());
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: msg }, { status: 500 });

@@ -45,6 +45,10 @@ export const EVENTS = {
   // purpose: nothing in the browser should be able to forge a subscription.
   calendarFetched:     'calendar_fetched',
   calendarCtaClick:    'calendar_cta_click',
+  // Recorded by /api/admin/reactivation when the owner sends the campaign to
+  // the existing account base. Listed here so that until it is sent it shows up
+  // in the endpoint's `never_fired` block rather than being invisible.
+  reactivationSent:    'reactivation_sent',
 } as const;
 
 let warned = false;

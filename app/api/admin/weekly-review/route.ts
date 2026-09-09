@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { evaluateTargets, summarise, type TargetResult } from '@/lib/growth-targets';
 import { escapeHtml, sendInternalNotice } from '@/lib/email';
+import { buildMetricsPayload } from '@/app/api/admin/daily-metrics/route';
 
 // The one-week review, as a computation rather than a memory.
 //
@@ -20,21 +21,6 @@ import { escapeHtml, sendInternalNotice } from '@/lib/email';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-/** Fetches the metrics endpoint from this same deployment.
- *
- *  A self-fetch rather than a direct call because the payload is assembled
- *  inside that route handler; going over HTTP keeps one definition of the
- *  numbers instead of two that can drift. */
-async function fetchMetrics(req: NextRequest, key: string): Promise<Record<string, unknown>> {
-  const base = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
-  const res = await fetch(`${base}/api/admin/daily-metrics?key=${encodeURIComponent(key)}`, {
-    cache: 'no-store',
-  });
-  if (!res.ok) {
-    throw new Error(`daily-metrics returned ${res.status}`);
-  }
-  return (await res.json()) as Record<string, unknown>;
-}
 
 type Snapshot = { taken_on: string; label: string | null; payload: Record<string, unknown> };
 
@@ -85,9 +71,15 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Called in process. This used to be a fetch of our own public URL, on the
+  // reasoning that one definition of the numbers beats two. It still is one
+  // definition — importing the builder keeps that — but without a network hop
+  // that Vercel's deployment protection can answer with an SSO redirect, which
+  // is the likeliest reason growth_snapshots was still empty two days after
+  // the daily snapshot cron shipped.
   let metrics: Record<string, unknown>;
   try {
-    metrics = await fetchMetrics(req, expected);
+    metrics = await buildMetricsPayload();
   } catch (err) {
     return NextResponse.json(
       { error: `Could not read metrics: ${err instanceof Error ? err.message : String(err)}` },

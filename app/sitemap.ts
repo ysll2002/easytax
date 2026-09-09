@@ -93,8 +93,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/timetable`,                 lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/tax-tips`,                  lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
     { url: `${base}/tax-tips/topics`,           lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.7 },
-    { url: `${base}/register`,                  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
-    { url: `${base}/login`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
+    // /register and /login are deliberately absent. The 2026-09-09 audit
+    // (/api/admin/seo-audit) found both of them serving the homepage's exact
+    // <title> and a canonical of https://easytax.vip — so the sitemap was
+    // inviting crawlers to two 48-to-71-word pages that then declared
+    // themselves to be a third page. A sign-in form is not a search result
+    // anyone wants, and nothing links to it from outside; it does not belong
+    // in the index.
     { url: `${base}/privacy`,                   lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
     { url: `${base}/terms`,                     lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
     ...topicUrls,
