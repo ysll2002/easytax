@@ -28,7 +28,12 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 // Two model calls at 8k output tokens, and up to `count` of them. The old
 // 1500-token cap made this a fast route; depth costs time.
-export const maxDuration = 800;
+//
+// 300 is the ceiling, not a preference: this project is on Vercel's Hobby
+// plan, where a serverless function may not exceed it — a first attempt at 800
+// failed the deploy outright with "must have a maxDuration between 1 and 300
+// for plan hobby". That same limit is why `count` is capped low.
+export const maxDuration = 300;
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 

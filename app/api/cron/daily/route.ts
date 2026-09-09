@@ -11,15 +11,19 @@ import { buildMetricsPayload } from '@/app/api/admin/daily-metrics/route';
 // generator, IndexNow, four date-pinned MTD reminders, and the growth
 // snapshot. `growth_snapshots` was empty two days after the snapshot cron
 // shipped and was deployed, while the article cron ran every morning without
-// missing a day — which is the shape of a per-plan cron limit biting the entry
-// furthest down the file, not of a broken handler.
+// missing a day — the shape of a per-plan cron limit biting the entry furthest
+// down the file, not of a broken handler.
 //
-// Guessing at the plan is the wrong fix. Not depending on the answer is the
-// right one: two entries survive here, which is under the lowest limit Vercel
-// applies to any plan. The article job keeps its own entry because it makes two
-// model calls and needs a function budget of its own; everything cheap runs
-// here, in order, and reports each step separately so a failure names itself
-// instead of showing up a week later as an empty table.
+// That was a hypothesis when this was written and is not one any more. The
+// deploy of this very commit failed with "Serverless Functions must have a
+// maxDuration between 1 and 300 for plan hobby", which settles which plan this
+// project is on: Hobby allows **two** cron jobs. Seven were declared. Five of
+// them, the snapshot last among them, were never going to run.
+//
+// Two entries survive. The article job keeps its own because it makes two model
+// calls and needs a function budget of its own; everything cheap runs here, in
+// order, and reports each step separately so a failure names itself instead of
+// showing up a week later as an empty table.
 //
 // The four date-pinned reminder entries are gone rather than moved. The
 // reminder handler already refuses to send outside its own window relative to
