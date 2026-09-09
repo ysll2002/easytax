@@ -48,6 +48,32 @@ async function run(step: string, fn: () => Promise<unknown>): Promise<Step> {
   }
 }
 
+/**
+ * Fetches one of our own routes and insists on a JSON answer.
+ *
+ * The snapshot avoids self-fetching entirely, for the reason in the header
+ * comment. The two steps below cannot — what they need is in a route handler,
+ * not a library — so they get the next best thing: a check that the reply is
+ * actually ours. Vercel's deployment protection answers an internal request to
+ * the public hostname with a 200 and an HTML login page, so `res.ok` is true
+ * and `res.json().catch(() => null)` swallows the rest. That combination
+ * reports a step as successful when nothing ran, which is the exact failure
+ * this whole route exists to stop happening quietly.
+ */
+async function fetchJson(url: URL): Promise<unknown> {
+  const res = await fetch(url, { cache: 'no-store' });
+  const type = res.headers.get('content-type') ?? '';
+  if (!type.includes('application/json')) {
+    throw new Error(
+      `${url.pathname} answered ${res.status} with content-type "${type}" instead of JSON — ` +
+        'likely a deployment-protection redirect rather than our own handler',
+    );
+  }
+  const body = await res.json();
+  if (!res.ok) throw new Error(`${url.pathname} returned ${res.status}: ${JSON.stringify(body)}`);
+  return body;
+}
+
 /** Today's metrics, stored as the day's row. Upserted on the date, so Vercel's
  *  at-least-once cron delivery cannot produce two rows for one day. */
 async function storeSnapshot(): Promise<unknown> {
@@ -88,8 +114,7 @@ export async function GET(req: NextRequest) {
   steps.push(await run('mtd-reminder', async () => {
     const url = new URL('/api/cron/mtd-reminder', base);
     if (cronSecret) url.searchParams.set('secret', cronSecret);
-    const res = await fetch(url, { cache: 'no-store' });
-    return { status: res.status, body: await res.json().catch(() => null) };
+    return fetchJson(url);
   }));
 
   // Before the review, so Monday's comparison includes today. This is the step
@@ -109,9 +134,7 @@ export async function GET(req: NextRequest) {
       const url = new URL('/api/admin/weekly-review', base);
       url.searchParams.set('key', metricsKey);
       url.searchParams.set('email', '1');
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`weekly-review returned ${res.status}`);
-      return { status: res.status };
+      return fetchJson(url);
     }));
   }
 
