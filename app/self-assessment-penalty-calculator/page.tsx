@@ -10,8 +10,9 @@ import {
 } from '@/lib/sa-penalties';
 import SiteFooter from '@/components/SiteFooter';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
+import { decodePenalty, encodePenalty, penaltyCard, toSearchParams } from '@/lib/share-results';
 
-export const metadata: Metadata = {
+const BASE: Metadata = {
   title: 'Self Assessment Late Filing Penalty Calculator — what HMRC will charge you',
   description:
     'Free calculator for a late Self Assessment return. Enter the tax year, when you filed and what you owe to see the £100 penalty, £10 daily charges, the 6 and 12 month penalties and the 5% late payment charges — itemised, with the dates each one bites.',
@@ -40,7 +41,47 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PenaltyCalculatorPage() {
+type Search = Promise<Record<string, string | string[] | undefined>>;
+
+/**
+ * A shared result link gets the answer in its title, description and preview
+ * card; the bare page keeps the metadata it already had.
+ *
+ * The canonical stays on the clean URL in both cases. The parameterised URLs
+ * are the same page with a form pre-filled, not new content, and letting a
+ * search engine index one per set of figures would build exactly the kind of
+ * near-duplicate inventory that suppresses the page that matters.
+ */
+export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
+  const shared = decodePenalty(toSearchParams(await searchParams));
+  if (!shared) return BASE;
+
+  const card = penaltyCard(shared);
+  const image = `/og/penalty?${encodePenalty(shared)}`;
+
+  return {
+    ...BASE,
+    title: card.metaTitle,
+    description: card.metaDescription,
+    openGraph: {
+      ...BASE.openGraph,
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [{ url: image, width: 1200, height: 630, alt: card.title }],
+    },
+    twitter: {
+      ...BASE.twitter,
+      card: 'summary_large_image',
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [image],
+    },
+  };
+}
+
+export default async function PenaltyCalculatorPage({ searchParams }: { searchParams: Search }) {
+  const shared = decodePenalty(toSearchParams(await searchParams));
+
   const faq = [
     {
       q: 'How much is the penalty for filing a Self Assessment return late?',
@@ -149,7 +190,7 @@ export default function PenaltyCalculatorPage() {
           and you do not need an account.
         </p>
 
-        <PenaltyCalculator />
+        <PenaltyCalculator initial={shared} />
 
         {/* ── How the bands work ── */}
         <section className="mt-14">

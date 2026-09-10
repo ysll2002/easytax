@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Wallet, Info, ArrowRight } from 'lucide-react';
 import { trackClient } from './PageViewTracker';
+import ShareResult from './ShareResult';
+import { encodePoa, poaCard, type PoaShare } from '@/lib/share-results';
 import {
   calculatePaymentsOnAccount,
   selectableTaxYears,
@@ -23,14 +25,37 @@ function gbp(n: number): string {
   return `£${Math.abs(Math.round(n)).toLocaleString('en-GB')}`;
 }
 
-export default function PaymentsOnAccountCalculator() {
+/** `initial` is a shared result link, decoded on the server by the page. See
+ *  the note on PenaltyCalculator: decoding there rather than here is what keeps
+ *  the server and client renders identical. */
+export default function PaymentsOnAccountCalculator({ initial }: { initial?: PoaShare | null }) {
   const years = useMemo(() => selectableTaxYears(), []);
-  const [taxYear, setTaxYear] = useState(years[0]);
-  const [liability, setLiability] = useState('');
-  const [deducted, setDeducted] = useState('');
-  const [alreadyPaid, setAlreadyPaid] = useState('');
-  const [result, setResult] = useState<PoaResult | null>(null);
+  const [taxYear, setTaxYear] = useState(initial?.taxYearStart ?? years[0]);
+  const [liability, setLiability] = useState(initial ? String(initial.liability) : '');
+  const [deducted, setDeducted] = useState(
+    initial?.deductedAtSource ? String(initial.deductedAtSource) : '',
+  );
+  const [alreadyPaid, setAlreadyPaid] = useState(
+    initial?.poaAlreadyMade ? String(initial.poaAlreadyMade) : '',
+  );
+  // Computed in the initialiser, not an effect, so a shared answer is in the
+  // server-rendered HTML rather than appearing a beat after hydration. See the
+  // same note on PenaltyCalculator.
+  const [result, setResult] = useState<PoaResult | null>(() =>
+    initial
+      ? calculatePaymentsOnAccount({
+          taxYearStart: initial.taxYearStart,
+          liability: initial.liability,
+          deductedAtSource: initial.deductedAtSource,
+          poaAlreadyMade: initial.poaAlreadyMade,
+        })
+      : null,
+  );
   const started = useRef(false);
+
+  useEffect(() => {
+    if (initial) trackClient('tool_completed', { tool: TOOL, source: 'shared_link' });
+  }, [initial]);
 
   const markStarted = () => {
     if (started.current) return;
@@ -192,6 +217,27 @@ export default function PaymentsOnAccountCalculator() {
       </form>
 
       {result && <Result result={result} />}
+
+      {result && parsedLiability !== null && (
+        <ShareResult
+          tool={TOOL}
+          path="/payments-on-account-calculator"
+          query={encodePoa({
+            taxYearStart: taxYear,
+            liability: parsedLiability,
+            deductedAtSource: num(deducted) ?? 0,
+            poaAlreadyMade: num(alreadyPaid) ?? 0,
+          })}
+          summary={
+            poaCard({
+              taxYearStart: taxYear,
+              liability: parsedLiability,
+              deductedAtSource: num(deducted) ?? 0,
+              poaAlreadyMade: num(alreadyPaid) ?? 0,
+            }).title
+          }
+        />
+      )}
     </div>
   );
 }

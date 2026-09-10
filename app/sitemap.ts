@@ -75,6 +75,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/mtd-deadline-checker`,      lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
     { url: `${base}/self-assessment-penalty-calculator`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/payments-on-account-calculator`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    // The embeddable widget's landing page. Addressed to accountants and
+    // advisers rather than taxpayers, and the only page here whose purpose is
+    // to be found by someone who might link to us rather than buy from us.
+    { url: `${base}/tools/embed`,               lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/self-assessment-software`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/landlord-tax-software`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/bokio-alternative`,         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },

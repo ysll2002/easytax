@@ -45,6 +45,23 @@ export const EVENTS = {
   // purpose: nothing in the browser should be able to forge a subscription.
   calendarFetched:     'calendar_fetched',
   calendarCtaClick:    'calendar_cta_click',
+  // Distribution: the four ways a page of ours can end up somewhere else.
+  // The click on a share control, and the copy of a result link. Both carry
+  // props.tool and props.channel; neither ever carries the figures, which are
+  // in the shared URL only because the reader put them there.
+  shareClick:          'share_click',
+  shareCopy:           'share_copy',
+  // Server-side, from the Open Graph route a shared result link points at. A
+  // hit is a platform scraping the card, which is the closest thing we get to
+  // proof that a link was actually posted somewhere.
+  shareCardServed:     'share_card_served',
+  // Server-side, from /embed/*. props.host is the site doing the embedding —
+  // in other words, a backlink, detected by us rather than waited for from
+  // Search Console.
+  embedServed:         'embed_served',
+  // Server-side, from the RSS/JSON feeds. A repeating fetch from the same
+  // reader user-agent is a subscription.
+  feedFetched:         'feed_fetched',
 } as const;
 
 let warned = false;
