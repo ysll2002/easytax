@@ -4,6 +4,14 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const nextConfig: NextConfig = {
+  // Vercel exposes the commit a deployment was built from, but not when the
+  // build ran — and "which commit" and "how stale" are different questions.
+  // Stamped at build time so lib/deployment.ts can answer both. Public because
+  // it is already public: it is the build date of code anyone can fetch.
+  env: {
+    NEXT_PUBLIC_BUILD_TIME: new Date().toISOString(),
+  },
+
   async headers() {
     return [
       {

@@ -38,6 +38,7 @@
       "badgeNoCard": "가입 시 카드 불필요",
       "badgeHmrc": "HMRC API 기반",
       "ctaPrimary": "MTD 준비하기 →",
+      "ctaChecker": "MTD 마감일 확인하기 →",
       "ctaSecondary": "지원 범위 보기 →"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "ICO 등록번호 ZA540758",
       "ai": "Finance Panda Limited",
       "company": "법인 지원"
+    },
+    "tools": {
+      "title": "지금 바로 쓸 수 있는 무료 도구",
+      "subtitle": "계정도 카드도 필요 없고 HMRC 승인을 기다릴 필요도 없습니다. 방문자가 실제로 궁금해하는 것에 답하는 계산기 세 가지.",
+      "all": "무료 도구 전체 보기 →"
     },
     "services": {
       "title1": "모든 것을 지원,",
@@ -332,6 +338,7 @@
     "rssFeed": "RSS 피드",
     "deadlineWidget": "마감일 위젯",
     "browseTopics": "주제별 보기",
+    "hmrcSignedMeUp": "HMRC가 나를 MTD에 등록했어요",
     "aboutUs": "회사 소개",
     "privacy": "개인정보",
     "terms": "이용약관",

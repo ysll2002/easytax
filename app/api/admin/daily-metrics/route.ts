@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { EVENTS } from '@/lib/analytics';
+import { deploymentInfo } from '@/lib/deployment';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -169,6 +170,76 @@ async function uniqueVisitors(sinceIso: string): Promise<number | null> {
     if (row.anon_id) ids.add(row.anon_id);
   }
   return ids.size;
+}
+
+/**
+ * Humans and automation, counted apart.
+ *
+ * `props.bot` is stamped server-side by /api/track from the request's
+ * User-Agent (see lib/bot-detection.ts) and cannot be set by the caller. It
+ * only exists on rows written after 2026-09-11, so everything older is
+ * reported as `unclassified` rather than silently assumed to be either — the
+ * split is a forward-looking measurement, and a backfill we cannot do would be
+ * a guess presented as a fact.
+ *
+ * Read `human.visitors` as the real top of the funnel. On the day this shipped
+ * the reported figure was 46 visitors over nine days with zero conversions of
+ * any kind, which is a number that describes crawlers at least as well as it
+ * describes customers. Until this block says which, no traffic experiment on
+ * this site is measurable.
+ */
+async function audience(sinceIso: string) {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('anon_id, path, props')
+    .eq('name', 'page_view')
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return null;
+
+  const human = new Set<string>();
+  const bots  = new Set<string>();
+  const unknown = new Set<string>();
+  const labels = new Map<string, number>();
+  let humanViews = 0, botViews = 0, unknownViews = 0;
+
+  for (const row of data ?? []) {
+    const props = (row.props ?? {}) as { env?: string; bot?: unknown; bot_label?: unknown };
+    if (props.env !== 'production') continue;
+    if (!isPublicContentPath(row.path)) continue;
+
+    if (props.bot === true) {
+      botViews++;
+      if (row.anon_id) bots.add(row.anon_id);
+      const label = typeof props.bot_label === 'string' ? props.bot_label : 'unidentified-client';
+      labels.set(label, (labels.get(label) ?? 0) + 1);
+    } else if (props.bot === false) {
+      humanViews++;
+      if (row.anon_id) human.add(row.anon_id);
+    } else {
+      unknownViews++;
+      if (row.anon_id) unknown.add(row.anon_id);
+    }
+  }
+
+  const classified = humanViews + botViews;
+  return {
+    human:   { page_views: humanViews, visitors: human.size },
+    bot:     {
+      page_views: botViews,
+      visitors: bots.size,
+      by_label: [...labels.entries()].sort((a, b) => b[1] - a[1]).slice(0, 20)
+        .map(([key, count]) => ({ key, count })),
+    },
+    // Rows written before the User-Agent was recorded. Not evidence either way.
+    unclassified: { page_views: unknownViews, visitors: unknown.size },
+    human_share: classified ? Number((humanViews / classified).toFixed(3)) : null,
+    note:
+      'props.bot is stamped server-side from the User-Agent and exists only on rows ' +
+      'written after 2026-09-11. `unclassified` is older traffic, which is counted in ' +
+      'the headline funnel totals above and cannot be split retrospectively.',
+  };
 }
 
 /** Traffic broken down by landing page and by acquisition channel.
@@ -653,7 +724,7 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
     const [
       events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
       tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window, reality,
-      distribution7d, distribution30d,
+      distribution7d, distribution30d, audience7d, audience30d,
     ] = await Promise.all([
       eventCounts(since7d),
       eventCounts(since30d),
@@ -674,6 +745,8 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       eventReality(Object.values(EVENTS)),
       distribution(since7d),
       distribution(since30d),
+      audience(since7d),
+      audience(since30d),
     ]);
 
     // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
@@ -811,6 +884,23 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       distribution: {
         last_7d:  distribution7d,
         last_30d: distribution30d,
+      },
+
+      // What is actually running. Read this first: every figure below it
+      // describes the behaviour of THIS commit, and on 2026-09-11 three days of
+      // metrics were read as if two merged-looking rounds were live when
+      // `main` had not moved and neither had production. `built_from_main:
+      // false` on a production deployment is the 2026-09-05 incident again.
+      deployment: deploymentInfo(now),
+
+      // How much of the traffic above is a person. See audience() for why the
+      // question had to be asked: 46 reported visitors over nine days produced
+      // zero conversions of any kind, which automation explains better than a
+      // 0% rate does. `human.visitors` is the figure to steer by once
+      // `unclassified` has drained.
+      audience: {
+        last_7d:  audience7d,
+        last_30d: audience30d,
       },
 
       // Launch waitlist — the addressable pipeline to convert on the day HMRC

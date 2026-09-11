@@ -38,6 +38,7 @@
       "badgeNoCard": "No card to sign up",
       "badgeHmrc": "Built on HMRC APIs",
       "ctaPrimary": "Get MTD-ready →",
+      "ctaChecker": "Check my MTD deadlines →",
       "ctaSecondary": "See what we cover →"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "ICO reg. ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Limited Companies"
+    },
+    "tools": {
+      "title": "Free tools you can use right now",
+      "subtitle": "No account, no card, no waiting on HMRC approval. Three calculators that answer the questions people actually arrive with.",
+      "all": "All free tools →"
     },
     "services": {
       "title1": "Everything covered,",
@@ -332,6 +338,7 @@
     "rssFeed": "RSS feed",
     "deadlineWidget": "Deadline widget",
     "browseTopics": "Browse by topic",
+    "hmrcSignedMeUp": "HMRC signed me up for MTD",
     "aboutUs": "About us",
     "privacy": "Privacy",
     "terms": "Terms",

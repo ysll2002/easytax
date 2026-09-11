@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import NotifyMeForm from '@/components/NotifyMeForm';
+import TrackedCta from '@/components/TrackedCta';
+import { TOOLS } from '@/lib/tools';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -147,14 +149,39 @@ export default async function Home() {
                   </span>
                 </div>
 
+                {/* ── Hero CTAs ──
+                    The secondary control used to be `#services`, an anchor to
+                    a section of this same page. So the homepage — 39% of all
+                    production page views — offered a visitor exactly one way
+                    to leave it, and that way was "create an account" for a
+                    product that cannot file until HMRC production approval
+                    lands. Across the nine days to 2026-09-11 it produced zero
+                    registrations, zero launch-list signups and zero of every
+                    other conversion event the site records.
+                    The deadline checker is the strongest thing we can offer a
+                    stranger today: it answers "am I in MTD and when is my next
+                    deadline" in one screen, needs no account, and works while
+                    approval is pending — which is true of almost nothing else
+                    here. It had 0 production page views in the same window.
+                    "See what we cover" is kept, demoted to a text link, so
+                    nothing that worked before has been taken away. */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
                     {t('hero.ctaPrimary')}
                   </Link>
-                  <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}>
-                    {t('hero.ctaSecondary')}
-                  </a>
+                  <TrackedCta
+                    href="/mtd-deadline-checker"
+                    placement="home_hero_secondary"
+                    className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all"
+                    style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}
+                  >
+                    {t('hero.ctaChecker')}
+                  </TrackedCta>
                 </div>
+
+                <a href="#services" className="inline-block mt-4 text-sm font-medium" style={{ color: '#9A8F83', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                  {t('hero.ctaSecondary')}
+                </a>
               </div>
 
               <div className="hidden lg:block flex-shrink-0" style={{ width: '480px' }}>
@@ -185,6 +212,64 @@ export default async function Home() {
                   <Icon size={16} color={color} strokeWidth={2} />
                   <span className="text-sm font-medium" style={{ color: '#4A4035' }}>{label}</span>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Free tools strip ──
+            lib/tools.ts has carried a `short` field since it was written, with
+            the comment "one short line for the homepage strip". Nothing ever
+            read it: the library was lifted out of /tools so the homepage could
+            surface the set, and then the homepage never did. Its own header
+            comment records why that mattered — "in 30 days the hub was viewed
+            0 times and the three tools took 2 page views between them, because
+            nothing but the nav ever pointed at them" — and by 2026-09-11 the
+            deadline checker still had zero production page views.
+            These three pages are the only things on this site a stranger can
+            use today, while HMRC production approval is pending. They are also
+            the only pages anyone would plausibly link to. Putting them above
+            the product pitch is not a downgrade of the pitch; it is the only
+            part of the page that can do anything for a visitor this month. */}
+        <section className="py-14 sm:py-20" style={{ backgroundColor: '#F8F5F0' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
+              <div className="max-w-2xl">
+                <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+                  {t('tools.title')}
+                </h2>
+                <p style={{ color: '#9A8F83', fontSize: '1rem', lineHeight: 1.6 }}>
+                  {t('tools.subtitle')}
+                </p>
+              </div>
+              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                {t('tools.all')}
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {TOOLS.map(tool => (
+                <TrackedCta
+                  key={tool.key}
+                  href={tool.href}
+                  placement={`home_tools_${tool.key}`}
+                  event="tool_cta_click"
+                  className="rounded-2xl p-5 sm:p-6 flex flex-col h-full"
+                  style={{ backgroundColor: '#FDFCF8', border: '1px solid #E8E2DA', textDecoration: 'none', minHeight: '44px' }}
+                >
+                  <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold self-start mb-3" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
+                    {tool.for}
+                  </span>
+                  <span className="font-semibold block mb-2" style={{ color: '#1C1208', fontSize: '1.02rem', lineHeight: 1.35 }}>
+                    {tool.question}
+                  </span>
+                  <span className="text-sm block mb-4 flex-grow" style={{ color: '#4A4035', lineHeight: 1.6 }}>
+                    {tool.short}
+                  </span>
+                  <span className="text-sm font-medium inline-flex items-center gap-1.5" style={{ color: '#C4622D' }}>
+                    {tool.name} <ArrowRight size={15} strokeWidth={2} />
+                  </span>
+                </TrackedCta>
               ))}
             </div>
           </div>

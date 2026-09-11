@@ -38,6 +38,7 @@
       "badgeNoCard": "Sans carte à l'inscription",
       "badgeHmrc": "Basé sur les API HMRC",
       "ctaPrimary": "Préparez-vous au MTD →",
+      "ctaChecker": "Vérifier mes échéances MTD →",
       "ctaSecondary": "Voir ce que nous couvrons →"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "Enregistrement ICO ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Sociétés limitées"
+    },
+    "tools": {
+      "title": "Des outils gratuits, utilisables tout de suite",
+      "subtitle": "Sans compte, sans carte, sans attendre l'agrément HMRC. Trois calculateurs qui répondent aux questions que les visiteurs se posent vraiment.",
+      "all": "Tous les outils gratuits →"
     },
     "services": {
       "title1": "Tout est couvert,",
@@ -332,6 +338,7 @@
     "rssFeed": "Flux RSS",
     "deadlineWidget": "Widget d'échéances",
     "browseTopics": "Parcourir par thème",
+    "hmrcSignedMeUp": "HMRC m'a inscrit au MTD",
     "aboutUs": "À propos",
     "privacy": "Confidentialité",
     "terms": "Conditions",

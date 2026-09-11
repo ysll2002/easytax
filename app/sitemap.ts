@@ -79,6 +79,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // advisers rather than taxpayers, and the only page here whose purpose is
     // to be found by someone who might link to us rather than buy from us.
     { url: `${base}/tools/embed`,               lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    // The September 2026 auto-enrolment cohort. Weekly rather than monthly
+    // because the page renders the live quarterly deadline, so its content
+    // genuinely changes; high priority because the demand behind it is
+    // time-limited and will not be here next spring.
+    { url: `${base}/hmrc-signed-me-up-for-mtd`, lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
     { url: `${base}/self-assessment-software`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/landlord-tax-software`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/bokio-alternative`,         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },

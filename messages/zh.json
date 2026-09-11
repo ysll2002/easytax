@@ -38,6 +38,7 @@
       "badgeNoCard": "注册无需信用卡",
       "badgeHmrc": "基于 HMRC 官方 API",
       "ctaPrimary": "开始 MTD 申报 →",
+      "ctaChecker": "查询我的 MTD 截止日期 →",
       "ctaSecondary": "查看支持范围 →"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "ICO 注册号 ZA540758",
       "ai": "Finance Panda Limited",
       "company": "支持有限公司"
+    },
+    "tools": {
+      "title": "现在就能用的免费工具",
+      "subtitle": "无需注册、无需银行卡，也不必等待 HMRC 审批。三个计算器，回答访客真正带来的问题。",
+      "all": "查看全部免费工具 →"
     },
     "services": {
       "title1": "全面覆盖，",
@@ -332,6 +338,7 @@
     "rssFeed": "RSS 订阅",
     "deadlineWidget": "截止日期挂件",
     "browseTopics": "按主题浏览",
+    "hmrcSignedMeUp": "HMRC 把我登记进了 MTD",
     "aboutUs": "关于我们",
     "privacy": "隐私",
     "terms": "条款",
