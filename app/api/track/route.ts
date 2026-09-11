@@ -37,6 +37,13 @@ const ALLOWED = new Set([
   // The click on "add to calendar". The subscription itself is recorded
   // server-side by the .ics route and is deliberately not forgeable from here.
   'calendar_cta_click',
+  // Share controls on the calculator results. The tool and the destination
+  // travel in props.tool / props.channel. The three server-recorded
+  // distribution events — share_card_served, embed_served, feed_fetched — are
+  // deliberately absent: each is evidence that something happened off this
+  // site, and evidence a browser can forge is not evidence.
+  'share_click',
+  'share_copy',
 ]);
 
 const MAX_STR = 512;

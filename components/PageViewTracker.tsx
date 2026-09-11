@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import { isEmbedPath } from '@/lib/embed';
 
 // Records a page_view into analytics_events on every client-side navigation.
 //
@@ -110,6 +111,12 @@ export default function PageViewTracker() {
     // one.
     const last = pathname.split('/').pop() ?? '';
     if (last.includes('.')) return;
+
+    // A widget rendered inside someone else's article is not a visit to this
+    // site, and counting it as one would inflate exactly the number the last
+    // round spent a change deflating. The embed records itself server-side
+    // instead, against the host that framed it.
+    if (isEmbedPath(pathname)) return;
 
     trackClient('page_view');
   }, [pathname]);

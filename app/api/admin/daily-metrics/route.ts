@@ -34,9 +34,16 @@ export const dynamic = 'force-dynamic';
 // result, and eight of the first sixty-eight production page views were on
 // them — a tenth of the traffic, all of it people who were already customers,
 // filed under "did the marketing work".
+//
+// `/embed` is here for a different reason from the rest. The others are ours
+// and are not content; the embed IS content, but it is being read on somebody
+// else's page. Counting an impression of a 560×190 widget as a visit to this
+// site would inflate the same number the 2026-09-08 round spent a change
+// deflating. It is measured separately, by host, in `distribution.embeds`.
 const NON_CONTENT_PREFIXES = [
   '/dashboard', '/api', '/onboarding', '/payment', '/actions',
   '/login', '/register', '/forgot-password', '/reset-password',
+  '/embed',
 ];
 
 /** True for paths that represent a person looking at a public page. */
@@ -484,6 +491,97 @@ async function editorialState(since7d: string) {
 }
 
 /**
+ * Distribution: did anything of ours end up somewhere else?
+ *
+ * Every measurement this project has added so far counts what happens *on*
+ * easytax.vip. That was the right place to start and it has now told us what
+ * it can: roughly two search-referred visitors a week against 157 pages. The
+ * conclusion of the 2026-09-08 round was that the remaining constraint is
+ * off-site, and nothing here could see off-site at all.
+ *
+ * These four counters can. Each is evidence of a different way a page of ours
+ * reached somebody who was not already on the site:
+ *
+ *  - `embeds.by_host`  — a domain that framed our widget. That is a backlink,
+ *                        observed directly, without waiting on Search Console.
+ *  - `share_cards`     — a platform fetching the preview image for a shared
+ *                        calculator result, i.e. someone posted the link.
+ *  - `feeds.by_agent`  — a reader polling the archive. Repetition is the
+ *                        signal; a single fetch is a look, not a subscription.
+ *  - `shares`          — the on-site clicks that precede all of the above.
+ *
+ * The first three are recorded server-side and are absent from /api/track's
+ * allowlist by design: evidence that a browser can forge is not evidence.
+ */
+async function distribution(sinceIso: string) {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('name, props, created_at')
+    .in('name', ['embed_served', 'share_card_served', 'feed_fetched', 'share_click', 'share_copy'])
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return null;
+
+  const embedHosts   = new Map<string, number>();
+  const feedAgents   = new Map<string, number>();
+  const scrapers     = new Map<string, number>();
+  const shareChannel = new Map<string, number>();
+  let embedServed = 0;
+  let shareCards  = 0;
+  let feedFetches = 0;
+
+  const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
+
+  for (const row of data ?? []) {
+    const props = (row.props ?? {}) as Record<string, unknown>;
+    if (props.env !== 'production') continue;
+    const str = (k: string) => (typeof props[k] === 'string' ? (props[k] as string) : 'unknown');
+
+    switch (row.name) {
+      case 'embed_served':
+        embedServed++;
+        bump(embedHosts, str('host'));
+        break;
+      case 'share_card_served':
+        shareCards++;
+        bump(scrapers, str('scraper'));
+        break;
+      case 'feed_fetched':
+        feedFetches++;
+        // The full user-agent is stored, but a feed reader's version string
+        // changes weekly and would split one subscriber across a dozen rows.
+        // Cut at the first space or slash to key on the product name.
+        bump(feedAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
+        break;
+      default:
+        bump(shareChannel, `${str('tool')}:${str('channel')}`);
+    }
+  }
+
+  const top = (m: Map<string, number>, n = 15) =>
+    [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n)
+      .map(([key, count]) => ({ key, count }));
+
+  return {
+    embeds: {
+      served: embedServed,
+      // Hosts that are not us. This list being non-empty is the single most
+      // important line in this whole endpoint: it means somebody else chose to
+      // put us on their page.
+      distinct_hosts: [...embedHosts.keys()].filter(h => h !== 'unknown').length,
+      by_host: top(embedHosts),
+    },
+    share_cards: { served: shareCards, by_scraper: top(scrapers) },
+    feeds: { fetches: feedFetches, distinct_agents: feedAgents.size, by_agent: top(feedAgents) },
+    shares: {
+      clicks: [...shareChannel.values()].reduce((a, b) => a + b, 0),
+      by_tool_channel: top(shareChannel),
+    },
+  };
+}
+
+/**
  * Assembles the whole metrics payload.
  *
  * Exported so callers inside the deployment can have the numbers without an
@@ -555,6 +653,7 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
     const [
       events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
       tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window, reality,
+      distribution7d, distribution30d,
     ] = await Promise.all([
       eventCounts(since7d),
       eventCounts(since30d),
@@ -573,6 +672,8 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       editorialState(since7d),
       dataWindow(),
       eventReality(Object.values(EVENTS)),
+      distribution(since7d),
+      distribution(since30d),
     ]);
 
     // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
@@ -698,6 +799,18 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       tools: {
         last_7d:  tools7d,
         last_30d: tools30d,
+      },
+
+      // Off-site reach: embeds, shared-result cards, feed readers and the
+      // on-site share clicks that precede them. See distribution() above for
+      // why this is the block that answers the question the last four rounds
+      // could not — whether anything of ours travels.
+      //
+      // Expect zeros on the first run. A zero here is a real reading, not a
+      // missing one: it says nobody has embedded, shared or subscribed yet.
+      distribution: {
+        last_7d:  distribution7d,
+        last_30d: distribution30d,
       },
 
       // Launch waitlist — the addressable pipeline to convert on the day HMRC
