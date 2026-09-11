@@ -4,8 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import "./globals.css";
 import Providers from "@/components/Providers";
-import { Analytics } from "@vercel/analytics/next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import SiteAnalytics from "@/components/SiteAnalytics";
 import ContactWidget from "@/components/ContactWidget";
 import PageViewTracker from "@/components/PageViewTracker";
 import { isRtl } from '@/i18n/routing';
@@ -66,13 +65,18 @@ export const metadata: Metadata = {
     siteName: 'EasyTax',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
     description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — £24 per submission, no subscription.',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'EasyTax — MTD ITSA software' }],
+    // No `images` here on purpose. This used to name `/og-image.png`, a file
+    // that has never existed in `public/` — so every page on the site
+    // advertised a preview image that returned 404, and every link the last
+    // four growth rounds earned rendered as a bare text row. The card now comes
+    // from app/opengraph-image.tsx (and per-route overrides), which Next fills
+    // in here automatically and which cannot 404 because it is generated.
   },
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
     description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — £24 per submission.',
-    images: ['/og-image.png'],
+    // Likewise: inherited from the generated Open Graph card.
   },
   alternates: { canonical: 'https://easytax.vip' },
   verification: {
@@ -96,6 +100,28 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang={locale} dir={dir}>
       <head>
+        {/* Feed autodiscovery — the `<link rel="alternate">` a reader, a
+            browser extension or an aggregator looks for when someone pastes
+            easytax.vip into it. Without it the feeds exist but can only be
+            found by guessing the URL.
+
+            Declared here rather than through `metadata.alternates.types`,
+            which looks like the right home for it and does not work: a page
+            that sets its own `alternates` replaces the layout's object
+            wholesale, and almost every page here sets a canonical. Routing it
+            through the layout's own <head> is what makes it site-wide. */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="EasyTax Tax Tips"
+          href="https://easytax.vip/tax-tips/feed.xml"
+        />
+        <link
+          rel="alternate"
+          type="application/feed+json"
+          title="EasyTax Tax Tips"
+          href="https://easytax.vip/tax-tips/feed.json"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -152,8 +178,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               so preview traffic is excluded from the funnel. */}
           <PageViewTracker />
         </NextIntlClientProvider>
-        {process.env.VERCEL_ENV === 'production' && <Analytics />}
-        {process.env.VERCEL_ENV === 'production' && <GoogleAnalytics gaId="G-ZF21G9RTJW" />}
+        {/* Wrapped rather than mounted directly so it can opt out of /embed/*,
+            which renders inside other people's pages. See SiteAnalytics. */}
+        {process.env.VERCEL_ENV === 'production' && <SiteAnalytics gaId="G-ZF21G9RTJW" />}
       </body>
     </html>
   );

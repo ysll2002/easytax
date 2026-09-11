@@ -5,28 +5,8 @@
       "schedule": "0 8 * * *"
     },
     {
-      "path": "/api/cron/indexnow",
+      "path": "/api/cron/daily",
       "schedule": "30 8 * * *"
-    },
-    {
-      "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 24 7 *"
-    },
-    {
-      "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 24 10 *"
-    },
-    {
-      "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 24 1 *"
-    },
-    {
-      "path": "/api/cron/mtd-reminder",
-      "schedule": "0 8 23 4 *"
-    },
-    {
-      "path": "/api/cron/growth-snapshot",
-      "schedule": "0 7 * * *"
     }
   ]
 }

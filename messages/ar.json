@@ -38,6 +38,7 @@
       "badgeNoCard": "بدون بطاقة للتسجيل",
       "badgeHmrc": "مبني على واجهات HMRC البرمجية",
       "ctaPrimary": "استعد لـ MTD ←",
+      "ctaChecker": "تحقق من مواعيد MTD النهائية ←",
       "ctaSecondary": "اطلع على ما نغطيه ←"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "تسجيل ICO رقم ZA540758",
       "ai": "Finance Panda Limited",
       "company": "الشركات المحدودة"
+    },
+    "tools": {
+      "title": "أدوات مجانية يمكنك استخدامها الآن",
+      "subtitle": "بدون حساب، بدون بطاقة، وبدون انتظار موافقة HMRC. ثلاث حاسبات تجيب عن الأسئلة التي يأتي بها الزوار فعلاً.",
+      "all": "كل الأدوات المجانية ←"
     },
     "services": {
       "title1": "كل شيء مغطى،",
@@ -329,7 +335,10 @@
     "penaltyCalculator": "حاسبة الغرامات",
     "poaCalculator": "حاسبة الدفعات المقدمة",
     "taxCalendar": "تقويم المواعيد الضريبية",
+    "rssFeed": "تغذية RSS",
+    "deadlineWidget": "أداة المواعيد النهائية",
     "browseTopics": "تصفح حسب الموضوع",
+    "hmrcSignedMeUp": "سجّلتني HMRC في MTD",
     "aboutUs": "من نحن",
     "privacy": "الخصوصية",
     "terms": "الشروط",

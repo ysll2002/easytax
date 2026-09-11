@@ -5,8 +5,9 @@ import PaymentsOnAccountCalculator from '@/components/PaymentsOnAccountCalculato
 import { RULES_REVIEWED, HMRC_POA_URL, POA_THRESHOLD } from '@/lib/payments-on-account';
 import SiteFooter from '@/components/SiteFooter';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
+import { decodePoa, encodePoa, poaCard, toSearchParams } from '@/lib/share-results';
 
-export const metadata: Metadata = {
+const BASE: Metadata = {
   title: 'Payments on Account Calculator — why your January tax bill is 50% bigger',
   description:
     'Free calculator for Self Assessment payments on account. Enter your tax bill and see what actually leaves your account on 31 January and 31 July, including the two advance payments HMRC adds towards next year.',
@@ -35,7 +36,41 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PaymentsOnAccountPage() {
+type Search = Promise<Record<string, string | string[] | undefined>>;
+
+/** A shared result link carries its answer into the title, description and
+ *  preview card. The canonical deliberately stays on the clean URL: these are
+ *  the same page with the form pre-filled, not new pages, and indexing one per
+ *  set of figures would bury the page that matters under near-duplicates. */
+export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
+  const shared = decodePoa(toSearchParams(await searchParams));
+  if (!shared) return BASE;
+
+  const card = poaCard(shared);
+  const image = `/og/payments-on-account?${encodePoa(shared)}`;
+
+  return {
+    ...BASE,
+    title: card.metaTitle,
+    description: card.metaDescription,
+    openGraph: {
+      ...BASE.openGraph,
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [{ url: image, width: 1200, height: 630, alt: card.title }],
+    },
+    twitter: {
+      ...BASE.twitter,
+      card: 'summary_large_image',
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [image],
+    },
+  };
+}
+
+export default async function PaymentsOnAccountPage({ searchParams }: { searchParams: Search }) {
+  const shared = decodePoa(toSearchParams(await searchParams));
   const faq = [
     {
       q: 'What are payments on account?',
@@ -145,7 +180,7 @@ export default function PaymentsOnAccountPage() {
           is stored and you do not need an account.
         </p>
 
-        <PaymentsOnAccountCalculator />
+        <PaymentsOnAccountCalculator initial={shared} />
 
         {/* ── Worked example ── */}
         <section className="mt-14">

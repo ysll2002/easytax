@@ -38,6 +38,7 @@
       "badgeNoCard": "Sin tarjeta para registrarte",
       "badgeHmrc": "Basado en las API de HMRC",
       "ctaPrimary": "Prepárate para MTD →",
+      "ctaChecker": "Consultar mis plazos de MTD →",
       "ctaSecondary": "Ver qué cubrimos →"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "Registro ICO ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Sociedades limitadas"
+    },
+    "tools": {
+      "title": "Herramientas gratuitas que puedes usar ahora",
+      "subtitle": "Sin cuenta, sin tarjeta y sin esperar la aprobación de HMRC. Tres calculadoras que responden a las preguntas con las que la gente llega.",
+      "all": "Todas las herramientas gratuitas →"
     },
     "services": {
       "title1": "Todo cubierto,",
@@ -329,7 +335,10 @@
     "penaltyCalculator": "Calculadora de sanciones",
     "poaCalculator": "Calculadora de pagos a cuenta",
     "taxCalendar": "Calendario de plazos fiscales",
+    "rssFeed": "Feed RSS",
+    "deadlineWidget": "Widget de plazos",
     "browseTopics": "Explorar por tema",
+    "hmrcSignedMeUp": "HMRC me inscribió en MTD",
     "aboutUs": "Sobre nosotros",
     "privacy": "Privacidad",
     "terms": "Términos",

@@ -47,6 +47,21 @@ h1, h2, h3, h4, h5, h6 {
 .prose-article ul { margin: 0.75rem 0 1rem 1.25rem; list-style-type: disc; }
 .prose-article li { color: #4A4035; line-height: 1.7; margin-bottom: 0.4rem; }
 .prose-article strong { color: #1C1208; font-weight: 600; }
+.prose-article h3 { font-family: var(--font-display), Georgia, serif; font-size: 1.1rem; font-weight: 700; color: #1C1208; margin: 1.5rem 0 0.5rem; }
+.prose-article ol { margin: 0.75rem 0 1rem 1.25rem; list-style-type: decimal; }
+.prose-article em { font-style: italic; }
+
+/* Tables are new to the archive: the quality gate in lib/article-quality.ts
+   requires one, because a page about rates and thresholds that states them in
+   prose is harder to use than the HMRC page it is competing with.
+   The wrapper scrolls rather than the page — a four-column rates table cannot
+   be allowed to give the whole document a horizontal scrollbar on a phone. */
+.prose-article-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; }
+.prose-article table { width: 100%; min-width: 32rem; border-collapse: collapse; font-size: 0.9rem; }
+.prose-article caption { caption-side: bottom; padding-top: 0.5rem; font-size: 0.8rem; color: #9A8F83; text-align: left; }
+.prose-article th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: #1C1208; background: #F0EBE1; border-bottom: 1px solid #DDD5C8; }
+.prose-article td { padding: 0.6rem 0.75rem; color: #4A4035; border-bottom: 1px solid #F0EBE1; vertical-align: top; }
+.prose-article tbody tr:last-child td { border-bottom: none; }
 
 @keyframes spin {
   to { transform: rotate(360deg); }

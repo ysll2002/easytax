@@ -38,6 +38,7 @@
       "badgeNoCard": "登録にカード不要",
       "badgeHmrc": "HMRC API 連携",
       "ctaPrimary": "MTD 対応を始める →",
+      "ctaChecker": "MTDの期限を確認する →",
       "ctaSecondary": "対応範囲を見る →"
     },
     "trust": {
@@ -46,6 +47,11 @@
       "fast": "ICO 登録番号 ZA540758",
       "ai": "Finance Panda Limited",
       "company": "法人対応"
+    },
+    "tools": {
+      "title": "今すぐ使える無料ツール",
+      "subtitle": "アカウント登録もカードも不要、HMRCの承認を待つ必要もありません。訪問者が実際に抱える疑問に答える3つの計算ツール。",
+      "all": "すべての無料ツール →"
     },
     "services": {
       "title1": "すべてに対応、",
@@ -329,7 +335,10 @@
     "penaltyCalculator": "加算税計算ツール",
     "poaCalculator": "予定納税計算ツール",
     "taxCalendar": "税務期限カレンダー",
+    "rssFeed": "RSSフィード",
+    "deadlineWidget": "期限ウィジェット",
     "browseTopics": "トピックから探す",
+    "hmrcSignedMeUp": "HMRCにMTDへ登録された",
     "aboutUs": "私たちについて",
     "privacy": "プライバシー",
     "terms": "利用規約",

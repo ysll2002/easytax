@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { track } from '@/lib/analytics';
+import { isBotUserAgent, botLabel } from '@/lib/bot-detection';
 
 // Client event sink. Called by components/PageViewTracker.tsx via
 // navigator.sendBeacon, so it must stay cheap and must always return quickly.
@@ -37,6 +38,13 @@ const ALLOWED = new Set([
   // The click on "add to calendar". The subscription itself is recorded
   // server-side by the .ics route and is deliberately not forgeable from here.
   'calendar_cta_click',
+  // Share controls on the calculator results. The tool and the destination
+  // travel in props.tool / props.channel. The three server-recorded
+  // distribution events — share_card_served, embed_served, feed_fetched — are
+  // deliberately absent: each is evidence that something happened off this
+  // site, and evidence a browser can forge is not evidence.
+  'share_click',
+  'share_copy',
 ]);
 
 const MAX_STR = 512;
@@ -84,6 +92,13 @@ export async function POST(req: NextRequest) {
   // could attribute events to another account.
   const session = await auth().catch(() => null);
 
+  // Read from the request header, never the body. A client that could declare
+  // itself human would make the whole distinction worthless, so this is
+  // stamped after sanitiseProps() — which would otherwise let a caller supply
+  // its own `bot: false` — and overwrites anything of that name.
+  const ua = req.headers.get('user-agent');
+  const bot = isBotUserAgent(ua);
+
   await track({
     name,
     userId:   session?.user?.profileId ?? null,
@@ -97,7 +112,14 @@ export async function POST(req: NextRequest) {
     },
     // The deploy environment is stamped by track() in lib/analytics, after
     // this sanitisation, so a caller cannot spoof it here.
-    props: sanitiseProps(b.props),
+    props: {
+      ...sanitiseProps(b.props),
+      bot,
+      // Only for bots: on a human row this would be a fingerprintable
+      // record of the reader's browser, which is not something we want to
+      // store to answer "how many people came".
+      ...(bot ? { bot_label: botLabel(ua) ?? 'unidentified-client' } : {}),
+    },
   });
 
   return new NextResponse(null, { status: 204 });
