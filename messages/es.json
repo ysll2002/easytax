@@ -123,6 +123,12 @@
       "empty": "Primer artículo mañana a las 8.",
       "visit": "Visita Consejos fiscales →"
     },
+    "questions": {
+      "kicker": "Respondido aquí",
+      "title": "Las preguntas que la gente hace de verdad",
+      "subtitle": "No es una lista de temas fiscales: es lo que autónomos, propietarios y directores de empresas del Reino Unido escriben en un buscador, y la guía que responde a cada pregunta.",
+      "viewAll": "Todas las guías"
+    },
     "finalCta": {
       "title1": "Deja de temer",
       "title2": "el papeleo.",

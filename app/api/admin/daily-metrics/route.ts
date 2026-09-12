@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { EVENTS } from '@/lib/analytics';
 import { deploymentInfo } from '@/lib/deployment';
+import { readQueue } from '@/lib/review-queue';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -545,18 +546,40 @@ async function dataWindow() {
  *
  *  Both are what the weekly review reads to judge F1 and F5, and both live
  *  behind the 20260906 migration — so a missing table or column returns null
- *  rather than failing the whole metrics call. */
+ *  rather than failing the whole metrics call.
+ *
+ *  `days_since_last_publish` and `oldest_draft_age_hours` are here because of
+ *  what happened without them. The 2026-09-06 review gate made the daily cron
+ *  write drafts instead of publishing, and the release action was never given
+ *  a UI — so nothing was ever released. The archive last gained a page on
+ *  2026-09-07 and was still frozen on 2026-09-12, with the cron adding to the
+ *  queue every morning. Two daily agent runs read this endpoint in that window
+ *  and neither caught it, because `drafts_awaiting_review: 2` reads as a small
+ *  healthy queue and there was no number anywhere saying the archive had
+ *  stopped moving. A count of what is waiting is not a measure of whether
+ *  anything is getting through. */
 async function editorialState(since7d: string) {
-  const [drafts, published, snapshots] = await Promise.all([
-    supabase.from('tax_articles').select('slug', { count: 'exact', head: true }).eq('review_status', 'draft'),
-    supabase.from('tax_articles').select('slug', { count: 'exact', head: true }).eq('review_status', 'published'),
+  const [queue, snapshots] = await Promise.all([
+    readQueue(),
     supabase.from('growth_snapshots').select('id', { count: 'exact', head: true }).gte('created_at', since7d),
   ]);
 
   return {
-    editorial: drafts.error || published.error
-      ? null
-      : { drafts_awaiting_review: drafts.count ?? 0, published: published.count ?? 0 },
+    editorial:
+      queue.drafts === null && queue.publishedCount === null
+        ? null
+        : {
+            drafts_awaiting_review: queue.drafts?.length ?? null,
+            published: queue.publishedCount,
+            last_published_at: queue.lastPublishedAt,
+            // The freeze detector. Anything above 1 means the cron has written
+            // an article that no reader can see.
+            days_since_last_publish: queue.daysSinceLastPublish,
+            oldest_draft_age_hours: queue.oldestDraftAgeHours,
+            pending_upgrades: queue.upgrades?.length ?? null,
+            review_queue_url: 'https://easytax.vip/admin/review?key=…',
+            note: queue.note,
+          },
     growth_snapshots: snapshots.error ? null : { last_7d: snapshots.count ?? 0 },
   };
 }
@@ -588,7 +611,7 @@ async function distribution(sinceIso: string) {
   const { data, error } = await supabase
     .from('analytics_events')
     .select('name, props, created_at')
-    .in('name', ['embed_served', 'share_card_served', 'feed_fetched', 'share_click', 'share_copy'])
+    .in('name', ['embed_served', 'share_card_served', 'feed_fetched', 'llms_fetched', 'share_click', 'share_copy'])
     .gte('created_at', sinceIso)
     .limit(50_000);
 
@@ -598,9 +621,12 @@ async function distribution(sinceIso: string) {
   const feedAgents   = new Map<string, number>();
   const scrapers     = new Map<string, number>();
   const shareChannel = new Map<string, number>();
+  const llmsAgents   = new Map<string, number>();
   let embedServed = 0;
   let shareCards  = 0;
   let feedFetches = 0;
+  let llmsFetches = 0;
+  let llmsFullFetches = 0;
 
   const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
 
@@ -625,6 +651,13 @@ async function distribution(sinceIso: string) {
         // Cut at the first space or slash to key on the product name.
         bump(feedAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
         break;
+      case 'llms_fetched':
+        llmsFetches++;
+        if (str('file') === 'full') llmsFullFetches++;
+        // Same keying as the feeds, and for the same reason: ClaudeBot/1.0 and
+        // ClaudeBot/1.1 are one crawler, not two.
+        bump(llmsAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
+        break;
       default:
         bump(shareChannel, `${str('tool')}:${str('channel')}`);
     }
@@ -645,6 +678,16 @@ async function distribution(sinceIso: string) {
     },
     share_cards: { served: shareCards, by_scraper: top(scrapers) },
     feeds: { fetches: feedFetches, distinct_agents: feedAgents.size, by_agent: top(feedAgents) },
+    // /llms.txt and /llms-full.txt, shipped 2026-09-12. The index being fetched
+    // is an answer engine noticing the site; the full text being fetched is the
+    // archive actually leaving with it, which is why the two are counted
+    // separately rather than summed.
+    llms: {
+      fetches: llmsFetches,
+      full_text_fetches: llmsFullFetches,
+      distinct_agents: llmsAgents.size,
+      by_agent: top(llmsAgents),
+    },
     shares: {
       clicks: [...shareChannel.values()].reduce((a, b) => a + b, 0),
       by_tool_channel: top(shareChannel),

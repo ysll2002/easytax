@@ -8,6 +8,8 @@ import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, F
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
+import { selectPublished } from '@/app/tax-tips/_lib/review';
+import { answeredQuestions } from '@/lib/answered-questions';
 import { getTranslations } from 'next-intl/server';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
@@ -35,15 +37,29 @@ export default async function Home() {
   // homepage down with a server-side exception on every preview, staging
   // included. The articles strip is decoration; a missing one renders the
   // empty state. Same guard as app/sitemap.ts and the Tax Tips pages.
+  //
+  // The `review_status` filter is not a refinement, it is a bug fix. The
+  // 2026-09-06 review gate made the daily cron write drafts, and every other
+  // reader of this table — the article page, the sitemap, the feeds, the topic
+  // hubs — was taught to ask for published rows only. This query was not. So
+  // from 2026-09-08 the homepage, which is 39% of all production page views,
+  // led with the two newest *drafts*: both cards linked to /tax-tips/<slug>,
+  // which 404s for anything unreviewed. Two of the three article cards on the
+  // page were dead links, on the one surface every human visitor touches.
   const latestArticles = hasSupabaseEnv()
     ? (
-        await supabase
-          .from('tax_articles')
-          .select('title, slug, excerpt, published_at')
-          .order('published_at', { ascending: false })
-          .limit(3)
+        await selectPublished(gated => {
+          const q = supabase.from('tax_articles').select('title, slug, excerpt, published_at');
+          return (gated ? q.eq('review_status', 'published') : q)
+            .order('published_at', { ascending: false })
+            .limit(3);
+        })
       ).data
     : null;
+
+  // The archive ordered by what people search for rather than by what the cron
+  // wrote last. See lib/answered-questions.ts.
+  const questions = await answeredQuestions(6);
 
   // Rolls forward on its own. The previous hardcoded 5 Aug 2026 date was both
   // wrong (the statutory deadline is the 7th) and, once Q1 passed, frozen at
@@ -455,6 +471,78 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* ── Answered questions ──
+            The archive, ordered by demand instead of by date. The wording is
+            the query as somebody would type it (lib/search-queries.ts), not
+            the headline a tax adviser would write, because the former is what
+            a stranger recognises as their own problem. The article's real
+            title sits underneath, so nothing is being promised that the page
+            does not deliver.
+            Rendered only when there is something genuinely answered to show:
+            an empty version of this block would be worse than no block, and on
+            a preview build without Supabase there is nothing.
+            Three is the floor rather than six because three is what the
+            archive currently earns. Measured on 2026-09-12, the 113 published
+            articles cover 3 of the 41 target queries — the demand model landed
+            on 09-08 and the cron that works through it has been writing into a
+            review queue nobody could empty ever since. So this block is also a
+            coverage gauge: it grows on its own as the pipeline closes queries,
+            and if it is still three cards in a fortnight that is the finding. */}
+        {questions.length >= 3 && (
+          <section className="py-14 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <p className="text-xs uppercase tracking-wide mb-2" style={{ color: '#9A8F83' }}>
+                {t('questions.kicker')}
+              </p>
+              <h2
+                className="mb-3"
+                style={{
+                  fontFamily: 'var(--font-display), Playfair Display, Georgia, serif',
+                  fontSize: 'clamp(1.5rem, 3vw, 2.1rem)',
+                  fontWeight: 700,
+                  color: '#1C1208',
+                  lineHeight: 1.25,
+                }}
+              >
+                {t('questions.title')}
+              </h2>
+              <p className="text-sm mb-7" style={{ color: '#4A4035', maxWidth: '46rem', lineHeight: 1.7 }}>
+                {t('questions.subtitle')}
+              </p>
+
+              <ul className="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {questions.map(q => (
+                  <li key={q.href}>
+                    <Link
+                      href={q.href}
+                      className="block h-full p-4 sm:p-5 rounded-xl transition-all hover:shadow-md"
+                      style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8', textDecoration: 'none' }}
+                    >
+                      <span
+                        className="block text-sm font-semibold mb-1.5"
+                        style={{ color: '#1C1208', lineHeight: 1.45 }}
+                      >
+                        {q.question}
+                      </span>
+                      <span className="block text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>
+                        {q.title}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/tax-tips"
+                className="inline-block mt-6 text-sm font-semibold"
+                style={{ color: '#C4622D', textDecoration: 'none', minHeight: 44 }}
+              >
+                {t('questions.viewAll')} →
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* ── FAQ ── */}
         <section id="faq" className="py-20 sm:py-28" style={{ backgroundColor: '#FDFCF8' }}>

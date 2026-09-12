@@ -10,6 +10,7 @@ import ArticleCta from '../_components/ArticleCta';
 import SiteFooter from '@/components/SiteFooter';
 import ArticleProvenance, { ArticleSources } from '../_components/ArticleProvenance';
 import { selectPublished } from '../_lib/review';
+import { extractHeadings, faqJsonLd, withHeadingIds } from '@/lib/article-structure';
 
 export const revalidate = 3600;
 
@@ -99,6 +100,18 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     isAccessibleForFree: true,
   };
 
+  // Anchors on every heading, and a contents list built from the same walk, so
+  // a section of an article has a URL. Done at render rather than at insert:
+  // the transform is over markup sanitiseArticleHtml has already cleaned, and
+  // doing it here means the 113 pages already in the table get it without a
+  // backfill.
+  const bodyHtml = withHeadingIds(article.content);
+  const headings = extractHeadings(article.content);
+
+  // Only for the articles that genuinely are question-and-answer pages — see
+  // lib/article-structure.ts for why this test is the strict one.
+  const jsonLdFaq = faqJsonLd(article.content, `https://easytax.vip/tax-tips/${slug}`);
+
   const jsonLdBreadcrumb = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -113,6 +126,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }} />
+      {jsonLdFaq && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
+      )}
       <SiteHeader />
 
       <main className="flex-grow">
@@ -173,9 +189,46 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             reviewedBy={article.reviewed_by ?? null}
           />
 
+          {/* "On this page". Only where there is enough structure for it to be
+              navigation rather than decoration — a contents list over two
+              sections just repeats the top of the article. It is also the
+              visible half of the anchors: the ids exist for Google's jump
+              links and for an answer engine citing one section, and a reader
+              who can see them gets the same benefit. */}
+          {headings.length >= 4 && (
+            <nav
+              className="mb-8 p-4 sm:p-5 rounded-xl"
+              style={{ backgroundColor: '#F7F3EC', border: '1px solid #E8E2DA' }}
+              aria-labelledby="on-this-page"
+            >
+              <p
+                id="on-this-page"
+                className="text-xs uppercase tracking-wide m-0 mb-2.5"
+                style={{ color: '#9A8F83' }}
+              >
+                On this page
+              </p>
+              <ul className="list-none p-0 m-0 space-y-1.5">
+                {headings
+                  .filter(h => h.level === 2)
+                  .map(h => (
+                    <li key={h.id} style={{ lineHeight: 1.5 }}>
+                      <a
+                        href={`#${h.id}`}
+                        className="text-sm"
+                        style={{ color: '#4A4035', textDecoration: 'none' }}
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
+          )}
+
           <div
             className="prose-article"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
 
           <ArticleSources sources={article.sources} />
