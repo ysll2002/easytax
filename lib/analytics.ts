@@ -66,6 +66,10 @@ export const EVENTS = {
   // Server-side, from the RSS/JSON feeds. A repeating fetch from the same
   // reader user-agent is a subscription.
   feedFetched:         'feed_fetched',
+  // Server-side, from /llms.txt and /llms-full.txt. props.file says which of
+  // the two, props.agent which crawler — the index being fetched is interest,
+  // the full text being fetched is the archive actually leaving with someone.
+  llmsFetched:         'llms_fetched',
 } as const;
 
 let warned = false;

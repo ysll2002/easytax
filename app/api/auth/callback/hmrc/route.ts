@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { getBusinessDetails, getVatObligations } from '@/lib/hmrc';
+import { getBusinessDetails } from '@/lib/hmrc';
 
 const BASE = process.env.HMRC_ENV === 'production'
   ? 'https://api.service.hmrc.gov.uk'
@@ -62,10 +62,38 @@ export async function GET(req: NextRequest) {
     businessId = selfEmp?.businessId ?? null;
   } catch { /* non-blocking */ }
 
-  // Warm up VAT obligations (makes a real API call to satisfy HMRC sandbox activity requirement)
-  try {
-    if (vrn) await getVatObligations(vrn, tokens.access_token);
-  } catch { /* non-blocking */ }
+  // The VAT obligations warm-up that used to sit here has been removed.
+  //
+  // It existed only to put activity on the sandbox, and its result was thrown
+  // away. What it actually did was send HMRC a fraud-prevention-header-less
+  // GET /organisations/vat/{vrn}/obligations on every single connect — the
+  // first of the four endpoints named in HMRC's FPH review of 2026-09-12.
+  //
+  // All three of fraudHeaders()' device-data sources are unavailable here, and
+  // this is the one HMRC call in the app where that is true by construction:
+  //
+  //   - No x-easytax-device-data header. That is set by lib/hmrc-client.ts on
+  //     a client fetch; this route is reached by a top-level 302 from HMRC, so
+  //     no client code runs.
+  //   - No hmrc_device cookie. device-data-client.ts writes it SameSite=Strict,
+  //     and Strict withholds cookies on cross-site top-level navigations —
+  //     which is exactly what a redirect back from HMRC is.
+  //   - auth() supplies userId and nothing else.
+  //
+  // So deviceData is {}, the trailing empty-value filter in fraudHeaders()
+  // drops all nine Gov-Client-* device headers, and the request goes out
+  // asserting Gov-Client-Connection-Method: WEB_APP_VIA_SERVER while carrying
+  // no browser data at all.
+  //
+  // This is the same fault, and the same remedy, as the sandbox-test cron in
+  // PR #7 (2026-09-07): there is no header fix, because there is genuinely no
+  // device to describe, and HMRC prohibits dummy values — which is why
+  // Gov-Client-Multi-Factor and Gov-Vendor-License-IDs were removed under
+  // ticket 2026-NQM717. PR #7 fixed the cron and did not reach this path.
+  //
+  // Nothing is lost: the dashboard fetches VAT obligations through
+  // lib/hmrc-client.ts as soon as the user lands on /dashboard/individual/vat,
+  // and that request carries the full header set and validates.
 
   const payload: Record<string, string | null> = {
     access_token:     tokens.access_token,

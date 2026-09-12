@@ -123,6 +123,12 @@
       "empty": "Premier article demain à 8h.",
       "visit": "Visiter Conseils fiscaux →"
     },
+    "questions": {
+      "kicker": "Réponses ici",
+      "title": "Les questions que les gens posent vraiment",
+      "subtitle": "Pas une liste de sujets fiscaux : ce que les indépendants, propriétaires et dirigeants britanniques tapent dans un moteur de recherche, et le guide qui répond à chacune.",
+      "viewAll": "Tous les guides"
+    },
     "finalCta": {
       "title1": "Arrêtez de redouter",
       "title2": "la paperasse.",

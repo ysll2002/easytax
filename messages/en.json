@@ -123,6 +123,12 @@
       "empty": "First article coming tomorrow at 8am.",
       "visit": "Visit Tax Tips →"
     },
+    "questions": {
+      "kicker": "Answered here",
+      "title": "The questions people actually ask",
+      "subtitle": "Not a list of tax topics — the things UK sole traders, landlords and company directors type into a search box, and the guide that answers each one.",
+      "viewAll": "All guides"
+    },
     "finalCta": {
       "title1": "Stop dreading",
       "title2": "the paperwork.",

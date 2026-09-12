@@ -48,6 +48,11 @@ h1, h2, h3, h4, h5, h6 {
 .prose-article li { color: #4A4035; line-height: 1.7; margin-bottom: 0.4rem; }
 .prose-article strong { color: #1C1208; font-weight: 600; }
 .prose-article h3 { font-family: var(--font-display), Georgia, serif; font-size: 1.1rem; font-weight: 700; color: #1C1208; margin: 1.5rem 0 0.5rem; }
+/* Every heading in an article body carries an id (see lib/article-structure.ts),
+   so a section can be linked to directly. Without the scroll margin the heading
+   lands hard against the top edge of the viewport and reads as though the jump
+   overshot it. */
+.prose-article h2[id], .prose-article h3[id] { scroll-margin-top: 1.5rem; }
 .prose-article ol { margin: 0.75rem 0 1rem 1.25rem; list-style-type: decimal; }
 .prose-article em { font-style: italic; }
 

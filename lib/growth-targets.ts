@@ -234,6 +234,133 @@ export function evaluateTargets(payload: MetricsPayload): TargetResult[] {
     }),
   });
 
+  // ── 2026-09-12 round ─────────────────────────────────────────────────────
+  // Four of the five below are traffic targets, which is the standing 80/20
+  // split. They are also, deliberately, mostly *leading* indicators: at five
+  // labelled human page views a day nothing downstream of traffic can be
+  // measured yet, and a target that cannot move in a week teaches nothing.
+
+  // ── F26 · the review queue has a UI ──────────────────────────────────────
+  // The only target here that is a countdown rather than a count. Baseline 5:
+  // the archive last published on 2026-09-07 and this shipped on 09-12.
+  const freezeDays = num(payload, 'editorial.days_since_last_publish');
+  results.push({
+    id: 'F26_publish_freshness',
+    feature: 'Editorial review queue UI at /admin/review',
+    goal: 'traffic',
+    metric: 'Days since the archive last published (lower is better)',
+    baseline: 5,
+    target: 2,
+    actual: freezeDays,
+    // Inverted: this one passes by going *down*, so the generic comparison
+    // cannot be reused. A queue with nothing in it and nothing published is
+    // still a healthy state, which is why the draft count is not the test.
+    verdict:
+      freezeDays === null
+        ? 'insufficient_data'
+        : freezeDays <= 2
+          ? 'hit'
+          : 'missed',
+    note:
+      freezeDays === null
+        ? 'The endpoint did not report editorial.days_since_last_publish.'
+        : `Archive last gained a page ${freezeDays} day(s) ago; the gate is only working if this ` +
+          'stays at or under 2. The review gate was right and the missing UI made it an outage: ' +
+          'the cron wrote a draft every morning from 09-08 and not one of them reached a reader.',
+  });
+
+  // ── F27 · llms.txt ───────────────────────────────────────────────────────
+  // Baseline 0: the files did not exist before 2026-09-12. Target 3 distinct
+  // agents, which is roughly what the RSS feed drew in its first fortnight —
+  // ClaudeBot, GPTBot and PerplexityBot all already fetch our feeds, so if the
+  // convention is honoured at all by the crawlers we actually have, it should
+  // clear this.
+  const llmsAgents = num(payload, 'distribution.last_7d.llms.distinct_agents');
+  results.push({
+    id: 'F27_llms_agents',
+    feature: '/llms.txt and /llms-full.txt',
+    goal: 'traffic',
+    metric: 'Distinct AI crawlers fetching the llms files in 7 days',
+    baseline: 0,
+    target: 3,
+    actual: llmsAgents,
+    ...verdictFor(llmsAgents, 3, 1, llmsAgents ?? 0, {
+      short:
+        'Over the nine days to 2026-09-12 organic search sent ten referred visits and none in the ' +
+        'last seventy-two hours, while five named AI crawlers fetched our feeds and calendar ' +
+        'twenty times in forty-eight hours. This bets on the channel that has a pulse. It is a ' +
+        'convention, not a standard: a zero here means the crawlers ignored it, not that it broke.',
+    }),
+  });
+
+  // ── F28 · FAQPage and section anchors ────────────────────────────────────
+  // Baseline 0.89/day = 8 article search referrals over the 9 days to 09-12.
+  // Structured-data effects show up in four to eight weeks, so a week-one
+  // reading of this is a leading indicator and the note says so.
+  const archiveSearch = visitorsUnderPath(payload, '/tax-tips');
+  results.push({
+    id: 'F28_archive_search',
+    feature: 'Section anchors, contents list and FAQPage structured data',
+    goal: 'traffic',
+    metric: 'Unique visitors per day to /tax-tips*',
+    baseline: 0.89,
+    target: 2,
+    actual: perDay(archiveSearch),
+    ...verdictFor(perDay(archiveSearch), 2, MIN_VISITORS_FOR_TRAFFIC, archiveSearch ?? 0, {
+      short:
+        'FAQPage is emitted on the 41 of 113 articles whose headings are genuinely questions — ' +
+        'marking up the other 72 would risk a manual action on a site whose whole pitch is being ' +
+        'trustworthy about tax. Judge at 4-8 weeks on Bing and Google, not at 7 days.',
+      perDay: true,
+    }),
+  });
+
+  // ── F29 · homepage routes into the archive ───────────────────────────────
+  // Baseline 0: over the 24 hours in which bot labelling was live, all five
+  // human page views were on `/` and none reached an article or a tool.
+  const humanViews = num(payload, 'audience.last_7d.human.page_views');
+  results.push({
+    id: 'F29_homepage_routing',
+    feature: 'Answer links from the homepage into the archive',
+    goal: 'traffic',
+    metric: 'Human page views per day (bot-filtered)',
+    baseline: 5,
+    target: 8,
+    actual: perDay(humanViews),
+    ...verdictFor(perDay(humanViews), 8, 1, humanViews ?? 0, {
+      short:
+        'Every labelled human page view in the first day of bot filtering landed on `/` and went ' +
+        'no further. This is the smallest possible test of whether that is a routing problem or ' +
+        'simply five people who were never going to read anything.',
+      perDay: true,
+    }),
+  });
+
+  // ── F30 · the numbers that would have caught the freeze ───────────────────
+  // audience() already computes this over the same denominator, so read it
+  // rather than recomputing: two definitions of "human share" that drift apart
+  // is how a metric starts disagreeing with itself.
+  const humanShare = num(payload, 'audience.last_7d.human_share');
+  results.push({
+    id: 'F30_human_share',
+    feature: 'Human/bot split and content-freshness in the metrics',
+    goal: 'trust',
+    metric: 'Share of classified page views that are human',
+    baseline: 0.38,
+    // Not a target to beat so much as a figure to know. Set at the observed
+    // baseline: what matters is that it is reported at all, and that a sudden
+    // move in it is visible. 5 of 13 labelled views were human on 2026-09-12.
+    target: 0.38,
+    actual: humanShare,
+    ...verdictFor(humanShare, 0.38, MIN_VISITORS_FOR_RATE, visitors, {
+      short:
+        'Sixty-two percent of labelled page views were automation. Every rate this project has ' +
+        'ever reported was computed over a denominator that included them. This target exists to ' +
+        'keep the split in front of the review rather than to be beaten.',
+      rate: true,
+    }),
+  });
+
   return results;
 }
 
