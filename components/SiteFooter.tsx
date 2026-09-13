@@ -125,6 +125,7 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
               // reaches only via the sitemap, and the demand it is aimed at is
               // measured in weeks, not quarters.
               { href: '/hmrc-signed-me-up-for-mtd', label: t('hmrcSignedMeUp') },
+              { href: '/mtd-quarterly-update-deadlines', label: t('mtdQuarterlyDeadlines') },
               // A feed is the one distribution route that does not depend on a
               // search engine choosing to send someone: it lets a reader, an
               // aggregator or another site carry the archive away.

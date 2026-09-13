@@ -375,23 +375,77 @@ export function coversQuery(title: string, query: TargetQuery): boolean {
   return hits / want.length >= 0.7;
 }
 
+/**
+ * Queries answered by a hand-built page rather than by an archive article.
+ *
+ * Coverage used to be computed over `tax_articles` alone, which quietly made
+ * the pipeline compete with itself. `/hmrc-signed-me-up-for-mtd` was built on
+ * 2026-09-11 specifically to answer the highest-priority query on this list —
+ * and because the archive still had no article for it, the cron went on
+ * treating it as uncovered and drafted one anyway. Two pages on this domain
+ * targeting one long-tail query is not twice the chance of ranking; it is the
+ * same chance, split, plus a day of the pipeline spent not answering anything
+ * new.
+ *
+ * A route earns an entry here when it answers the query directly and is
+ * indexable — in the sitemap, linked, canonical of its own. Nothing else
+ * counts: a passing mention on /timetable is not an answer.
+ *
+ * Keyed by the exact `q` string so an edit to a query in TARGET_QUERIES that
+ * does not update this map shows up as the query going uncovered again, which
+ * is the safe direction. A stale entry here would hide it.
+ */
+export const LANDING_PAGE_ANSWERS: Readonly<Record<string, string>> = {
+  'hmrc signed me up for making tax digital automatically': '/hmrc-signed-me-up-for-mtd',
+  'making tax digital income tax deadlines 2026 27': '/mtd-quarterly-update-deadlines',
+  'i missed my mtd quarterly update deadline what happens': '/mtd-quarterly-update-deadlines',
+  'making tax digital penalty points how do they work': '/mtd-quarterly-update-deadlines',
+  'what do i put in an mtd quarterly update': '/mtd-quarterly-update-deadlines',
+
+  // The calculators. These four were answered on the day each tool shipped —
+  // in its FAQ, with FAQPage markup, on a page carrying sitemap priority 0.9 —
+  // and coverage() went on calling them pending because it only ever looked at
+  // article titles. The archive was being asked to write, from scratch, pages
+  // that already existed and ranked better than a new article would.
+  'how much is the fine for filing self assessment late': '/self-assessment-penalty-calculator',
+  'hmrc late payment interest rate 2026': '/self-assessment-penalty-calculator',
+  'what are payments on account and why do i have to pay them': '/payments-on-account-calculator',
+  'can i reduce my payments on account': '/payments-on-account-calculator',
+  'do i have to use making tax digital for income tax': '/mtd-deadline-checker',
+};
+
+/** The route answering a query outside the archive, if there is one. */
+export function landingPageFor(query: TargetQuery): string | null {
+  return LANDING_PAGE_ANSWERS[query.q] ?? null;
+}
+
 export interface QueryCoverage {
   total: number;
   covered: number;
   /** Uncovered queries, highest priority first. */
   pending: TargetQuery[];
+  /** Of `covered`, how many are answered by a landing page rather than by an
+   *  article. Reported separately because the two are different kinds of
+   *  progress: one is the pipeline working, the other is a page someone built. */
+  coveredByLandingPage: number;
 }
 
-/** Coverage of the target list by an existing set of article titles. */
+/** Coverage of the target list by the site as a whole — the archive's titles
+ *  plus the hand-built landing pages. */
 export function coverage(titles: string[]): QueryCoverage {
-  const pending = TARGET_QUERIES.filter(q => !titles.some(t => coversQuery(t, q)));
+  const answered = (q: TargetQuery) =>
+    landingPageFor(q) !== null || titles.some(t => coversQuery(t, q));
+
+  const pending = TARGET_QUERIES.filter(q => !answered(q));
   // Stable within a priority band: the list order is the editorial order, and
   // reshuffling it daily would make the pipeline's choices unreproducible.
   pending.sort((a, b) => a.priority - b.priority);
+
   return {
     total: TARGET_QUERIES.length,
     covered: TARGET_QUERIES.length - pending.length,
     pending,
+    coveredByLandingPage: TARGET_QUERIES.filter(q => landingPageFor(q) !== null).length,
   };
 }
 

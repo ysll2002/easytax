@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import { getMtdStatus } from '@/lib/mtd-status';
 import { track, EVENTS } from '@/lib/analytics';
+import { botProps } from '@/lib/bot-detection';
 
 // The widget other people put on their own pages.
 //
@@ -55,7 +56,11 @@ export default async function MtdDeadlineEmbed() {
     name: EVENTS.embedServed,
     path: '/embed/mtd-deadline',
     referrer: h.get('referer'),
-    props: { widget: 'mtd_deadline', host: host ?? 'unknown' },
+    props: {
+      widget: 'mtd_deadline',
+      host: host ?? 'unknown',
+      ...botProps(h.get('user-agent')),
+    },
   }).catch(() => {});
 
   const q = status.dueQuarter;

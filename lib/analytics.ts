@@ -36,6 +36,12 @@ export const EVENTS = {
   toolCompleted:       'tool_completed',
   toolCtaClick:        'tool_cta_click',
   topicHubViewed:      'topic_hub_viewed',
+  // Behaviour on a page, recorded at most once per view: how far down, how
+  // long, and whether anything was clicked or typed. It exists to answer a
+  // question page_view cannot — whether the handful of "human" visitors are
+  // reading or are automation with a browser User-Agent. See
+  // components/EngagementTracker.tsx.
+  pageEngaged:         'page_engaged',
   editorialViewed:     'editorial_standards_viewed',
   // Deadline-schedule capture. The address is given for something deliverable
   // today, so it is counted separately from the plain launch waitlist.
