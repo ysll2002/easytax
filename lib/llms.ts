@@ -31,6 +31,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv, type ArticleSummary } from '@/app/tax-tips/_lib/articles';
 import { selectPublished } from '@/app/tax-tips/_lib/review';
 import { track } from '@/lib/analytics';
+import { botProps } from '@/lib/bot-detection';
 
 export const SITE = 'https://easytax.vip';
 
@@ -151,6 +152,7 @@ export function recordLlmsFetch(file: 'index' | 'full', req: Request, path: stri
     props: {
       file,
       agent: (req.headers.get('user-agent') ?? '').slice(0, 120),
+      ...botProps(req.headers.get('user-agent')),
     },
   }).catch(() => {});
 }
@@ -173,6 +175,21 @@ export const KEY_PAGES: readonly { url: string; title: string; note: string }[] 
     url: `${SITE}/payments-on-account-calculator`,
     title: 'Payments on account calculator',
     note: 'What the two payments on account will be, when they fall due, and when they can be reduced.',
+  },
+  // The two demand-anchored answer pages. They belong near the top of this
+  // list rather than in the archive section: they are the pages most likely to
+  // be the correct answer to a question someone is asking an answer engine
+  // right now, and both correct a widely-repeated wrong answer, which is the
+  // only real reason to cite a small site over GOV.UK.
+  {
+    url: `${SITE}/hmrc-signed-me-up-for-mtd`,
+    title: 'HMRC signed me up for Making Tax Digital — what now',
+    note: 'What HMRC\'s automatic sign-up letter means, whether it can be opted out of, and why qualifying income is gross turnover plus gross rents before expenses rather than profit.',
+  },
+  {
+    url: `${SITE}/mtd-quarterly-update-deadlines`,
+    title: 'MTD quarterly update deadlines and late submission penalties',
+    note: 'The four quarterly update deadlines, what goes in an update, and what a late one actually costs. Note that HMRC is not charging late submission penalties for missed quarterly updates in 2026/27; the points regime still applies to the tax return, and late payment is charged separately.',
   },
   {
     url: `${SITE}/timetable`,

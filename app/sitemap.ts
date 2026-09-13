@@ -84,6 +84,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // genuinely changes; high priority because the demand behind it is
     // time-limited and will not be here next spring.
     { url: `${base}/hmrc-signed-me-up-for-mtd`, lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
+    // Same reasoning, and the same expiry: it answers four priority-1 queries
+    // about the quarterly updates and the first-year penalty concession, and
+    // the concession itself runs out on 6 April 2027.
+    { url: `${base}/mtd-quarterly-update-deadlines`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/self-assessment-software`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/landlord-tax-software`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/bokio-alternative`,         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },

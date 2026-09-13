@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { sendArticleReviewEmail } from '@/lib/email';
+import { sendArticleReviewEmail, reviewEmailIsDue } from '@/lib/email';
+import { readQueue } from '@/lib/review-queue';
 import {
   TARGET_QUERIES,
   coverage,
@@ -401,13 +402,40 @@ function targetForTitle(title: string): TargetQuery | null {
   return TARGET_QUERIES.find(q => coversQuery(title, q)) ?? null;
 }
 
-async function notifyReviewQueue(drafts: { title: string; slug: string }[]): Promise<void> {
-  const { count } = await supabase
-    .from('tax_articles')
-    .select('slug', { count: 'exact', head: true })
-    .eq('review_status', 'draft');
+/** Mails the owner the review queue — when there is a reason to.
+ *
+ *  Previously this ran only when the run had just written something, and only
+ *  ever counted the queue. Both are why the archive sat frozen from 2026-09-07
+ *  to 2026-09-12 without a single alarm: the notification was a function of
+ *  what the cron produced, never of what actually reached a reader.
+ *
+ *  It now reads the same queue state the metrics endpoint and /admin/review
+ *  read, and `reviewEmailIsDue` decides — new drafts, or a publishing freeze.
+ *  Returns what it decided so the cron's JSON says so out loud. */
+async function notifyReviewQueue(
+  newDrafts: { title: string; slug: string }[],
+): Promise<{ sent: boolean; reason: string; days_since_last_publish: number | null }> {
+  const state = await readQueue();
+  const input = {
+    newDrafts,
+    queue: (state.drafts ?? []).map(d => ({ title: d.title, slug: d.slug })),
+    daysSinceLastPublish: state.daysSinceLastPublish,
+    oldestDraftAgeHours: state.oldestDraftAgeHours,
+  };
 
-  await sendArticleReviewEmail(drafts, count ?? drafts.length);
+  if (!reviewEmailIsDue(input)) {
+    return { sent: false, reason: 'nothing new and nothing frozen', days_since_last_publish: state.daysSinceLastPublish };
+  }
+
+  const sent = await sendArticleReviewEmail(input);
+  return {
+    sent,
+    reason:
+      newDrafts.length > 0
+        ? `${newDrafts.length} new draft${newDrafts.length === 1 ? '' : 's'}`
+        : `publishing frozen for ${state.daysSinceLastPublish} days`,
+    days_since_last_publish: state.daysSinceLastPublish,
+  };
 }
 
 export async function GET(req: NextRequest) {
@@ -574,19 +602,27 @@ Reply with ONLY the topic sentence, no explanation.`,
     }
 
     const created = results.filter(r => !r.error);
-    if (created.length > 0) {
-      // The drafts are invisible until someone acts on them, so a silent queue
-      // is a queue that never empties. Fire-and-forget: a mail failure must not
-      // fail the cron and lose the generated article.
-      void notifyReviewQueue(created.map(r => ({ title: r.title, slug: r.slug }))).catch(err => {
-        console.error('[daily-article] review notification failed', err);
-      });
+
+    // Runs on every successful pass, not only the ones that produced
+    // something. A run that generates nothing is exactly the run during which
+    // a freeze goes unnoticed — which is what happened for five days — so the
+    // decision about whether to mail belongs to the queue's state, not to this
+    // run's output. Awaited rather than fired and forgotten: the old version
+    // could fail silently and the cron would still report success. It cannot
+    // fail the cron either, because `sendArticleReviewEmail` never throws.
+    let notified: Awaited<ReturnType<typeof notifyReviewQueue>> | { sent: false; reason: string; days_since_last_publish: null };
+    try {
+      notified = await notifyReviewQueue(created.map(r => ({ title: r.title, slug: r.slug })));
+    } catch (err) {
+      console.error('[daily-article] review notification failed', err);
+      notified = { sent: false, reason: `failed: ${err instanceof Error ? err.message : String(err)}`, days_since_last_publish: null };
     }
 
     return NextResponse.json({
       ok: true,
       generated: results.length,
-      status: 'draft — awaiting review at /api/admin/article-review',
+      status: 'draft — awaiting review at /admin/review',
+      review_notification: notified,
       upgrade_note: upgradeNote,
       // Whether the gate is doing work or just adding a model call. If
       // first_pass_failures stays at 100%, the prompt and the standard have

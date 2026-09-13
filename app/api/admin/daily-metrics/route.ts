@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { EVENTS } from '@/lib/analytics';
 import { deploymentInfo } from '@/lib/deployment';
 import { readQueue } from '@/lib/review-queue';
+import { coverage } from '@/lib/search-queries';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -190,13 +191,22 @@ async function uniqueVisitors(sinceIso: string): Promise<number | null> {
  * this site is measurable.
  */
 async function audience(sinceIso: string) {
-  const { data, error } = await supabase
-    .from('analytics_events')
-    .select('anon_id, path, props')
-    .eq('name', 'page_view')
-    .gte('created_at', sinceIso)
-    .limit(50_000);
+  const [views, engaged] = await Promise.all([
+    supabase
+      .from('analytics_events')
+      .select('anon_id, path, props')
+      .eq('name', 'page_view')
+      .gte('created_at', sinceIso)
+      .limit(50_000),
+    supabase
+      .from('analytics_events')
+      .select('anon_id, path, props')
+      .eq('name', 'page_engaged')
+      .gte('created_at', sinceIso)
+      .limit(50_000),
+  ]);
 
+  const { data, error } = views;
   if (error) return null;
 
   const human = new Set<string>();
@@ -224,6 +234,39 @@ async function audience(sinceIso: string) {
     }
   }
 
+  // Engagement, over the same window and the same filters.
+  //
+  // This is the number that separates the two readings of "seven human page
+  // views, all on `/`, nothing else": three or four people a day who found
+  // nothing worth clicking, or three or four automated clients with browser
+  // User-Agents. A crawler renders the page and fires page_view; it does not
+  // scroll half way down and stay fifteen seconds. See
+  // components/EngagementTracker.tsx.
+  //
+  // Counted over human-labelled rows only. An engaged bot is not interesting
+  // and including it would put the thing being measured back in the
+  // denominator.
+  const engagedVisitors = new Set<string>();
+  let engagedEvents = 0, scrolled = 0, stayed = 0, interacted = 0;
+  let depthTotal = 0, dwellTotal = 0;
+  const reasons: Record<string, number> = {};
+
+  for (const row of engaged.data ?? []) {
+    const props = (row.props ?? {}) as Record<string, unknown>;
+    if (props.env !== 'production') continue;
+    if (props.bot !== false) continue;
+    if (!isPublicContentPath(row.path)) continue;
+
+    engagedEvents++;
+    if (row.anon_id) engagedVisitors.add(row.anon_id);
+    if (props.scrolled === true)   scrolled++;
+    if (props.stayed === true)     stayed++;
+    if (props.interacted === true) interacted++;
+    if (typeof props.depth_pct === 'number')     depthTotal += props.depth_pct;
+    if (typeof props.dwell_seconds === 'number') dwellTotal += props.dwell_seconds;
+    if (typeof props.reason === 'string') reasons[props.reason] = (reasons[props.reason] ?? 0) + 1;
+  }
+
   const classified = humanViews + botViews;
   return {
     human:   { page_views: humanViews, visitors: human.size },
@@ -236,10 +279,31 @@ async function audience(sinceIso: string) {
     // Rows written before the User-Agent was recorded. Not evidence either way.
     unclassified: { page_views: unknownViews, visitors: unknown.size },
     human_share: classified ? Number((humanViews / classified).toFixed(3)) : null,
+    engagement: {
+      events: engagedEvents,
+      visitors: engagedVisitors.size,
+      // Of the human page views in this window, how many produced any evidence
+      // of a person. Null rather than 0 when there were no human page views at
+      // all: a rate over an empty denominator is not zero, it is unknown.
+      rate_of_human_views: humanViews ? Number((engagedEvents / humanViews).toFixed(3)) : null,
+      scrolled_past_half: scrolled,
+      stayed_15s: stayed,
+      clicked_or_typed: interacted,
+      avg_depth_pct: engagedEvents ? Math.round(depthTotal / engagedEvents) : null,
+      // "Engaged by second N", not time on page: the event is sent when the
+      // first signal lands, so a reader who scrolls immediately and then reads
+      // for five minutes reports a low number. It is a lower bound on
+      // attention, not a measure of it. See components/EngagementTracker.tsx.
+      avg_seconds_to_signal: engagedEvents ? Math.round(dwellTotal / engagedEvents) : null,
+      by_first_signal: Object.entries(reasons).sort((a, b) => b[1] - a[1]).map(([key, count]) => ({ key, count })),
+    },
     note:
       'props.bot is stamped server-side from the User-Agent and exists only on rows ' +
       'written after 2026-09-11. `unclassified` is older traffic, which is counted in ' +
-      'the headline funnel totals above and cannot be split retrospectively.',
+      'the headline funnel totals above and cannot be split retrospectively. ' +
+      '`engagement` counts page_engaged, which exists only on rows written after ' +
+      '2026-09-13; a zero there before that date means not-yet-instrumented, not ' +
+      'not-engaged.',
   };
 }
 
@@ -559,10 +623,25 @@ async function dataWindow() {
  *  stopped moving. A count of what is waiting is not a measure of whether
  *  anything is getting through. */
 async function editorialState(since7d: string) {
-  const [queue, snapshots] = await Promise.all([
+  const [queue, snapshots, titles] = await Promise.all([
     readQueue(),
     supabase.from('growth_snapshots').select('id', { count: 'exact', head: true }).gte('created_at', since7d),
+    supabase.from('tax_articles').select('title').eq('review_status', 'published').limit(1000),
   ]);
+
+  // How much of the demand model the site actually answers.
+  //
+  // This existed only in the daily-article cron's JSON response, which is read
+  // by nobody: the cron runs unattended and its body is discarded. So the one
+  // number that says whether four rounds of traffic work are converging on the
+  // questions people search for has never appeared anywhere a person looks.
+  // `covered_by_landing_page` is split out because the two are different kinds
+  // of progress — the pipeline grinding through the list, versus a page
+  // somebody built on purpose — and because until 2026-09-13 coverage counted
+  // only the archive and so reported the hand-built pages as pending.
+  const cover = titles.error
+    ? null
+    : coverage(((titles.data ?? []) as { title: string }[]).map(a => a.title));
 
   return {
     editorial:
@@ -580,6 +659,15 @@ async function editorialState(since7d: string) {
             review_queue_url: 'https://easytax.vip/admin/review?key=…',
             note: queue.note,
           },
+    query_coverage: cover
+      ? {
+          total: cover.total,
+          covered: cover.covered,
+          covered_by_landing_page: cover.coveredByLandingPage,
+          remaining: cover.pending.length,
+          next_up: cover.pending.slice(0, 5).map(q => ({ q: q.q, priority: q.priority, cluster: q.cluster })),
+        }
+      : null,
     growth_snapshots: snapshots.error ? null : { last_7d: snapshots.count ?? 0 },
   };
 }

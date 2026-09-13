@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { AlertTriangle, CalendarClock, CheckCircle2, ExternalLink, HelpCircle } from 'lucide-react';
+import { AlertTriangle, CalendarClock, CheckCircle2, ExternalLink } from 'lucide-react';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import NotifyMeForm from '@/components/NotifyMeForm';
 import TrackedCta from '@/components/TrackedCta';
 import CalendarSubscribe from '@/components/CalendarSubscribe';
+import FaqSection from '@/components/FaqSection';
 import TrackEvent from '@/components/TrackEvent';
 import { getMtdStatus } from '@/lib/mtd-status';
 import { quartersForTaxYear, finalDeclarationFor } from '@/lib/mtd-dates';
@@ -111,22 +112,17 @@ export default function HmrcSignedMeUpPage() {
     },
   ];
 
-  const jsonLdFaq = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map(({ q, a }) => ({
-      '@type': 'Question',
-      name: q,
-      acceptedAnswer: { '@type': 'Answer', text: a },
-    })),
-  };
+  // The FAQPage node is emitted by <FaqSection> below, from this same array.
+  // It used to be built here and rendered by a hand-rolled block further down;
+  // both are gone, because two expressions of one list is how the markup and
+  // the page drift apart. (It also briefly meant two FAQPage blocks on one
+  // URL, which is worse than none.)
 
   return (
     <div
       className="flex flex-col min-h-screen"
       style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}
     >
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
       <TrackEvent name="topic_hub_viewed" props={{ topic: 'hmrc_auto_signup' }} />
 
       <SiteHeader />
@@ -291,25 +287,17 @@ export default function HmrcSignedMeUpPage() {
             </div>
           </div>
 
-          {/* ── FAQ ── */}
-          <h2
-            className="mt-12 mb-6"
-            style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700 }}
-          >
-            Questions people are asking this month
-          </h2>
-
-          <div className="flex flex-col gap-5">
-            {faqs.map(({ q, a }) => (
-              <div key={q}>
-                <p className="font-semibold mb-1.5 flex items-start gap-2" style={{ color: '#1C1208' }}>
-                  <HelpCircle size={16} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-1" />
-                  <span>{q}</span>
-                </p>
-                <p className="text-sm" style={{ color: '#4A4035', lineHeight: 1.7, paddingLeft: '1.5rem' }}>{a}</p>
-              </div>
-            ))}
-          </div>
+          {/* ── FAQ ──
+              These six questions were written as the words this cohort types.
+              The markup and the rendering used to be two separate expressions
+              of the `faqs` array — a JSON-LD object at the top of the file and
+              a hand-rolled list down here — which is an invitation to edit an
+              answer and leave the schema behind. FaqSection is both. */}
+          <FaqSection
+            faqs={faqs}
+            pageUrl={CANONICAL}
+            heading="Questions people are asking this month"
+          />
 
           {/* Send people to the source. A page about an HMRC letter that does
               not link HMRC is asking to be trusted for no reason, and the

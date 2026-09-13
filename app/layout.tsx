@@ -7,6 +7,7 @@ import Providers from "@/components/Providers";
 import SiteAnalytics from "@/components/SiteAnalytics";
 import ContactWidget from "@/components/ContactWidget";
 import PageViewTracker from "@/components/PageViewTracker";
+import EngagementTracker from "@/components/EngagementTracker";
 import { isRtl } from '@/i18n/routing';
 
 const playfair = Playfair_Display({
@@ -177,6 +178,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               easytax.vip. Rows carry the deploy environment (see /api/track)
               so preview traffic is excluded from the funnel. */}
           <PageViewTracker />
+          {/* page_view says somebody loaded this. This says whether anybody
+              read it — the distinction the funnel has never been able to make
+              between a reader who bounced and a headless client that renders
+              our JavaScript. See components/EngagementTracker.tsx. */}
+          <EngagementTracker />
         </NextIntlClientProvider>
         {/* Wrapped rather than mounted directly so it can opt out of /embed/*,
             which renders inside other people's pages. See SiteAnalytics. */}
