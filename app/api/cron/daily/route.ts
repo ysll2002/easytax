@@ -100,8 +100,21 @@ async function runAudit(base: string): Promise<SeoSummary | { error: string }> {
 
 /** Today's metrics, stored as the day's row. Upserted on the date, so Vercel's
  *  at-least-once cron delivery cannot produce two rows for one day. */
-async function storeSnapshot(seo: SeoSummary | { error: string } | null): Promise<unknown> {
-  const payload = { ...(await buildMetricsPayload()), ...(seo ? { seo } : {}) };
+async function storeSnapshot(
+  seo: SeoSummary | { error: string } | null,
+  indexnow: unknown,
+): Promise<unknown> {
+  const payload = {
+    ...(await buildMetricsPayload()),
+    ...(seo ? { seo } : {}),
+    // Stored for the same reason as the SEO summary: `submitToIndexNow`
+    // already returns the endpoint's status, and until now the only place that
+    // answer went was the cron's own HTTP response — which nobody reads. Bing
+    // is one of two engines that has ever sent this site a visitor and the
+    // only one that honours IndexNow, so a 403 from a key file that stopped
+    // being reachable would have been completely silent.
+    ...(indexnow ? { indexnow: { ...(indexnow as object), submitted_at: new Date().toISOString() } } : {}),
+  };
   const takenOn = new Date().toISOString().slice(0, 10);
 
   const { error } = await supabase
@@ -131,7 +144,8 @@ export async function GET(req: NextRequest) {
 
   // IndexNow: announce every URL we publish. Bing is one of only two search
   // engines that has ever sent this site a visitor, and it honours the protocol.
-  steps.push(await run('indexnow', async () => submitToIndexNow(await publishedUrls())));
+  const indexnow = await run('indexnow', async () => submitToIndexNow(await publishedUrls()));
+  steps.push(indexnow);
 
   // Quarterly-update reminders. Self-guarding on the real deadline: outside its
   // window this returns `skipped` and sends nothing.
@@ -154,7 +168,8 @@ export async function GET(req: NextRequest) {
   // that must not be lost: without a row a day, every round re-derives its
   // baseline from whatever the last few days happen to contain, and "did last
   // week's changes work?" stops being a subtraction.
-  steps.push(await run('growth-snapshot', () => storeSnapshot(seo)));
+  steps.push(await run('growth-snapshot', () =>
+    storeSnapshot(seo, indexnow.ok ? indexnow.detail : { error: indexnow.error })));
 
   // Monday only. Still a self-fetch, unlike the snapshot above, because what is
   // left in that handler is the comparison and the email rather than the

@@ -361,6 +361,105 @@ export function evaluateTargets(payload: MetricsPayload): TargetResult[] {
     }),
   });
 
+  // ── F36/F37 · the site's own title tags, and the crawl that watches them ──
+  // `blocking_issues` counts the SEO defects that cost us a result rather than
+  // merely look untidy: a sitemap URL that is not 200, a brand repeated in a
+  // title, a missing title or canonical, a canonical pointing elsewhere, a
+  // noindex page we also listed for crawling, and every page in a
+  // duplicate-title set. On 2026-09-14, before the fix, it stood at 128:
+  // 122 brand repeats, 2 noindex pages we also listed for crawling, and 4
+  // pages sharing a title with another page.
+  //
+  // Zero is achievable and is the target. Unlike most numbers here it does not
+  // depend on anybody visiting, so it is readable at a sample size of one and
+  // is the only target this round that can be judged in seven days.
+  const blocking = num(payload, 'seo.blocking_issues');
+  results.push({
+    id: 'F36_seo_blocking_issues',
+    feature: 'One source for titles and descriptions, and a daily crawl of the rendered HTML',
+    goal: 'traffic',
+    metric: 'Blocking SEO defects across every sitemap URL (lower is better)',
+    baseline: 128,
+    target: 0,
+    actual: blocking,
+    // Inverted, like F26: this passes by going down.
+    verdict: blocking === null ? 'insufficient_data' : blocking === 0 ? 'hit' : 'missed',
+    note:
+      blocking === null
+        ? 'No crawl stored yet. /api/cron/daily writes one each morning into the day\'s snapshot.'
+        : `${blocking} blocking defect(s) across the sitemap. Of the 158 URLs crawled on ` +
+          '2026-09-14, 119 shipped a title ending "| EasyTax | EasyTax" and 150 were past the ' +
+          'length Google displays. The audit that would have shown this was written on 09-09 and ' +
+          'never once called, which is why it now runs from the cron instead of on request.',
+  });
+
+  // ── F38 · the pipeline stops competing with itself ───────────────────────
+  // Baseline 29: of 116 titles in the archive on 2026-09-14, 29 collided with
+  // another article — 3 exact pairs and 23 sharing a subject. The guard cannot
+  // unwrite those, so this counts *new* collisions, which should be zero from
+  // the day it shipped. A non-zero reading means the guard is not running.
+  const dupTitlePages = num(payload, 'seo.problem_counts.brand_repeated_in_title');
+  results.push({
+    id: 'F38_new_duplicate_titles',
+    feature: 'Title-collision guard in the article pipeline',
+    goal: 'traffic',
+    metric: 'Pages whose title repeats the brand (lower is better)',
+    baseline: 122,
+    target: 0,
+    actual: dupTitlePages,
+    verdict: dupTitlePages === null ? 'insufficient_data' : dupTitlePages === 0 ? 'hit' : 'missed',
+    note:
+      dupTitlePages === null
+        ? 'No crawl stored yet.'
+        : `${dupTitlePages} page(s) still repeat the brand in the title. Alongside this, ` +
+          'STANDARD.maxTitleChars now imports TITLE_BUDGET rather than carrying its own 80, and ' +
+          'findTitleCollision refuses a headline the archive already claims.',
+  });
+
+  // ── F39 · the calendar, on the page people actually reach ────────────────
+  // Baseline 0: `calendar_cta_click` has never fired with placement "home",
+  // because the block was only ever on four pages no labelled human has
+  // visited. Every human page view in production has been on `/`.
+  const calendarClicks = num(payload, 'funnel.last_7d.calendar_cta_click');
+  results.push({
+    id: 'F39_calendar_from_home',
+    feature: 'Calendar subscription block on the homepage',
+    goal: 'traffic',
+    metric: 'calendar_cta_click in 7 days',
+    baseline: 0,
+    target: 1,
+    actual: calendarClicks,
+    ...verdictFor(calendarClicks, 1, 1, calendarClicks ?? 0, {
+      short:
+        'The .ics feed was fetched 24 times and the RSS/JSON feeds 35 in the four days to ' +
+        '2026-09-14, against 8 human page views — machines read this site about six times as ' +
+        'often as people do. The subscribe block sat on four pages no human reached. A ' +
+        'subscription is also the only recurring relationship available before HMRC approval.',
+    }),
+  });
+
+  // ── F40 · did our pages actually reach Bing? ─────────────────────────────
+  // Bing is half of every search referral this site has ever had and the only
+  // engine that honours IndexNow. `submitToIndexNow` has always returned the
+  // endpoint's status; until 2026-09-14 it went only into the cron's own HTTP
+  // response, so a key file that stopped being reachable would be silent.
+  const submitted = num(payload, 'indexnow.submitted');
+  results.push({
+    id: 'F40_indexnow_accepted',
+    feature: 'IndexNow submission receipts in the daily metrics',
+    goal: 'traffic',
+    metric: 'URLs accepted by IndexNow on the last run',
+    baseline: 0,
+    target: 100,
+    actual: submitted,
+    ...verdictFor(submitted, 100, 1, submitted ?? 0, {
+      short:
+        'Reported, not chased. The number that matters is whether it is zero: a 0 with a 403 ' +
+        'means the key file stopped resolving, which is the failure this makes visible. The ' +
+        'sitemap carries ~158 URLs and the submission is capped below that.',
+    }),
+  });
+
   return results;
 }
 

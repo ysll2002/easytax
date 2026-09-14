@@ -813,7 +813,7 @@ async function distribution(sinceIso: string) {
  * `age_days` is reported because a stale audit and a clean one look identical
  * otherwise — the same reason `deployment.build_age_days` exists.
  */
-async function lastStoredSeoAudit(): Promise<Record<string, unknown> | null> {
+async function lastSnapshotBlock(key: 'seo' | 'indexnow'): Promise<Record<string, unknown> | null> {
   const { data, error } = await supabase
     .from('growth_snapshots')
     .select('taken_on, payload')
@@ -822,11 +822,11 @@ async function lastStoredSeoAudit(): Promise<Record<string, unknown> | null> {
   if (error || !data?.length) return null;
 
   const payload = (data[0] as { payload?: Record<string, unknown> }).payload ?? {};
-  const seo = payload.seo as Record<string, unknown> | undefined;
+  const seo = payload[key] as Record<string, unknown> | undefined;
   if (!seo) {
     return {
-      note: 'No SEO crawl stored yet. /api/cron/daily runs one each morning and writes it here; '
-        + 'before 2026-09-14 the audit existed only as an endpoint nobody called.',
+      note: `No ${key} result stored yet. /api/cron/daily writes one each morning; `
+        + 'before 2026-09-14 neither was recorded anywhere a person would look.',
     };
   }
 
@@ -1086,7 +1086,13 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       // first run of this found 119 of 158 pages whose <title> said "EasyTax"
       // twice, on a site five growth rounds had aimed at organic search.
       // `blocking_issues` is the number to watch and zero is achievable.
-      seo: await lastStoredSeoAudit(),
+      seo: await lastSnapshotBlock('seo'),
+
+      // Did our pages actually reach Bing? `submitToIndexNow` has always
+      // returned the endpoint's status and the count; until 2026-09-14 that
+      // answer only ever went into the cron's HTTP response. Bing is half of
+      // every search referral this site has ever had.
+      indexnow: await lastSnapshotBlock('indexnow'),
 
       // Pre-revenue: HMRC production approval pending, no Stripe integration
       // yet. Once revenue lands, wire it in here so the agent can compute

@@ -13,6 +13,7 @@ import { answeredQuestions } from '@/lib/answered-questions';
 import { getTranslations } from 'next-intl/server';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
+import CalendarSubscribe from '@/components/CalendarSubscribe';
 import { pageTitle, metaDescription } from '@/lib/seo-meta';
 
 export const revalidate = 3600;
@@ -291,6 +292,27 @@ export default async function Home() {
                   </span>
                 </TrackedCta>
               ))}
+            </div>
+
+            {/* ── The calendar, on the page people actually reach ──
+                The .ics feed is the second most-consumed surface this site
+                has. Over the four days to 2026-09-14 it was fetched 24 times
+                and the RSS/JSON feeds 35, against 8 human page views in the
+                same window — machines are reading this site roughly six times
+                as often as people are.
+                The subscribe block existed on four pages (/timetable, the
+                deadline checker, the quarterly-deadlines page and the
+                auto-signup page) and none of them has had a single human
+                visitor since bot labelling went live. Every labelled human
+                page view in production has been on `/`.
+                So the one asset with demonstrated pull was on four pages
+                nobody reaches, and absent from the only page anyone does. A
+                calendar subscription is also the only recurring relationship
+                available before HMRC approval: it puts us in front of the same
+                person four times a year without an account or an email
+                address. */}
+            <div className="mt-8 sm:mt-10 max-w-3xl">
+              <CalendarSubscribe placement="home" />
             </div>
           </div>
         </section>
