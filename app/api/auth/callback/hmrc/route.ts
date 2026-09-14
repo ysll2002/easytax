@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { getBusinessDetails } from '@/lib/hmrc';
 
 const BASE = process.env.HMRC_ENV === 'production'
   ? 'https://api.service.hmrc.gov.uk'
@@ -54,13 +53,18 @@ export async function GET(req: NextRequest) {
   const nino = existing?.nino && existing.nino !== 'GW460330D' ? existing.nino : (existing?.nino ?? null);
   const vrn  = existing?.vrn  && existing.vrn  !== '999999999' ? existing.vrn  : (existing?.vrn  ?? null);
 
-  // Fetch the self-employment businessId from HMRC
-  let businessId: string | null = null;
-  try {
-    const businesses = await getBusinessDetails(nino ?? 'GW460330D', tokens.access_token);
-    const selfEmp = businesses.find(b => b.typeOfBusiness === 'self-employment');
-    businessId = selfEmp?.businessId ?? null;
-  } catch { /* non-blocking */ }
+  // The self-employment businessId lookup that used to sit here has moved to
+  // lib/hmrc-business.ts, for the same reason as the VAT warm-up below: this
+  // route cannot produce a single Gov-Client-* device header, so the request
+  // reached HMRC asserting Gov-Client-Connection-Method: WEB_APP_VIA_SERVER
+  // with nothing behind it — on every connect.
+  //
+  // Unlike the warm-up, this one could not just be deleted: its result is
+  // persisted as `business_id` and /api/hmrc/submit-quarter and
+  // /api/hmrc/adjustments need it. `resolveBusinessId()` now does the lookup
+  // lazily from whichever of those routes needs it first. Both are reached
+  // from the dashboard through hmrcFetch, so the call is made from a request
+  // that carries real device data, and the answer is persisted once.
 
   // The VAT obligations warm-up that used to sit here has been removed.
   //
@@ -105,8 +109,9 @@ export async function GET(req: NextRequest) {
     vrn,
     connected_at: new Date().toISOString(),
   };
-  // Only include business_id if we found one (column may not exist yet)
-  if (businessId) payload.business_id = businessId;
+  // business_id is no longer written here — see the note above. An existing
+  // value in the row is left untouched, and a connection without one gets it
+  // the first time a filing route needs it.
 
   const { error: dbError } = await supabase
     .from('hmrc_connections')

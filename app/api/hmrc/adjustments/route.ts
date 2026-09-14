@@ -8,6 +8,7 @@ import {
   submitDividendsIncome,
   submitCharitableGiving,
 } from '@/lib/hmrc';
+import { resolveBusinessId } from '@/lib/hmrc-business';
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -23,8 +24,7 @@ export async function POST(req: NextRequest) {
     .eq('user_id', profileId)
     .single();
 
-  const nino       = hmrc?.nino       ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D'       : null);
-  const businessId = hmrc?.business_id ?? (process.env.HMRC_ENV !== 'production' ? 'XAIS12345678910' : null);
+  const nino = hmrc?.nino ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
 
   if (!nino) return NextResponse.json({ error: 'NINO missing — add it in Profile' }, { status: 400 });
 
@@ -32,8 +32,16 @@ export async function POST(req: NextRequest) {
     const token = await getValidToken(profileId);
     const results: Record<string, unknown> = {};
 
-    if (businessId && Object.values(businessAdjustments ?? {}).some(Boolean)) {
-      results.businessAdjustments = await submitAnnualAdjustments(nino, businessId, taxYear, businessAdjustments, token);
+    if (Object.values(businessAdjustments ?? {}).some(Boolean)) {
+      // Resolved only when there is actually a business adjustment to submit,
+      // so the rest of this route never triggers an HMRC lookup it does not
+      // need. See lib/hmrc-business.ts for why it is no longer done at connect
+      // time: this request carries device data and the callback could not.
+      const businessId = (await resolveBusinessId(profileId, nino, token, hmrc?.business_id))
+        ?? (process.env.HMRC_ENV !== 'production' ? 'XAIS12345678910' : null);
+      if (businessId) {
+        results.businessAdjustments = await submitAnnualAdjustments(nino, businessId, taxYear, businessAdjustments, token);
+      }
     }
     if (savingsAccounts?.length) {
       results.savings = await submitSavingsIncome(nino, taxYear, savingsAccounts, token);
