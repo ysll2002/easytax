@@ -388,9 +388,10 @@ export function evaluateTargets(payload: MetricsPayload): TargetResult[] {
       blocking === null
         ? 'No crawl stored yet. /api/cron/daily writes one each morning into the day\'s snapshot.'
         : `${blocking} blocking defect(s) across the sitemap. Of the 158 URLs crawled on ` +
-          '2026-09-14, 119 shipped a title ending "| EasyTax | EasyTax" and 150 were past the ' +
-          'length Google displays. The audit that would have shown this was written on 09-09 and ' +
-          'never once called, which is why it now runs from the cron instead of on request.',
+          '2026-09-14, 122 named the brand twice in one title — 119 of them ending literally ' +
+          '"| EasyTax | EasyTax" — and 150 were past the length Google displays. The audit that ' +
+          'would have shown this was written on 09-09 and never once called, which is why it ' +
+          'now runs from the cron instead of on request.',
   });
 
   // ── F38 · the pipeline stops competing with itself ───────────────────────
