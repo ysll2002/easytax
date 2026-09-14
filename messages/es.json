@@ -315,6 +315,8 @@
       "taxIdsSubtitle": "Necesarios para presentar Self Assessment ante HMRC.",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "Formato: 2 letras, 6 dígitos, 1 letra — lo encuentras en tu P60 o cartas de HMRC.",
+      "vrnLabel": "Número de registro de IVA (VRN)",
+      "vrnHelp": "9 dígitos, en su certificado de IVA. Puede incluir el prefijo «GB» y espacios: lo normalizamos al guardar.",
       "saving": "Guardando…",
       "save": "Guardar",
       "saved": "✓ Guardado"

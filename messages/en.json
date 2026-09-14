@@ -315,6 +315,8 @@
       "taxIdsSubtitle": "Required for HMRC Self Assessment submissions.",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "Format: 2 letters, 6 digits, 1 letter — found on your P60 or HMRC letters.",
+      "vrnLabel": "VAT Registration Number (VRN)",
+      "vrnHelp": "9 digits, on your VAT certificate. A 'GB' prefix and spaces are fine — we'll tidy it up.",
       "saving": "Saving…",
       "save": "Save",
       "saved": "✓ Saved"

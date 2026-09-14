@@ -315,6 +315,8 @@
       "taxIdsSubtitle": "HMRC Self Assessment 申告に必須。",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "形式：英字 2 文字 + 数字 6 桁 + 英字 1 文字 —— P60 や HMRC 書類で確認可。",
+      "vrnLabel": "VAT登録番号 (VRN)",
+      "vrnHelp": "9桁の数字で、VAT証明書に記載されています。「GB」の接頭辞やスペースが含まれていても保存時に整形されます。",
       "saving": "保存中…",
       "save": "保存",
       "saved": "✓ 保存しました"
