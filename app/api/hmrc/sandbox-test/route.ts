@@ -114,8 +114,26 @@ export async function GET(req: NextRequest) {
       .eq('user_id', profileId)
       .single();
 
+    // No guessed VRN.
+    //
+    // This used to read `conn?.vrn ?? '999999999'`. On 2026-09-14 that cost an
+    // hour: the four VAT calls returned CLIENT_OR_AGENT_NOT_AUTHORISED, and
+    // because the fallback and the stored value were the same string, the
+    // result page gave no way to tell whether the VRN had come from the
+    // connection or been invented here. The real VRN for that test user was
+    // 308930751, sitting in an older `hmrc_connections` row.
+    //
+    // A default that can never work is worse than no default: it makes the VAT
+    // section *look* exercised while guaranteeing a 403, and it hides the one
+    // fact needed to fix it. With no VRN we now skip those calls and say so.
+    //
+    // The NINO default is kept — `GW460330D` is a working HMRC sandbox NINO and
+    // roughly sixty calls depend on it — but its provenance is now reported
+    // too, so the same ambiguity cannot recur silently for either value.
     const nino = conn?.nino ?? 'GW460330D';
-    const vrn  = conn?.vrn  ?? '999999999';
+    const ninoSource = conn?.nino ? 'from your HMRC connection' : 'sandbox default (none stored)';
+    const vrn: string | null = conn?.vrn ?? null;
+    const vrnSource = vrn ? 'from your HMRC connection' : 'not set — add it in Profile';
 
     // Current UK tax year (April 6 → April 5)
     const now = new Date();
@@ -679,6 +697,26 @@ export async function GET(req: NextRequest) {
     const to   = new Date().toISOString().slice(0, 10);
     const from = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
+    if (!vrn) {
+      // Reported as five explicit skips rather than silently omitted, so the
+      // harness still accounts for every endpoint it claims to cover.
+      for (const [name, method, path] of [
+        ['VAT – Obligations',     'GET',  '/organisations/vat/{vrn}/obligations'],
+        ['VAT – Submit Return',   'POST', '/organisations/vat/{vrn}/returns'],
+        ['VAT – Retrieve Return', 'GET',  '/organisations/vat/{vrn}/returns/18A2'],
+        ['VAT – Liabilities',     'GET',  '/organisations/vat/{vrn}/liabilities'],
+        ['VAT – Payments',        'GET',  '/organisations/vat/{vrn}/payments'],
+      ] as const) {
+        results.push({
+          name, endpoint: `${method} ${path}`, method, status: null, ok: false,
+          error: 'Skipped: no VAT registration number on this HMRC connection. '
+            + 'Add the VRN your test user is enrolled for in Profile — it must match '
+            + 'the enrolment on the connected account, or HMRC returns 403 '
+            + 'CLIENT_OR_AGENT_NOT_AUTHORISED.',
+        });
+      }
+    } else {
+
     const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
     // Find any fulfilled period key (for Retrieve) and any open one (for Submit)
@@ -719,6 +757,8 @@ export async function GET(req: NextRequest) {
     // upstream test backend has no row matching real-date queries.
     await call(results, 'VAT – Liabilities',         `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,             'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_LIABILITY' });
     await call(results, 'VAT – Payments',            `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,                'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_PAYMENT' });
+
+    }
     // Penalties API + Financial Details are not in our production subscription scope
     // (declared out of scope in 9 Jun 2026 email to Ciaran). Excluded from the harness.
 
@@ -734,7 +774,11 @@ export async function GET(req: NextRequest) {
         tokenLen:   token.length,
         tokenStart: token.substring(0, 8),
       },
-      context: { nino, vrn, businessId: resolvedBusinessId, taxYear },
+      context: {
+        nino, ninoSource,
+        vrn: vrn || '(not set)', vrnSource,
+        businessId: resolvedBusinessId, taxYear,
+      },
       results,
     });
 
