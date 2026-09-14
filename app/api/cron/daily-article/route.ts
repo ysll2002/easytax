@@ -15,6 +15,7 @@ import { getMtdStatus, mandateSentence } from '@/lib/mtd-status';
 import { publishedTopicsForTitle } from '@/app/tax-tips/_lib/topic-articles';
 import {
   STANDARD,
+  findTitleCollision,
   gradeArticle,
   meetsStandard,
   normaliseSources,
@@ -578,7 +579,28 @@ Reply with ONLY the topic sentence, no explanation.`,
         continue;
       }
 
+      // Refuse a headline the archive already claims. `titles` includes drafts,
+      // so a queued article counts — otherwise the pipeline writes the same
+      // page again tomorrow while the first one waits for review.
+      const collision = findTitleCollision(draft.title, titles);
+      if (collision) {
+        results.push({
+          mode: 'new' as const,
+          slug: null,
+          title: draft.title,
+          replaces: null,
+          targetQuery: assignment.target?.q ?? null,
+          cluster: assignment.target?.cluster ?? null,
+          quality,
+          attempts,
+          error: `Not written: this headline ${collision.kind === 'exact' ? 'is already in the archive' : 'claims the same subject as an existing page'} — "${collision.match}". Two pages competing for one query rank worse than one.`,
+        });
+        continue;
+      }
+
       const slug = toSlug(draft.title, isSeeding ? new Date(pubDate).toISOString().slice(0, 10) : today);
+      // Keep the in-run list current so a batch cannot collide with itself.
+      titles.push(draft.title);
       const error = await insertDraft({
         title: draft.title,
         slug,
@@ -612,7 +634,9 @@ Reply with ONLY the topic sentence, no explanation.`,
     // fail the cron either, because `sendArticleReviewEmail` never throws.
     let notified: Awaited<ReturnType<typeof notifyReviewQueue>> | { sent: false; reason: string; days_since_last_publish: null };
     try {
-      notified = await notifyReviewQueue(created.map(r => ({ title: r.title, slug: r.slug })));
+      notified = await notifyReviewQueue(
+        created.flatMap(r => (r.slug ? [{ title: r.title, slug: r.slug }] : [])),
+      );
     } catch (err) {
       console.error('[daily-article] review notification failed', err);
       notified = { sent: false, reason: `failed: ${err instanceof Error ? err.message : String(err)}`, days_since_last_publish: null };

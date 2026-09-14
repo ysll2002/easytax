@@ -34,13 +34,20 @@ const SOURCE_HOSTS = [
   'bankofengland.co.uk',
 ];
 
+import { TITLE_BUDGET } from './seo-meta';
+
 export const STANDARD = {
   minWords: 1100,
   maxWords: 2600,
   minSources: 2,
   minMoneyFigures: 3,
   minHeadings: 4,
-  maxTitleChars: 80,
+  // Tied to the search budget rather than chosen separately. These were 80 and
+  // 60, and the gap is why 84 of 158 pages ship a title Google truncates: the
+  // quality gate was happy with a headline twenty characters longer than the
+  // thing that renders it. `pageTitle()` drops the brand to make room and then
+  // leaves the rest whole, so the headline itself has to fit.
+  maxTitleChars: TITLE_BUDGET,
   maxExcerptWords: 45,
   // The excerpt is used verbatim as the page's meta description, and Google
   // truncates that around 155-160 characters. Forty-five words is roughly 270,
@@ -263,4 +270,67 @@ export function meetsStandard(article: { content: string; sources?: unknown }): 
     Array.isArray(article.sources) &&
     (article.sources as GeneratedSource[]).filter(isPrimarySource).length >= STANDARD.minSources
   );
+}
+
+/**
+ * Normalised form of a headline, for comparing one against another.
+ *
+ * Case, punctuation and the ampersand/`and` split are all ways the same
+ * headline has been written twice in this archive, and none of them makes two
+ * pages any less in competition with each other.
+ */
+export function normaliseTitle(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+/** The part before the first clause break — the subject the page claims. */
+function titleStem(title: string): string {
+  const cut = title.split(/[:—–]/)[0];
+  return normaliseTitle(cut);
+}
+
+/** Stems shorter than this are too generic to treat as a claim on a subject. */
+const MIN_STEM_CHARS = 20;
+
+export type TitleCollision = { kind: 'exact' | 'stem'; match: string };
+
+/**
+ * Whether a proposed headline collides with one the archive already has.
+ *
+ * The 2026-09-14 crawl found the pipeline had written the same article twice
+ * under the same title — `VAT Partial Exemption: How to Calculate Your
+ * Recoverable Input Tax` in July and again in September, and `Trading Allowance
+ * vs Actual Expenses: Which Saves You More Tax?` in May and again in June — and
+ * five separate pages all claiming `Capital Allowances on Plant & Machinery`.
+ *
+ * Two pages on one domain targeting one query is not twice the chance of
+ * ranking. It is the same chance, split, plus a day of the pipeline spent not
+ * answering anything new. Duplicate titles are the single defect
+ * `/api/admin/seo-audit` was built to surface, and the pipeline was the thing
+ * creating them.
+ *
+ * `stem` is deliberately as blocking as `exact`. The five Capital Allowances
+ * pages are all distinct articles by their subtitles and all indistinguishable
+ * to a search engine deciding which one answers "capital allowances on plant
+ * and machinery". A day on which this refuses to write is a day the archive
+ * did not get worse, and the refusal is reported rather than swallowed.
+ */
+export function findTitleCollision(candidate: string, existing: string[]): TitleCollision | null {
+  const n = normaliseTitle(candidate);
+  if (!n) return null;
+
+  for (const other of existing) {
+    if (normaliseTitle(other) === n) return { kind: 'exact', match: other };
+  }
+
+  const stem = titleStem(candidate);
+  if (stem.length < MIN_STEM_CHARS) return null;
+  for (const other of existing) {
+    if (titleStem(other) === stem) return { kind: 'stem', match: other };
+  }
+  return null;
 }
