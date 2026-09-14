@@ -113,8 +113,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // themselves to be a third page. A sign-in form is not a search result
     // anyone wants, and nothing links to it from outside; it does not belong
     // in the index.
-    { url: `${base}/privacy`,                   lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
-    { url: `${base}/terms`,                     lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
+    // /privacy and /terms are deliberately not listed. Both send
+    // `<meta name="robots" content="noindex">`, and a URL that is in the
+    // sitemap and also asks not to be indexed gives a crawler two of our own
+    // instructions that contradict each other — which it then resolves however
+    // it likes. Found by the first run of the SEO crawl on 2026-09-14, and
+    // `noindex_but_in_sitemap` in lib/seo-audit keeps it found.
+    //
+    // They stay reachable and linked from the footer, which is what a reader
+    // and a compliance reviewer need; neither needs them in search results.
     ...topicUrls,
     ...articleUrls,
   ];

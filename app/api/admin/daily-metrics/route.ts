@@ -802,6 +802,41 @@ async function distribution(sinceIso: string) {
  * Only route handlers named for HTTP methods are treated as endpoints by Next,
  * so this export adds no new public surface.
  */
+/**
+ * The most recent stored SEO crawl.
+ *
+ * Read from the day's snapshot rather than crawled here. `/api/cron/daily`
+ * runs the audit over all ~158 sitemap URLs and writes the summary into the
+ * row it stores; a live metrics fetch must stay a read, or the endpoint the
+ * daily round opens with becomes a minute-long crawl of our own origin.
+ *
+ * `age_days` is reported because a stale audit and a clean one look identical
+ * otherwise — the same reason `deployment.build_age_days` exists.
+ */
+async function lastStoredSeoAudit(): Promise<Record<string, unknown> | null> {
+  const { data, error } = await supabase
+    .from('growth_snapshots')
+    .select('taken_on, payload')
+    .order('taken_on', { ascending: false })
+    .limit(1);
+  if (error || !data?.length) return null;
+
+  const payload = (data[0] as { payload?: Record<string, unknown> }).payload ?? {};
+  const seo = payload.seo as Record<string, unknown> | undefined;
+  if (!seo) {
+    return {
+      note: 'No SEO crawl stored yet. /api/cron/daily runs one each morning and writes it here; '
+        + 'before 2026-09-14 the audit existed only as an endpoint nobody called.',
+    };
+  }
+
+  const takenOn = (data[0] as { taken_on?: string }).taken_on;
+  const ageDays = takenOn
+    ? Math.floor((Date.now() - new Date(`${takenOn}T00:00:00Z`).getTime()) / 86_400_000)
+    : null;
+  return { ...seo, from_snapshot: takenOn, age_days: ageDays };
+}
+
 export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
   const now      = new Date();
   const since24h = new Date(now.getTime() - 24  * 60 * 60 * 1000).toISOString();
@@ -1046,6 +1081,12 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       // Stored daily snapshots, which is what makes the weekly review a
       // comparison rather than a reading.
       growth_snapshots: editorial.growth_snapshots,
+
+      // What the site actually serves, crawled page by page. On 2026-09-14 the
+      // first run of this found 119 of 158 pages whose <title> said "EasyTax"
+      // twice, on a site five growth rounds had aimed at organic search.
+      // `blocking_issues` is the number to watch and zero is achievable.
+      seo: await lastStoredSeoAudit(),
 
       // Pre-revenue: HMRC production approval pending, no Stripe integration
       // yet. Once revenue lands, wire it in here so the agent can compute
