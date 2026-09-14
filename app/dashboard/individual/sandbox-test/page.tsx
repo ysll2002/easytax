@@ -20,7 +20,11 @@ type TestReport = {
   failed: number;
   total: number;
   debug: { hmrcEnv: string; baseUrl: string; tokenStart: string; tokenLen: number };
-  context: { nino: string; vrn: string; businessId: string; taxYear: string };
+  context: {
+    nino: string; ninoSource?: string;
+    vrn: string;  vrnSource?: string;
+    businessId: string; taxYear: string;
+  };
   results: ApiResult[];
 };
 
@@ -107,12 +111,27 @@ export default function SandboxTestPage() {
               </div>
             </div>
             <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {(['nino', 'vrn', 'businessId', 'taxYear'] as const).map(k => (
-                <div key={k}>
-                  <p className="text-xs uppercase" style={{ color: '#4A4035' }}>{k}</p>
-                  <p className="text-xs font-mono font-semibold" style={{ color: '#C4622D' }}>{report.context[k]}</p>
-                </div>
-              ))}
+              {([
+                ['nino', 'ninoSource'],
+                ['vrn', 'vrnSource'],
+                ['businessId', null],
+                ['taxYear', null],
+              ] as const).map(([k, sourceKey]) => {
+                // Where the value came from, under the value itself. Without
+                // this, a stored VRN and a hardcoded default looked identical
+                // on this page — which is exactly how 2026-09-14 lost an hour
+                // to a VAT number nobody had actually set.
+                const source = sourceKey ? report.context[sourceKey] : null;
+                return (
+                  <div key={k}>
+                    <p className="text-xs uppercase" style={{ color: '#4A4035' }}>{k}</p>
+                    <p className="text-xs font-mono font-semibold" style={{ color: '#C4622D' }}>{report.context[k]}</p>
+                    {source && (
+                      <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>{source}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
             <div className="mt-4 pt-4" style={{ borderTop: '1px solid #2E2418' }}>
               <p className="text-xs mb-1" style={{ color: '#4A4035' }}>DEBUG</p>
