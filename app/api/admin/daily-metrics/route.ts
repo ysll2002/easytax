@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { EVENTS } from '@/lib/analytics';
 import { deploymentInfo } from '@/lib/deployment';
+import { readQueue } from '@/lib/review-queue';
+import { coverage } from '@/lib/search-queries';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -189,13 +191,22 @@ async function uniqueVisitors(sinceIso: string): Promise<number | null> {
  * this site is measurable.
  */
 async function audience(sinceIso: string) {
-  const { data, error } = await supabase
-    .from('analytics_events')
-    .select('anon_id, path, props')
-    .eq('name', 'page_view')
-    .gte('created_at', sinceIso)
-    .limit(50_000);
+  const [views, engaged] = await Promise.all([
+    supabase
+      .from('analytics_events')
+      .select('anon_id, path, props')
+      .eq('name', 'page_view')
+      .gte('created_at', sinceIso)
+      .limit(50_000),
+    supabase
+      .from('analytics_events')
+      .select('anon_id, path, props')
+      .eq('name', 'page_engaged')
+      .gte('created_at', sinceIso)
+      .limit(50_000),
+  ]);
 
+  const { data, error } = views;
   if (error) return null;
 
   const human = new Set<string>();
@@ -223,6 +234,39 @@ async function audience(sinceIso: string) {
     }
   }
 
+  // Engagement, over the same window and the same filters.
+  //
+  // This is the number that separates the two readings of "seven human page
+  // views, all on `/`, nothing else": three or four people a day who found
+  // nothing worth clicking, or three or four automated clients with browser
+  // User-Agents. A crawler renders the page and fires page_view; it does not
+  // scroll half way down and stay fifteen seconds. See
+  // components/EngagementTracker.tsx.
+  //
+  // Counted over human-labelled rows only. An engaged bot is not interesting
+  // and including it would put the thing being measured back in the
+  // denominator.
+  const engagedVisitors = new Set<string>();
+  let engagedEvents = 0, scrolled = 0, stayed = 0, interacted = 0;
+  let depthTotal = 0, dwellTotal = 0;
+  const reasons: Record<string, number> = {};
+
+  for (const row of engaged.data ?? []) {
+    const props = (row.props ?? {}) as Record<string, unknown>;
+    if (props.env !== 'production') continue;
+    if (props.bot !== false) continue;
+    if (!isPublicContentPath(row.path)) continue;
+
+    engagedEvents++;
+    if (row.anon_id) engagedVisitors.add(row.anon_id);
+    if (props.scrolled === true)   scrolled++;
+    if (props.stayed === true)     stayed++;
+    if (props.interacted === true) interacted++;
+    if (typeof props.depth_pct === 'number')     depthTotal += props.depth_pct;
+    if (typeof props.dwell_seconds === 'number') dwellTotal += props.dwell_seconds;
+    if (typeof props.reason === 'string') reasons[props.reason] = (reasons[props.reason] ?? 0) + 1;
+  }
+
   const classified = humanViews + botViews;
   return {
     human:   { page_views: humanViews, visitors: human.size },
@@ -235,10 +279,31 @@ async function audience(sinceIso: string) {
     // Rows written before the User-Agent was recorded. Not evidence either way.
     unclassified: { page_views: unknownViews, visitors: unknown.size },
     human_share: classified ? Number((humanViews / classified).toFixed(3)) : null,
+    engagement: {
+      events: engagedEvents,
+      visitors: engagedVisitors.size,
+      // Of the human page views in this window, how many produced any evidence
+      // of a person. Null rather than 0 when there were no human page views at
+      // all: a rate over an empty denominator is not zero, it is unknown.
+      rate_of_human_views: humanViews ? Number((engagedEvents / humanViews).toFixed(3)) : null,
+      scrolled_past_half: scrolled,
+      stayed_15s: stayed,
+      clicked_or_typed: interacted,
+      avg_depth_pct: engagedEvents ? Math.round(depthTotal / engagedEvents) : null,
+      // "Engaged by second N", not time on page: the event is sent when the
+      // first signal lands, so a reader who scrolls immediately and then reads
+      // for five minutes reports a low number. It is a lower bound on
+      // attention, not a measure of it. See components/EngagementTracker.tsx.
+      avg_seconds_to_signal: engagedEvents ? Math.round(dwellTotal / engagedEvents) : null,
+      by_first_signal: Object.entries(reasons).sort((a, b) => b[1] - a[1]).map(([key, count]) => ({ key, count })),
+    },
     note:
       'props.bot is stamped server-side from the User-Agent and exists only on rows ' +
       'written after 2026-09-11. `unclassified` is older traffic, which is counted in ' +
-      'the headline funnel totals above and cannot be split retrospectively.',
+      'the headline funnel totals above and cannot be split retrospectively. ' +
+      '`engagement` counts page_engaged, which exists only on rows written after ' +
+      '2026-09-13; a zero there before that date means not-yet-instrumented, not ' +
+      'not-engaged.',
   };
 }
 
@@ -545,18 +610,64 @@ async function dataWindow() {
  *
  *  Both are what the weekly review reads to judge F1 and F5, and both live
  *  behind the 20260906 migration — so a missing table or column returns null
- *  rather than failing the whole metrics call. */
+ *  rather than failing the whole metrics call.
+ *
+ *  `days_since_last_publish` and `oldest_draft_age_hours` are here because of
+ *  what happened without them. The 2026-09-06 review gate made the daily cron
+ *  write drafts instead of publishing, and the release action was never given
+ *  a UI — so nothing was ever released. The archive last gained a page on
+ *  2026-09-07 and was still frozen on 2026-09-12, with the cron adding to the
+ *  queue every morning. Two daily agent runs read this endpoint in that window
+ *  and neither caught it, because `drafts_awaiting_review: 2` reads as a small
+ *  healthy queue and there was no number anywhere saying the archive had
+ *  stopped moving. A count of what is waiting is not a measure of whether
+ *  anything is getting through. */
 async function editorialState(since7d: string) {
-  const [drafts, published, snapshots] = await Promise.all([
-    supabase.from('tax_articles').select('slug', { count: 'exact', head: true }).eq('review_status', 'draft'),
-    supabase.from('tax_articles').select('slug', { count: 'exact', head: true }).eq('review_status', 'published'),
+  const [queue, snapshots, titles] = await Promise.all([
+    readQueue(),
     supabase.from('growth_snapshots').select('id', { count: 'exact', head: true }).gte('created_at', since7d),
+    supabase.from('tax_articles').select('title').eq('review_status', 'published').limit(1000),
   ]);
 
+  // How much of the demand model the site actually answers.
+  //
+  // This existed only in the daily-article cron's JSON response, which is read
+  // by nobody: the cron runs unattended and its body is discarded. So the one
+  // number that says whether four rounds of traffic work are converging on the
+  // questions people search for has never appeared anywhere a person looks.
+  // `covered_by_landing_page` is split out because the two are different kinds
+  // of progress — the pipeline grinding through the list, versus a page
+  // somebody built on purpose — and because until 2026-09-13 coverage counted
+  // only the archive and so reported the hand-built pages as pending.
+  const cover = titles.error
+    ? null
+    : coverage(((titles.data ?? []) as { title: string }[]).map(a => a.title));
+
   return {
-    editorial: drafts.error || published.error
-      ? null
-      : { drafts_awaiting_review: drafts.count ?? 0, published: published.count ?? 0 },
+    editorial:
+      queue.drafts === null && queue.publishedCount === null
+        ? null
+        : {
+            drafts_awaiting_review: queue.drafts?.length ?? null,
+            published: queue.publishedCount,
+            last_published_at: queue.lastPublishedAt,
+            // The freeze detector. Anything above 1 means the cron has written
+            // an article that no reader can see.
+            days_since_last_publish: queue.daysSinceLastPublish,
+            oldest_draft_age_hours: queue.oldestDraftAgeHours,
+            pending_upgrades: queue.upgrades?.length ?? null,
+            review_queue_url: 'https://easytax.vip/admin/review?key=…',
+            note: queue.note,
+          },
+    query_coverage: cover
+      ? {
+          total: cover.total,
+          covered: cover.covered,
+          covered_by_landing_page: cover.coveredByLandingPage,
+          remaining: cover.pending.length,
+          next_up: cover.pending.slice(0, 5).map(q => ({ q: q.q, priority: q.priority, cluster: q.cluster })),
+        }
+      : null,
     growth_snapshots: snapshots.error ? null : { last_7d: snapshots.count ?? 0 },
   };
 }
@@ -588,7 +699,7 @@ async function distribution(sinceIso: string) {
   const { data, error } = await supabase
     .from('analytics_events')
     .select('name, props, created_at')
-    .in('name', ['embed_served', 'share_card_served', 'feed_fetched', 'share_click', 'share_copy'])
+    .in('name', ['embed_served', 'share_card_served', 'feed_fetched', 'llms_fetched', 'share_click', 'share_copy'])
     .gte('created_at', sinceIso)
     .limit(50_000);
 
@@ -598,9 +709,12 @@ async function distribution(sinceIso: string) {
   const feedAgents   = new Map<string, number>();
   const scrapers     = new Map<string, number>();
   const shareChannel = new Map<string, number>();
+  const llmsAgents   = new Map<string, number>();
   let embedServed = 0;
   let shareCards  = 0;
   let feedFetches = 0;
+  let llmsFetches = 0;
+  let llmsFullFetches = 0;
 
   const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
 
@@ -625,6 +739,13 @@ async function distribution(sinceIso: string) {
         // Cut at the first space or slash to key on the product name.
         bump(feedAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
         break;
+      case 'llms_fetched':
+        llmsFetches++;
+        if (str('file') === 'full') llmsFullFetches++;
+        // Same keying as the feeds, and for the same reason: ClaudeBot/1.0 and
+        // ClaudeBot/1.1 are one crawler, not two.
+        bump(llmsAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
+        break;
       default:
         bump(shareChannel, `${str('tool')}:${str('channel')}`);
     }
@@ -645,6 +766,16 @@ async function distribution(sinceIso: string) {
     },
     share_cards: { served: shareCards, by_scraper: top(scrapers) },
     feeds: { fetches: feedFetches, distinct_agents: feedAgents.size, by_agent: top(feedAgents) },
+    // /llms.txt and /llms-full.txt, shipped 2026-09-12. The index being fetched
+    // is an answer engine noticing the site; the full text being fetched is the
+    // archive actually leaving with it, which is why the two are counted
+    // separately rather than summed.
+    llms: {
+      fetches: llmsFetches,
+      full_text_fetches: llmsFullFetches,
+      distinct_agents: llmsAgents.size,
+      by_agent: top(llmsAgents),
+    },
     shares: {
       clicks: [...shareChannel.values()].reduce((a, b) => a + b, 0),
       by_tool_channel: top(shareChannel),
@@ -671,6 +802,41 @@ async function distribution(sinceIso: string) {
  * Only route handlers named for HTTP methods are treated as endpoints by Next,
  * so this export adds no new public surface.
  */
+/**
+ * The most recent stored SEO crawl.
+ *
+ * Read from the day's snapshot rather than crawled here. `/api/cron/daily`
+ * runs the audit over all ~158 sitemap URLs and writes the summary into the
+ * row it stores; a live metrics fetch must stay a read, or the endpoint the
+ * daily round opens with becomes a minute-long crawl of our own origin.
+ *
+ * `age_days` is reported because a stale audit and a clean one look identical
+ * otherwise — the same reason `deployment.build_age_days` exists.
+ */
+async function lastSnapshotBlock(key: 'seo' | 'indexnow'): Promise<Record<string, unknown> | null> {
+  const { data, error } = await supabase
+    .from('growth_snapshots')
+    .select('taken_on, payload')
+    .order('taken_on', { ascending: false })
+    .limit(1);
+  if (error || !data?.length) return null;
+
+  const payload = (data[0] as { payload?: Record<string, unknown> }).payload ?? {};
+  const seo = payload[key] as Record<string, unknown> | undefined;
+  if (!seo) {
+    return {
+      note: `No ${key} result stored yet. /api/cron/daily writes one each morning; `
+        + 'before 2026-09-14 neither was recorded anywhere a person would look.',
+    };
+  }
+
+  const takenOn = (data[0] as { taken_on?: string }).taken_on;
+  const ageDays = takenOn
+    ? Math.floor((Date.now() - new Date(`${takenOn}T00:00:00Z`).getTime()) / 86_400_000)
+    : null;
+  return { ...seo, from_snapshot: takenOn, age_days: ageDays };
+}
+
 export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
   const now      = new Date();
   const since24h = new Date(now.getTime() - 24  * 60 * 60 * 1000).toISOString();
@@ -915,6 +1081,18 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       // Stored daily snapshots, which is what makes the weekly review a
       // comparison rather than a reading.
       growth_snapshots: editorial.growth_snapshots,
+
+      // What the site actually serves, crawled page by page. On 2026-09-14 the
+      // first run of this found 119 of 158 pages whose <title> said "EasyTax"
+      // twice, on a site five growth rounds had aimed at organic search.
+      // `blocking_issues` is the number to watch and zero is achievable.
+      seo: await lastSnapshotBlock('seo'),
+
+      // Did our pages actually reach Bing? `submitToIndexNow` has always
+      // returned the endpoint's status and the count; until 2026-09-14 that
+      // answer only ever went into the cron's HTTP response. Bing is half of
+      // every search referral this site has ever had.
+      indexnow: await lastSnapshotBlock('indexnow'),
 
       // Pre-revenue: HMRC production approval pending, no Stripe integration
       // yet. Once revenue lands, wire it in here so the agent can compute

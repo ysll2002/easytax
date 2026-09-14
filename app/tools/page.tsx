@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import TrackEvent from '@/components/TrackEvent';
@@ -16,7 +17,7 @@ import { TOOLS } from '@/lib/tools';
 // the generic "free UK tax calculator" queries that no single tool targets.
 
 export const metadata: Metadata = {
-  title: 'Free UK Tax Calculators & Tools — MTD deadlines, penalties, payments on account',
+  title: pageTitle('Free UK Tax Calculators & MTD Deadline Tools'),
   description:
     'Free tools for UK sole traders, landlords and small limited companies. Check whether you are in Making Tax Digital, work out a late filing penalty, and see what really leaves your account on 31 January. No signup, nothing stored.',
   keywords: [

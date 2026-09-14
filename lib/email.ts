@@ -172,37 +172,140 @@ export async function sendInternalNotice(subject: string, html: string): Promise
  *
  *  Drafts are invisible to readers by design, which means nothing surfaces them
  *  on its own — without this the queue silently grows and the archive quietly
- *  stops gaining pages. */
-export async function sendArticleReviewEmail(
-  drafts: { title: string; slug: string }[],
-  queueDepth: number,
-): Promise<boolean> {
-  const rows = drafts
+ *  stops gaining pages.
+ *
+ *  It grew silently anyway, for five days, and this is the rewrite. The old
+ *  version of this email did two things wrong and both are fixed here.
+ *
+ *  1. **It gave instructions instead of a link.** The call to action was
+ *     `GET /api/admin/article-review?key=<AGENT_METRICS_KEY>`, i.e. "open a
+ *     terminal, find the secret, write a curl command with a JSON body". No
+ *     draft was ever released. /admin/review (2026-09-12) is a page that does
+ *     the same job with a button, so the email now links straight at it, and
+ *     at each individual draft.
+ *  2. **It only fired on the days new drafts were written.** A queue that
+ *     stops being added to stops being mentioned, which is precisely backwards
+ *     — the longer nothing is published, the quieter it got. The caller now
+ *     decides with `reviewEmailIsDue()` below, which fires on a freeze whether
+ *     or not anything new was generated.
+ *
+ *  The admin key travels in the link. That is a secret in an inbox, and it is
+ *  a deliberate trade: the alternative is the status quo, where the control is
+ *  technically available and practically unreachable. The key only opens the
+ *  editorial queue, it is already checked server-side before any content
+ *  renders, and it is rotatable.
+ */
+export type ReviewEmailInput = {
+  /** Written by this cron run. May be empty on a freeze-alarm send. */
+  newDrafts: { title: string; slug: string }[];
+  /** Everything waiting, oldest first. */
+  queue: { title: string; slug: string }[];
+  /** Whole days since the archive last gained a public page. Null = unknown,
+   *  which is reported as unknown rather than flattened to zero. */
+  daysSinceLastPublish: number | null;
+  /** Hours the longest-waiting draft has been waiting. */
+  oldestDraftAgeHours: number | null;
+};
+
+/** The freeze threshold, in days since the archive last gained a page.
+ *
+ *  One day is normal: the cron writes at 08:19 and a draft released the same
+ *  evening still reads as one. Two means a day's output never reached a
+ *  reader. The observed failure ran to five. */
+export const PUBLISH_FREEZE_DAYS = 2;
+
+/** Whether this run should mail the owner at all.
+ *
+ *  Something new to look at, or nothing getting through — and in the second
+ *  case it sends every day the freeze lasts, because the whole failure mode
+ *  was a queue nobody was reminded about. */
+export function reviewEmailIsDue(input: ReviewEmailInput): boolean {
+  if (input.newDrafts.length > 0) return true;
+  if (input.queue.length === 0) return false;
+  return (input.daysSinceLastPublish ?? 0) >= PUBLISH_FREEZE_DAYS;
+}
+
+function reviewUrl(slug?: string): string {
+  const key = process.env.AGENT_METRICS_KEY;
+  const base = 'https://easytax.vip/admin/review';
+  const params = new URLSearchParams();
+  // No key configured is not a reason to send a broken link: the page says so
+  // itself, and a bare URL is still one click closer than a curl command.
+  if (key) params.set('key', key);
+  if (slug) params.set('slug', slug);
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+}
+
+function button(href: string, label: string): string {
+  return `<a href="${escapeHtml(href)}"
+     style="display:inline-block;padding:12px 22px;border-radius:999px;background:#1C1208;color:#FDFCF8;
+            font-size:14px;font-weight:600;text-decoration:none;line-height:20px">${escapeHtml(label)}</a>`;
+}
+
+export async function sendArticleReviewEmail(input: ReviewEmailInput): Promise<boolean> {
+  const { newDrafts, queue, daysSinceLastPublish, oldestDraftAgeHours } = input;
+  const frozen = (daysSinceLastPublish ?? 0) >= PUBLISH_FREEZE_DAYS;
+  const depth = queue.length;
+
+  const rows = queue
     .map(
-      d => `<li style="margin:0 0 10px;font-size:14px;color:#4A4035;line-height:1.5">
-              <strong style="color:#1C1208">${escapeHtml(d.title)}</strong><br>
-              <span style="color:#9A8F83;font-size:12px">${escapeHtml(d.slug)}</span>
-            </li>`,
+      d => `<tr><td style="padding:0 0 14px">
+              <div style="font-size:14px;font-weight:700;color:#1C1208;line-height:1.4;margin:0 0 4px">
+                ${escapeHtml(d.title)}
+              </div>
+              <a href="${escapeHtml(reviewUrl(d.slug))}"
+                 style="font-size:13px;color:#C4622D;text-decoration:none">Read it and decide →</a>
+            </td></tr>`,
     )
     .join('');
 
+  // The subject line is the only part that reliably gets read, so the freeze
+  // goes in it. "2 drafts awaiting review" was true for five days and told
+  // nobody anything was wrong.
+  const subject = frozen
+    ? `EasyTax: nothing has been published for ${daysSinceLastPublish} days — ${depth} draft${depth === 1 ? '' : 's'} waiting`
+    : `EasyTax: ${depth} article draft${depth === 1 ? '' : 's'} awaiting review`;
+
+  const alarm = frozen
+    ? `<p style="margin:0 0 18px;padding:14px 16px;border-radius:12px;background:#FBF0E6;border:1px solid #E8C9A8;
+                 font-size:14px;color:#7A4A1E;line-height:1.6">
+         <strong>The archive has stopped moving.</strong> The last article a reader could see went up
+         ${daysSinceLastPublish} days ago. The cron has kept writing since; none of it is on the site,
+         in the sitemap, or linked from anywhere.
+       </p>`
+    : '';
+
+  const waited =
+    oldestDraftAgeHours === null
+      ? ''
+      : `<p style="margin:0 0 20px;font-size:13px;color:#9A8F83;line-height:1.6">
+           Longest wait in the queue: ${
+             oldestDraftAgeHours < 48
+               ? `${Math.round(oldestDraftAgeHours)} hours`
+               : `${Math.round(oldestDraftAgeHours / 24)} days`
+           }.
+         </p>`;
+
   return sendInternalNotice(
-    `EasyTax: ${drafts.length} article draft${drafts.length === 1 ? '' : 's'} awaiting review (${queueDepth} in queue)`,
+    subject,
     `<!DOCTYPE html>
 <html><body style="margin:0;padding:24px;background:#F0EBE1;font-family:Arial,sans-serif">
   <table width="560" cellpadding="0" cellspacing="0" align="center" style="background:#FDFCF8;border-radius:16px;border:1px solid #DDD5C8">
     <tr><td style="padding:32px">
       <p style="margin:0 0 6px;font-size:20px;font-weight:700;color:#1C1208;font-family:Georgia,serif">
-        ${drafts.length} draft${drafts.length === 1 ? '' : 's'} waiting
+        ${depth} draft${depth === 1 ? '' : 's'} waiting${newDrafts.length > 0 ? ` · ${newDrafts.length} new today` : ''}
       </p>
-      <p style="margin:0 0 20px;font-size:14px;color:#9A8F83;line-height:1.6">
-        These are not on the site, not in the sitemap and not linked from anywhere until you publish
-        them. ${queueDepth} draft${queueDepth === 1 ? '' : 's'} in the queue in total.
+      <p style="margin:0 0 18px;font-size:14px;color:#9A8F83;line-height:1.6">
+        Nothing here is visible to a reader until you release it.
       </p>
-      <ul style="margin:0 0 24px;padding-left:18px">${rows}</ul>
+      ${alarm}
+      ${waited}
+      <table width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+      <p style="margin:6px 0 20px">${button(reviewUrl(), 'Open the review queue')}</p>
       <p style="margin:0;font-size:12px;color:#9A8F83;line-height:1.6">
-        Review them with <code>GET /api/admin/article-review?key=&lt;AGENT_METRICS_KEY&gt;</code>,
-        publish with <code>POST</code> and <code>{"slug":"…","action":"publish"}</code>.
+        Each link opens the draft with its quality report, and publishes or rejects it in one click.
+        The link carries the admin key — treat this email as a credential.
       </p>
     </td></tr>
   </table>

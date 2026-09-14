@@ -36,6 +36,12 @@ export const EVENTS = {
   toolCompleted:       'tool_completed',
   toolCtaClick:        'tool_cta_click',
   topicHubViewed:      'topic_hub_viewed',
+  // Behaviour on a page, recorded at most once per view: how far down, how
+  // long, and whether anything was clicked or typed. It exists to answer a
+  // question page_view cannot — whether the handful of "human" visitors are
+  // reading or are automation with a browser User-Agent. See
+  // components/EngagementTracker.tsx.
+  pageEngaged:         'page_engaged',
   editorialViewed:     'editorial_standards_viewed',
   // Deadline-schedule capture. The address is given for something deliverable
   // today, so it is counted separately from the plain launch waitlist.
@@ -66,6 +72,10 @@ export const EVENTS = {
   // Server-side, from the RSS/JSON feeds. A repeating fetch from the same
   // reader user-agent is a subscription.
   feedFetched:         'feed_fetched',
+  // Server-side, from /llms.txt and /llms-full.txt. props.file says which of
+  // the two, props.agent which crawler — the index being fetched is interest,
+  // the full text being fetched is the archive actually leaving with someone.
+  llmsFetched:         'llms_fetched',
 } as const;
 
 let warned = false;

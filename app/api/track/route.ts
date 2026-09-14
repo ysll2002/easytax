@@ -35,6 +35,12 @@ const ALLOWED = new Set([
   'tool_completed',
   'tool_cta_click',
   'topic_hub_viewed',
+  // Scroll depth, dwell and whether anything was interacted with. Forgeable
+  // like every other client event, and that is acceptable here for the same
+  // reason it is for page_view: the bot verdict is stamped server-side from
+  // the User-Agent below, so a client cannot use this to promote itself into
+  // the human count.
+  'page_engaged',
   // The click on "add to calendar". The subscription itself is recorded
   // server-side by the .ics route and is deliberately not forgeable from here.
   'calendar_cta_click',

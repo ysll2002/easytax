@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Landlord Tax Software — MTD ITSA Filing for UK Landlords, £24 per Submission',
+  title: pageTitle('Landlord Tax Software — MTD ITSA for UK Landlords'),
   description: 'MTD ITSA software built for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105 property supplement) directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription, no accountant required.',
   alternates: { canonical: 'https://easytax.vip/landlord-tax-software' },
   openGraph: {
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Landlord Tax Software — MTD ITSA + SA105, £24 per Filing | EasyTax',
+    title: 'Landlord Tax Software — MTD ITSA + SA105, £24 per Filing',
     description: 'MTD ITSA quarterly updates and Self Assessment for UK landlords — £24 per submission, no subscription, no accountant required.',
   },
 };

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { publishedUrls, submitToIndexNow } from '@/lib/indexnow';
 import { buildMetricsPayload } from '@/app/api/admin/daily-metrics/route';
+import { runSeoAudit, type SeoSummary } from '@/lib/seo-audit';
 
 // One cron for everything that happens once a day and is not slow.
 //
@@ -74,10 +75,46 @@ async function fetchJson(url: URL): Promise<unknown> {
   return body;
 }
 
+/**
+ * Crawl every URL in our own sitemap and check the rendered HTML.
+ *
+ * Runs here rather than only behind `/api/admin/seo-audit` because that
+ * endpoint existed for five days without being called once, and in that window
+ * 119 of 158 pages were serving a title that said "EasyTax" twice. The summary
+ * goes into the day's snapshot, so the next round reads it without having to
+ * know the endpoint exists.
+ *
+ * Failure is reported, not thrown: a crawl that cannot reach the origin should
+ * not cost us the day's metrics row, which is the one step in this route that
+ * must not be lost.
+ */
+async function runAudit(base: string): Promise<SeoSummary | { error: string }> {
+  try {
+    const paths = (await publishedUrls()).map(u => new URL(u).pathname);
+    const { summary } = await runSeoAudit(base, paths);
+    return summary;
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 /** Today's metrics, stored as the day's row. Upserted on the date, so Vercel's
  *  at-least-once cron delivery cannot produce two rows for one day. */
-async function storeSnapshot(): Promise<unknown> {
-  const payload = await buildMetricsPayload();
+async function storeSnapshot(
+  seo: SeoSummary | { error: string } | null,
+  indexnow: unknown,
+): Promise<unknown> {
+  const payload = {
+    ...(await buildMetricsPayload()),
+    ...(seo ? { seo } : {}),
+    // Stored for the same reason as the SEO summary: `submitToIndexNow`
+    // already returns the endpoint's status, and until now the only place that
+    // answer went was the cron's own HTTP response — which nobody reads. Bing
+    // is one of two engines that has ever sent this site a visitor and the
+    // only one that honours IndexNow, so a 403 from a key file that stopped
+    // being reachable would have been completely silent.
+    ...(indexnow ? { indexnow: { ...(indexnow as object), submitted_at: new Date().toISOString() } } : {}),
+  };
   const takenOn = new Date().toISOString().slice(0, 10);
 
   const { error } = await supabase
@@ -107,7 +144,8 @@ export async function GET(req: NextRequest) {
 
   // IndexNow: announce every URL we publish. Bing is one of only two search
   // engines that has ever sent this site a visitor, and it honours the protocol.
-  steps.push(await run('indexnow', async () => submitToIndexNow(await publishedUrls())));
+  const indexnow = await run('indexnow', async () => submitToIndexNow(await publishedUrls()));
+  steps.push(indexnow);
 
   // Quarterly-update reminders. Self-guarding on the real deadline: outside its
   // window this returns `skipped` and sends nothing.
@@ -117,11 +155,21 @@ export async function GET(req: NextRequest) {
     return fetchJson(url);
   }));
 
+  // The rendered-HTML crawl. Before the snapshot, because its result is stored
+  // inside the snapshot's payload. `runAudit` catches its own failures, so the
+  // step's verdict comes from what it returned rather than from whether it
+  // threw — otherwise a crawl that reached nothing would report as a success.
+  const seo = await runAudit(base);
+  steps.push('error' in seo
+    ? { step: 'seo-audit', ok: false, error: seo.error }
+    : { step: 'seo-audit', ok: true, detail: { audited: seo.audited, blocking_issues: seo.blocking_issues } });
+
   // Before the review, so Monday's comparison includes today. This is the step
   // that must not be lost: without a row a day, every round re-derives its
   // baseline from whatever the last few days happen to contain, and "did last
   // week's changes work?" stops being a subtraction.
-  steps.push(await run('growth-snapshot', storeSnapshot));
+  steps.push(await run('growth-snapshot', () =>
+    storeSnapshot(seo, indexnow.ok ? indexnow.detail : { error: indexnow.error })));
 
   // Monday only. Still a self-fetch, unlike the snapshot above, because what is
   // left in that handler is the comparison and the email rather than the

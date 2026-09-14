@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { buildTaxCalendar } from '@/lib/tax-calendar';
 import { track } from '@/lib/analytics';
+import { botProps } from '@/lib/bot-detection';
 
 // The subscribable calendar feed.
 //
@@ -27,6 +28,7 @@ export async function GET(req: Request) {
       // Enough to tell a real subscription (Google/Apple/Outlook fetchers) from
       // a one-off download in a browser. No identifier, nothing personal.
       agent: (req.headers.get('user-agent') ?? '').slice(0, 120),
+      ...botProps(req.headers.get('user-agent')),
     },
   }).catch(() => {});
 

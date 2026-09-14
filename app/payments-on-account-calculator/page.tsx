@@ -1,14 +1,16 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PaymentsOnAccountCalculator from '@/components/PaymentsOnAccountCalculator';
 import { RULES_REVIEWED, HMRC_POA_URL, POA_THRESHOLD } from '@/lib/payments-on-account';
 import SiteFooter from '@/components/SiteFooter';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
+import ShortAnswer from '@/components/ShortAnswer';
 import { decodePoa, encodePoa, poaCard, toSearchParams } from '@/lib/share-results';
 
 const BASE: Metadata = {
-  title: 'Payments on Account Calculator — why your January tax bill is 50% bigger',
+  title: pageTitle('UK Payments on Account Calculator'),
   description:
     'Free calculator for Self Assessment payments on account. Enter your tax bill and see what actually leaves your account on 31 January and 31 July, including the two advance payments HMRC adds towards next year.',
   keywords: [
@@ -171,6 +173,18 @@ export default async function PaymentsOnAccountPage({ searchParams }: { searchPa
         >
           What will actually leave my account in January?
         </h1>
+
+        {/* The answer to "what are payments on account and why do i have to
+            pay them" — a priority-1 query this page has always answered, in an
+            FAQ two thirds of the way down. See components/ShortAnswer.tsx. */}
+        <ShortAnswer>
+          Payments on account are two advance instalments towards next year&apos;s tax bill, each
+          half of this year&apos;s Self Assessment liability, due on 31 January and 31 July. HMRC
+          asks for them because it assumes next year will look like this one. They apply once you
+          owe more than £{POA_THRESHOLD.toLocaleString('en-GB')} through Self Assessment and less
+          than 80% of your tax was collected at source — and you can apply to reduce them if you
+          expect a worse year.
+        </ShortAnswer>
 
         <p className="text-sm sm:text-base leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: 620 }}>
           The number at the bottom of your tax calculation is rarely the number HMRC collects. In

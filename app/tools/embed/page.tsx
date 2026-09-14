@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
@@ -18,7 +19,7 @@ import { getMtdStatus } from '@/lib/mtd-status';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Free MTD deadline widget for your website — embed the next quarterly update date',
+  title: pageTitle('Free MTD Deadline Widget for Your Website'),
   description:
     'A free, always-current Making Tax Digital deadline widget for accountants, bookkeepers and advisers. One line of HTML shows your readers the next MTD quarterly update deadline and the days remaining, updated automatically every quarter.',
   keywords: [

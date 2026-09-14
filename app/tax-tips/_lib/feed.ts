@@ -2,6 +2,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv, type ArticleSummary } from './articles';
 import { selectPublished } from './review';
 import { track } from '@/lib/analytics';
+import { botProps } from '@/lib/bot-detection';
 
 // Shared plumbing for the RSS and JSON feeds.
 //
@@ -65,6 +66,7 @@ export function recordFetch(format: 'rss' | 'json', req: Request, path: string):
     props: {
       format,
       agent: (req.headers.get('user-agent') ?? '').slice(0, 120),
+      ...botProps(req.headers.get('user-agent')),
     },
   }).catch(() => {});
 }

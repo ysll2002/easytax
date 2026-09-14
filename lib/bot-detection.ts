@@ -99,3 +99,27 @@ export function botLabel(ua: string | null | undefined): string | null {
   if (hit) return hit.replace(/\/$/, '').replace(/ \($/, '').trim();
   return looksLikeRealBrowser(s) ? null : 'unidentified-client';
 }
+
+/**
+ * The standard verdict props, for any event recorded server-side.
+ *
+ * `/api/track` has stamped these on client events since 2026-09-11. The four
+ * server-recorded events did not: the .ics calendar, the RSS/JSON feeds, the
+ * embed and /llms.txt each stored the raw `agent` string and nothing else. Over
+ * the nine days to 2026-09-13 that left 43 of 185 production rows — feeds,
+ * calendar fetches and embed impressions — carrying no verdict at all, so every
+ * split the funnel reports had to either drop them or guess at them.
+ *
+ * It matters most precisely where those events live. A calendar fetch or a
+ * /llms.txt fetch is *expected* to be automation, and that is the point: the
+ * distribution numbers are meant to show a channel where crawlers reading us
+ * is the good outcome, and they cannot show it if the rows are unclassified.
+ *
+ * `bot_label` is set only for bots, matching /api/track: on a human row it
+ * would be a fingerprintable record of the reader's browser, which is not
+ * something to store to answer "how many people came".
+ */
+export function botProps(ua: string | null | undefined): Record<string, unknown> {
+  const bot = isBotUserAgent(ua);
+  return { bot, ...(bot ? { bot_label: botLabel(ua) ?? 'unidentified-client' } : {}) };
+}

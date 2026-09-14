@@ -84,6 +84,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // genuinely changes; high priority because the demand behind it is
     // time-limited and will not be here next spring.
     { url: `${base}/hmrc-signed-me-up-for-mtd`, lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
+    // Same reasoning, and the same expiry: it answers four priority-1 queries
+    // about the quarterly updates and the first-year penalty concession, and
+    // the concession itself runs out on 6 April 2027.
+    { url: `${base}/mtd-quarterly-update-deadlines`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
     { url: `${base}/self-assessment-software`,  lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/landlord-tax-software`,    lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/bokio-alternative`,         lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
@@ -109,8 +113,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // themselves to be a third page. A sign-in form is not a search result
     // anyone wants, and nothing links to it from outside; it does not belong
     // in the index.
-    { url: `${base}/privacy`,                   lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
-    { url: `${base}/terms`,                     lastModified: new Date(), changeFrequency: 'yearly',  priority: 0.3 },
+    // /privacy and /terms are deliberately not listed. Both send
+    // `<meta name="robots" content="noindex">`, and a URL that is in the
+    // sitemap and also asks not to be indexed gives a crawler two of our own
+    // instructions that contradict each other — which it then resolves however
+    // it likes. Found by the first run of the SEO crawl on 2026-09-14, and
+    // `noindex_but_in_sitemap` in lib/seo-audit keeps it found.
+    //
+    // They stay reachable and linked from the footer, which is what a reader
+    // and a compliance reviewer need; neither needs them in search results.
     ...topicUrls,
     ...articleUrls,
   ];

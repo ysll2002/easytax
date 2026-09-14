@@ -123,6 +123,12 @@
       "empty": "Primer artículo mañana a las 8.",
       "visit": "Visita Consejos fiscales →"
     },
+    "questions": {
+      "kicker": "Respondido aquí",
+      "title": "Las preguntas que la gente hace de verdad",
+      "subtitle": "No es una lista de temas fiscales: es lo que autónomos, propietarios y directores de empresas del Reino Unido escriben en un buscador, y la guía que responde a cada pregunta.",
+      "viewAll": "Todas las guías"
+    },
     "finalCta": {
       "title1": "Deja de temer",
       "title2": "el papeleo.",
@@ -136,8 +142,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "EasyTax — Software MTD ITSA para autónomos y sociedades del Reino Unido",
-      "description": "Software MTD ITSA para autónomos, arrendadores y sociedades limitadas del Reino Unido. Envía actualizaciones trimestrales a HMRC, presenta Self Assessment, IVA y CT600. £24 por envío, sin suscripción — sin tarjeta para registrarte."
+      "title": "Software MTD ITSA para autónomos en el Reino Unido",
+      "description": "Software MTD ITSA para autónomos, arrendadores y sociedades del Reino Unido. Actualizaciones trimestrales a HMRC, Self Assessment, IVA y CT600 desde £24."
     },
     "toolsStrip": {
       "kicker": "Gratis · sin cuenta",
@@ -339,6 +345,7 @@
     "deadlineWidget": "Widget de plazos",
     "browseTopics": "Explorar por tema",
     "hmrcSignedMeUp": "HMRC me inscribió en MTD",
+    "mtdQuarterlyDeadlines": "Plazos de actualizaciones trimestrales MTD",
     "aboutUs": "Sobre nosotros",
     "privacy": "Privacidad",
     "terms": "Términos",

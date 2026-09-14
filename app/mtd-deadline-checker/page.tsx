@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import DeadlineChecker from '@/components/DeadlineChecker';
@@ -9,7 +10,7 @@ import ToolCrossLinks from '@/components/ToolCrossLinks';
 import { decodeDeadline, encodeDeadline, deadlineCard, toSearchParams } from '@/lib/share-results';
 
 const BASE: Metadata = {
-  title: 'MTD Deadline Checker — Am I in Making Tax Digital, and when are my deadlines?',
+  title: pageTitle('MTD Deadline Checker — Am I in Making Tax Digital?'),
   description:
     'Free checker for UK sole traders and landlords. Enter your income and get the exact tax year you come into MTD for Income Tax, your four quarterly update deadlines (7 Aug, 7 Nov, 7 Feb, 7 May) and your final declaration date.',
   keywords: [
