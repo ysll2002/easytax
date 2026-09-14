@@ -6,6 +6,7 @@ import {
   FileText, Receipt, CreditCard, TrendingUp, CalendarClock,
 } from 'lucide-react';
 import type { Task, TaskType, TaskStatus } from '@/app/api/hmrc/tasks/route';
+import { hmrcFetch } from '@/lib/hmrc-client';
 
 const TYPE_ICON: Record<TaskType, React.ElementType> = {
   quarterly_mtd:     TrendingUp,
@@ -130,7 +131,19 @@ export default function TasksTimeline() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('/api/hmrc/tasks')
+    // `hmrcFetch`, not bare `fetch`. This route reaches HMRC — it calls
+    // getObligations() and getVatObligations() — so the request has to carry
+    // `x-easytax-device-data`, which only hmrcFetch sets.
+    //
+    // A bare fetch was not obviously broken, because fraudHeaders() falls back
+    // to the `hmrc_device` cookie and a same-site XHR does send it. But that
+    // cookie is written with `max-age=3600`: an hour after the collector last
+    // ran, it is gone, and this request would have reached
+    // /organisations/vat/{vrn}/obligations with all nine Gov-Client-* device
+    // headers empty. That is the first of the four endpoints in HMRC's FPH
+    // review, and this was the last client-side caller on the site still
+    // taking that path.
+    hmrcFetch('/api/hmrc/tasks')
       .then(r => r.json())
       .then(d => { if (d.error) setError(d.error); else setTasks(d.tasks ?? []); })
       .catch(() => setError('Could not reach HMRC'))
