@@ -315,6 +315,8 @@
       "taxIdsSubtitle": "مطلوبة لتقديم Self Assessment إلى HMRC.",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "التنسيق: حرفان + 6 أرقام + حرف —— يوجد على P60 أو رسائل HMRC.",
+      "vrnLabel": "رقم تسجيل ضريبة القيمة المضافة (VRN)",
+      "vrnHelp": "٩ أرقام، موجود في شهادة ضريبة القيمة المضافة. يمكن إدخال البادئة «GB» والمسافات — سيتم تنسيقها عند الحفظ.",
       "saving": "جارٍ الحفظ…",
       "save": "حفظ",
       "saved": "✓ تم الحفظ"

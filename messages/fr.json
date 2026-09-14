@@ -315,6 +315,8 @@
       "taxIdsSubtitle": "Requis pour les dépôts Self Assessment auprès du HMRC.",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "Format : 2 lettres, 6 chiffres, 1 lettre — sur votre P60 ou vos courriers HMRC.",
+      "vrnLabel": "Numéro de TVA (VRN)",
+      "vrnHelp": "9 chiffres, sur votre certificat de TVA. Le préfixe « GB » et les espaces sont acceptés : nous les nettoyons.",
       "saving": "Enregistrement…",
       "save": "Enregistrer",
       "saved": "✓ Enregistré"

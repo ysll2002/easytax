@@ -315,6 +315,8 @@
       "taxIdsSubtitle": "用于 HMRC Self Assessment 申报所必需。",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "格式：2 个字母 + 6 位数字 + 1 个字母 —— 可在 P60 或 HMRC 信件中找到。",
+      "vrnLabel": "增值税登记号 (VRN)",
+      "vrnHelp": "9 位数字，在你的 VAT 证书上。可以带 GB 前缀和空格，保存时会自动整理。",
       "saving": "保存中…",
       "save": "保存",
       "saved": "✓ 已保存"
