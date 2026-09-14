@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PaymentsOnAccountCalculator from '@/components/PaymentsOnAccountCalculator';
@@ -9,7 +10,7 @@ import ShortAnswer from '@/components/ShortAnswer';
 import { decodePoa, encodePoa, poaCard, toSearchParams } from '@/lib/share-results';
 
 const BASE: Metadata = {
-  title: 'Payments on Account Calculator — why your January tax bill is 50% bigger',
+  title: pageTitle('UK Payments on Account Calculator'),
   description:
     'Free calculator for Self Assessment payments on account. Enter your tax bill and see what actually leaves your account on 31 January and 31 July, including the two advance payments HMRC adds towards next year.',
   keywords: [

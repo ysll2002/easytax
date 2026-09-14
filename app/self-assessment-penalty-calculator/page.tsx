@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PenaltyCalculator from '@/components/PenaltyCalculator';
@@ -18,7 +19,7 @@ import ToolCrossLinks from '@/components/ToolCrossLinks';
 import { decodePenalty, encodePenalty, penaltyCard, toSearchParams } from '@/lib/share-results';
 
 const BASE: Metadata = {
-  title: 'Self Assessment Late Filing Penalty Calculator — what HMRC will charge you',
+  title: pageTitle('Self Assessment Late Filing Penalty Calculator'),
   description:
     'Free calculator for a late Self Assessment return. Enter the tax year, when you filed and what you owe to see the £100 penalty, £10 daily charges, the 6 and 12 month penalties and the 5% late payment charges — itemised, with the dates each one bites.',
   keywords: [

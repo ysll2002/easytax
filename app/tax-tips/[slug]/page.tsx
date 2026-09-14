@@ -10,6 +10,7 @@ import ArticleCta from '../_components/ArticleCta';
 import SiteFooter from '@/components/SiteFooter';
 import ArticleProvenance, { ArticleSources } from '../_components/ArticleProvenance';
 import { selectPublished } from '../_lib/review';
+import { pageTitle, metaDescription } from '@/lib/seo-meta';
 import { extractHeadings, faqJsonLd, withHeadingIds } from '@/lib/article-structure';
 
 export const revalidate = 3600;
@@ -26,8 +27,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!data) return {};
 
   return {
-    title: `${data.title} | EasyTax`,
-    description: data.excerpt,
+    // `pageTitle` applies the brand exactly once and drops it when the
+    // headline needs the room. Appending it here, as this line used to, put
+    // `| EasyTax | EasyTax` on all 113 articles — the root layout's title
+    // template had already added one.
+    title: pageTitle(data.title),
+    description: metaDescription(data.excerpt),
     // Without this, every article inherited the site-wide canonical pointing
     // at the homepage, telling Google these 109 pages were duplicates of it.
     alternates: { canonical: `https://easytax.vip/tax-tips/${slug}` },

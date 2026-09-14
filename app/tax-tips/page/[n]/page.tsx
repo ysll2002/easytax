@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ArticleIndex from '../../_components/ArticleIndex';
 import { getArticlePage, getTotalPages } from '../../_lib/articles';
+import { pageTitle } from '@/lib/seo-meta';
 
 // Pages 2..N of the Tax Tips archive.
 //
@@ -32,9 +33,13 @@ export async function generateMetadata({
   if (!page) return {};
 
   return {
-    title: `Tax Tips & Insights — page ${page} | EasyTax`,
+    title: pageTitle(`Tax Tips & Insights — page ${page}`),
+    // Pages 1–5 all carried the identical description, which is the one
+    // duplicate-description cluster the 2026-09-14 crawl found. Naming the
+    // page is enough to make each distinct, and it is honest about what the
+    // URL is: an archive slice, not another topic.
     description:
-      'Daily UK tax tips, HMRC updates and Self Assessment guidance for freelancers and self-employed professionals.',
+      `Daily UK tax tips, HMRC updates and Self Assessment guidance for freelancers and self-employed professionals. Page ${page} of the archive.`,
     alternates: { canonical: `https://easytax.vip/tax-tips/page/${page}` },
   };
 }

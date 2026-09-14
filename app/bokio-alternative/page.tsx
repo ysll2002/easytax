@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight, AlertCircle } from 'lucide-react';
@@ -18,7 +19,7 @@ function daysUntilBokioCloses(): number {
 }
 
 export const metadata: Metadata = {
-  title: 'Bokio Alternative — MTD ITSA Software for UK Sole Traders & Ltd Companies',
+  title: pageTitle('Bokio Alternative — MTD ITSA Software UK'),
   description: 'Bokio UK closes 7 July 2026. Migrate to EasyTax — MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for UK sole traders, landlords and limited companies. £20 + VAT (£24 inc. VAT) per submission, no subscription, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/bokio-alternative' },
   openGraph: {

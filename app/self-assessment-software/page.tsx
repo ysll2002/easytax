@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Self Assessment Software UK — EasyTax, £24 per Filing, MTD ITSA Ready',
+  title: pageTitle('Self Assessment Software UK — £24 per Filing'),
   description: 'EasyTax is Self Assessment software built on the HMRC MTD API for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC for £20 + VAT per submission. No monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/self-assessment-software' },
   openGraph: {

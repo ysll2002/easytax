@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import { AlertTriangle, CalendarClock, CheckCircle2, ExternalLink, Info } from 'lucide-react';
 import SiteHeader from '@/components/SiteHeader';
@@ -53,7 +54,7 @@ export const revalidate = 3600;
 const CANONICAL = 'https://easytax.vip/mtd-quarterly-update-deadlines';
 
 export const metadata: Metadata = {
-  title: 'MTD quarterly update deadlines 2026/27 — and what happens if you miss one',
+  title: pageTitle('MTD Quarterly Update Deadlines 2026/27'),
   description:
     'The four Making Tax Digital for Income Tax quarterly update deadlines, what goes in an update, and what HMRC actually charges for a late one. There are no late submission penalties for missed quarterly updates in 2026/27 — but paying late is charged separately.',
   keywords: [

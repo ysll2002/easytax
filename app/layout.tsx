@@ -25,10 +25,18 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL('https://easytax.vip'),
   title: {
-    default: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
+    // 55 characters. The old default was 67 and led with a brand nobody has
+    // searched for; the category is what a stranger types.
+    default: 'MTD ITSA Software for Sole Traders & Landlords | EasyTax',
+    // Kept for any route that has not been moved to `pageTitle()`. Routes that
+    // have use `{ absolute }` and opt out of it — which is what stops the
+    // `| EasyTax | EasyTax` doubling recurring.
     template: '%s | EasyTax',
   },
-  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Send quarterly updates to HMRC, file Self Assessment, VAT returns and CT600. £20 + VAT (£24 inc. VAT) per submission — no subscription, no card to sign up.',
+  // 146 characters. The previous text ran to 253 and was inherited by every
+  // page without its own, so the site's most-used description was cut off in
+  // results mid-clause.
+  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 from £24.',
   keywords: [
     'MTD ITSA software',
     'MTD for income tax UK',

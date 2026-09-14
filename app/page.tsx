@@ -13,14 +13,18 @@ import { answeredQuestions } from '@/lib/answered-questions';
 import { getTranslations } from 'next-intl/server';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
+import { pageTitle, metaDescription } from '@/lib/seo-meta';
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('home.meta');
   return {
-    title: t('title'),
-    description: t('description'),
+    // Through `pageTitle` like every other route: the homepage is the only
+    // page a human visitor has reached in the labelled traffic so far, and its
+    // tag should not depend on how a translator punctuated the string.
+    title: pageTitle(t('title')),
+    description: metaDescription(t('description')),
     alternates: { canonical: 'https://easytax.vip' },
   };
 }
