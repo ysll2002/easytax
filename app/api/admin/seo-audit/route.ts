@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { publishedUrls } from '@/lib/indexnow';
-import { CONCURRENCY, analyse, auditPage, mapPool } from '@/lib/seo-audit';
+import { CONCURRENCY, analyse, auditPage, crawlWall, mapPool } from '@/lib/seo-audit';
 
 // The full per-page SEO report, on demand.
 //
@@ -61,6 +61,15 @@ export async function GET(req: NextRequest) {
   const slice = paths.slice(offset, offset + limit);
   const pages = await mapPool(slice, CONCURRENCY, p => auditPage(base, p));
   const analysis = analyse(pages);
+
+  // A protected deployment answers every path with a login page, 200 and all,
+  // and every check below then reports a defect on a page that is not ours.
+  // Said first and said as `ok: false`, because the counts underneath it are
+  // real numbers about the wrong site.
+  const wall = crawlWall(base, pages);
+  if (wall) {
+    return NextResponse.json({ ok: false, base, audited: pages.length, error: wall }, { status: 502 });
+  }
 
   return NextResponse.json({
     ok: true,

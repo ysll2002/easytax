@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { publishedUrls, submitToIndexNow } from '@/lib/indexnow';
 import { buildMetricsPayload } from '@/app/api/admin/daily-metrics/route';
-import { runSeoAudit, type SeoSummary } from '@/lib/seo-audit';
+import { auditBase, runSeoAudit, type SeoSummary } from '@/lib/seo-audit';
+import { readQueue, reviewEmailInput } from '@/lib/review-queue';
+import { existingArticleRun } from '@/lib/editorial-run';
+import { reviewEmailIsDue, sendArticleReviewEmail } from '@/lib/email';
 
 // One cron for everything that happens once a day and is not slow.
 //
@@ -88,14 +91,59 @@ async function fetchJson(url: URL): Promise<unknown> {
  * not cost us the day's metrics row, which is the one step in this route that
  * must not be lost.
  */
-async function runAudit(base: string): Promise<SeoSummary | { error: string }> {
+async function runAudit(requestOrigin: string): Promise<SeoSummary | { error: string }> {
+  // Not `requestOrigin`. In production the cron arrives at the deployment URL,
+  // which is behind Vercel's deployment protection: on 2026-09-14 that made
+  // every one of the 156 fetches a Vercel login page, and the day's stored
+  // summary reported 312 blocking issues that were all about vercel.com.
+  const base = auditBase(requestOrigin);
   try {
     const paths = (await publishedUrls()).map(u => new URL(u).pathname);
-    const { summary } = await runSeoAudit(base, paths);
-    return summary;
+    const { summary, wall } = await runSeoAudit(base, paths);
+    // A wall is a failure, not a finding. Reporting the counts here is exactly
+    // the mistake that made a broken crawl look like a working one.
+    return wall ? { error: wall } : summary;
   } catch (err) {
     return { error: err instanceof Error ? err.message : String(err) };
   }
+}
+
+/**
+ * Mails the owner the review queue, when the queue says there is a reason to.
+ *
+ * Throws on a send failure rather than returning a flag. The whole defect this
+ * moved to fix was a notification whose failure was invisible: a thrown error
+ * here becomes a failed step, which makes the cron answer 500, which makes
+ * Vercel log the run red. An alarm that cannot raise an alarm about itself is
+ * the same bug one level up.
+ */
+async function notifyReviewQueue(): Promise<unknown> {
+  const state = await readQueue();
+  const input = reviewEmailInput(state);
+
+  if (!reviewEmailIsDue(input)) {
+    return {
+      sent: false,
+      reason: 'nothing new and nothing frozen',
+      queue_depth: input.queue.length,
+      days_since_last_publish: input.daysSinceLastPublish,
+    };
+  }
+
+  const reason =
+    input.newDrafts.length > 0
+      ? `${input.newDrafts.length} new draft${input.newDrafts.length === 1 ? '' : 's'}`
+      : `publishing frozen for ${input.daysSinceLastPublish} days`;
+
+  if (!(await sendArticleReviewEmail(input))) {
+    throw new Error(`review email not accepted (${reason}) — check RESEND_API_KEY and the Resend logs`);
+  }
+  return {
+    sent: true,
+    reason,
+    queue_depth: input.queue.length,
+    days_since_last_publish: input.daysSinceLastPublish,
+  };
 }
 
 /** Today's metrics, stored as the day's row. Upserted on the date, so Vercel's
@@ -104,8 +152,15 @@ async function storeSnapshot(
   seo: SeoSummary | { error: string } | null,
   indexnow: unknown,
 ): Promise<unknown> {
+  const takenOn = new Date().toISOString().slice(0, 10);
+  // The article cron runs at 08:00 and writes its run record onto this same
+  // row; this runs at 08:30 and upserts over it. Read it back and carry it, or
+  // the record is erased half an hour after it is written — every day.
+  const editorialRun = await existingArticleRun(takenOn);
+
   const payload = {
     ...(await buildMetricsPayload()),
+    ...(editorialRun ? { editorial_run: editorialRun } : {}),
     ...(seo ? { seo } : {}),
     // Stored for the same reason as the SEO summary: `submitToIndexNow`
     // already returns the endpoint's status, and until now the only place that
@@ -115,7 +170,6 @@ async function storeSnapshot(
     // being reachable would have been completely silent.
     ...(indexnow ? { indexnow: { ...(indexnow as object), submitted_at: new Date().toISOString() } } : {}),
   };
-  const takenOn = new Date().toISOString().slice(0, 10);
 
   const { error } = await supabase
     .from('growth_snapshots')
@@ -154,6 +208,23 @@ export async function GET(req: NextRequest) {
     if (cronSecret) url.searchParams.set('secret', cronSecret);
     return fetchJson(url);
   }));
+
+  // The editorial freeze alarm.
+  //
+  // It lives here, and not at the end of /api/cron/daily-article where it was
+  // written, because of what happened to it there. That handler makes two
+  // model calls before it reaches its notification; when one of them throws,
+  // the run 500s and the email is not sent. The archive published nothing
+  // between 2026-09-07 and 2026-09-15 — eight days, three drafts queued, the
+  // longest waiting seven days — and across that window the owner's inbox
+  // received no alarm at all. An alarm downstream of the thing it is watching
+  // is not an alarm.
+  //
+  // This route has written a snapshot row every single day since it shipped
+  // and does no model work. It runs at 08:30, half an hour after the
+  // generator, so anything written this morning is in the queue by now and
+  // still counts as new.
+  steps.push(await run('review-alarm', notifyReviewQueue));
 
   // The rendered-HTML crawl. Before the snapshot, because its result is stored
   // inside the snapshot's payload. `runAudit` catches its own failures, so the

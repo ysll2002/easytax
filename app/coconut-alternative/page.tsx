@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
@@ -8,7 +9,7 @@ import SiteFooter from '@/components/SiteFooter';
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
+  title: pageTitle('Coconut Alternative — MTD ITSA Software for Sole Traders'),
   description: 'Looking for a Coconut alternative? EasyTax offers MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for £20 + VAT (£24 inc. VAT) per submission — no subscription, no card to sign up. Built for UK sole traders, landlords and limited companies.',
   alternates: { canonical: 'https://easytax.vip/coconut-alternative' },
   openGraph: {

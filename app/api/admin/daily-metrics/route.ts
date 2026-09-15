@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { EVENTS } from '@/lib/analytics';
 import { deploymentInfo } from '@/lib/deployment';
 import { readQueue } from '@/lib/review-queue';
+import { existingArticleRun } from '@/lib/editorial-run';
 import { coverage } from '@/lib/search-queries';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
@@ -656,6 +657,12 @@ async function editorialState(since7d: string) {
             days_since_last_publish: queue.daysSinceLastPublish,
             oldest_draft_age_hours: queue.oldestDraftAgeHours,
             pending_upgrades: queue.upgrades?.length ?? null,
+            // What the generator actually did this morning. `days_since_last
+            // _publish` says the archive is frozen; this says why — an
+            // assignment refused as a duplicate, a headline that missed its
+            // query, a run that threw. Null means today's run has not
+            // happened yet, or happened before this was recorded.
+            last_run: await existingArticleRun().catch(() => null),
             review_queue_url: 'https://easytax.vip/admin/review?key=…',
             note: queue.note,
           },
