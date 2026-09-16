@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { sendArticleReviewEmail, reviewEmailIsDue } from '@/lib/email';
-import { readQueue } from '@/lib/review-queue';
+import { recordArticleRun } from '@/lib/editorial-run';
 import {
   TARGET_QUERIES,
   coverage,
   coversQuery,
+  distinctiveWords,
   linkLabelFor,
   nextQuery,
   type TargetQuery,
@@ -226,6 +226,7 @@ Do not preserve its structure. Start again and write the version that deserves t
 Write the page that answers them, directly and without preamble.
 
 - Use this headline, or something within a few words of it: "${target.title}"
+- The headline MUST contain these words, because a headline without them is not about this search: ${distinctiveWords(target).map(w => `"${w}"`).join(', ')}. This is checked before the article is written and a headline that misses them is discarded.
 - The "excerpt" field must ANSWER THE QUESTION in ${STANDARD.maxExcerptChars} characters or fewer. Not a summary, not a tease — the actual answer, stated plainly, so that someone who reads only that sentence has what they came for. It is shown as the opening paragraph and used as the search-result description.
 - The article body then earns the answer: the conditions, the exceptions, the numbers, what to actually do.
 - Reader intent here is ${target.intent}.`;
@@ -265,8 +266,46 @@ Return ONLY valid JSON (no markdown, no code blocks) in this exact format:
 
   const link = await internalLinkFor(target, assignment.kind === 'upgrade' ? assignment.existing.title : (target?.title ?? assignment.topic));
 
+  /**
+   * Did the headline come back about the thing it was commissioned for?
+   *
+   * This is the check that was missing, and it cost the pipeline a week.
+   * `nextQuery` picks the highest-priority query no page answers, the model is
+   * briefed on it, and `coverage` then decides whether it has been answered by
+   * running `coversQuery` over the resulting title. Nothing closed the loop
+   * between the brief and that test. So on 2026-09-11 the pipeline was asked
+   * for "what counts as qualifying income for making tax digital" and wrote
+   * "HMRC signed you up for Making Tax Digital — what happens now", which
+   * answers no target query at all. The query stayed pending, came up again on
+   * 09-13, and produced the same headline a second time.
+   *
+   * That was merely wasteful until yesterday. `findTitleCollision` now refuses
+   * a headline the archive already claims, which turns the loop from writing
+   * the same page repeatedly into writing nothing at all, every single "new
+   * article" day, for as long as the query stays at the top of the list.
+   *
+   * Graded rather than thrown, so the existing retry does the work: the miss
+   * is appended to the quality failures and the model is told what it got
+   * wrong in exactly the way it is told about a short excerpt.
+   */
+  const offTarget = (d: ArticleDraft): string[] =>
+    assignment.kind === 'new' && target && !coversQuery(d.title, target)
+      ? [
+          `The headline "${d.title}" is not about the search it was written for ("${target.q}"). ` +
+            `Rewrite the headline so it contains all of these words: ${distinctiveWords(target).map(w => `"${w}"`).join(', ')}.`,
+        ]
+      : [];
+
+  const grade = (d: ArticleDraft): QualityReport => {
+    const report = gradeArticle(d);
+    const missed = offTarget(d);
+    return missed.length === 0
+      ? report
+      : { ...report, pass: false, failures: [...report.failures, ...missed] };
+  };
+
   let draft = finalise(await callModel(basePrompt), link);
-  let quality = gradeArticle(draft);
+  let quality = grade(draft);
   if (quality.pass) return { draft, quality, attempts: 1 };
 
   const retryPrompt = `${basePrompt}
@@ -278,7 +317,7 @@ ${quality.failures.map(f => `- ${f}`).join('\n')}
 Do not shorten anything else to compensate. Return the same JSON shape.`;
 
   draft = finalise(await callModel(retryPrompt), link);
-  quality = gradeArticle(draft);
+  quality = grade(draft);
   return { draft, quality, attempts: 2 };
 }
 
@@ -289,6 +328,9 @@ type DraftRow = {
   content: string;
   published_at: string;
   sources: GeneratedSource[] | null;
+  /** The curated query this was commissioned against, stored so the page can
+   *  state the question it answers. Null when the run had no target. */
+  target_query: string | null;
 };
 
 /**
@@ -301,7 +343,7 @@ type DraftRow = {
  * rather than a lost article or a failed cron.
  */
 async function insertDraft(row: DraftRow): Promise<string | null> {
-  const { error } = await supabase.from('tax_articles').insert({
+  const gated = {
     title:         row.title,
     slug:          row.slug,
     excerpt:       row.excerpt,
@@ -309,9 +351,31 @@ async function insertDraft(row: DraftRow): Promise<string | null> {
     published_at:  row.published_at,
     review_status: 'draft',
     sources:       row.sources,
+  };
+
+  const { error } = await supabase.from('tax_articles').insert({
+    ...gated,
+    target_query: row.target_query,
   });
 
   if (!error) return null;
+
+  // `target_query` is the newest column here (20260916) and the most likely
+  // one to be missing on a deploy that lands before its migration. Retry
+  // without it, still gated, BEFORE reaching the legacy fallback below —
+  // otherwise a missing column whose only job is a snippet would drop this
+  // insert into the path that publishes without review. A cosmetic field must
+  // never be able to open the editorial gate.
+  if (error.code === '42703' || error.code === 'PGRST204') {
+    const { error: retryError } = await supabase.from('tax_articles').insert(gated);
+    if (!retryError) {
+      console.warn('[daily-article] target_query missing — run the 20260916 migration.');
+      return null;
+    }
+    if (retryError.code !== '42703' && retryError.code !== 'PGRST204') {
+      return retryError.message;
+    }
+  }
 
   if (error.code === '42703' || error.code === 'PGRST204') {
     console.warn(
@@ -403,41 +467,22 @@ function targetForTitle(title: string): TargetQuery | null {
   return TARGET_QUERIES.find(q => coversQuery(title, q)) ?? null;
 }
 
-/** Mails the owner the review queue — when there is a reason to.
+/* The review-queue email used to be sent from the end of this handler. It is
+ * now sent by /api/cron/daily, half an hour later.
  *
- *  Previously this ran only when the run had just written something, and only
- *  ever counted the queue. Both are why the archive sat frozen from 2026-09-07
- *  to 2026-09-12 without a single alarm: the notification was a function of
- *  what the cron produced, never of what actually reached a reader.
+ * The reason is this handler's failure mode. Everything above makes two model
+ * calls per assignment; when one of them throws, the catch at the bottom
+ * returns a 500 and nothing after the loop runs — including, until today, the
+ * email whose entire job is to say that the archive has stopped publishing.
+ * The alarm was wired downstream of the thing it was watching, so it went
+ * silent in exactly the case it existed for: eight days frozen, three drafts
+ * queued, not one alarm sent.
  *
- *  It now reads the same queue state the metrics endpoint and /admin/review
- *  read, and `reviewEmailIsDue` decides — new drafts, or a publishing freeze.
- *  Returns what it decided so the cron's JSON says so out loud. */
-async function notifyReviewQueue(
-  newDrafts: { title: string; slug: string }[],
-): Promise<{ sent: boolean; reason: string; days_since_last_publish: number | null }> {
-  const state = await readQueue();
-  const input = {
-    newDrafts,
-    queue: (state.drafts ?? []).map(d => ({ title: d.title, slug: d.slug })),
-    daysSinceLastPublish: state.daysSinceLastPublish,
-    oldestDraftAgeHours: state.oldestDraftAgeHours,
-  };
-
-  if (!reviewEmailIsDue(input)) {
-    return { sent: false, reason: 'nothing new and nothing frozen', days_since_last_publish: state.daysSinceLastPublish };
-  }
-
-  const sent = await sendArticleReviewEmail(input);
-  return {
-    sent,
-    reason:
-      newDrafts.length > 0
-        ? `${newDrafts.length} new draft${newDrafts.length === 1 ? '' : 's'}`
-        : `publishing frozen for ${state.daysSinceLastPublish} days`,
-    days_since_last_publish: state.daysSinceLastPublish,
-  };
-}
+ * /api/cron/daily makes no model calls and has written a snapshot row every
+ * day since it shipped. It derives "what is new" from the queue's own
+ * timestamps (`reviewEmailInput`) rather than from what a run produced, which
+ * is what lets it be sent from somewhere that is not here.
+ */
 
 export async function GET(req: NextRequest) {
   // Verify cron secret
@@ -608,6 +653,7 @@ Reply with ONLY the topic sentence, no explanation.`,
         content: draft.content,
         published_at: pubDate,
         sources: draft.sources ?? null,
+        target_query: assignment.target?.q ?? null,
       });
 
       results.push({
@@ -623,30 +669,30 @@ Reply with ONLY the topic sentence, no explanation.`,
       });
     }
 
-    const created = results.filter(r => !r.error);
-
-    // Runs on every successful pass, not only the ones that produced
-    // something. A run that generates nothing is exactly the run during which
-    // a freeze goes unnoticed — which is what happened for five days — so the
-    // decision about whether to mail belongs to the queue's state, not to this
-    // run's output. Awaited rather than fired and forgotten: the old version
-    // could fail silently and the cron would still report success. It cannot
-    // fail the cron either, because `sendArticleReviewEmail` never throws.
-    let notified: Awaited<ReturnType<typeof notifyReviewQueue>> | { sent: false; reason: string; days_since_last_publish: null };
-    try {
-      notified = await notifyReviewQueue(
-        created.flatMap(r => (r.slug ? [{ title: r.title, slug: r.slug }] : [])),
-      );
-    } catch (err) {
-      console.error('[daily-article] review notification failed', err);
-      notified = { sent: false, reason: `failed: ${err instanceof Error ? err.message : String(err)}`, days_since_last_publish: null };
-    }
+    // The durable trace. Written before the response, because the response is
+    // the part nobody reads — and a run that produced nothing leaves no row in
+    // `tax_articles` to say it happened at all.
+    const recorded = await recordArticleRun({
+      ran_at: new Date().toISOString(),
+      mode: assignments[0]?.kind ?? 'none',
+      written: results.filter(r => !r.error && r.slug).length,
+      outcomes: results.map(r =>
+        r.error ? `${r.mode}: ${r.error}` : `${r.mode}: wrote "${r.title}"`,
+      ),
+      coverage: {
+        covered: cover.covered,
+        total: cover.total,
+        next_up: cover.pending.slice(0, 3).map(q => q.q),
+      },
+    });
 
     return NextResponse.json({
       ok: true,
       generated: results.length,
+      run_recorded: recorded,
       status: 'draft — awaiting review at /admin/review',
-      review_notification: notified,
+      // The review email is sent by /api/cron/daily now; see the note above.
+      review_notification: 'sent by /api/cron/daily',
       upgrade_note: upgradeNote,
       // Whether the gate is doing work or just adding a model call. If
       // first_pass_failures stays at 100%, the prompt and the standard have
@@ -671,6 +717,17 @@ Reply with ONLY the topic sentence, no explanation.`,
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
+    // A thrown run is the one that most needs a trace: it writes no article,
+    // and until now the only record of it was a red line in a Vercel log that
+    // ages out. This is the case that cost eight days of publishing.
+    await recordArticleRun({
+      ran_at: new Date().toISOString(),
+      mode: 'none',
+      written: 0,
+      outcomes: [],
+      coverage: { covered: 0, total: 0, next_up: [] },
+      error: msg,
+    });
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

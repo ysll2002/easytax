@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import { AlertTriangle, CalendarClock, CheckCircle2, ExternalLink } from 'lucide-react';
 import SiteHeader from '@/components/SiteHeader';
@@ -38,7 +39,7 @@ export const revalidate = 3600;
 const CANONICAL = 'https://easytax.vip/hmrc-signed-me-up-for-mtd';
 
 export const metadata: Metadata = {
-  title: 'HMRC signed me up for Making Tax Digital — what do I do now?',
+  title: pageTitle('HMRC signed me up for Making Tax Digital — what now?'),
   description:
     'HMRC is automatically signing up sole traders and landlords who earned over £50,000 in 2024/25. What the letter means, whether you can opt out, your quarterly update deadlines, and what you have to do before the next one.',
   keywords: [

@@ -333,8 +333,13 @@ const DOC_FREQ: Map<string, number> = (() => {
   return m;
 })();
 
-/** The rarest words in a query — the ones a title must contain to be about it. */
-function distinctiveWords(query: TargetQuery): string[] {
+/** The rarest words in a query — the ones a title must contain to be about it.
+ *
+ *  Exported because the generator now states them in the brief: a headline is
+ *  checked against `coversQuery` before it is written, so the words that check
+ *  will demand are worth telling the model up front rather than only on a
+ *  retry it should not have needed. */
+export function distinctiveWords(query: TargetQuery): string[] {
   const ws = significantWords(query.q);
   if (ws.length === 0) return [];
   const rarest = Math.min(...ws.map(w => DOC_FREQ.get(w) ?? 1));

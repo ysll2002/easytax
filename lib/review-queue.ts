@@ -66,6 +66,42 @@ function hoursSince(iso: string): number {
   return Math.max(0, (Date.now() - new Date(iso).getTime()) / 3_600_000);
 }
 
+/** How recently a draft must have been written to count as "new" in the
+ *  review email. One cron cycle, plus room for a late run. */
+export const NEW_DRAFT_HOURS = 26;
+
+/**
+ * The review email's input, derived from the queue alone.
+ *
+ * It used to be derived from what the generator had just produced, which is
+ * why no alarm ever reached the owner. The notification lived at the end of
+ * `/api/cron/daily-article`, after two model calls — so on any morning the
+ * generator threw, the run 500'd and the email that exists to say "nothing has
+ * been published for a week" was the thing that did not happen. It is the
+ * inverse of what an alarm is for: it went quiet exactly when it mattered.
+ *
+ * Reading "what is new" out of the queue's own timestamps instead makes the
+ * email a function of state rather than of a particular run, so it can be sent
+ * by any caller — and it is now sent by `/api/cron/daily`, which has produced
+ * a row every day since it shipped and does no model work at all.
+ */
+export function reviewEmailInput(state: QueueState): {
+  newDrafts: { title: string; slug: string }[];
+  queue: { title: string; slug: string }[];
+  daysSinceLastPublish: number | null;
+  oldestDraftAgeHours: number | null;
+} {
+  const drafts = state.drafts ?? [];
+  return {
+    newDrafts: drafts
+      .filter(d => hoursSince(d.published_at) <= NEW_DRAFT_HOURS)
+      .map(d => ({ title: d.title, slug: d.slug })),
+    queue: drafts.map(d => ({ title: d.title, slug: d.slug })),
+    daysSinceLastPublish: state.daysSinceLastPublish,
+    oldestDraftAgeHours: state.oldestDraftAgeHours,
+  };
+}
+
 /**
  * Reads the queue.
  *

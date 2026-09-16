@@ -103,6 +103,103 @@ export function brandRepeats(title: string | null): number {
   return (title.match(/EasyTax/gi) ?? []).length;
 }
 
+/** The title with any trailing ` | EasyTax` removed, however many there are. */
+export function withoutBrandSuffix(title: string): string {
+  let out = title.trim();
+  for (;;) {
+    const next = out.replace(/\s*[|–—-]\s*EasyTax\s*$/i, '').trim();
+    if (next === out) return out;
+    out = next;
+  }
+}
+
+/**
+ * A title that is only too long because it is carrying the brand.
+ *
+ * `lib/seo-meta.ts` has done the right thing since 2026-09-14: it appends
+ * ` | EasyTax` when the result still fits in the display budget and drops it
+ * when it does not. The catch is that a route has to *call* it. Ten routes
+ * never did, so the root layout's `title.template` appended the brand for
+ * them — unconditionally, budget or no budget — and four public pages went out
+ * at 64–70 characters where dropping seven characters of brand they do not
+ * need would have left every one of them inside 60.
+ *
+ * Named as its own check rather than folded into `title_over_60` because the
+ * two want opposite responses. An over-long headline is an editorial problem
+ * and is left whole on purpose. This is a route that is not wired to the
+ * helper, it is fixable to zero, and it is the failure that comes back the
+ * next time somebody adds a page — which is the argument for having a number
+ * that goes up when it does.
+ */
+export function brandPushedOverBudget(title: string | null): boolean {
+  if (!title || title.length <= TITLE_MAX) return false;
+  const bare = withoutBrandSuffix(title);
+  return bare !== title && bare.length <= TITLE_MAX;
+}
+
+/** The origin the public actually reads. Every canonical, every sitemap entry
+ *  and every IndexNow submission on this site names it. */
+export const PUBLIC_ORIGIN = 'https://easytax.vip';
+
+/**
+ * Which origin a crawl should fetch.
+ *
+ * The 2026-09-14 round moved this crawl into the daily cron so it would stop
+ * being a thing somebody had to remember to run. It then ran, every morning,
+ * against `https://easytax-h9sul77b4-….vercel.app` — the deployment URL the
+ * cron request arrives at, which sits behind Vercel's deployment protection.
+ * Every one of the 156 fetches returned Vercel's login page with a 200, and
+ * the crawl dutifully reported 156 canonical mismatches, 156 missing
+ * descriptions, 156 thin pages and a confident `blocking_issues: 312`. None of
+ * it was about this site.
+ *
+ * So in production the crawl goes to the public origin, which is the artefact
+ * under test and the only host whose HTML a search engine will ever see.
+ * Anywhere else it stays on the deployment it was asked from, because that is
+ * the point of running it against a preview.
+ */
+export function auditBase(requestOrigin: string): string {
+  return process.env.VERCEL_ENV === 'production' ? PUBLIC_ORIGIN : requestOrigin;
+}
+
+/**
+ * Whether the crawl reached this site at all, and what it hit if not.
+ *
+ * A login wall, an SSO interstitial or a parked domain answers 200 with
+ * perfectly well-formed HTML, so every check in `analyse` runs happily and
+ * every count comes back wrong in the same direction. The tell is the
+ * canonical: our pages name `easytax.vip` (or, on a preview, their own
+ * deployment), and an interstitial names whoever is serving it.
+ *
+ * Returns a reason when the crawl is looking at somebody else's pages, and
+ * null when it is looking at ours. Deliberately needs a majority rather than
+ * one page: a single stray canonical is a bug on that page, which is a finding
+ * the audit should report, not a reason to throw the whole run away.
+ */
+export function crawlWall(base: string, pages: PageAudit[]): string | null {
+  const ok = pages.filter(p => p.status === 200 && p.canonical);
+  if (ok.length === 0) return null;
+
+  const ours = new Set([new URL(base).origin, PUBLIC_ORIGIN]);
+  const foreign = ok.filter(p => {
+    try {
+      return !ours.has(new URL(p.canonical!, base).origin);
+    } catch {
+      return false;
+    }
+  });
+  if (foreign.length * 2 <= ok.length) return null;
+
+  const host = (() => {
+    try { return new URL(foreign[0].canonical!, base).origin; } catch { return 'an unknown origin'; }
+  })();
+  return (
+    `${foreign.length} of ${ok.length} crawled pages canonicalise to ${host} rather than to us — ` +
+    `${base} is serving somebody else's HTML (deployment protection, an SSO wall or a redirect), ` +
+    'so no number from this crawl is about this site'
+  );
+}
+
 export async function auditPage(base: string, path: string): Promise<PageAudit> {
   const empty: PageAudit = {
     path, status: null, title: null, titleLength: 0, description: null,
@@ -211,6 +308,10 @@ export function analyse(pages: PageAudit[]) {
     // The 2026-09-14 defect, kept as a named check so its return is loud.
     brand_repeated_in_title: ok.filter(p => brandRepeats(p.title) > 1)
       .map(p => ({ path: p.path, title: p.title })),
+    // The 2026-09-15 defect: a route that never went through `pageTitle`, so
+    // the layout template appended a brand the title had no room for.
+    brand_pushed_title_over_budget: ok.filter(p => brandPushedOverBudget(p.title))
+      .map(p => ({ path: p.path, title: p.title, length: p.titleLength })),
     missing_title: ok.filter(p => !p.title).map(p => p.path),
     missing_description: ok.filter(p => !p.description).map(p => p.path),
     missing_canonical: ok.filter(p => !p.canonical).map(p => p.path),
@@ -273,6 +374,7 @@ export function compactSummary(base: string, urlCount: number, analysis: SeoAnal
   const blocking =
     problem_counts.not_200 +
     problem_counts.brand_repeated_in_title +
+    problem_counts.brand_pushed_title_over_budget +
     problem_counts.missing_title +
     problem_counts.missing_canonical +
     problem_counts.canonical_mismatch +
@@ -294,6 +396,7 @@ export function compactSummary(base: string, urlCount: number, analysis: SeoAnal
     worst_offenders: {
       not_200: analysis.problems.not_200.slice(0, 10),
       brand_repeated_in_title: analysis.problems.brand_repeated_in_title.slice(0, 5),
+      brand_pushed_title_over_budget: analysis.problems.brand_pushed_title_over_budget.slice(0, 10),
       noindex_but_in_sitemap: analysis.problems.noindex_but_in_sitemap.slice(0, 10),
       canonical_mismatch: analysis.problems.canonical_mismatch.slice(0, 10),
     },
@@ -302,13 +405,25 @@ export function compactSummary(base: string, urlCount: number, analysis: SeoAnal
 
 export type SeoSummary = ReturnType<typeof compactSummary>;
 
-/** Crawl and analyse. The one entry point a caller needs. */
+/** Crawl and analyse. The one entry point a caller needs.
+ *
+ *  `wall` is non-null when the crawl reached something that is not this site,
+ *  in which case `summary` is still returned — a caller debugging the wall
+ *  wants to see what came back — but no caller should store or report those
+ *  numbers as findings. `/api/cron/daily` turns a non-null `wall` into a
+ *  failed step, which is what makes the run go red instead of green. */
 export async function runSeoAudit(base: string, paths: string[]): Promise<{
   pages: PageAudit[];
   analysis: SeoAnalysis;
   summary: SeoSummary;
+  wall: string | null;
 }> {
   const pages = await mapPool(paths, CONCURRENCY, p => auditPage(base, p));
   const analysis = analyse(pages);
-  return { pages, analysis, summary: compactSummary(base, paths.length, analysis) };
+  return {
+    pages,
+    analysis,
+    summary: compactSummary(base, paths.length, analysis),
+    wall: crawlWall(base, pages),
+  };
 }
