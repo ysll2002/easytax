@@ -702,11 +702,113 @@ async function editorialState(since7d: string) {
  * The first three are recorded server-side and are absent from /api/track's
  * allowlist by design: evidence that a browser can forge is not evidence.
  */
+/**
+ * What registered people actually did inside the product.
+ *
+ * Why this is a separate block from `audience`, and why it had to be added.
+ * `audience` and `funnel` both filter through `isPublicContentPath`, which
+ * excludes `/dashboard`, `/login`, `/register` and the rest — correctly, for
+ * their purpose, which is "did the marketing work". The effect was that the
+ * daily report had no way at all to say whether anybody was using the thing
+ * the marketing is for.
+ *
+ * On 2026-09-16 that hid the most encouraging signal this project has
+ * produced. A person who found the site through Google registered on the
+ * evening of 09-15 and spent about an hour across eight dashboard pages —
+ * company, P&L, banking, reconcile, profile, HMRC — then came back the next
+ * morning and did it again. 108 engaged events. The 09-15 snapshot reported
+ * `human.visitors: 16` and `engagement.events: 11`, and nothing anywhere in
+ * the payload mentioned that a real user had explored the product for an hour,
+ * because every one of those events was on a path the filter drops.
+ *
+ * Five rounds have steered on a report that could see visitors and could not
+ * see users. This is the other half: how far the people who did sign up got,
+ * counted from the same events, on exactly the paths the other blocks exclude.
+ *
+ * Deliberately counted by `user_id` where there is one. An anon id changes
+ * between a logged-out session and a logged-in one — the 09-15 user appears
+ * under two — so counting anon ids would have reported one person as two.
+ */
+async function activation(sinceIso: string) {
+  const { data, error } = await supabase
+    .from('analytics_events')
+    .select('name, path, props, anon_id, user_id, created_at')
+    .gte('created_at', sinceIso)
+    .limit(50_000);
+
+  if (error) return null;
+
+  const inProduct = (p: string | null | undefined) =>
+    !!p && (p === '/dashboard' || p.startsWith('/dashboard/'));
+
+  const people = new Set<string>();
+  const reachedDashboard = new Set<string>();
+  const areas = new Map<string, number>();
+  let engagedEvents = 0;
+  let engagedSeconds = 0;
+  const engagedPeople = new Set<string>();
+
+  for (const row of (data ?? []) as {
+    name: string; path: string | null; user_id: string | null; anon_id: string | null;
+    props: Record<string, unknown> | null;
+  }[]) {
+    const props = row.props ?? {};
+    if (props.env !== 'production') continue;
+    // Automation that renders the app is not a user of it.
+    if (props.bot === true) continue;
+
+    const who = row.user_id ?? row.anon_id;
+    if (!who) continue;
+    if (row.user_id) people.add(row.user_id);
+
+    if (!inProduct(row.path)) continue;
+    reachedDashboard.add(who);
+
+    // The area of the product, not the exact route: /dashboard/company/pl and
+    // /dashboard/company are the same answer to "what did they come to do".
+    const area = (row.path ?? '').split('/').slice(0, 3).join('/') || '/dashboard';
+    areas.set(area, (areas.get(area) ?? 0) + 1);
+
+    if (row.name === 'page_engaged') {
+      engagedEvents++;
+      engagedPeople.add(who);
+      const secs = props.dwell_seconds;
+      if (typeof secs === 'number') engagedSeconds += secs;
+    }
+  }
+
+  return {
+    note:
+      'Counted on /dashboard paths, which audience and funnel deliberately exclude. ' +
+      'Identified by user_id where present, so one person across a logged-out and a ' +
+      'logged-in session counts once. dwell_seconds is time-to-first-signal, a lower ' +
+      'bound — see components/EngagementTracker.tsx; do not read it as time on page.',
+    signed_in_people: people.size,
+    reached_dashboard: reachedDashboard.size,
+    engaged_people: engagedPeople.size,
+    engaged_events: engagedEvents,
+    median_seconds_to_signal:
+      engagedEvents > 0 ? +(engagedSeconds / engagedEvents).toFixed(1) : null,
+    by_area: [...areas.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .map(([area, events]) => ({ area, events })),
+  };
+}
+
 async function distribution(sinceIso: string) {
   const { data, error } = await supabase
     .from('analytics_events')
     .select('name, props, created_at')
-    .in('name', ['embed_served', 'share_card_served', 'feed_fetched', 'llms_fetched', 'share_click', 'share_copy'])
+    .in('name', [
+      'embed_served', 'share_card_served', 'feed_fetched', 'llms_fetched',
+      // The .ics subscriptions. Absent from this block until 2026-09-16, which
+      // meant the single largest machine signal on the site — 44 fetches in the
+      // week this was added, against 23 human page views — appeared nowhere in
+      // the payload. Every round that discussed it had to query Supabase by
+      // hand, and F39 shipped a calendar CTA whose demand side was unreportable.
+      'calendar_fetched',
+      'share_click', 'share_copy',
+    ])
     .gte('created_at', sinceIso)
     .limit(50_000);
 
@@ -717,13 +819,53 @@ async function distribution(sinceIso: string) {
   const scrapers     = new Map<string, number>();
   const shareChannel = new Map<string, number>();
   const llmsAgents   = new Map<string, number>();
+  const calendarAgents = new Map<string, number>();
   let embedServed = 0;
   let shareCards  = 0;
   let feedFetches = 0;
+  let calendarFetches = 0;
   let llmsFetches = 0;
   let llmsFullFetches = 0;
 
   const bump = (m: Map<string, number>, k: string) => m.set(k, (m.get(k) ?? 0) + 1);
+
+  /**
+   * Who fetched this, by name.
+   *
+   * The old rule was "cut the user-agent at the first space or slash", which
+   * is right for `Feedly/1.0` and catastrophic for everything else. Nearly
+   * every crawler on earth opens its UA with `Mozilla/5.0`, so the rule
+   * bucketed all of them into a single key called `Mozilla` — and the report
+   * then presented that as a product name. On 2026-09-16 the payload said the
+   * feeds had one distinct agent, `Mozilla`, 51 fetches. The truth was that
+   * the .ics calendar was being pulled several times a day by **GPTBot**, and
+   * the articles by `meta-externalagent`.
+   *
+   * The identification was never missing. `lib/bot-detection.ts` already
+   * resolves these and stamps `bot_label` on the row at write time; this
+   * function simply did not read it. Same failure as the crawl that audited
+   * Vercel's login page: the instrument existed and was pointed elsewhere.
+   *
+   * So: prefer the label that was computed when the request arrived. Fall back
+   * to the UA's product token only when there is no label, and never emit a
+   * browser marker as if it were a client — `Mozilla` alone identifies nothing
+   * and must read as the unknown it is.
+   */
+  const BROWSER_MARKERS = new Set(['mozilla', 'opera', 'unknown', '']);
+  const agentKey = (props: Record<string, unknown>): string => {
+    const label = props.bot_label;
+    if (typeof label === 'string' && label.trim()) return label.slice(0, 60);
+
+    const ua = typeof props.agent === 'string' ? props.agent : '';
+    const head = (ua.split(/[\s/]/)[0] ?? '').trim();
+    if (BROWSER_MARKERS.has(head.toLowerCase())) {
+      // A browser-shaped UA with no bot label. Honest name, not a fake one:
+      // this is where a real feed reader in a browser wrapper would land, and
+      // calling it "Mozilla" hid exactly that distinction.
+      return props.bot === false ? 'browser (human-labelled)' : 'unidentified-client';
+    }
+    return head.slice(0, 60);
+  };
 
   for (const row of data ?? []) {
     const props = (row.props ?? {}) as Record<string, unknown>;
@@ -741,17 +883,21 @@ async function distribution(sinceIso: string) {
         break;
       case 'feed_fetched':
         feedFetches++;
-        // The full user-agent is stored, but a feed reader's version string
-        // changes weekly and would split one subscriber across a dozen rows.
-        // Cut at the first space or slash to key on the product name.
-        bump(feedAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
+        // Keyed on the resolved client, not the UA's first token: a feed
+        // reader's version string changes weekly and would otherwise split one
+        // subscriber across a dozen rows.
+        bump(feedAgents, agentKey(props));
+        break;
+      case 'calendar_fetched':
+        calendarFetches++;
+        bump(calendarAgents, agentKey(props));
         break;
       case 'llms_fetched':
         llmsFetches++;
         if (str('file') === 'full') llmsFullFetches++;
         // Same keying as the feeds, and for the same reason: ClaudeBot/1.0 and
         // ClaudeBot/1.1 are one crawler, not two.
-        bump(llmsAgents, (str('agent').split(/[\s/]/)[0] || 'unknown').slice(0, 60));
+        bump(llmsAgents, agentKey(props));
         break;
       default:
         bump(shareChannel, `${str('tool')}:${str('channel')}`);
@@ -773,6 +919,17 @@ async function distribution(sinceIso: string) {
     },
     share_cards: { served: shareCards, by_scraper: top(scrapers) },
     feeds: { fetches: feedFetches, distinct_agents: feedAgents.size, by_agent: top(feedAgents) },
+
+    // The .ics calendar. A subscription is the only recurring relationship this
+    // product can offer before HMRC approval — four appearances a year in
+    // somebody's calendar, no account, no address — so who is pulling it is a
+    // demand signal, not a vanity count. Reported here for the first time on
+    // 2026-09-16, when it turned out to be OpenAI's crawler rather than readers.
+    calendar: {
+      fetches: calendarFetches,
+      distinct_agents: calendarAgents.size,
+      by_agent: top(calendarAgents),
+    },
     // /llms.txt and /llms-full.txt, shipped 2026-09-12. The index being fetched
     // is an answer engine noticing the site; the full text being fetched is the
     // archive actually leaving with it, which is why the two are counted
@@ -898,6 +1055,7 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       events7d, events30d, visitors7d, visitors30d, launchList, traffic7d, traffic30d,
       tools7d, tools30d, eventsPrev7d, visitorsPrev7d, editorial, window, reality,
       distribution7d, distribution30d, audience7d, audience30d,
+      activation7d, activation30d,
     ] = await Promise.all([
       eventCounts(since7d),
       eventCounts(since30d),
@@ -920,6 +1078,8 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       distribution(since30d),
       audience(since7d),
       audience(since30d),
+      activation(since7d),
+      activation(since30d),
     ]);
 
     // eventCounts/uniqueVisitors take a single lower bound, so the "previous"
@@ -1074,6 +1234,15 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       audience: {
         last_7d:  audience7d,
         last_30d: audience30d,
+      },
+
+      // What signed-up people did inside the product. `audience` above is
+      // people arriving; this is people using it. Until 2026-09-16 the report
+      // carried only the first, so an hour of real dashboard use by a user who
+      // came from Google was invisible in a payload 1,100 lines long.
+      activation: {
+        last_7d:  activation7d,
+        last_30d: activation30d,
       },
 
       // Launch waitlist — the addressable pipeline to convert on the day HMRC

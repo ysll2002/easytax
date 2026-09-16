@@ -12,6 +12,7 @@ import ArticleProvenance, { ArticleSources } from '../_components/ArticleProvena
 import { selectPublished } from '../_lib/review';
 import { pageTitle, metaDescription } from '@/lib/seo-meta';
 import { extractHeadings, faqJsonLd, withHeadingIds } from '@/lib/article-structure';
+import { articleQuestion, withCommissionedQuestion } from '@/lib/article-question';
 
 export const revalidate = 3600;
 
@@ -115,7 +116,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   // Only for the articles that genuinely are question-and-answer pages — see
   // lib/article-structure.ts for why this test is the strict one.
-  const jsonLdFaq = faqJsonLd(article.content, `https://easytax.vip/tax-tips/${slug}`);
+  // The search this piece was commissioned to answer, where we know it. Every
+  // search referral this site has ever had landed on one of these pages from a
+  // long-tail question query, and until now the page never said which question
+  // it was written for — the pipeline knew and threw it away.
+  const pageUrl = `https://easytax.vip/tax-tips/${slug}`;
+  const question = articleQuestion(article);
+  const jsonLdFaq = question
+    ? withCommissionedQuestion(faqJsonLd(article.content, pageUrl), question, pageUrl)
+    : faqJsonLd(article.content, pageUrl);
 
   const jsonLdBreadcrumb = {
     '@context': 'https://schema.org',
@@ -152,6 +161,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2, marginBottom: '1.25rem' }}>
             {article.title}
           </h1>
+
+          {/* The question, above the answer. The excerpt already *is* the short
+              answer — it is written by the same run and reviewed by the same
+              person — so this labels it rather than repeating it in new words.
+              Rendering a second, generated summary here would be unreviewed tax
+              guidance reaching the page through a side door. */}
+          {question && (
+            <p
+              className="text-sm mb-2"
+              style={{ color: '#9A8F83', fontWeight: 600, lineHeight: 1.5 }}
+            >
+              {question.question}
+            </p>
+          )}
 
           <p className="text-lg leading-relaxed mb-6" style={{ color: '#4A4035' }}>
             {article.excerpt}

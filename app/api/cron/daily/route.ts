@@ -5,6 +5,7 @@ import { buildMetricsPayload } from '@/app/api/admin/daily-metrics/route';
 import { auditBase, runSeoAudit, type SeoSummary } from '@/lib/seo-audit';
 import { readQueue, reviewEmailInput } from '@/lib/review-queue';
 import { existingArticleRun } from '@/lib/editorial-run';
+import { reconcileQueue } from '@/lib/queue-reconcile';
 import { reviewEmailIsDue, sendArticleReviewEmail } from '@/lib/email';
 
 // One cron for everything that happens once a day and is not slow.
@@ -224,6 +225,26 @@ export async function GET(req: NextRequest) {
   // and does no model work. It runs at 08:30, half an hour after the
   // generator, so anything written this morning is in the queue by now and
   // still counts as new.
+  // Before the alarm, deliberately: the email is composed from the queue, so a
+  // pass that runs after it has already mailed somebody a list containing the
+  // same page twice. On the morning this shipped that was two of three items.
+  //
+  // It cannot publish and cannot delete — it only moves a draft that duplicates
+  // a live page to `rejected`, which changes nothing a reader sees. That is
+  // what makes it safe to run unattended where releasing a draft is not.
+  steps.push(await run('queue-reconcile', async () => {
+    const result = await reconcileQueue();
+    // An unreadable queue is a failed step, not a clean pass. A reconcile that
+    // rejected nothing because it could not read anything must not look like
+    // one that rejected nothing because the queue was already clean.
+    if (result.error) throw new Error(result.error);
+    return {
+      rejected: result.rejected.length,
+      remaining: result.remaining,
+      detail: result.rejected.map(r => ({ slug: r.slug, kind: r.collision.kind, against: r.against })),
+    };
+  }));
+
   steps.push(await run('review-alarm', notifyReviewQueue));
 
   // The rendered-HTML crawl. Before the snapshot, because its result is stored

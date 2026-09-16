@@ -328,6 +328,9 @@ type DraftRow = {
   content: string;
   published_at: string;
   sources: GeneratedSource[] | null;
+  /** The curated query this was commissioned against, stored so the page can
+   *  state the question it answers. Null when the run had no target. */
+  target_query: string | null;
 };
 
 /**
@@ -340,7 +343,7 @@ type DraftRow = {
  * rather than a lost article or a failed cron.
  */
 async function insertDraft(row: DraftRow): Promise<string | null> {
-  const { error } = await supabase.from('tax_articles').insert({
+  const gated = {
     title:         row.title,
     slug:          row.slug,
     excerpt:       row.excerpt,
@@ -348,9 +351,31 @@ async function insertDraft(row: DraftRow): Promise<string | null> {
     published_at:  row.published_at,
     review_status: 'draft',
     sources:       row.sources,
+  };
+
+  const { error } = await supabase.from('tax_articles').insert({
+    ...gated,
+    target_query: row.target_query,
   });
 
   if (!error) return null;
+
+  // `target_query` is the newest column here (20260916) and the most likely
+  // one to be missing on a deploy that lands before its migration. Retry
+  // without it, still gated, BEFORE reaching the legacy fallback below —
+  // otherwise a missing column whose only job is a snippet would drop this
+  // insert into the path that publishes without review. A cosmetic field must
+  // never be able to open the editorial gate.
+  if (error.code === '42703' || error.code === 'PGRST204') {
+    const { error: retryError } = await supabase.from('tax_articles').insert(gated);
+    if (!retryError) {
+      console.warn('[daily-article] target_query missing — run the 20260916 migration.');
+      return null;
+    }
+    if (retryError.code !== '42703' && retryError.code !== 'PGRST204') {
+      return retryError.message;
+    }
+  }
 
   if (error.code === '42703' || error.code === 'PGRST204') {
     console.warn(
@@ -628,6 +653,7 @@ Reply with ONLY the topic sentence, no explanation.`,
         content: draft.content,
         published_at: pubDate,
         sources: draft.sources ?? null,
+        target_query: assignment.target?.q ?? null,
       });
 
       results.push({
