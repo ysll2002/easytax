@@ -91,30 +91,17 @@ export default async function Home() {
     })),
   };
 
-  const jsonLdSoftware = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    // Same @id as the node emitted in app/layout.tsx — one entity, described
-    // once, so the two do not compete in search results.
-    '@id': 'https://easytax.vip/#software',
-    name: 'EasyTax',
-    applicationCategory: 'FinanceApplication',
-    operatingSystem: 'Web',
-    url: 'https://easytax.vip',
-    description: 'MTD-compliant tax filing for UK sole traders and limited companies — MTD ITSA quarterly updates, Self Assessment, VAT returns, and CT600 Corporation Tax filed directly to HMRC.',
-    offers: {
-      '@type': 'Offer',
-      price: '24',
-      priceCurrency: 'GBP',
-      description: '£24 per HMRC submission (inc. VAT), no monthly subscription',
-    },
-    publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-  };
+  // The SoftwareApplication node that used to be built here has moved to
+  // lib/site-entity.ts, which app/layout.tsx emits on every page including this
+  // one. It claimed in its own comment to share an @id with the layout's node
+  // "so the two do not compete" — but same @id with a different `description`
+  // and a different offer `description` is precisely two competing descriptions
+  // of one entity, on the single URL that matters most for the brand query.
+  // One definition, one place.
 
   return (
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', fontFamily: 'var(--font-body), DM Sans, system-ui, sans-serif' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftware) }} />
 
       {/* ── MTD announcement bar ──
           The date here used to be hardcoded as "Q1 update due 5 Aug 2026". It
