@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken, fraudHeaders } from '@/lib/hmrc';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -58,38 +58,46 @@ async function call(
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   // Top-level catch so we always return valid JSON even if something crashes
   try {
-    // Two auth modes:
-    //  1. Interactive: normal user session, runs against the caller's own
-    //     HMRC connection (dashboard button).
-    //  2. Cron: Vercel cron with Authorization: Bearer $CRON_SECRET. Picks
-    //     the first hmrc_connections row so the harness stays "warm" against
-    //     HMRC's 30-day rolling test log even when nobody clicks the button.
-    const cronSecret = process.env.CRON_SECRET;
-    const authHeader = req.headers.get('authorization') ?? '';
-    const isCron     = cronSecret != null && authHeader === `Bearer ${cronSecret}`;
-
-    let profileId: string;
-    if (isCron) {
-      const { data: anyConn } = await supabase
-        .from('hmrc_connections')
-        .select('user_id')
-        .limit(1)
-        .maybeSingle();
-      if (!anyConn?.user_id) {
-        return NextResponse.json(
-          { error: 'Cron: no hmrc_connections row available to test with.' },
-          { status: 400 },
-        );
-      }
-      profileId = anyConn.user_id;
-    } else {
-      const session = await auth();
-      if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      profileId = session.user.profileId;
+    // One auth mode: a signed-in user, running the harness against their own
+    // HMRC connection.
+    //
+    // There used to be a second — `Authorization: Bearer $CRON_SECRET`, which
+    // picked the first `hmrc_connections` row via `.limit(1)` so the harness
+    // could stay "warm" against HMRC's 30-day rolling log without anybody
+    // clicking the button. It is gone, for two reasons.
+    //
+    // The first is fraud prevention headers. A cron has no browser, so
+    // `fraudHeaders()` finds no device data and the nine Gov-Client-* headers
+    // come out empty and are dropped. That is exactly the traffic HMRC's FPH
+    // review sampled on 2026-09-01 and reported three times over; the
+    // twice-monthly `vercel.json` entry that produced it was removed on
+    // 2026-09-07, and this branch was the other half of the same mechanism —
+    // one line in `vercel.json` away from firing again, at the precise moment
+    // HMRC's fraud header team is running a full review.
+    //
+    // The second is worse and is the reason this is a removal rather than a
+    // guard. The harness is not read-only: it makes 11 POSTs, 12 PUTs and 8
+    // DELETEs, including `POST /organisations/vat/{vrn}/returns` and
+    // `POST .../self-employment/.../period`. Under the cron branch those ran
+    // against whichever user's stored access token happened to sort first in
+    // the table, with no session and no consent. In the sandbox that is
+    // harmless noise. With `HMRC_ENV=production` set — which is the whole
+    // point of the approval this project is working toward — it would be
+    // filing tax data to HMRC on a real person's behalf, triggered by a shared
+    // secret rather than by them.
+    //
+    // If automated keep-alive is ever wanted, it cannot be a cron: there is no
+    // browser, so there are no device headers, so the requests would be
+    // non-compliant by construction. It needs a different design, not this
+    // branch back.
+    const session = await auth();
+    if (!session?.user?.profileId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const profileId = session.user.profileId;
 
     let token: string;
     try {
