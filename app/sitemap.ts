@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { PAGE_SIZE, hasSupabaseEnv } from './tax-tips/_lib/articles';
 import { getPublishedTopics } from './tax-tips/_lib/topic-articles';
 import { selectPublished } from './tax-tips/_lib/review';
+import { withoutDuplicates } from '@/lib/article-canonical';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://easytax.vip';
@@ -44,7 +45,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // For a reviewed article that is the review date, which is also the date
     // shown to the reader — the two must not disagree.
     type ArticleRow = { slug: string; published_at: string; reviewed_at?: string | null };
-    articleUrls = ((articles ?? []) as unknown as ArticleRow[]).map(a => ({
+    const rows = (articles ?? []) as unknown as ArticleRow[];
+
+    // A page the archive wrote twice is offered to a crawler once. The
+    // duplicates keep their URLs and still render — they are dropped from the
+    // sitemap and carry a canonical tag pointing at the version that stays,
+    // which is the same signal said two ways rather than two signals. See
+    // lib/article-clusters.ts.
+    //
+    // Deliberately *not* applied to the pagination count below: /tax-tips and
+    // /tax-tips/page/N still list the whole archive, because those listings are
+    // what give older articles an inbound internal link, and shortening them
+    // would orphan pages to fix a problem the canonical tag has already fixed.
+    const indexable = await withoutDuplicates(rows);
+
+    articleUrls = indexable.map(a => ({
       url: `${base}/tax-tips/${a.slug}`,
       lastModified: new Date(a.reviewed_at ?? a.published_at),
       changeFrequency: 'monthly',
@@ -54,7 +69,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Paginated index pages. These are what give the older articles an inbound
     // internal link — listing the articles without them leaves most of the
     // archive orphaned. Page 1 is /tax-tips, already listed below.
-    const totalPages = Math.ceil((articles?.length ?? 0) / PAGE_SIZE);
+    const totalPages = Math.ceil(rows.length / PAGE_SIZE);
     for (let n = 2; n <= totalPages; n++) {
       articleUrls.push({
         url: `${base}/tax-tips/page/${n}`,
@@ -69,6 +84,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: base,                                lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
     { url: `${base}/pricing`,                   lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
     { url: `${base}/mtd-software`,              lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },
+    // The comparison hub. Same priority band as /tools and for the same
+    // reason: it is the parent of nine pages that had no parent, and the one
+    // page on this site that answers the generic "which MTD software" query
+    // that all nine of them are individually the wrong answer to.
+    { url: `${base}/compare`,                   lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },
     // Free tools. The hub and its three calculators are the pages most likely
     // to earn links from outside, so they sit at the top of the priority band.
     { url: `${base}/tools`,                     lastModified: new Date(), changeFrequency: 'weekly',  priority: 0.9 },

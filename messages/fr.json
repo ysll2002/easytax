@@ -53,6 +53,12 @@
       "subtitle": "Sans compte, sans carte, sans attendre l'agrément HMRC. Trois calculateurs qui répondent aux questions que les visiteurs se posent vraiment.",
       "all": "Tous les outils gratuits →"
     },
+    "compare": {
+      "title": "Vous payez déjà pour autre chose ?",
+      "subtitle": "La plupart des logiciels comptables britanniques se vendent par abonnement mensuel, parce qu'il s'agit avant tout de comptabilité qui sait aussi déclarer. Neuf comparatifs, chacun honnête sur les points forts de l'autre produit.",
+      "vs": "face à {name}",
+      "all": "Comparer les neuf →"
+    },
     "services": {
       "title1": "Tout est couvert,",
       "title2": "quel que soit votre profil.",

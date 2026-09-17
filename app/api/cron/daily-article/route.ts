@@ -638,7 +638,14 @@ Reply with ONLY the topic sentence, no explanation.`,
           cluster: assignment.target?.cluster ?? null,
           quality,
           attempts,
-          error: `Not written: this headline ${collision.kind === 'exact' ? 'is already in the archive' : 'claims the same subject as an existing page'} — "${collision.match}". Two pages competing for one query rank worse than one.`,
+          error:
+            `Not written: this headline ${
+              collision.kind === 'exact'
+                ? 'is already in the archive'
+                : collision.kind === 'similar'
+                  ? `is a rephrasing of an existing page (${collision.similarity} similar)`
+                  : 'claims the same subject as an existing page'
+            } — "${collision.match}". Two pages competing for one query rank worse than one.`,
         });
         continue;
       }
