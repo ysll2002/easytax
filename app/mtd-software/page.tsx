@@ -5,6 +5,7 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { COMPETITORS } from '@/lib/competitors';
 
 export const metadata: Metadata = {
   title: pageTitle('MTD Software UK — Making Tax Digital for Income Tax'),
@@ -364,6 +365,40 @@ export default async function MtdSoftware() {
                 </details>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ── Comparisons ──
+            This page is the obvious topical parent of "which MTD software
+            should I use", and until 2026-09-17 it linked to none of the nine
+            comparison pages that answer it product by product. All nine had
+            zero page views over 30 days. A reader who has got this far is
+            shopping; the next thing they want is the name of what they are
+            currently paying for. */}
+        <section className="py-16 sm:py-20" style={{ backgroundColor: '#FDFCF8' }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+              Already paying for something else?
+            </h2>
+            <p className="text-sm sm:text-base mb-8" style={{ color: '#4A4035', maxWidth: 640, lineHeight: 1.6 }}>
+              Nine side-by-side comparisons, each one honest about what the other product is better
+              at. Start with whichever name you recognise.
+            </p>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {COMPETITORS.map(c => (
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className="inline-block px-4 py-2.5 rounded-full text-sm font-medium"
+                  style={{ backgroundColor: '#F0EBE1', color: '#1C1208', border: '1px solid #DDD5C8', textDecoration: 'none', minHeight: '44px', lineHeight: '1.4' }}
+                >
+                  vs {c.name}
+                </Link>
+              ))}
+            </div>
+            <Link href="/compare" className="inline-block mt-6 text-sm font-medium" style={{ color: '#C4622D', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              Compare all nine side by side →
+            </Link>
           </div>
         </section>
 

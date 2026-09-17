@@ -3,6 +3,7 @@ import { hasSupabaseEnv, type ArticleSummary } from './articles';
 import { selectPublished } from './review';
 import { track } from '@/lib/analytics';
 import { botProps } from '@/lib/bot-detection';
+import { withoutDuplicates } from '@/lib/article-canonical';
 
 // Shared plumbing for the RSS and JSON feeds.
 //
@@ -23,18 +24,30 @@ export const SITE = 'https://easytax.vip';
 
 /** Most recent published articles, newest first. Empty on a preview build with
  *  no Supabase credentials — an empty feed is a valid feed, and better than a
- *  500 on a URL that readers poll unattended. */
+ *  500 on a URL that readers poll unattended.
+ *
+ *  Duplicates are dropped. The 2026-09-16 round found the feeds are this
+ *  site's largest real audience — 66 fetches in seven days, of which GPTBot 14,
+ *  meta-externalagent 10 and OAI-SearchBot 2, against 95 human page views — and
+ *  the archive they were being handed contained the trading allowance five
+ *  times. Sending an answer engine the same guidance under three headlines does
+ *  not make it three times as likely to be cited; it spends our one channel
+ *  that is actually growing on repetition. See lib/article-clusters.ts. */
 export async function recentArticles(limit = FEED_LIMIT): Promise<ArticleSummary[]> {
   if (!hasSupabaseEnv()) return [];
 
+  // Over-fetch, then de-duplicate, so that dropping duplicates shortens the
+  // feed's reach into the archive rather than the feed itself — asking for 50
+  // and filtering would have returned fewer than 50 items.
   const { data } = await selectPublished(gated => {
     const q = supabase.from('tax_articles').select('title, slug, excerpt, published_at');
     return (gated ? q.eq('review_status', 'published') : q)
       .order('published_at', { ascending: false })
-      .limit(limit);
+      .limit(limit * 2);
   });
 
-  return (data ?? []) as ArticleSummary[];
+  const rows = (data ?? []) as ArticleSummary[];
+  return (await withoutDuplicates(rows)).slice(0, limit);
 }
 
 /** The five characters that are not legal as raw text in XML content or in an
