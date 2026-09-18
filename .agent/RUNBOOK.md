@@ -142,17 +142,29 @@ commit message body 结尾加：
    并在 `MEMORY.md` 加一行索引。只记"以后每天都用得上"的东西，流水账留在 JOURNAL。
 5. **镜像到 git**（让暂停中的云端兜底 agent 也能读到同一份记忆）：
 
+   镜像走一个**独立的 worktree** `/Users/linli/clawd/easytax-journal`，它常驻在
+   `agent/journal` 这个 orphan 分支上。**绝不要在主 clone 里 `git checkout agent/journal`** ——
+   那是个不含应用代码的 orphan 分支，切过去会被未跟踪文件挡住，把主工作区搞乱。
+
 ```bash
-cd /Users/linli/clawd/easytax
-git fetch origin agent/journal 2>/dev/null || true
-git checkout -B agent/journal origin/agent/journal 2>/dev/null || git checkout -B agent/journal
-mkdir -p .agent
-cp /Users/linli/Documents/EasyTax/agent/{JOURNAL.md,BACKLOG.md,STATE.md,RUNBOOK.md} .agent/
+JW=/Users/linli/clawd/easytax-journal
+
+# worktree 不在就重建（正常情况下它一直在）
+[ -d "$JW/.agent" ] || git -C /Users/linli/clawd/easytax worktree add "$JW" agent/journal
+
+cd "$JW"
+git pull --ff-only origin agent/journal || true
+cp /Users/linli/Documents/EasyTax/agent/JOURNAL.md \
+   /Users/linli/Documents/EasyTax/agent/BACKLOG.md \
+   /Users/linli/Documents/EasyTax/agent/STATE.md \
+   /Users/linli/Documents/EasyTax/agent/RUNBOOK.md .agent/
 git add .agent/JOURNAL.md .agent/BACKLOG.md .agent/STATE.md .agent/RUNBOOK.md
-git commit -m "chore(agent): journal $(date -u +%Y-%m-%d)" || true
-git push -u origin agent/journal
-git checkout staging
+git commit -m "chore(agent): journal $(date -u +%Y-%m-%d)" || echo "无变化，跳过"
+git push origin agent/journal
 ```
+
+   做完确认主 clone 没被影响：`git -C /Users/linli/clawd/easytax status --porcelain` 应为空，
+   分支应仍是 `staging`。
 
 推失败不算致命，记进「今日失败」即可。
 
