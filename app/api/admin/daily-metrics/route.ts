@@ -696,13 +696,19 @@ async function editorialState(since7d: string) {
   const cover = titles.error ? null : coverage(articleRows.map(a => a.title));
 
   return {
-    archive_depth: titles.error ? null : archiveDepth(articleRows),
     editorial:
       queue.drafts === null && queue.publishedCount === null
         ? null
         : {
             drafts_awaiting_review: queue.drafts?.length ?? null,
             published: queue.publishedCount,
+            // Nested here rather than returned alongside `editorial`, because
+            // the caller picks `editorial.editorial` and drops every other key
+            // this function returns — which is how the first version of this
+            // field shipped, serialised nowhere, and was found only by calling
+            // the endpoint. `query_coverage` below survives because it is
+            // picked out by name.
+            archive_depth: titles.error ? null : archiveDepth(articleRows),
             last_published_at: queue.lastPublishedAt,
             // The freeze detector. Anything above 1 means the cron has written
             // an article that no reader can see.
