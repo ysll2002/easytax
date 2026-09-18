@@ -5,6 +5,7 @@ import { deploymentInfo } from '@/lib/deployment';
 import { readQueue } from '@/lib/review-queue';
 import { existingArticleRun } from '@/lib/editorial-run';
 import { coverage } from '@/lib/search-queries';
+import { STANDARD } from '@/lib/article-quality';
 import { clusterArticles, reviewCandidates, titleSimilarity } from '@/lib/article-clusters';
 import { schemaState } from '@/lib/schema-state';
 import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
@@ -627,11 +628,58 @@ async function dataWindow() {
  *  healthy queue and there was no number anywhere saying the archive had
  *  stopped moving. A count of what is waiting is not a measure of whether
  *  anything is getting through. */
+/**
+ * How deep the archive actually is, against the standard it is written to.
+ *
+ * The one fact about this site's content that nothing has ever reported.
+ * `STANDARD.minWords` is 1,100 and `gradeArticle` has enforced it on every
+ * draft since 2026-09-14 — but on 2026-09-18 **not one of the 114 published
+ * articles reaches it**: they run 573 to 724 words, median 641. They were all
+ * written while `max_tokens` was 1500, so the cap, not the brief, decided how
+ * long they were, and raising the cap did nothing for the pages already
+ * published.
+ *
+ * `meets_standard: 0 of 114` is the number that frames the only real decision
+ * left on the content side, and the daily payload could not state it. The
+ * upgrade loop rewrites the weakest page on alternate days, so
+ * `backlog_days_at_current_rate` puts a date on "leave it running": at one
+ * rewrite every two days the archive meets its own standard some time in 2027.
+ * The alternatives — batching rewrites with `?count=`, or pruning the weakest
+ * pages instead of rewriting them — both cost money or pages, and are the
+ * owner's call. This exists so the call is made against a number.
+ */
+function archiveDepth(rows: { content: string | null }[]) {
+  const words = rows
+    .map(a => String(a.content ?? '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length)
+    .sort((a, b) => a - b);
+
+  if (words.length === 0) return { published: 0, note: 'no published articles' };
+
+  const meets = words.filter(n => n >= STANDARD.minWords).length;
+  // The cron alternates upgrade days with new-article days, one piece each, so
+  // the effective rewrite rate is one every two days.
+  const backlog = words.length - meets;
+
+  return {
+    published: words.length,
+    min_words: words[0],
+    median_words: words[Math.floor(words.length / 2)],
+    max_words: words[words.length - 1],
+    standard_min_words: STANDARD.minWords,
+    meets_standard: meets,
+    below_standard: backlog,
+    /** At one rewrite every other day, which is what the cron does unattended. */
+    backlog_days_at_current_rate: backlog * 2,
+    note:
+      'Bodies only, tags stripped. Every published article predates the 2026-09-14 raise of the generator\'s max_tokens; the upgrade arm of /api/cron/daily-article rewrites the weakest one on alternate days.',
+  };
+}
+
 async function editorialState(since7d: string) {
   const [queue, snapshots, titles] = await Promise.all([
     readQueue(),
     supabase.from('growth_snapshots').select('id', { count: 'exact', head: true }).gte('created_at', since7d),
-    supabase.from('tax_articles').select('title').eq('review_status', 'published').limit(1000),
+    supabase.from('tax_articles').select('title, content').eq('review_status', 'published').limit(1000),
   ]);
 
   // How much of the demand model the site actually answers.
@@ -644,11 +692,11 @@ async function editorialState(since7d: string) {
   // of progress — the pipeline grinding through the list, versus a page
   // somebody built on purpose — and because until 2026-09-13 coverage counted
   // only the archive and so reported the hand-built pages as pending.
-  const cover = titles.error
-    ? null
-    : coverage(((titles.data ?? []) as { title: string }[]).map(a => a.title));
+  const articleRows = titles.error ? [] : ((titles.data ?? []) as { title: string; content: string | null }[]);
+  const cover = titles.error ? null : coverage(articleRows.map(a => a.title));
 
   return {
+    archive_depth: titles.error ? null : archiveDepth(articleRows),
     editorial:
       queue.drafts === null && queue.publishedCount === null
         ? null

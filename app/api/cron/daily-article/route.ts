@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { recordArticleRun } from '@/lib/editorial-run';
+import { parseDraft, DraftParseError, type ParsedDraft } from '@/lib/draft-json';
 import {
   TARGET_QUERIES,
   coverage,
@@ -143,16 +144,20 @@ function standardBrief(): string {
 }
 
 /** Model output as it arrives, before sanitising and grading. */
-type RawDraft = { title: string; excerpt: string; content: string; sources?: unknown };
+type RawDraft = ParsedDraft;
 
-function parseDraft(text: string): RawDraft {
-  // The model is asked for bare JSON, but a stray ```json fence is the one
-  // deviation that shows up in practice and is cheap to tolerate.
-  const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
-  return JSON.parse(cleaned) as RawDraft;
-}
+/** What the model is told when its first response would not parse.
+ *
+ *  Appended rather than substituted, so the brief and the standard are still
+ *  in front of it — the response was rejected for its punctuation, and a
+ *  second attempt that fixes the escaping and loses the table has not helped. */
+const ESCAPING_REMINDER = `
 
-async function callModel(prompt: string): Promise<RawDraft> {
+Your previous response could not be parsed as JSON. The usual cause is a double quote inside the "content" string that was not escaped.
+
+Return the same JSON shape again, and escape every double quote inside a string value as \\". If you want quotation marks in the prose, prefer typographic quotes (“ ”) — they need no escaping. Do not truncate the article to make it fit.`;
+
+async function requestDraft(prompt: string): Promise<RawDraft> {
   const msg = await client.messages.create({
     model: 'claude-sonnet-4-6',
     // The old value was 1500, which is why no article in the archive exceeds
@@ -166,6 +171,28 @@ async function callModel(prompt: string): Promise<RawDraft> {
     throw new Error('model returned no text block');
   }
   return parseDraft(block.text);
+}
+
+/**
+ * One generation, with a second sample if the first will not parse.
+ *
+ * `parseDraft` already recovers the common case without another call (see
+ * lib/draft-json.ts). This is the backstop for the cases it declines —
+ * chiefly a response truncated by `max_tokens`, where there is nothing to
+ * recover and asking again is the only move.
+ *
+ * Only `DraftParseError` is retried. An API error, a rate limit or a refusal
+ * is not something a reworded prompt fixes, and retrying those would double
+ * the cost of every real outage.
+ */
+async function callModel(prompt: string): Promise<RawDraft> {
+  try {
+    return await requestDraft(prompt);
+  } catch (err) {
+    if (!(err instanceof DraftParseError)) throw err;
+    console.warn('[daily-article] unparseable response, regenerating:', err.message);
+    return requestDraft(prompt + ESCAPING_REMINDER);
+  }
 }
 
 function finalise(raw: RawDraft, link: InternalLink | null): ArticleDraft {
@@ -604,7 +631,53 @@ Reply with ONLY the topic sentence, no explanation.`,
         ? new Date(Date.now() - (assignments.length - 1 - i) * 24 * 60 * 60 * 1000).toISOString()
         : new Date().toISOString();
 
-      const { draft, quality, attempts } = await generateArticle(assignment);
+      // One assignment must not be able to end the run.
+      //
+      // Until today every throw inside this loop — a parse failure, a rate
+      // limit, an overloaded model — went straight to the handler's outer
+      // catch, which records `mode: none, written: 0` and returns a 500. With
+      // the default batch of one that loses the day; with `?count=5` it also
+      // discards the four assignments that had not been tried yet, and the
+      // ones already written are still in `results` and never recorded.
+      //
+      // The failure is now this assignment's outcome and the loop continues.
+      // A run where every assignment fails still writes its trace, which is
+      // the record that was missing on 2026-09-17.
+      let generated: { draft: ArticleDraft; quality: QualityReport; attempts: number };
+      try {
+        generated = await generateArticle(assignment);
+      } catch (err) {
+        const why =
+          err instanceof DraftParseError
+            ? `the model's response could not be read even after regenerating — ${err.message}`
+            : err instanceof Error
+              ? err.message
+              : String(err);
+        results.push({
+          mode: assignment.kind === 'upgrade' ? ('upgrade' as const) : ('new' as const),
+          slug: assignment.kind === 'upgrade' ? assignment.existing.slug : null,
+          title: assignment.topic,
+          replaces: assignment.kind === 'upgrade' ? assignment.existing.title : null,
+          targetQuery: assignment.target?.q ?? null,
+          cluster: assignment.target?.cluster ?? null,
+          // Nothing was produced, so every count is genuinely zero rather than
+          // unmeasured. `failures` carries the reason, which is what the
+          // review page and the daily trace both read.
+          quality: {
+            pass: false,
+            words: 0,
+            headings: 0,
+            primarySources: 0,
+            moneyFigures: 0,
+            hasTable: false,
+            failures: [why],
+          },
+          attempts: 0,
+          error: `Not written: generation failed — ${why}`,
+        });
+        continue;
+      }
+      const { draft, quality, attempts } = generated;
 
       if (assignment.kind === 'upgrade') {
         const staged = await stageUpgrade(assignment.existing.slug, draft);

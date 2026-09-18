@@ -34,7 +34,7 @@ import { ArrowRight } from 'lucide-react';
 export const metadata: Metadata = {
   title: pageTitle('Compare MTD Software for UK Sole Traders & Landlords'),
   description:
-    'How EasyTax compares with QuickBooks, Xero, FreeAgent, Sage, Crunch, Coconut, KashFlow, Bokio and TaxScouts for MTD ITSA, Self Assessment, VAT and CT600. £24 per submission, no monthly subscription.',
+    'EasyTax vs QuickBooks, Xero, FreeAgent, Sage, Crunch, Coconut, KashFlow, Bokio and TaxScouts for MTD ITSA, Self Assessment, VAT and CT600. £24 per submission.',
   keywords: [
     'MTD software comparison',
     'best MTD software UK',

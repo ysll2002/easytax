@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import {
   recentArticles,
   recordFetch,
+  leadSection,
+  feedDescription,
   FEED_TITLE,
-  FEED_DESCRIPTION,
   FEED_CACHE,
   SITE,
 } from '../_lib/feed';
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
     {
       version: 'https://jsonfeed.org/version/1.1',
       title: FEED_TITLE,
-      description: FEED_DESCRIPTION,
+      description: feedDescription(),
       home_page_url: `${SITE}/tax-tips`,
       feed_url: `${SITE}/tax-tips/feed.json`,
       language: 'en-GB',
@@ -36,10 +37,13 @@ export async function GET(req: Request) {
         url: `${SITE}/tax-tips/${a.slug}`,
         title: a.title,
         summary: a.excerpt ?? '',
-        // No `content_html`: the excerpt answers the question and the article
-        // is one click away. Syndicating the full body would hand a scraper a
-        // clean copy of 113 pages we are trying to rank ourselves.
-        content_text: a.excerpt ?? '',
+        // This used to be the excerpt twice over, on the reasoning that
+        // syndicating the full body would hand a scraper a clean copy of the
+        // archive. `leadSection` keeps that concern and answers the other
+        // half of it: an answer engine judging whether this page answers a
+        // question cannot do it from two sentences. It carries the opening of
+        // the article and stops at an element boundary — see LEAD_CHARS.
+        content_html: leadSection(a.excerpt ?? '', a.content),
         date_published: new Date(a.published_at).toISOString(),
       })),
     },

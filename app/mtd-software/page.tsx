@@ -9,7 +9,7 @@ import { COMPETITORS } from '@/lib/competitors';
 
 export const metadata: Metadata = {
   title: pageTitle('MTD Software UK — Making Tax Digital for Income Tax'),
-  description: 'EasyTax is MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT per submission. No monthly subscription.',
+  description: 'MTD ITSA software on the HMRC MTD API for UK sole traders and landlords. Quarterly updates, Self Assessment, VAT and CT600 for £24 a filing. No subscription.',
   alternates: { canonical: 'https://easytax.vip/mtd-software' },
   openGraph: {
     title: 'MTD ITSA Software — EasyTax, £24 per Filing, No Subscription',
