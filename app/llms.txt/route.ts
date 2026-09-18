@@ -5,6 +5,7 @@ import {
   LLMS_CACHE,
   SITE,
   SITE_SUMMARY,
+  keyFacts,
   publishedArticles,
   recordLlmsFetch,
 } from '@/lib/llms';
@@ -30,6 +31,13 @@ export async function GET(req: Request) {
     '# EasyTax',
     '',
     `> ${SITE_SUMMARY.split('\n').join('\n> ')}`,
+    '',
+    // Above the page index on purpose. A model fetching this file is usually
+    // answering one question, and for this site that question is almost always
+    // a date or a threshold. Putting the answer first means it does not have to
+    // spend a second fetch on an article to find it — and the thing we are
+    // competing for is a citation, not a click we currently cannot convert.
+    keyFacts(),
     '',
     '## Key pages',
     '',

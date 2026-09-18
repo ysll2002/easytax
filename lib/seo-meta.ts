@@ -52,6 +52,8 @@
 // genuinely carried boilerplate are handled at the call site instead, by
 // passing the heading rather than the decorated string.
 
+import { fitHeadline } from './serp-title';
+
 /** Google renders roughly 600px of title, which is ~60 characters at the
  *  weights it uses. Past that the display is truncated. */
 export const TITLE_BUDGET = 60;
@@ -87,6 +89,9 @@ export type TitleReport = {
   /** True when the result is still longer than the budget — nothing safe was
    *  available. The audit counts these; they are visible, not hidden. */
   overBudget: boolean;
+  /** Which reductions `fitHeadline` applied, empty when none were needed or
+   *  none helped. The H1 is unaffected either way. */
+  shortened: string[];
 };
 
 /**
@@ -98,15 +103,27 @@ export function buildTitle(headline: string): TitleReport {
 
   const withBrand = head + BRAND_SUFFIX;
   if (withBrand.length <= TITLE_BUDGET) {
-    return { title: withBrand, brandDropped: false, overBudget: false };
+    return { title: withBrand, brandDropped: false, overBudget: false, shortened: [] };
   }
 
   if (head.length <= TITLE_BUDGET) {
-    return { title: head, brandDropped: true, overBudget: false };
+    return { title: head, brandDropped: true, overBudget: false, shortened: [] };
   }
 
-  // Rule 3: leave it whole rather than mangle it, and let the audit say so.
-  return { title: head, brandDropped: true, overBudget: true };
+  // Rule 3 used to end here: leave it whole rather than mangle it, and let the
+  // audit say so. The audit said so about 80 of 114 articles, for weeks.
+  //
+  // `fitHeadline` is the safe shortening that was missing — it removes words
+  // that carry no search intent and keeps the longest version that fits, or
+  // declines. When it declines, the old behaviour is exactly what happens.
+  // The H1 is built from the headline, not from this, so the page a reader
+  // lands on is unchanged either way.
+  const fitted = fitHeadline(head, TITLE_BUDGET);
+  if (fitted.fits) {
+    return { title: fitted.title, brandDropped: true, overBudget: false, shortened: fitted.applied };
+  }
+
+  return { title: head, brandDropped: true, overBudget: true, shortened: [] };
 }
 
 /**
@@ -142,6 +159,30 @@ export function metaDescription(text: string): string {
     window.lastIndexOf('! '),
   );
   if (sentence >= DESC_BUDGET * 0.6) return s.slice(0, sentence + 1);
+
+  // No sentence ends in time. That happens when the excerpt opens with one
+  // long sentence, and it is not rare: of the 114 published articles, 19 land
+  // here and every one of them shipped a search snippet that stopped
+  // mid-phrase — "…money actually lands in their account — not when they…".
+  //
+  // A clause boundary is the next best thing and reads as a finished thought
+  // rather than a interrupted one. Dashes, semicolons and colons all end a
+  // clause cleanly; a comma does too, but only just, so it is tried last and
+  // only when it is late enough to leave a usable description.
+  const clause = Math.max(
+    window.lastIndexOf(' — '),
+    window.lastIndexOf(' – '),
+    window.lastIndexOf('; '),
+    window.lastIndexOf(': '),
+  );
+  if (clause >= DESC_BUDGET * 0.55) {
+    return s.slice(0, clause).replace(/[,;:—–-]\s*$/, '').trimEnd() + '.';
+  }
+
+  const comma = window.lastIndexOf(', ');
+  if (comma >= DESC_BUDGET * 0.7) {
+    return s.slice(0, comma).trimEnd() + '.';
+  }
 
   const word = s.lastIndexOf(' ', DESC_BUDGET - 1);
   const cut = word > DESC_BUDGET * 0.5 ? word : DESC_BUDGET - 1;

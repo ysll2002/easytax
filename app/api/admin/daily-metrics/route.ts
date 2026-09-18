@@ -5,6 +5,11 @@ import { deploymentInfo } from '@/lib/deployment';
 import { readQueue } from '@/lib/review-queue';
 import { existingArticleRun } from '@/lib/editorial-run';
 import { coverage } from '@/lib/search-queries';
+import { STANDARD } from '@/lib/article-quality';
+import { clusterArticles, reviewCandidates, titleSimilarity } from '@/lib/article-clusters';
+import { schemaState } from '@/lib/schema-state';
+import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
+import { selectPublished } from '@/app/tax-tips/_lib/review';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -623,11 +628,58 @@ async function dataWindow() {
  *  healthy queue and there was no number anywhere saying the archive had
  *  stopped moving. A count of what is waiting is not a measure of whether
  *  anything is getting through. */
+/**
+ * How deep the archive actually is, against the standard it is written to.
+ *
+ * The one fact about this site's content that nothing has ever reported.
+ * `STANDARD.minWords` is 1,100 and `gradeArticle` has enforced it on every
+ * draft since 2026-09-14 — but on 2026-09-18 **not one of the 114 published
+ * articles reaches it**: they run 573 to 724 words, median 641. They were all
+ * written while `max_tokens` was 1500, so the cap, not the brief, decided how
+ * long they were, and raising the cap did nothing for the pages already
+ * published.
+ *
+ * `meets_standard: 0 of 114` is the number that frames the only real decision
+ * left on the content side, and the daily payload could not state it. The
+ * upgrade loop rewrites the weakest page on alternate days, so
+ * `backlog_days_at_current_rate` puts a date on "leave it running": at one
+ * rewrite every two days the archive meets its own standard some time in 2027.
+ * The alternatives — batching rewrites with `?count=`, or pruning the weakest
+ * pages instead of rewriting them — both cost money or pages, and are the
+ * owner's call. This exists so the call is made against a number.
+ */
+function archiveDepth(rows: { content: string | null }[]) {
+  const words = rows
+    .map(a => String(a.content ?? '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length)
+    .sort((a, b) => a - b);
+
+  if (words.length === 0) return { published: 0, note: 'no published articles' };
+
+  const meets = words.filter(n => n >= STANDARD.minWords).length;
+  // The cron alternates upgrade days with new-article days, one piece each, so
+  // the effective rewrite rate is one every two days.
+  const backlog = words.length - meets;
+
+  return {
+    published: words.length,
+    min_words: words[0],
+    median_words: words[Math.floor(words.length / 2)],
+    max_words: words[words.length - 1],
+    standard_min_words: STANDARD.minWords,
+    meets_standard: meets,
+    below_standard: backlog,
+    /** At one rewrite every other day, which is what the cron does unattended. */
+    backlog_days_at_current_rate: backlog * 2,
+    note:
+      'Bodies only, tags stripped. Every published article predates the 2026-09-14 raise of the generator\'s max_tokens; the upgrade arm of /api/cron/daily-article rewrites the weakest one on alternate days.',
+  };
+}
+
 async function editorialState(since7d: string) {
   const [queue, snapshots, titles] = await Promise.all([
     readQueue(),
     supabase.from('growth_snapshots').select('id', { count: 'exact', head: true }).gte('created_at', since7d),
-    supabase.from('tax_articles').select('title').eq('review_status', 'published').limit(1000),
+    supabase.from('tax_articles').select('title, content').eq('review_status', 'published').limit(1000),
   ]);
 
   // How much of the demand model the site actually answers.
@@ -640,9 +692,8 @@ async function editorialState(since7d: string) {
   // of progress — the pipeline grinding through the list, versus a page
   // somebody built on purpose — and because until 2026-09-13 coverage counted
   // only the archive and so reported the hand-built pages as pending.
-  const cover = titles.error
-    ? null
-    : coverage(((titles.data ?? []) as { title: string }[]).map(a => a.title));
+  const articleRows = titles.error ? [] : ((titles.data ?? []) as { title: string; content: string | null }[]);
+  const cover = titles.error ? null : coverage(articleRows.map(a => a.title));
 
   return {
     editorial:
@@ -651,6 +702,13 @@ async function editorialState(since7d: string) {
         : {
             drafts_awaiting_review: queue.drafts?.length ?? null,
             published: queue.publishedCount,
+            // Nested here rather than returned alongside `editorial`, because
+            // the caller picks `editorial.editorial` and drops every other key
+            // this function returns — which is how the first version of this
+            // field shipped, serialised nowhere, and was found only by calling
+            // the endpoint. `query_coverage` below survives because it is
+            // picked out by name.
+            archive_depth: titles.error ? null : archiveDepth(articleRows),
             last_published_at: queue.lastPublishedAt,
             // The freeze detector. Anything above 1 means the cron has written
             // an article that no reader can see.
@@ -1001,6 +1059,71 @@ async function lastSnapshotBlock(key: 'seo' | 'indexnow'): Promise<Record<string
   return { ...seo, from_snapshot: takenOn, age_days: ageDays };
 }
 
+/**
+ * How much of the published archive is the same page written twice, and which
+ * pages those are.
+ *
+ * Reported in full rather than as a count because the count alone is not
+ * actionable: "14 duplicates" tells a reader nothing they can check, whereas
+ * the elected primary and the headlines consolidated into it can be disagreed
+ * with. `review_candidates` is the pairs that look alike but sit below the
+ * threshold for acting on automatically — deliberately surfaced and
+ * deliberately not touched, because which of two overlapping angles should
+ * survive is an editorial judgement and not an agent's to make quietly.
+ */
+async function archiveDuplicationBlock(): Promise<Record<string, unknown>> {
+  if (!hasSupabaseEnv()) return { error: 'No Supabase credentials in this environment.' };
+
+  const { data, error } = await selectPublished(gated => {
+    const q = supabase.from('tax_articles').select('slug, title, published_at');
+    return (gated ? q.eq('review_status', 'published') : q)
+      .order('published_at', { ascending: false })
+      .limit(1000);
+  });
+
+  if (error || !data) {
+    return { error: `Archive unreadable: ${error?.message ?? 'no rows'}` };
+  }
+
+  const rows = data as unknown as { slug: string; title: string; published_at: string }[];
+  const clusters = clusterArticles(rows);
+  const canonicalised = clusters.reduce((n, c) => n + c.secondaries.length, 0);
+  const candidates = reviewCandidates(rows);
+
+  return {
+    note:
+      'Near-duplicate published articles, grouped by headline similarity. ' +
+      'Secondaries keep their URLs and still render — they carry a canonical tag ' +
+      'pointing at the primary and are dropped from the sitemap, the feeds and ' +
+      'llms.txt. Nothing here is deleted or unpublished. See lib/article-clusters.ts.',
+    published: rows.length,
+    clusters: clusters.length,
+    canonicalised,
+    indexable: rows.length - canonicalised,
+    duplication_rate: rows.length > 0 ? +(canonicalised / rows.length).toFixed(3) : 0,
+    sets: clusters.map(c => ({
+      primary: c.primary.title,
+      primary_slug: c.primary.slug,
+      canonicalised: c.secondaries.map(s => ({
+        title: s.title,
+        slug: s.slug,
+        similarity: +titleSimilarity(c.primary.title, s.title).toFixed(2),
+      })),
+    })),
+    review_candidates: {
+      note:
+        'Below the automatic threshold and left alone. A person decides whether ' +
+        'these are two angles or one page written twice.',
+      count: candidates.length,
+      pairs: candidates.slice(0, 10).map(p => ({
+        similarity: p.similarity,
+        a: p.a.title,
+        b: p.b.title,
+      })),
+    },
+  };
+}
+
 export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
   const now      = new Date();
   const since24h = new Date(now.getTime() - 24  * 60 * 60 * 1000).toISOString();
@@ -1253,6 +1376,21 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       // person, and how many articles are actually live. A queue that only
       // grows means the gate has become a bottleneck rather than a standard.
       editorial: editorial.editorial,
+
+      // How much of the archive is the same page written more than once.
+      // On 2026-09-17 this was 14 of 113 published articles across six
+      // subjects, on a site drawing six search visitors a week and surfacing
+      // exactly one page — the homepage — for a `site:` query. Duplicates are
+      // consolidated by canonical tag rather than deleted, so
+      // `canonicalised` is how many URLs still exist and resolve but are no
+      // longer offered to a crawler as separate pages.
+      archive_duplication: await archiveDuplicationBlock(),
+
+      // Which migrations in supabase/migrations/ have actually run. Added
+      // after F47 shipped on 2026-09-16 with a migration that was never
+      // applied, degraded silently exactly as designed, and did nothing for a
+      // day without a single counter moving. `pending` must be empty.
+      schema: await schemaState(),
 
       // Stored daily snapshots, which is what makes the weekly review a
       // comparison rather than a reading.

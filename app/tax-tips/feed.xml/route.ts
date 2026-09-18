@@ -3,8 +3,9 @@ import {
   recentArticles,
   recordFetch,
   xmlEscape,
+  leadSection,
+  feedDescription,
   FEED_TITLE,
-  FEED_DESCRIPTION,
   FEED_CACHE,
   SITE,
 } from '../_lib/feed';
@@ -28,6 +29,14 @@ function rfc822(iso: string): string {
   return Number.isNaN(d.getTime()) ? new Date().toUTCString() : d.toUTCString();
 }
 
+/** The one sequence that cannot appear inside a CDATA section. Splitting it
+ *  across two sections is the standard escape and is invisible to a parser;
+ *  the alternative — entity-escaping the whole body — would defeat the point
+ *  of using CDATA for HTML. */
+function cdataSafe(s: string): string {
+  return s.replace(/]]>/g, ']]]]><![CDATA[>');
+}
+
 export async function GET(req: Request) {
   const articles = await recentArticles();
   recordFetch('rss', req, '/tax-tips/feed.xml');
@@ -41,18 +50,22 @@ export async function GET(req: Request) {
       <guid isPermaLink="true">${xmlEscape(url)}</guid>
       <pubDate>${rfc822(a.published_at)}</pubDate>
       <description>${xmlEscape(a.excerpt ?? '')}</description>
+      <content:encoded><![CDATA[${cdataSafe(leadSection(a.excerpt ?? '', a.content))}]]></content:encoded>
     </item>`;
     })
     .join('\n');
 
   // `atom:link rel="self"` is required by the RSS validator and is what lets a
   // reader that was handed the feed's contents work out where to poll next.
+  // `content:encoded` is the RSS 1.0 content module, which is how RSS 2.0
+  // carries HTML — the namespace has to be declared or readers ignore the
+  // element.
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>${xmlEscape(FEED_TITLE)}</title>
     <link>${SITE}/tax-tips</link>
-    <description>${xmlEscape(FEED_DESCRIPTION)}</description>
+    <description>${xmlEscape(feedDescription())}</description>
     <language>en-gb</language>
     <lastBuildDate>${articles[0] ? rfc822(articles[0].published_at) : new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${FEED_URL}" rel="self" type="application/rss+xml" />

@@ -72,15 +72,31 @@ export function jsonLdTypes(html: string): string[] {
     /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
   ) ?? [];
   const types: string[] = [];
+
+  /** `@graph` is how JSON-LD expresses several linked entities in one block,
+   *  and it is what `lib/site-entity.ts` emits from the root layout —
+   *  Organization, WebSite and SoftwareApplication, cross-referenced by `@id`.
+   *  Reading only the top-level `@type` made every page carrying that graph
+   *  look like a page carrying no structured data at all: the four pages with
+   *  no markup of their own would have been reported as `no_json_ld` the
+   *  morning the entity graph shipped, and `json_ld_coverage` would have
+   *  fallen from 156/156 for a change that added entities rather than
+   *  removing them. Nested one level, which is all the spec's `@graph` is. */
+  const collect = (node: unknown): void => {
+    if (!node || typeof node !== 'object') return;
+    const t = (node as { '@type'?: unknown })['@type'];
+    if (typeof t === 'string') types.push(t);
+    else if (Array.isArray(t)) types.push(...t.filter((x): x is string => typeof x === 'string'));
+
+    const graph = (node as { '@graph'?: unknown })['@graph'];
+    if (Array.isArray(graph)) for (const child of graph) collect(child);
+  };
+
   for (const block of blocks) {
     const body = block.replace(/^<script[^>]*>/i, '').replace(/<\/script>$/i, '');
     try {
       const parsed = JSON.parse(body) as unknown;
-      for (const node of Array.isArray(parsed) ? parsed : [parsed]) {
-        const t = (node as { '@type'?: unknown })?.['@type'];
-        if (typeof t === 'string') types.push(t);
-        else if (Array.isArray(t)) types.push(...t.filter((x): x is string => typeof x === 'string'));
-      }
+      for (const node of Array.isArray(parsed) ? parsed : [parsed]) collect(node);
     } catch {
       types.push('(unparseable)');
     }
@@ -393,12 +409,40 @@ export function compactSummary(base: string, urlCount: number, analysis: SeoAnal
     problem_counts,
     duplicate_titles: duplicate_titles.slice(0, 5).map(d => ({ title: d.value, paths: d.paths })),
     duplicate_descriptions: duplicate_descriptions.slice(0, 5).map(d => ({ count: d.count, paths: d.paths })),
+    // Which pages, not just how many.
+    //
+    // Until 2026-09-18 this listed five categories and every one of them was
+    // empty, while the three that were not — 80 titles over budget, 23
+    // descriptions outside the usable range, 7 pages under 600 words — were
+    // reported as bare integers with no way to learn which pages they were.
+    // The report named only the problems it did not have.
+    //
+    // That is the seventh instance in this project of a control existing and
+    // the number that would show it misfiring not being reported. It is also
+    // why "80" sat in the payload for four days without anybody being able to
+    // act on it: acting on it required a crawl of your own.
+    //
+    // Sorted worst-first within each category and capped, because the payload
+    // is read by a person and a list nobody scrolls to the end of is a list
+    // nobody reads.
     worst_offenders: {
       not_200: analysis.problems.not_200.slice(0, 10),
       brand_repeated_in_title: analysis.problems.brand_repeated_in_title.slice(0, 5),
       brand_pushed_title_over_budget: analysis.problems.brand_pushed_title_over_budget.slice(0, 10),
       noindex_but_in_sitemap: analysis.problems.noindex_but_in_sitemap.slice(0, 10),
       canonical_mismatch: analysis.problems.canonical_mismatch.slice(0, 10),
+      title_over_60: [...analysis.problems.title_over_60]
+        .sort((a, b) => b.length - a.length)
+        .slice(0, 10),
+      description_outside_70_160: [...analysis.problems.description_outside_70_160]
+        .sort((a, b) => Math.abs(b.length - DESC_MAX) - Math.abs(a.length - DESC_MAX))
+        .slice(0, 10),
+      thin_under_600_words: [...analysis.problems.thin_under_600_words]
+        .sort((a, b) => a.words - b.words)
+        .slice(0, 10),
+      orphan_risk_few_internal_links: [...analysis.problems.orphan_risk_few_internal_links]
+        .sort((a, b) => a.links - b.links)
+        .slice(0, 10),
     },
   };
 }
