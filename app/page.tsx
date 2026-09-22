@@ -101,9 +101,9 @@ export default async function Home() {
           computed source as the hero pill, so it cannot drift again. */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span>{' '}
+          <span style={{ color: '#FFD23F' }}>{t('announcement.live')}</span>{' '}
           {nextDeadline && <>{t('announcement.nextUpdate', { date: nextDeadline.deadlineLabel })} </>}
-          <span style={{ color: '#6B8E6E' }}>{t('announcement.status')}</span>
+          <span style={{ color: '#8FB0FF' }}>{t('announcement.status')}</span>
         </p>
       </div>
 
@@ -111,24 +111,29 @@ export default async function Home() {
 
       <main className="flex-grow">
 
-        {/* ── Hero ── */}
-        <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-24 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4622D 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+        {/* ── Hero ──
+            "Friendly Flat" direction, previewed 2026-09-22: thick flat ink
+            outlines and one cobalt + one yellow accent instead of the soft
+            gradient blob and rounded-pill look below. Deliberately scoped to
+            this section only — SiteHeader and every section below keeps the
+            existing cream/terra/sage look until this direction is decided;
+            expanding it further is a separate, larger change. */}
+        <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-24 overflow-hidden" style={{ backgroundColor: '#F9F8F2' }}>
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
                 {nextDeadline && (
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
-                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-semibold mb-6 sm:mb-8" style={{ border: '2.5px solid #1C1208', color: '#1C1208', backgroundColor: '#FFD23F', borderRadius: '10px' }}>
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#1C1208' }} />
                     {t('hero.pill', { days: daysToNext, date: nextDeadline.deadlineLabel })}
                   </div>
                 )}
 
-                <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
+                <h1 style={{ fontFamily: 'var(--font-hero), "Space Grotesk", sans-serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.01em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
                   {t('hero.title1')}<br />
-                  <span style={{ color: '#6B8E6E' }}>{t('hero.title2')}</span>{' '}
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('hero.title3')}</em>
+                  <span style={{ color: '#1D4ED8' }}>{t('hero.title2')}</span>{' '}
+                  {t('hero.title3')}
                 </h1>
 
                 <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '520px' }}>
@@ -136,29 +141,29 @@ export default async function Home() {
                 </p>
 
                 <div className="flex items-center gap-3 mb-7 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold" style={{ backgroundColor: '#1D4ED8', color: '#FDFCF8', border: '2.5px solid #1C1208', borderRadius: '8px' }}>
                     {t('hero.badgeFree')}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '2.5px solid #1C1208', borderRadius: '8px' }}>
                     {t('hero.badgeNoCard')}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '2.5px solid #1C1208', borderRadius: '8px' }}>
                     {t('hero.badgeHmrc')}
                   </span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
+                  <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 font-semibold text-sm text-center transition-all" style={{ backgroundColor: '#1D4ED8', color: '#FDFCF8', border: '2.5px solid #1C1208', borderRadius: '12px' }}>
                     {t('hero.ctaPrimary')}
                   </Link>
-                  <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}>
+                  <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 font-semibold text-sm text-center transition-all" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '2.5px solid #1C1208', borderRadius: '12px' }}>
                     {t('hero.ctaSecondary')}
                   </a>
                 </div>
               </div>
 
               <div className="hidden lg:block flex-shrink-0" style={{ width: '480px' }}>
-                <div style={{ borderRadius: '1rem', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.12)', border: '1px solid #E8E2DA' }}>
+                <div style={{ borderRadius: '1.25rem', overflow: 'hidden', border: '3px solid #1C1208', boxShadow: '10px 10px 0 rgba(28,18,8,0.12)' }}>
                   <img
                     src="/dashboard-preview.png"
                     alt="EasyTax dashboard"

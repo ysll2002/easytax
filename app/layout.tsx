@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import { Playfair_Display, DM_Sans, Space_Grotesk } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import "./globals.css";
@@ -18,6 +18,15 @@ const playfair = Playfair_Display({
 
 const dmSans = DM_Sans({
   variable: "--font-body",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// Used only by the homepage hero while its "Friendly Flat" restyle
+// (2026-09-22) is being previewed on staging — a candidate direction away
+// from the Playfair serif look, not yet applied anywhere else on the site.
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-hero",
   subsets: ["latin"],
   display: "swap",
 });
@@ -142,7 +151,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           }}
         />
       </head>
-      <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>
+      <body className={`${playfair.variable} ${dmSans.variable} ${spaceGrotesk.variable} antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers>{children}</Providers>
           <ContactWidget />
