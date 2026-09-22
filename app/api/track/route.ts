@@ -25,6 +25,8 @@ const ALLOWED = new Set([
   'article_cta_click',
   'checker_started',
   'checker_completed',
+  'schedule_requested',
+  'editorial_standards_viewed',
   // Free tools. `tool_started` / `tool_completed` carry the tool name in
   // props.tool rather than in the event name, so adding a fourth calculator
   // does not mean adding two more names here and two more queries in
