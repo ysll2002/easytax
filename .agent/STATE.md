@@ -72,6 +72,10 @@ repo 里有一套**不受本 RUNBOOK 治理**的自动化系统，在 `main` 分
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)
   （待 owner 审核合并到 `staging`）——修复 `schedule_requested` / `editorial_standards_viewed`
   两个埋点事件被静默丢弃的 bug。
+- `agent/2026-09-22-hero-friendly-flat-preview` → [PR #25](https://github.com/ysll2002/easytax/pull/25)
+  （待 owner 看 Vercel preview 决定）——首页 hero「Friendly Flat」视觉方向预览，owner 实时对话中
+  明确要求实现（见 BACKLOG stg-006、JOURNAL 2026-09-22）。只改了 hero + 公告条，SiteHeader 和
+  其余板块未动。
 
 ## 待复盘的 metric
 

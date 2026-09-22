@@ -13,6 +13,7 @@
 | stg-003 | 用 human unique visitors 作为流量北极星，而非总 PV | done | LOW | STATE.md/JOURNAL.md 起用新口径 | — | 纯记忆/报告口径调整，非 repo 代码改动，2026-09-18 起生效 |
 | stg-004 | 内容深度补课：114 篇文章 median 641 字，0 篇达标 1100 字 | proposed | LOW | archive_depth 达标篇数 | — | BLOCKED —— 属于另一套 editorial pipeline 职责范围，本 agent 只监控 |
 | stg-005 | Alternative 对比页（9 个）30 天内 0 访问，考虑站外获客而非站内优化 | proposed | N/A | 9 个页面中至少 1 个 30 天内出现非 0 UV | — | 已确认非内链问题（SiteFooter.tsx 已全站互链），PROPOSE-ONLY。2026-09-22：30d 口径下 /freeagent-alternative 首次出现 1 UV，其余 8 个仍 0 |
+| stg-006 | 首页视觉改版："Friendly Flat" 方向（粗描边+cobalt/yellow强调色）预览 | in-progress | MEDIUM | owner 看完 staging 预览后决定是否推广到全站 | `agent/2026-09-22-hero-friendly-flat-preview` / [PR #25](https://github.com/ysll2002/easytax/pull/25) | owner 反馈首页太像 AI 生成网站 → 出了 3 个设计方向 → owner 选中方向 C → 已应用到首页 hero（仅 hero + 公告条，SiteHeader 和其余板块未动），owner 明确要求实现，超出当日 1 项额度但因是 owner 直接指令而做，见 JOURNAL 2026-09-22。等 owner 看完 Vercel PR 预览决定：ship it（合 staging）/ 调整方向 / 推广到全站（更大范围的改动，需要单独评估） |
 
 ## Owner 的长期禁区 / 已否决方向
 

@@ -50,6 +50,29 @@ Production 部署与 main HEAD 一致（commit 7bf7bde）但已 5 天没有新�
   按现有护栏刻意避开 SEO/editorial/RSS 领域。
 **失败**：无（Gmail 搜索、指标接口、git fetch/pull/push、gh pr create、tsc 均正常）。
 
+**补充（同日，owner 实时对话）**：owner 反馈 easytax.vip 首页视觉太像 AI 生成的网站。诊断后认为
+问题不在配色本身（暖白+赤陶+鼠尾草+serif 其实已有辨识度），而在版式套路——处处 rounded-full 药丸、
+rounded-2xl 卡片、统一三栏网格，是 Tailwind/v0/Cursor 这类工具的默认"形状语言"。用 Design canvas
+artifact 出了 3 个方向的首页 hero 设计稿（A 大色块斜切、B 车票邮戳感、C 粗描边扁平 friendly-flat），
+owner 选中 C（蓝色系）。随后 owner 明确要求把 C 应用到真实代码并推到 staging 预览。
+
+**第二项实现（今日第 2 项，超出日常"每天最多 1 项"护栏 —— 例外原因：owner 在对话中实时明确要求，
+不是本 agent 自主选择的 backlog 条目，因此判断不适用该护栏，但记录在案以备复盘）**：
+分支 `agent/2026-09-22-hero-friendly-flat-preview`，
+[PR #25](https://github.com/ysll2002/easytax/pull/25)（对 `staging`，待 owner 审核）。
+只改了首页 hero + 顶部公告条（`app/page.tsx`）和新增一个 additive 的 Space Grotesk 字体变量
+（`app/layout.tsx`，不影响其他任何页面）：粗描边（2.5–3px ink）替代圆角药丸和模糊投影，新增
+cobalt `#1D4ED8` + yellow `#FFD23F` 两个强调色（逐一做了 WCAG AA 对比度检查，深色公告条上
+cobalt 对比度不够改用浅色调 `#8FB0FF`），删掉了首页最明显的"AI 味"装饰元素——hero 背后那个
+径向渐变光斑。**刻意没有动** `SiteHeader`（全站共用）和首页 hero 以下的所有板块，保持这是一次
+可回退的定向预览，不是全站重设计。所有文案保持不变（沿用相同的 next-intl key）。
+`npx tsc --noEmit` 通过。本次运行处于非交互/定时任务会话，无法本地起 dev server 预览
+（unattended session 限制），验收要靠 PR 的 Vercel preview 部署。
+**学到 / 决定**：owner 明确要求的改动，即使当天已经用掉「自主实现 1 项」的额度，也应该去做，
+不应该以护栏为由拒绝执行owner的直接指令——护栏管的是本 agent 自主判断要不要动手，不是 owner
+本人明确要求时的执行边界。以后遇到owner在对话里直接要求实现的情况，按此判断，仅在记录里注明
+"超出当日常规额度、因 owner 明确要求而做"即可，不需要因为已经实现过 1 项就拒绝。
+
 ---
 
 ## 2026-09-18（首次真实运行）
