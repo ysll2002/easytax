@@ -56,6 +56,67 @@ GitHub Actions 发的是传进去的 ref，两者都可以是任何分支，于�
 - 如果 `/tmp/easytax` 目录丢失（例如重启），需重新克隆：`git clone https://github.com/ysll2002/easytax /tmp/easytax && cd /tmp/easytax && git checkout staging`
 - HMRC sandbox 的 staging redirect URI 暂未生效，staging 目前使用 `https://easytax.vip/api/auth/callback/hmrc` 作为 HMRC_REDIRECT_URI 的临时绕过方案
 
+## 增长背景与数据源（每轮开始前必读）
+
+每天的定时任务都是一个**全新会话，没有任何对话记忆**。这一节写的是查不出来、
+只能靠记录传递的事实。不读这一节，就会重复已经做过的判断。
+
+### 每轮开始前必做的三件事
+
+1. 读**最近一篇** `GROWTH_*.md`（不是最早那篇）
+2. 查 **open PR**：`gh pr list` 或 GitHub MCP。截至 2026-09-22，最近 7 轮里有
+   4 轮开头都在收拾上一轮没合并的 PR —— 先看有没有搁置的，再开新工作
+3. 读本节下面的「数据源」和「渠道历史」
+
+### 数据源：有什么、没什么
+
+| 数据源 | 能用吗 | 覆盖范围 |
+|---|---|---|
+| Supabase（`analytics_events`、`profiles`、`growth_snapshots` 等） | ✅ 可直连，环境变量里有 `SUPABASE_SERVICE_ROLE_KEY` | 埋点 **2026-09-03 起**，之前没有 |
+| `profiles` / `hmrc_connections` 表 | ✅ | 追到 2026-04 |
+| `https://easytax.vip/api/admin/daily-metrics` | ❌ **被 egress proxy 拦截**，已连续 7 轮拉不到 | — |
+| Google Analytics（`G-ZF21G9RTJW`） | ⚠️ 站上装了，但 agent 读不到（Windsor.ai connector 在会话里未启用） | 约 2026-06 起 |
+| Google Search Console | ❌ **未接入** | — |
+| staging.easytax.vip | ⚠️ 开着 Vercel SSO，sandbox 过不去；验收要用本地生产构建 | — |
+
+**不要再花时间重新发现这些。** 拉不到 `daily-metrics` 就直接读 Supabase，
+`growth_snapshots` 里存着每天 cron 写的完整 payload。
+
+### 测试账号必须排除
+
+`profiles` 里有 7 个是 owner 自己的测试账号。任何关于注册数、转化率的结论，
+**必须先剔除**，否则会高估 17%（注册）和 50%（HMRC 连接）。
+
+判定规则：email 含 `lilin.gabriel` / `ysll2002` / `test`，或 name 含
+`test` / `lin li` / `xueyan`。
+
+截至 2026-09-22 的**真实**数字：注册 **41**（不是 48），HMRC 连接 **12**（不是 18），
+转化率 **29%**（不是 37.5%），申报 **0**，MRR **£0**。
+
+### 渠道历史：唯一有效过的是 Reddit
+
+- **2026-06**：owner 在 Reddit 发帖带 easytax 链接 → 约 3 个帖子带来
+  **29 个真实注册**，占这个产品历史上全部真实用户的 **71%**。每帖约 10 个。
+- **2026-07 初**：Reddit 开始删帖/限制，渠道关闭。注册从 6 月的 26 掉到
+  7 月 10、8 月 3、9 月 **1**。
+- **SEO（114 篇文章 + 14 轮迭代）**：至今带来过 **1 个**真实注册
+  （2026-09-15，从 Google 进来，当天连了 HMRC）。搜索来源约 6 人/周，无增长。
+- **2026-08-25 首页从免费改成 £24/filing**：**不是**下滑原因。下滑在改价前
+  就已经走完（断点是 6→7 月的 Reddit，不是 8 月底的改价）。
+
+完整分析见 `GROWTH_2026-09-22.md`。
+
+**约束是分发，不是产品。** 41 个真人看到产品，12 个连了 HMRC（29%），
+在一个还不能报税的 app 上。不要把「转化不行」当作问题来解。
+
+### 不得自动化的事
+
+- **不得自动向 Reddit 或任何社区平台发帖/发链接。** 这正是导致封禁的行为，
+  违反平台规则，且用机器人冒充真人做营销本身就不对。重建社区存在感是
+  owner 本人的事，agent 只能准备素材。
+- **不得发送对外邮件给真实用户**（例如 reactivation campaign）。对外、不可撤回，
+  需要 owner 明确同意。
+
 ## Mobile-First Design Rules
 
 **所有页面和组件的设计与开发，必须遵循 mobile-friendly 原则：**

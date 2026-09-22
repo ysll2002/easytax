@@ -9,7 +9,7 @@ import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: pageTitle('Pricing — £24 per HMRC filing, no subscription'),
-  description: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600. No monthly subscription. No card needed to sign up.',
+  description: '£24 inc. VAT per HMRC submission — MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600. No monthly subscription, no card needed to sign up.',
   alternates: { canonical: 'https://easytax.vip/pricing' },
   openGraph: {
     title: 'EasyTax Pricing — £24 per Filing, No Subscription',

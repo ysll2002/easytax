@@ -8,7 +8,7 @@ import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: pageTitle('Self Assessment Software UK — £24 per Filing'),
-  description: 'EasyTax is Self Assessment software built on the HMRC MTD API for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC for £20 + VAT per submission. No monthly subscription.',
+  description: 'Self Assessment software on the HMRC MTD API for UK sole traders. File SA100, SA103, SA105 and MTD ITSA updates for £24 per submission. No monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/self-assessment-software' },
   openGraph: {
     title: 'Self Assessment Software UK — EasyTax, £24 per Filing',
