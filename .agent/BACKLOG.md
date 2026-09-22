@@ -7,11 +7,12 @@
 
 | id | 标题 | 状态 | Risk | Metric | 分支 / PR | 备注 |
 |---|---|---|---|---|---|---|
-| stg-001 | 查清两套自动化增长系统的分工 | proposed | N/A | owner 给出书面分工 | — | 见下方说明；BLOCKED，需 owner 决定 |
-| stg-002 | 诊断 CTA / checker 转化事件为何从未在 production 触发 | proposed | LOW | 每个 never_fired 事件标注「代码没挂上」/「没人点」 | — | PROPOSE-ONLY，需先读代码不改代码 |
+| stg-001 | 查清两套自动化增长系统的分工 | proposed | N/A | owner 给出书面分工 | — | 见下方说明；BLOCKED，需 owner 决定。2026-09-22：main 已推进到 PR#20，仍有 #21/#22/#23 挂起 4–6 天未合，production 落后 main 0 个提交但 5 天没有新合并 |
+| stg-002 | 诊断 CTA / checker 转化事件为何从未在 production 触发 | in-progress | LOW | 每个 never_fired 事件标注「代码没挂上」/「没人点」 | `agent/2026-09-22-fix-schedule-event-tracking` / [PR #24](https://github.com/ysll2002/easytax/pull/24) | 2026-09-22 完成诊断，见 JOURNAL。已修 2 个真 bug（schedule_requested 改名未接 allowlist、editorial_standards_viewed 漏 allowlist），已开 PR。article_cta_click/checker_started/checker_completed/tool_cta_click 确认代码没问题，是流量太小没人点。calendar_cta_click/reactivation_sent/share_click/share_copy 确认代码里根本不存在调用点（未建的功能，非 bug）。launch_subscribed 所属旧功能已被 DeadlineScheduleForm 取代。剩余 stg-002b：schedule_sent（邮件真发送后应打的点）在 app/api/schedule/route.ts 里完全没有 track() 调用，需要单独一天实现 |
+| stg-002b | 给 /api/schedule/route.ts 的邮件发送成功路径补上 schedule_sent 的 track() 调用 | proposed | LOW | schedule_sent 从 never_fired 移除 | — | 从 stg-002 拆出来的后续项，PROPOSE-ONLY（今天已经用掉当日 1 项实现额度） |
 | stg-003 | 用 human unique visitors 作为流量北极星，而非总 PV | done | LOW | STATE.md/JOURNAL.md 起用新口径 | — | 纯记忆/报告口径调整，非 repo 代码改动，2026-09-18 起生效 |
 | stg-004 | 内容深度补课：114 篇文章 median 641 字，0 篇达标 1100 字 | proposed | LOW | archive_depth 达标篇数 | — | BLOCKED —— 属于另一套 editorial pipeline 职责范围，本 agent 只监控 |
-| stg-005 | Alternative 对比页（9 个）30 天内 0 访问，考虑站外获客而非站内优化 | proposed | N/A | 9 个页面中至少 1 个 30 天内出现非 0 UV | — | 已确认非内链问题（SiteFooter.tsx 已全站互链），PROPOSE-ONLY |
+| stg-005 | Alternative 对比页（9 个）30 天内 0 访问，考虑站外获客而非站内优化 | proposed | N/A | 9 个页面中至少 1 个 30 天内出现非 0 UV | — | 已确认非内链问题（SiteFooter.tsx 已全站互链），PROPOSE-ONLY。2026-09-22：30d 口径下 /freeagent-alternative 首次出现 1 UV，其余 8 个仍 0 |
 
 ## Owner 的长期禁区 / 已否决方向
 
