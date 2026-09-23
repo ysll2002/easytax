@@ -15,6 +15,38 @@
 
 ---
 
+## 2026-09-23
+
+**HMRC**：⚠️ **重大外部变化**。HMRC 开发者指南 *Income Tax MTD end-to-end service guide*（页面标注
+「Updated 15 September 2026」）Overview 顶部新增横幅：HMRC「no longer accepting production credential
+access requests for new 2026–27 quarterly update products」，理由是 market window 已关闭。页面**没有说**
+已在审中的申请如何处理、也没有说 2027–28 何时重开。线索来源：owner 今天 12:12 UTC 发给自己的一封
+「tax mtd chatgpt分析」邮件提到这点，本 agent 用 WebFetch 直接读 HMRC 原页面核实过。EasyTax 的 ITSA
+production 审批仍 PENDING（FPH review，Aleesah Sher / Ciaran McLaughlin），**必须由 owner 向 HMRC 书面确认
+我们的在审申请是否受影响**。VAT 路径（app 也调用 `/organisations/vat/`）不在该横幅范围内。
+24h 内无 HMRC 官方来信。其他命中：另一系统「4 天没发文章，1 篇草稿待审」告警（09:04 UTC）、
+Coconut 营销邮件、Vercel `agent/journal` 预览部署失败（预期内）。
+**指标**（18:34 UTC）：注册 48(+0) · HMRC 连接 18(+0, 转化 37.5%) · 申报 0(+0) · MRR £0。
+**7d 注册 0、7d HMRC 连接 0**（上次 7d 各为 1）——现在已经连续 ≥7 天零新增注册。
+7d human visitors 32（上次 30），human_share 72.9%。GA4 7d：Direct 19 用户 / Organic 13（**Bing 7 > Google 6**）/
+Referral 2（`test-www.tax.service.gov.uk` 7 sessions，是 HMRC sandbox 回跳，不是真实流量）/ chatgpt.com 1。
+Production 构建已 7 天（commit 7bf7bde），main 无新合并；PR #21/#22/#23（另一系统）+ #24/#25（本 agent）全部未合。
+**今日执行**：**没有实现**。Top 1（stg-007，确认 HMRC 截止令对在审申请的影响）Category=compliance、
+Action=BLOCKED（只有 owner 能联系 HMRC），不满足自主实现门槛；按护栏不顺延到 Top 2（stg-002b 本来符合条件）。
+**Top 5**：1. stg-007 向 HMRC 书面确认在审 ITSA 申请是否受 2026-09-15 截止令影响 2. stg-008 把 PR #24 送上
+production（它目前只对 staging，而 production 只从 main 构建——合进 staging 并不会让埋点在线上生效）
+3. stg-002b 补 schedule_sent 埋点 4. stg-009 会计师渠道探索（PROPOSE-ONLY，取决于 stg-007 结果）
+5. stg-001 两套自动化系统分工（仍 BLOCKED）
+**学到 / 决定**：
+- HMRC 已对新的 2026–27 ITSA 季度更新产品关闭 production 凭证申请（2026-09-15 起）。这是跨天有效的外部约束，
+  已写入 memory（easytax-hmrc-itsa-cutoff）。在 owner 拿到 HMRC 答复前，任何「等审批通过就开收费」的收入假设都要打问号。
+- 发现部署链路上的一个坑：本 agent 的 PR 都对 `staging`，但 production 只从 `main` 构建（`deployment.built_from_main`）。
+  所以 PR #24 合进 staging 后，线上 `never_fired` 不会变化，直到 staging→main 再合一次。复盘日期要按此顺延。
+- Bing organic 已经和 Google 持平甚至略多（7 vs 6 用户）——IndexNow（另一系统在推）可能在起作用，只记录不动手。
+**失败**：无（git、指标接口、Gmail、GA4、WebFetch 均正常）。
+
+---
+
 ## 2026-09-22
 
 **HMRC**：PENDING，过去 4 天（newer_than:4d）无相关邮件。找到另一系统自己的「11 天没发文章」
