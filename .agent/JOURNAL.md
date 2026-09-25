@@ -32,6 +32,9 @@ CMQAA-712 把我们发的 userId 哈希判为 dummy 值，所以才删掉，两�
 用 update_draft 修改时草稿脱离了原 HMRC 线程，所以在线程里重新建了一份（id r9140492644388941147）；
 脱离线程的旧草稿（r-6678069759678272716）要 owner 手动删掉，agent 不删除。另外注意：`lib/hmrc.ts` 注释和
 2026-08-22 给 HMRC 的邮件里都写了「free to all users」，已经过时。`app/payment/page.tsx` 仍是模拟支付（没接 Stripe）。
+**补充（同日）**：owner 跑 sandbox test 时 5 个 VAT 调用显示红 ✕、状态码「—」。诊断：这个 HMRC 连接上没有存 VRN，
+所以被 PR #17 的逻辑跳过了（不是失败）。owner 在 Profile 填了 VRN 后已经跑通。页面把「跳过」画成失败、路径显示
+「GET GET」是显示 bug，已向 owner 提议只改 `app/dashboard/individual/sandbox-test/page.tsx`，owner 尚未批准。
 **待 owner**：①审阅并发送草稿 ②亲自用 ≥2 台设备、≥2 个用户在浏览器里重跑一轮 sandbox 覆盖测试，并用 Test API
 validation-feedback 验证。
 
