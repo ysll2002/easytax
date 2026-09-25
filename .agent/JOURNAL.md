@@ -15,6 +15,23 @@
 
 ---
 
+## 2026-09-25（owner 实时对话，非定时运行）
+
+**HMRC**：owner 贴来 2026-09-24 12:25 UTC 的 FPH 回信（CMQAA-923 / 2026-NQM717，Aleesah Sher）。审的是 9-23 12:16 UTC
+那批 sandbox 流量。`Gov-Client-Multi-Factor`：HMRC 接受省略。`Gov-Vendor-License-IDs`：「Header required」——但 8 月 VAT 工单
+CMQAA-712 把我们发的 userId 哈希判为 dummy 值，所以才删掉，两次反馈互相矛盾。HMRC 规范（web-app-via-server）对该头的描述是
+「hashed license keys」，没有许可证时属于「missing data」，要按缺失数据指引处理。代码现状（main `lib/hmrc.ts` fraudHeaders）两个头都省略，只读未改。
+**今日执行**：owner 在 A（先回信解释）/ B（实现真实的每用户许可证 ID）/ A+B 中选了 **A**。已在 HMRC 线程里用 `create_draft`
+存了英文回信草稿（未发送），抄送 makingtaxdigital-softwarevendors：确认继续省略 MFA；按 missing-header-data 指引正式通知没有许可证密钥、
+引用 CMQAA-712 的 dummy 值结论、请求像 MFA 一样记录，或告诉我们应该发什么值；承诺用不同设备和用户重测；问截止令是否影响我们 7 月提交的申请。
+没有改代码。
+**学到 / 决定**：9-15 截止之后 HMRC 仍在审我们的申请，stg-007 的风险降低但还没有正式答复。License-IDs 的
+处理方式要等 HMRC 回复；如果对方坚持要，方案 B 需要 owner 另外批准（合规禁区 + DB schema）。
+**待 owner**：①审阅并发送草稿 ②亲自用 ≥2 台设备、≥2 个用户在浏览器里重跑一轮 sandbox 覆盖测试，并用 Test API
+validation-feedback 验证。
+
+---
+
 ## 2026-09-23
 
 **HMRC**：⚠️ **重大外部变化**。HMRC 开发者指南 *Income Tax MTD end-to-end service guide*（页面标注

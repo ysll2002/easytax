@@ -2,7 +2,7 @@
 
 > 每日 agent 每次运行后**覆盖写**这个文件。要看历史请查 `JOURNAL.md`。
 
-**最后更新：2026-09-23（18:34 UTC 指标快照）**
+**最后更新：2026-09-25（owner 对话：HMRC FPH 回信；指标仍是 2026-09-23 18:34 UTC 快照）**
 
 ## HMRC
 
@@ -13,7 +13,15 @@
   new 2026–27 quarterly update products, as the market window for these products has now closed」。
   页面没说在审申请怎么处理，也没说 2027–28 何时重开。**需要 owner 向 HMRC 书面确认（BACKLOG stg-007）。**
   VAT 路径不在该横幅范围内。
-- 24h 内无 HMRC 官方来信。
+- **2026-09-24 12:25 UTC HMRC FPH 团队回信**（ITSA 工单 CMQAA-923 / 2026-NQM717，Aleesah Sher）：
+  审了 2026-09-23 12:16–12:17 UTC 的 sandbox 流量（11 个 ITSA API）。
+  - `Gov-Client-Multi-Factor`：同意省略（继续不发；将来加了应用内 MFA 要通知 HMRC）。
+  - `Gov-Vendor-License-IDs`：「Header required」。和 8 月 VAT 工单 CMQAA-712 的结论冲突（当时 userId 哈希被判为 dummy 值，所以删了）。
+  - 他们要求：修正 → 用 Test API 验证 → 用**不同设备和不同用户**再提交一批请求。
+  - 正面信号：截止日（9-15）之后他们还在审我们的申请。
+- **owner 选了方案 A（2026-09-25）**：先回信解释、不改代码。回信草稿已存进 Gmail（在该 HMRC 线程里，未发送），
+  内容：正式通知没有许可证密钥所以省略 License-IDs、请求像 MFA 一样记录；承诺用不同设备和用户重测；
+  并问 2026–27 截止令是否影响我们 7 月提交的申请。**等 owner 审阅后发送，并亲自做多设备重测。**
 - 影响：**pre-revenue**，没有 Stripe，没有真实申报。
 
 ## 指标（2026-09-23 18:34 UTC，对比 2026-09-22 06:40 UTC）
