@@ -27,6 +27,11 @@ CMQAA-712 把我们发的 userId 哈希判为 dummy 值，所以才删掉，两�
 没有改代码。
 **学到 / 决定**：9-15 截止之后 HMRC 仍在审我们的申请，stg-007 的风险降低但还没有正式答复。License-IDs 的
 处理方式要等 HMRC 回复；如果对方坚持要，方案 B 需要 owner 另外批准（合规禁区 + DB schema）。
+**更正（同日）**：owner 指出网站已经不是免费的了（/pricing：£20+VAT 每次申报，无订阅）。第一版草稿写了「EasyTax is free」，
+已改成「按次收费，不以许可证形式销售，不发许可证密钥或订阅；按次付款的支付凭证标识的是交易，不是软件许可证」。
+用 update_draft 修改时草稿脱离了原 HMRC 线程，所以在线程里重新建了一份（id r9140492644388941147）；
+脱离线程的旧草稿（r-6678069759678272716）要 owner 手动删掉，agent 不删除。另外注意：`lib/hmrc.ts` 注释和
+2026-08-22 给 HMRC 的邮件里都写了「free to all users」，已经过时。`app/payment/page.tsx` 仍是模拟支付（没接 Stripe）。
 **待 owner**：①审阅并发送草稿 ②亲自用 ≥2 台设备、≥2 个用户在浏览器里重跑一轮 sandbox 覆盖测试，并用 Test API
 validation-feedback 验证。
 
