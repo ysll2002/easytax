@@ -1,9 +1,10 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { AlertTriangle, CheckCircle2, ArrowRight } from 'lucide-react';
 import { trackClient } from './PageViewTracker';
+import ShareResult from './ShareResult';
 import {
   calculatePenalties,
   selectableTaxYears,
@@ -14,6 +15,7 @@ import {
   type PenaltyLine,
   type PenaltyResult,
 } from '@/lib/sa-penalties';
+import { encodePenalty, penaltyCard, type PenaltyShare } from '@/lib/share-results';
 
 // "How much is the fine for filing my tax return late" is a question people
 // type when they are already anxious and already late. The honest answer is a
@@ -32,14 +34,38 @@ function isoDate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-export default function PenaltyCalculator() {
+/**
+ * `initial` arrives when someone opened a shared result link. It is decoded on
+ * the server by the page, from the same module that encoded it, so this
+ * component never parses a query string and there is no hydration mismatch
+ * between the server's idea of the form state and the browser's.
+ */
+export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare | null }) {
   const years = useMemo(() => selectableTaxYears(), []);
-  const [taxYear, setTaxYear] = useState(years[0]);
-  const [filingDate, setFilingDate] = useState(isoDate(new Date()));
-  const [taxDue, setTaxDue] = useState('');
-  const [unpaid, setUnpaid] = useState(true);
-  const [result, setResult] = useState<PenaltyResult | null>(null);
+  const [taxYear, setTaxYear] = useState(initial?.taxYearStart ?? years[0]);
+  const [filingDate, setFilingDate] = useState(isoDate(initial?.filingDate ?? new Date()));
+  const [taxDue, setTaxDue] = useState(initial ? String(initial.taxDue) : '');
+  const [unpaid, setUnpaid] = useState(initial ? initial.unpaid : true);
+  // A shared answer is computed in the initialiser rather than in an effect, so
+  // it is present in the server-rendered HTML. In an effect it would appear
+  // only after hydration, which means a crawler and a reader without JavaScript
+  // see a link that promised a number and delivered an empty form.
+  const [result, setResult] = useState<PenaltyResult | null>(() =>
+    initial
+      ? calculatePenalties({
+          taxYearStart: initial.taxYearStart,
+          filingDate: initial.filingDate,
+          paymentDate: initial.unpaid ? initial.filingDate : null,
+          taxDue: initial.taxDue,
+        })
+      : null,
+  );
   const started = useRef(false);
+
+  // Recording it, on the other hand, has to wait for the browser.
+  useEffect(() => {
+    if (initial) trackClient('tool_completed', { tool: TOOL, source: 'shared_link' });
+  }, [initial]);
 
   const markStarted = () => {
     if (started.current) return;
@@ -226,6 +252,30 @@ export default function PenaltyCalculator() {
       </form>
 
       {result && <Result result={result} />}
+
+      {/* Every input change sets `result` back to null, so the state read here
+          is always the state that produced the answer on screen — the link can
+          never encode figures the reader is no longer looking at. */}
+      {result && parsedTax !== null && parsedDate !== null && (
+        <ShareResult
+          tool={TOOL}
+          path="/self-assessment-penalty-calculator"
+          query={encodePenalty({
+            taxYearStart: taxYear,
+            filingDate: parsedDate,
+            taxDue: parsedTax,
+            unpaid,
+          })}
+          summary={
+            penaltyCard({
+              taxYearStart: taxYear,
+              filingDate: parsedDate,
+              taxDue: parsedTax,
+              unpaid,
+            }).title
+          }
+        />
+      )}
     </div>
   );
 }

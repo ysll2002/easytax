@@ -234,6 +234,233 @@ export function evaluateTargets(payload: MetricsPayload): TargetResult[] {
     }),
   });
 
+  // ── 2026-09-12 round ─────────────────────────────────────────────────────
+  // Four of the five below are traffic targets, which is the standing 80/20
+  // split. They are also, deliberately, mostly *leading* indicators: at five
+  // labelled human page views a day nothing downstream of traffic can be
+  // measured yet, and a target that cannot move in a week teaches nothing.
+
+  // ── F26 · the review queue has a UI ──────────────────────────────────────
+  // The only target here that is a countdown rather than a count. Baseline 5:
+  // the archive last published on 2026-09-07 and this shipped on 09-12.
+  const freezeDays = num(payload, 'editorial.days_since_last_publish');
+  results.push({
+    id: 'F26_publish_freshness',
+    feature: 'Editorial review queue UI at /admin/review',
+    goal: 'traffic',
+    metric: 'Days since the archive last published (lower is better)',
+    baseline: 5,
+    target: 2,
+    actual: freezeDays,
+    // Inverted: this one passes by going *down*, so the generic comparison
+    // cannot be reused. A queue with nothing in it and nothing published is
+    // still a healthy state, which is why the draft count is not the test.
+    verdict:
+      freezeDays === null
+        ? 'insufficient_data'
+        : freezeDays <= 2
+          ? 'hit'
+          : 'missed',
+    note:
+      freezeDays === null
+        ? 'The endpoint did not report editorial.days_since_last_publish.'
+        : `Archive last gained a page ${freezeDays} day(s) ago; the gate is only working if this ` +
+          'stays at or under 2. The review gate was right and the missing UI made it an outage: ' +
+          'the cron wrote a draft every morning from 09-08 and not one of them reached a reader.',
+  });
+
+  // ── F27 · llms.txt ───────────────────────────────────────────────────────
+  // Baseline 0: the files did not exist before 2026-09-12. Target 3 distinct
+  // agents, which is roughly what the RSS feed drew in its first fortnight —
+  // ClaudeBot, GPTBot and PerplexityBot all already fetch our feeds, so if the
+  // convention is honoured at all by the crawlers we actually have, it should
+  // clear this.
+  const llmsAgents = num(payload, 'distribution.last_7d.llms.distinct_agents');
+  results.push({
+    id: 'F27_llms_agents',
+    feature: '/llms.txt and /llms-full.txt',
+    goal: 'traffic',
+    metric: 'Distinct AI crawlers fetching the llms files in 7 days',
+    baseline: 0,
+    target: 3,
+    actual: llmsAgents,
+    ...verdictFor(llmsAgents, 3, 1, llmsAgents ?? 0, {
+      short:
+        'Over the nine days to 2026-09-12 organic search sent ten referred visits and none in the ' +
+        'last seventy-two hours, while five named AI crawlers fetched our feeds and calendar ' +
+        'twenty times in forty-eight hours. This bets on the channel that has a pulse. It is a ' +
+        'convention, not a standard: a zero here means the crawlers ignored it, not that it broke.',
+    }),
+  });
+
+  // ── F28 · FAQPage and section anchors ────────────────────────────────────
+  // Baseline 0.89/day = 8 article search referrals over the 9 days to 09-12.
+  // Structured-data effects show up in four to eight weeks, so a week-one
+  // reading of this is a leading indicator and the note says so.
+  const archiveSearch = visitorsUnderPath(payload, '/tax-tips');
+  results.push({
+    id: 'F28_archive_search',
+    feature: 'Section anchors, contents list and FAQPage structured data',
+    goal: 'traffic',
+    metric: 'Unique visitors per day to /tax-tips*',
+    baseline: 0.89,
+    target: 2,
+    actual: perDay(archiveSearch),
+    ...verdictFor(perDay(archiveSearch), 2, MIN_VISITORS_FOR_TRAFFIC, archiveSearch ?? 0, {
+      short:
+        'FAQPage is emitted on the 41 of 113 articles whose headings are genuinely questions — ' +
+        'marking up the other 72 would risk a manual action on a site whose whole pitch is being ' +
+        'trustworthy about tax. Judge at 4-8 weeks on Bing and Google, not at 7 days.',
+      perDay: true,
+    }),
+  });
+
+  // ── F29 · homepage routes into the archive ───────────────────────────────
+  // Baseline 0: over the 24 hours in which bot labelling was live, all five
+  // human page views were on `/` and none reached an article or a tool.
+  const humanViews = num(payload, 'audience.last_7d.human.page_views');
+  results.push({
+    id: 'F29_homepage_routing',
+    feature: 'Answer links from the homepage into the archive',
+    goal: 'traffic',
+    metric: 'Human page views per day (bot-filtered)',
+    baseline: 5,
+    target: 8,
+    actual: perDay(humanViews),
+    ...verdictFor(perDay(humanViews), 8, 1, humanViews ?? 0, {
+      short:
+        'Every labelled human page view in the first day of bot filtering landed on `/` and went ' +
+        'no further. This is the smallest possible test of whether that is a routing problem or ' +
+        'simply five people who were never going to read anything.',
+      perDay: true,
+    }),
+  });
+
+  // ── F30 · the numbers that would have caught the freeze ───────────────────
+  // audience() already computes this over the same denominator, so read it
+  // rather than recomputing: two definitions of "human share" that drift apart
+  // is how a metric starts disagreeing with itself.
+  const humanShare = num(payload, 'audience.last_7d.human_share');
+  results.push({
+    id: 'F30_human_share',
+    feature: 'Human/bot split and content-freshness in the metrics',
+    goal: 'trust',
+    metric: 'Share of classified page views that are human',
+    baseline: 0.38,
+    // Not a target to beat so much as a figure to know. Set at the observed
+    // baseline: what matters is that it is reported at all, and that a sudden
+    // move in it is visible. 5 of 13 labelled views were human on 2026-09-12.
+    target: 0.38,
+    actual: humanShare,
+    ...verdictFor(humanShare, 0.38, MIN_VISITORS_FOR_RATE, visitors, {
+      short:
+        'Sixty-two percent of labelled page views were automation. Every rate this project has ' +
+        'ever reported was computed over a denominator that included them. This target exists to ' +
+        'keep the split in front of the review rather than to be beaten.',
+      rate: true,
+    }),
+  });
+
+  // ── F36/F37 · the site's own title tags, and the crawl that watches them ──
+  // `blocking_issues` counts the SEO defects that cost us a result rather than
+  // merely look untidy: a sitemap URL that is not 200, a brand repeated in a
+  // title, a missing title or canonical, a canonical pointing elsewhere, a
+  // noindex page we also listed for crawling, and every page in a
+  // duplicate-title set. On 2026-09-14, before the fix, it stood at 128:
+  // 122 brand repeats, 2 noindex pages we also listed for crawling, and 4
+  // pages sharing a title with another page.
+  //
+  // Zero is achievable and is the target. Unlike most numbers here it does not
+  // depend on anybody visiting, so it is readable at a sample size of one and
+  // is the only target this round that can be judged in seven days.
+  const blocking = num(payload, 'seo.blocking_issues');
+  results.push({
+    id: 'F36_seo_blocking_issues',
+    feature: 'One source for titles and descriptions, and a daily crawl of the rendered HTML',
+    goal: 'traffic',
+    metric: 'Blocking SEO defects across every sitemap URL (lower is better)',
+    baseline: 128,
+    target: 0,
+    actual: blocking,
+    // Inverted, like F26: this passes by going down.
+    verdict: blocking === null ? 'insufficient_data' : blocking === 0 ? 'hit' : 'missed',
+    note:
+      blocking === null
+        ? 'No crawl stored yet. /api/cron/daily writes one each morning into the day\'s snapshot.'
+        : `${blocking} blocking defect(s) across the sitemap. Of the 158 URLs crawled on ` +
+          '2026-09-14, 122 named the brand twice in one title — 119 of them ending literally ' +
+          '"| EasyTax | EasyTax" — and 150 were past the length Google displays. The audit that ' +
+          'would have shown this was written on 09-09 and never once called, which is why it ' +
+          'now runs from the cron instead of on request.',
+  });
+
+  // ── F38 · the pipeline stops competing with itself ───────────────────────
+  // Baseline 29: of 116 titles in the archive on 2026-09-14, 29 collided with
+  // another article — 3 exact pairs and 23 sharing a subject. The guard cannot
+  // unwrite those, so this counts *new* collisions, which should be zero from
+  // the day it shipped. A non-zero reading means the guard is not running.
+  const dupTitlePages = num(payload, 'seo.problem_counts.brand_repeated_in_title');
+  results.push({
+    id: 'F38_new_duplicate_titles',
+    feature: 'Title-collision guard in the article pipeline',
+    goal: 'traffic',
+    metric: 'Pages whose title repeats the brand (lower is better)',
+    baseline: 122,
+    target: 0,
+    actual: dupTitlePages,
+    verdict: dupTitlePages === null ? 'insufficient_data' : dupTitlePages === 0 ? 'hit' : 'missed',
+    note:
+      dupTitlePages === null
+        ? 'No crawl stored yet.'
+        : `${dupTitlePages} page(s) still repeat the brand in the title. Alongside this, ` +
+          'STANDARD.maxTitleChars now imports TITLE_BUDGET rather than carrying its own 80, and ' +
+          'findTitleCollision refuses a headline the archive already claims.',
+  });
+
+  // ── F39 · the calendar, on the page people actually reach ────────────────
+  // Baseline 0: `calendar_cta_click` has never fired with placement "home",
+  // because the block was only ever on four pages no labelled human has
+  // visited. Every human page view in production has been on `/`.
+  const calendarClicks = num(payload, 'funnel.last_7d.calendar_cta_click');
+  results.push({
+    id: 'F39_calendar_from_home',
+    feature: 'Calendar subscription block on the homepage',
+    goal: 'traffic',
+    metric: 'calendar_cta_click in 7 days',
+    baseline: 0,
+    target: 1,
+    actual: calendarClicks,
+    ...verdictFor(calendarClicks, 1, 1, calendarClicks ?? 0, {
+      short:
+        'The .ics feed was fetched 24 times and the RSS/JSON feeds 35 in the four days to ' +
+        '2026-09-14, against 8 human page views — machines read this site about six times as ' +
+        'often as people do. The subscribe block sat on four pages no human reached. A ' +
+        'subscription is also the only recurring relationship available before HMRC approval.',
+    }),
+  });
+
+  // ── F40 · did our pages actually reach Bing? ─────────────────────────────
+  // Bing is half of every search referral this site has ever had and the only
+  // engine that honours IndexNow. `submitToIndexNow` has always returned the
+  // endpoint's status; until 2026-09-14 it went only into the cron's own HTTP
+  // response, so a key file that stopped being reachable would be silent.
+  const submitted = num(payload, 'indexnow.submitted');
+  results.push({
+    id: 'F40_indexnow_accepted',
+    feature: 'IndexNow submission receipts in the daily metrics',
+    goal: 'traffic',
+    metric: 'URLs accepted by IndexNow on the last run',
+    baseline: 0,
+    target: 100,
+    actual: submitted,
+    ...verdictFor(submitted, 100, 1, submitted ?? 0, {
+      short:
+        'Reported, not chased. The number that matters is whether it is zero: a 0 with a 403 ' +
+        'means the key file stopped resolving, which is the failure this makes visible. The ' +
+        'sitemap carries ~158 URLs and the submission is capped below that.',
+    }),
+  });
+
   return results;
 }
 

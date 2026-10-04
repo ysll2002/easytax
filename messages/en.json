@@ -14,6 +14,13 @@
     "language": "Language",
     "trust": "Trust & Security"
   },
+  "mtdBar": {
+    "live": "MTD ITSA is live.",
+    "preMandate": "MTD ITSA starts 6 April 2026.",
+    "due": "{quarter} update ({period}) due {date}",
+    "daysLeft": "{days} days left",
+    "cta": "Check your deadlines"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital has started.",
@@ -31,6 +38,7 @@
       "badgeNoCard": "No card to sign up",
       "badgeHmrc": "Built on HMRC APIs",
       "ctaPrimary": "Get MTD-ready →",
+      "ctaChecker": "Check my MTD deadlines →",
       "ctaSecondary": "See what we cover →"
     },
     "trust": {
@@ -39,6 +47,11 @@
       "fast": "ICO reg. ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Limited Companies"
+    },
+    "tools": {
+      "title": "Free tools you can use right now",
+      "subtitle": "No account, no card, no waiting on HMRC approval. Three calculators that answer the questions people actually arrive with.",
+      "all": "All free tools →"
     },
     "services": {
       "title1": "Everything covered,",
@@ -110,6 +123,12 @@
       "empty": "First article coming tomorrow at 8am.",
       "visit": "Visit Tax Tips →"
     },
+    "questions": {
+      "kicker": "Answered here",
+      "title": "The questions people actually ask",
+      "subtitle": "Not a list of tax topics — the things UK sole traders, landlords and company directors type into a search box, and the guide that answers each one.",
+      "viewAll": "All guides"
+    },
     "finalCta": {
       "title1": "Stop dreading",
       "title2": "the paperwork.",
@@ -123,8 +142,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies",
-      "description": "MTD ITSA software for UK sole traders, landlords and limited companies. Send quarterly updates to HMRC, file Self Assessment, VAT returns and CT600. £24 per submission, no subscription — no card needed to sign up."
+      "title": "MTD ITSA Software for UK Sole Traders & Landlords",
+      "description": "MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 from £24 per filing."
     },
     "toolsStrip": {
       "kicker": "Free · no account needed",
@@ -296,6 +315,8 @@
       "taxIdsSubtitle": "Required for HMRC Self Assessment submissions.",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "Format: 2 letters, 6 digits, 1 letter — found on your P60 or HMRC letters.",
+      "vrnLabel": "VAT Registration Number (VRN)",
+      "vrnHelp": "9 digits, on your VAT certificate. A 'GB' prefix and spaces are fine — we'll tidy it up.",
       "saving": "Saving…",
       "save": "Save",
       "saved": "✓ Saved"
@@ -321,7 +342,12 @@
     "allTools": "All free tools",
     "penaltyCalculator": "Penalty Calculator",
     "poaCalculator": "Payments on Account Calculator",
+    "taxCalendar": "Tax deadline calendar",
+    "rssFeed": "RSS feed",
+    "deadlineWidget": "Deadline widget",
     "browseTopics": "Browse by topic",
+    "hmrcSignedMeUp": "HMRC signed me up for MTD",
+    "mtdQuarterlyDeadlines": "MTD quarterly update deadlines",
     "aboutUs": "About us",
     "privacy": "Privacy",
     "terms": "Terms",

@@ -1,18 +1,25 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PenaltyCalculator from '@/components/PenaltyCalculator';
+import ShortAnswer from '@/components/ShortAnswer';
 import {
   RULES_REVIEWED,
   HMRC_PENALTIES_URL,
   DAILY_MAX,
+  DAILY_RATE,
+  DAILY_MAX_DAYS,
+  FIXED_FILING_PENALTY,
   TAX_GEARED_MINIMUM,
+  TAX_GEARED_RATE,
 } from '@/lib/sa-penalties';
 import SiteFooter from '@/components/SiteFooter';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
+import { decodePenalty, encodePenalty, penaltyCard, toSearchParams } from '@/lib/share-results';
 
-export const metadata: Metadata = {
-  title: 'Self Assessment Late Filing Penalty Calculator — what HMRC will charge you',
+const BASE: Metadata = {
+  title: pageTitle('Self Assessment Late Filing Penalty Calculator'),
   description:
     'Free calculator for a late Self Assessment return. Enter the tax year, when you filed and what you owe to see the £100 penalty, £10 daily charges, the 6 and 12 month penalties and the 5% late payment charges — itemised, with the dates each one bites.',
   keywords: [
@@ -40,7 +47,47 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PenaltyCalculatorPage() {
+type Search = Promise<Record<string, string | string[] | undefined>>;
+
+/**
+ * A shared result link gets the answer in its title, description and preview
+ * card; the bare page keeps the metadata it already had.
+ *
+ * The canonical stays on the clean URL in both cases. The parameterised URLs
+ * are the same page with a form pre-filled, not new content, and letting a
+ * search engine index one per set of figures would build exactly the kind of
+ * near-duplicate inventory that suppresses the page that matters.
+ */
+export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
+  const shared = decodePenalty(toSearchParams(await searchParams));
+  if (!shared) return BASE;
+
+  const card = penaltyCard(shared);
+  const image = `/og/penalty?${encodePenalty(shared)}`;
+
+  return {
+    ...BASE,
+    title: card.metaTitle,
+    description: card.metaDescription,
+    openGraph: {
+      ...BASE.openGraph,
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [{ url: image, width: 1200, height: 630, alt: card.title }],
+    },
+    twitter: {
+      ...BASE.twitter,
+      card: 'summary_large_image',
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [image],
+    },
+  };
+}
+
+export default async function PenaltyCalculatorPage({ searchParams }: { searchParams: Search }) {
+  const shared = decodePenalty(toSearchParams(await searchParams));
+
   const faq = [
     {
       q: 'How much is the penalty for filing a Self Assessment return late?',
@@ -53,6 +100,18 @@ export default function PenaltyCalculatorPage() {
     {
       q: 'What are the penalties for paying late, as opposed to filing late?',
       a: 'Late payment is charged separately: 5% of the tax still unpaid 30 days after the deadline, a further 5% at six months, and a further 5% at twelve months. HMRC also charges interest from the day the payment was due, on top of the penalties.',
+    },
+    {
+      // "hmrc late payment interest rate 2026" is a priority-1 query in
+      // lib/search-queries.ts that nothing on this site answered. The
+      // calculator deliberately does not model interest — see the header of
+      // lib/sa-penalties.ts — but declining to compute a figure is not a
+      // reason to decline to explain the rule. The mechanism is stated and
+      // the current percentage is left to HMRC on purpose: a number typed here
+      // would be wrong within one Bank Rate decision, and a stale rate on a
+      // tax site is worse than no rate.
+      q: 'What is HMRC\'s late payment interest rate?',
+      a: 'HMRC charges late payment interest at the Bank of England base rate plus 4 percentage points, and it runs from the day the tax was due rather than from the day a penalty is charged — so it applies even where no penalty does. The rate moves whenever the Bank of England moves the base rate, so check HMRC\'s current-rates page for today\'s figure rather than trusting a number quoted in an article. Interest is not a penalty and cannot be appealed on a reasonable-excuse basis; it is the cost of HMRC being out of the money.',
     },
     {
       q: 'Can I appeal a late filing penalty?',
@@ -142,14 +201,25 @@ export default function PenaltyCalculatorPage() {
           What will HMRC charge me for a late tax return?
         </h1>
 
+        {/* The figures, before the description of the form. See
+            components/ShortAnswer.tsx for why this block exists at all: the
+            query is "how much is the fine", and the page used to open by
+            explaining what the calculator does. */}
+        <ShortAnswer>
+          £{FIXED_FILING_PENALTY} the day the return is late, whether or not you owe any tax. After
+          three months HMRC adds £{DAILY_RATE} a day for up to {DAILY_MAX_DAYS} days
+          (£{DAILY_MAX.toLocaleString('en-GB')}), then at six months and again at twelve months a
+          further {Math.round(TAX_GEARED_RATE * 100)}% of the tax due or
+          £{TAX_GEARED_MINIMUM}, whichever is more. Paying late is charged on top and separately.
+        </ShortAnswer>
+
         <p className="text-sm sm:text-base leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: 620 }}>
-          Late filing penalties stack in four bands and late payment penalties in three more, so the
-          bill grows in steps rather than smoothly. Enter three things and you will see exactly which
-          bands you are in, what each one costs and the date the next one starts. Nothing is stored
-          and you do not need an account.
+          The bands stack rather than replace each other, so the bill grows in steps. Enter three
+          things and you will see exactly which bands you are in, what each one costs and the date
+          the next one starts. Nothing is stored and you do not need an account.
         </p>
 
-        <PenaltyCalculator />
+        <PenaltyCalculator initial={shared} />
 
         {/* ── How the bands work ── */}
         <section className="mt-14">

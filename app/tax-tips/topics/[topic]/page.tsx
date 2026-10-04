@@ -7,6 +7,7 @@ import ArticleCardList from '../../_components/ArticleCardList';
 import { topicBySlug } from '../../_lib/topics';
 import { getArticlesForTopic, getPublishedTopics } from '../../_lib/topic-articles';
 import SiteFooter from '@/components/SiteFooter';
+import { pageTitle, metaDescription } from '@/lib/seo-meta';
 
 const BASE = 'https://easytax.vip';
 
@@ -34,8 +35,12 @@ export async function generateMetadata({
   if (!topic) return {};
 
   return {
-    title: `${topic.heading} — guides for UK sole traders and small companies`,
-    description: topic.intro.slice(0, 300),
+    // The old suffix — "— guides for UK sole traders and small companies" —
+    // was identical on all 13 hubs and pushed every one of them to 99–105
+    // characters, so the part that distinguishes them was the part Google cut.
+    // The heading already says what the hub is.
+    title: pageTitle(topic.heading),
+    description: metaDescription(topic.intro),
     alternates: { canonical: `${BASE}/tax-tips/topics/${topic.slug}` },
     openGraph: {
       type: 'website',

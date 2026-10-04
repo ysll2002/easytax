@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'MTD ITSA Software for UK Sole Traders & Landlords — EasyTax, £24 per Filing',
+  title: pageTitle('MTD Software UK — Making Tax Digital for Income Tax'),
   description: 'EasyTax is MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT per submission. No monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/mtd-software' },
   openGraph: {
@@ -62,7 +63,7 @@ export default async function MtdSoftware() {
         name: 'What is MTD ITSA software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'MTD ITSA software is a digital tool recognised by HMRC that lets sole traders and landlords submit quarterly income and expense updates — and an end-of-year final declaration — as required by Making Tax Digital for Income Tax Self Assessment. From April 2026, this is mandatory for those earning over £50,000.',
+          text: 'MTD ITSA software is a digital tool recognised by HMRC that lets sole traders and landlords submit quarterly income and expense updates — and an end-of-year final declaration — as required by Making Tax Digital for Income Tax Self Assessment. This has been mandatory since 6 April 2026 for those earning over £50,000.',
         },
       },
       {
@@ -202,7 +203,7 @@ export default async function MtdSoftware() {
               Who needs MTD ITSA software?
             </h2>
             <p className="text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              From April 2026, MTD-compatible software is required by law if you fall into any of these categories.
+              Since 6 April 2026, MTD-compatible software has been required by law if you fall into any of these categories.
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[

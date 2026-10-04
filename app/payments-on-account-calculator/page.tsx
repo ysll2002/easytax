@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import PaymentsOnAccountCalculator from '@/components/PaymentsOnAccountCalculator';
 import { RULES_REVIEWED, HMRC_POA_URL, POA_THRESHOLD } from '@/lib/payments-on-account';
 import SiteFooter from '@/components/SiteFooter';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
+import ShortAnswer from '@/components/ShortAnswer';
+import { decodePoa, encodePoa, poaCard, toSearchParams } from '@/lib/share-results';
 
-export const metadata: Metadata = {
-  title: 'Payments on Account Calculator — why your January tax bill is 50% bigger',
+const BASE: Metadata = {
+  title: pageTitle('UK Payments on Account Calculator'),
   description:
     'Free calculator for Self Assessment payments on account. Enter your tax bill and see what actually leaves your account on 31 January and 31 July, including the two advance payments HMRC adds towards next year.',
   keywords: [
@@ -35,7 +38,41 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PaymentsOnAccountPage() {
+type Search = Promise<Record<string, string | string[] | undefined>>;
+
+/** A shared result link carries its answer into the title, description and
+ *  preview card. The canonical deliberately stays on the clean URL: these are
+ *  the same page with the form pre-filled, not new pages, and indexing one per
+ *  set of figures would bury the page that matters under near-duplicates. */
+export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
+  const shared = decodePoa(toSearchParams(await searchParams));
+  if (!shared) return BASE;
+
+  const card = poaCard(shared);
+  const image = `/og/payments-on-account?${encodePoa(shared)}`;
+
+  return {
+    ...BASE,
+    title: card.metaTitle,
+    description: card.metaDescription,
+    openGraph: {
+      ...BASE.openGraph,
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [{ url: image, width: 1200, height: 630, alt: card.title }],
+    },
+    twitter: {
+      ...BASE.twitter,
+      card: 'summary_large_image',
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [image],
+    },
+  };
+}
+
+export default async function PaymentsOnAccountPage({ searchParams }: { searchParams: Search }) {
+  const shared = decodePoa(toSearchParams(await searchParams));
   const faq = [
     {
       q: 'What are payments on account?',
@@ -137,6 +174,18 @@ export default function PaymentsOnAccountPage() {
           What will actually leave my account in January?
         </h1>
 
+        {/* The answer to "what are payments on account and why do i have to
+            pay them" — a priority-1 query this page has always answered, in an
+            FAQ two thirds of the way down. See components/ShortAnswer.tsx. */}
+        <ShortAnswer>
+          Payments on account are two advance instalments towards next year&apos;s tax bill, each
+          half of this year&apos;s Self Assessment liability, due on 31 January and 31 July. HMRC
+          asks for them because it assumes next year will look like this one. They apply once you
+          owe more than £{POA_THRESHOLD.toLocaleString('en-GB')} through Self Assessment and less
+          than 80% of your tax was collected at source — and you can apply to reduce them if you
+          expect a worse year.
+        </ShortAnswer>
+
         <p className="text-sm sm:text-base leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: 620 }}>
           The number at the bottom of your tax calculation is rarely the number HMRC collects. In
           your first year over the £{POA_THRESHOLD.toLocaleString('en-GB')} threshold, the January
@@ -145,7 +194,7 @@ export default function PaymentsOnAccountPage() {
           is stored and you do not need an account.
         </p>
 
-        <PaymentsOnAccountCalculator />
+        <PaymentsOnAccountCalculator initial={shared} />
 
         {/* ── Worked example ── */}
         <section className="mt-14">

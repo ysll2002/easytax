@@ -1,8 +1,16 @@
 'use client';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { MessageCircle, X, Send, CheckCircle2 } from 'lucide-react';
+import { isEmbedPath } from '@/lib/embed';
 
 export default function ContactWidget() {
+  // The embeddable widget is rendered inside someone else's page, often at
+  // 400×220. A floating contact bubble belongs to our site, not to theirs, and
+  // in a box that size it covers the answer. The root layout mounts this on
+  // every route, so the opt-out has to live here.
+  const pathname = usePathname();
+
   const [open,       setOpen]       = useState(false);
   const [name,       setName]       = useState('');
   const [email,      setEmail]      = useState('');
@@ -37,6 +45,8 @@ export default function ContactWidget() {
       setTimeout(() => { setSent(false); setName(''); setEmail(''); setMessage(''); }, 400);
     }
   }
+
+  if (isEmbedPath(pathname)) return null;
 
   return (
     <>

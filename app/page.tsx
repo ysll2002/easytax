@@ -2,21 +2,30 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import NotifyMeForm from '@/components/NotifyMeForm';
+import TrackedCta from '@/components/TrackedCta';
+import { TOOLS } from '@/lib/tools';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
+import { selectPublished } from '@/app/tax-tips/_lib/review';
+import { answeredQuestions } from '@/lib/answered-questions';
 import { getTranslations } from 'next-intl/server';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
+import CalendarSubscribe from '@/components/CalendarSubscribe';
+import { pageTitle, metaDescription } from '@/lib/seo-meta';
 
 export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('home.meta');
   return {
-    title: t('title'),
-    description: t('description'),
+    // Through `pageTitle` like every other route: the homepage is the only
+    // page a human visitor has reached in the labelled traffic so far, and its
+    // tag should not depend on how a translator punctuated the string.
+    title: pageTitle(t('title')),
+    description: metaDescription(t('description')),
     alternates: { canonical: 'https://easytax.vip' },
   };
 }
@@ -33,15 +42,29 @@ export default async function Home() {
   // homepage down with a server-side exception on every preview, staging
   // included. The articles strip is decoration; a missing one renders the
   // empty state. Same guard as app/sitemap.ts and the Tax Tips pages.
+  //
+  // The `review_status` filter is not a refinement, it is a bug fix. The
+  // 2026-09-06 review gate made the daily cron write drafts, and every other
+  // reader of this table — the article page, the sitemap, the feeds, the topic
+  // hubs — was taught to ask for published rows only. This query was not. So
+  // from 2026-09-08 the homepage, which is 39% of all production page views,
+  // led with the two newest *drafts*: both cards linked to /tax-tips/<slug>,
+  // which 404s for anything unreviewed. Two of the three article cards on the
+  // page were dead links, on the one surface every human visitor touches.
   const latestArticles = hasSupabaseEnv()
     ? (
-        await supabase
-          .from('tax_articles')
-          .select('title, slug, excerpt, published_at')
-          .order('published_at', { ascending: false })
-          .limit(3)
+        await selectPublished(gated => {
+          const q = supabase.from('tax_articles').select('title, slug, excerpt, published_at');
+          return (gated ? q.eq('review_status', 'published') : q)
+            .order('published_at', { ascending: false })
+            .limit(3);
+        })
       ).data
     : null;
+
+  // The archive ordered by what people search for rather than by what the cron
+  // wrote last. See lib/answered-questions.ts.
+  const questions = await answeredQuestions(6);
 
   // Rolls forward on its own. The previous hardcoded 5 Aug 2026 date was both
   // wrong (the statutory deadline is the 7th) and, once Q1 passed, frozen at
@@ -147,14 +170,39 @@ export default async function Home() {
                   </span>
                 </div>
 
+                {/* ── Hero CTAs ──
+                    The secondary control used to be `#services`, an anchor to
+                    a section of this same page. So the homepage — 39% of all
+                    production page views — offered a visitor exactly one way
+                    to leave it, and that way was "create an account" for a
+                    product that cannot file until HMRC production approval
+                    lands. Across the nine days to 2026-09-11 it produced zero
+                    registrations, zero launch-list signups and zero of every
+                    other conversion event the site records.
+                    The deadline checker is the strongest thing we can offer a
+                    stranger today: it answers "am I in MTD and when is my next
+                    deadline" in one screen, needs no account, and works while
+                    approval is pending — which is true of almost nothing else
+                    here. It had 0 production page views in the same window.
+                    "See what we cover" is kept, demoted to a text link, so
+                    nothing that worked before has been taken away. */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
                     {t('hero.ctaPrimary')}
                   </Link>
-                  <a href="#services" className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}>
-                    {t('hero.ctaSecondary')}
-                  </a>
+                  <TrackedCta
+                    href="/mtd-deadline-checker"
+                    placement="home_hero_secondary"
+                    className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all"
+                    style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}
+                  >
+                    {t('hero.ctaChecker')}
+                  </TrackedCta>
                 </div>
+
+                <a href="#services" className="inline-block mt-4 text-sm font-medium" style={{ color: '#9A8F83', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                  {t('hero.ctaSecondary')}
+                </a>
               </div>
 
               <div className="hidden lg:block flex-shrink-0" style={{ width: '480px' }}>
@@ -186,6 +234,85 @@ export default async function Home() {
                   <span className="text-sm font-medium" style={{ color: '#4A4035' }}>{label}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Free tools strip ──
+            lib/tools.ts has carried a `short` field since it was written, with
+            the comment "one short line for the homepage strip". Nothing ever
+            read it: the library was lifted out of /tools so the homepage could
+            surface the set, and then the homepage never did. Its own header
+            comment records why that mattered — "in 30 days the hub was viewed
+            0 times and the three tools took 2 page views between them, because
+            nothing but the nav ever pointed at them" — and by 2026-09-11 the
+            deadline checker still had zero production page views.
+            These three pages are the only things on this site a stranger can
+            use today, while HMRC production approval is pending. They are also
+            the only pages anyone would plausibly link to. Putting them above
+            the product pitch is not a downgrade of the pitch; it is the only
+            part of the page that can do anything for a visitor this month. */}
+        <section className="py-14 sm:py-20" style={{ backgroundColor: '#F8F5F0' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
+              <div className="max-w-2xl">
+                <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+                  {t('tools.title')}
+                </h2>
+                <p style={{ color: '#9A8F83', fontSize: '1rem', lineHeight: 1.6 }}>
+                  {t('tools.subtitle')}
+                </p>
+              </div>
+              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                {t('tools.all')}
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {TOOLS.map(tool => (
+                <TrackedCta
+                  key={tool.key}
+                  href={tool.href}
+                  placement={`home_tools_${tool.key}`}
+                  event="tool_cta_click"
+                  className="rounded-2xl p-5 sm:p-6 flex flex-col h-full"
+                  style={{ backgroundColor: '#FDFCF8', border: '1px solid #E8E2DA', textDecoration: 'none', minHeight: '44px' }}
+                >
+                  <span className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold self-start mb-3" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
+                    {tool.for}
+                  </span>
+                  <span className="font-semibold block mb-2" style={{ color: '#1C1208', fontSize: '1.02rem', lineHeight: 1.35 }}>
+                    {tool.question}
+                  </span>
+                  <span className="text-sm block mb-4 flex-grow" style={{ color: '#4A4035', lineHeight: 1.6 }}>
+                    {tool.short}
+                  </span>
+                  <span className="text-sm font-medium inline-flex items-center gap-1.5" style={{ color: '#C4622D' }}>
+                    {tool.name} <ArrowRight size={15} strokeWidth={2} />
+                  </span>
+                </TrackedCta>
+              ))}
+            </div>
+
+            {/* ── The calendar, on the page people actually reach ──
+                The .ics feed is the second most-consumed surface this site
+                has. Over the four days to 2026-09-14 it was fetched 24 times
+                and the RSS/JSON feeds 35, against 8 human page views in the
+                same window — machines are reading this site roughly six times
+                as often as people are.
+                The subscribe block existed on four pages (/timetable, the
+                deadline checker, the quarterly-deadlines page and the
+                auto-signup page) and none of them has had a single human
+                visitor since bot labelling went live. Every labelled human
+                page view in production has been on `/`.
+                So the one asset with demonstrated pull was on four pages
+                nobody reaches, and absent from the only page anyone does. A
+                calendar subscription is also the only recurring relationship
+                available before HMRC approval: it puts us in front of the same
+                person four times a year without an account or an email
+                address. */}
+            <div className="mt-8 sm:mt-10 max-w-3xl">
+              <CalendarSubscribe placement="home" />
             </div>
           </div>
         </section>
@@ -370,6 +497,78 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        {/* ── Answered questions ──
+            The archive, ordered by demand instead of by date. The wording is
+            the query as somebody would type it (lib/search-queries.ts), not
+            the headline a tax adviser would write, because the former is what
+            a stranger recognises as their own problem. The article's real
+            title sits underneath, so nothing is being promised that the page
+            does not deliver.
+            Rendered only when there is something genuinely answered to show:
+            an empty version of this block would be worse than no block, and on
+            a preview build without Supabase there is nothing.
+            Three is the floor rather than six because three is what the
+            archive currently earns. Measured on 2026-09-12, the 113 published
+            articles cover 3 of the 41 target queries — the demand model landed
+            on 09-08 and the cron that works through it has been writing into a
+            review queue nobody could empty ever since. So this block is also a
+            coverage gauge: it grows on its own as the pipeline closes queries,
+            and if it is still three cards in a fortnight that is the finding. */}
+        {questions.length >= 3 && (
+          <section className="py-14 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <p className="text-xs uppercase tracking-wide mb-2" style={{ color: '#9A8F83' }}>
+                {t('questions.kicker')}
+              </p>
+              <h2
+                className="mb-3"
+                style={{
+                  fontFamily: 'var(--font-display), Playfair Display, Georgia, serif',
+                  fontSize: 'clamp(1.5rem, 3vw, 2.1rem)',
+                  fontWeight: 700,
+                  color: '#1C1208',
+                  lineHeight: 1.25,
+                }}
+              >
+                {t('questions.title')}
+              </h2>
+              <p className="text-sm mb-7" style={{ color: '#4A4035', maxWidth: '46rem', lineHeight: 1.7 }}>
+                {t('questions.subtitle')}
+              </p>
+
+              <ul className="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {questions.map(q => (
+                  <li key={q.href}>
+                    <Link
+                      href={q.href}
+                      className="block h-full p-4 sm:p-5 rounded-xl transition-all hover:shadow-md"
+                      style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8', textDecoration: 'none' }}
+                    >
+                      <span
+                        className="block text-sm font-semibold mb-1.5"
+                        style={{ color: '#1C1208', lineHeight: 1.45 }}
+                      >
+                        {q.question}
+                      </span>
+                      <span className="block text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>
+                        {q.title}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/tax-tips"
+                className="inline-block mt-6 text-sm font-semibold"
+                style={{ color: '#C4622D', textDecoration: 'none', minHeight: 44 }}
+              >
+                {t('questions.viewAll')} →
+              </Link>
+            </div>
+          </section>
+        )}
 
         {/* ── FAQ ── */}
         <section id="faq" className="py-20 sm:py-28" style={{ backgroundColor: '#FDFCF8' }}>

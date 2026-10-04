@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Landlord Tax Software — MTD ITSA Filing for UK Landlords, £24 per Submission',
+  title: pageTitle('Landlord Tax Software — MTD ITSA for UK Landlords'),
   description: 'MTD ITSA software built for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105 property supplement) directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription, no accountant required.',
   alternates: { canonical: 'https://easytax.vip/landlord-tax-software' },
   openGraph: {
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Landlord Tax Software — MTD ITSA + SA105, £24 per Filing | EasyTax',
+    title: 'Landlord Tax Software — MTD ITSA + SA105, £24 per Filing',
     description: 'MTD ITSA quarterly updates and Self Assessment for UK landlords — £24 per submission, no subscription, no accountant required.',
   },
 };
@@ -119,7 +120,7 @@ export default async function LandlordTaxSoftware() {
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> MTD ITSA required from April 2026 — £50k+ landlords
+              <Sparkles size={12} /> MTD ITSA mandatory since April 2026 — £50k+ landlords
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               Landlord tax software.<br />
@@ -149,7 +150,7 @@ export default async function LandlordTaxSoftware() {
         <section className="py-12 sm:py-14" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3.5vw, 2rem)', fontWeight: 700, marginBottom: '1.25rem' }}>
-              MTD ITSA is mandatory for landlords from April 2026
+              MTD ITSA has been mandatory for landlords since April 2026
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
               Making Tax Digital for Income Tax Self Assessment (MTD ITSA) requires UK landlords and sole traders to send quarterly income and expense updates to HMRC digitally — in addition to the existing annual Self Assessment. If your total property income (plus any self-employment income) exceeds the threshold, you must use Software like EasyTax, which connects to the HMRC MTD API,.

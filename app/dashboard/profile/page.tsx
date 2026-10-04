@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 
-type TaxIds = { nino: string; user: { name?: string; email?: string; image?: string; profileId?: string } };
+type TaxIds = { nino: string; vrn: string; user: { name?: string; email?: string; image?: string; profileId?: string } };
 
 const inputStyle = {
   width: '100%', padding: '0.6rem 0.875rem', borderRadius: '0.75rem',
@@ -15,9 +15,12 @@ export default function ProfilePage() {
   const t = useTranslations('dashboard.profile');
   const [data, setData]     = useState<TaxIds | null>(null);
   const [nino, setNino]     = useState('');
+  const [vrn, setVrn]       = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved]   = useState(false);
   const [error, setError]   = useState('');
+  // A failed VAT check digit is reported, not enforced — see lib/vat-number.ts.
+  const [warning, setWarning] = useState('');
   const [exporting, setExporting] = useState(false);
 
   async function handleExport() {
@@ -47,21 +50,26 @@ export default function ProfilePage() {
   useEffect(() => {
     fetch('/api/profile/tax-ids')
       .then(r => r.json())
-      .then((d: TaxIds) => { setData(d); setNino(d.nino); });
+      .then((d: TaxIds) => { setData(d); setNino(d.nino); setVrn(d.vrn ?? ''); });
   }, []);
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setWarning('');
     setSaving(true);
     try {
       const res = await fetch('/api/profile/tax-ids', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nino: nino.trim().toUpperCase() }),
+        body: JSON.stringify({ nino: nino.trim().toUpperCase(), vrn: vrn.trim() }),
       });
       const d = await res.json();
       if (d.error) { setError(d.error); return; }
+      // The server normalises (strips GB and spaces); show what was stored, so
+      // the field matches what will actually be sent to HMRC.
+      if (d.vrn !== undefined) setVrn(d.vrn);
+      if (d.warning) setWarning(d.warning);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } finally {
@@ -133,10 +141,32 @@ export default function ProfilePage() {
               onChange={e => setNino(e.target.value)}
               placeholder="AB 12 34 56 C"
               maxLength={13}
-              style={inputStyle}
+              style={{ ...inputStyle, minHeight: 44 }}
             />
             <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>{t('ninoHelp')}</p>
           </div>
+
+          <div className="mt-5">
+            <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A4035' }}>
+              {t('vrnLabel')}
+            </label>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={vrn}
+              onChange={e => setVrn(e.target.value)}
+              placeholder="GB 123 4567 89"
+              maxLength={16}
+              // 44px minimum touch target, per the mobile-first rules in
+              // CLAUDE.md. The shared inputStyle sets padding but not height.
+              style={{ ...inputStyle, minHeight: 44 }}
+            />
+            <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>{t('vrnHelp')}</p>
+          </div>
+
+          {warning && (
+            <div className="mt-4 p-3 rounded-xl text-sm" style={{ backgroundColor: '#FEF3C7', color: '#92400E' }}>{warning}</div>
+          )}
 
           {error && (
             <div className="mt-4 p-3 rounded-xl text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
@@ -147,7 +177,7 @@ export default function ProfilePage() {
               type="submit"
               disabled={saving}
               className="px-6 py-2.5 rounded-full text-sm font-medium"
-              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
+              style={{ minHeight: 44, backgroundColor: '#1C1208', color: '#FDFCF8', opacity: saving ? 0.6 : 1, cursor: saving ? 'wait' : 'pointer' }}
             >
               {saving ? t('saving') : t('save')}
             </button>

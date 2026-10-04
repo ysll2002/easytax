@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Crunch Alternative — MTD ITSA Software for UK Freelancers, £24 per Filing',
+  title: pageTitle('Crunch Alternative — MTD ITSA Software UK'),
   description: 'Looking for a Crunch alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/crunch-alternative' },
   openGraph: {
@@ -198,7 +199,7 @@ export default async function CrunchAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or landlord who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially once HMRC MTD ITSA becomes mandatory.
+              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or landlord who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially now that HMRC MTD ITSA is mandatory.
             </p>
           </div>
         </section>

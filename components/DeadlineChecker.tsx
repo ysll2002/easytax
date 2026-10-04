@@ -1,10 +1,12 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { CalendarClock, CheckCircle2, Info, ArrowRight } from 'lucide-react';
 import { trackClient } from './PageViewTracker';
 import DeadlineScheduleForm from './DeadlineScheduleForm';
+import ShareResult from './ShareResult';
+import { encodeDeadline, deadlineCard, type DeadlineShare } from '@/lib/share-results';
 import {
   quartersForTaxYear,
   finalDeclarationFor,
@@ -34,11 +36,24 @@ function formatGbp(n: number): string {
   return `£${n.toLocaleString('en-GB')}`;
 }
 
-export default function DeadlineChecker() {
-  const [kinds, setKinds]   = useState<IncomeKind[]>([]);
-  const [income, setIncome] = useState('');
-  const [result, setResult] = useState<null | { mandatedFrom: number | null; income: number }>(null);
+/** `initial` is a shared result link, decoded on the server by the page — see
+ *  the note on PenaltyCalculator for why the decode does not happen here. */
+export default function DeadlineChecker({ initial }: { initial?: DeadlineShare | null }) {
+  const [kinds, setKinds]   = useState<IncomeKind[]>(initial?.kinds ?? []);
+  const [income, setIncome] = useState(initial ? String(initial.income) : '');
+  // Computed in the initialiser, not an effect, so a shared answer is in the
+  // server-rendered HTML rather than appearing a beat after hydration. See the
+  // same note on PenaltyCalculator.
+  const [result, setResult] = useState<null | { mandatedFrom: number | null; income: number }>(() =>
+    initial
+      ? { mandatedFrom: firstMandatedTaxYear(initial.income), income: initial.income }
+      : null,
+  );
   const started = useRef(false);
+
+  useEffect(() => {
+    if (initial) trackClient('checker_completed', { source: 'shared_link' });
+  }, [initial]);
 
   // Fired once, on the first real interaction, so the funnel can separate
   // "landed on the page" from "actually engaged with the tool".
@@ -150,6 +165,15 @@ export default function DeadlineChecker() {
       </form>
 
       {result && <Result mandatedFrom={result.mandatedFrom} income={result.income} />}
+
+      {result && parsedIncome !== null && kinds.length > 0 && (
+        <ShareResult
+          tool="mtd_deadline"
+          path="/mtd-deadline-checker"
+          query={encodeDeadline({ income: parsedIncome, kinds })}
+          summary={deadlineCard({ income: parsedIncome, kinds }).title}
+        />
+      )}
     </div>
   );
 }

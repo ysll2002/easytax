@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
@@ -6,7 +7,7 @@ import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
-  title: 'Xero Alternative UK — MTD ITSA Software for UK Sole Traders',
+  title: pageTitle('Xero Alternative — MTD ITSA Software for UK Sole Traders'),
   description: 'Looking for a Xero alternative in the UK? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC. £24 per filing — no monthly subscription.',
   alternates: { canonical: 'https://easytax.vip/xero-alternative' },
   openGraph: {

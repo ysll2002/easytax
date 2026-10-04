@@ -14,6 +14,13 @@
     "language": "言語",
     "trust": "安全性と信頼"
   },
+  "mtdBar": {
+    "live": "MTD ITSA は施行されています。",
+    "preMandate": "MTD ITSA は 2026 年 4 月 6 日に開始します。",
+    "due": "{quarter} 四半期申告（{period}）の期限は {date}",
+    "daysLeft": "残り {days} 日",
+    "cta": "期限を確認する"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital が始まりました。",
@@ -31,6 +38,7 @@
       "badgeNoCard": "登録にカード不要",
       "badgeHmrc": "HMRC API 連携",
       "ctaPrimary": "MTD 対応を始める →",
+      "ctaChecker": "MTDの期限を確認する →",
       "ctaSecondary": "対応範囲を見る →"
     },
     "trust": {
@@ -39,6 +47,11 @@
       "fast": "ICO 登録番号 ZA540758",
       "ai": "Finance Panda Limited",
       "company": "法人対応"
+    },
+    "tools": {
+      "title": "今すぐ使える無料ツール",
+      "subtitle": "アカウント登録もカードも不要、HMRCの承認を待つ必要もありません。訪問者が実際に抱える疑問に答える3つの計算ツール。",
+      "all": "すべての無料ツール →"
     },
     "services": {
       "title1": "すべてに対応、",
@@ -109,6 +122,12 @@
       "readMore": "続きを読む →",
       "empty": "最初の記事は明朝 8 時に。",
       "visit": "税務情報を見る →"
+    },
+    "questions": {
+      "kicker": "ここで解決",
+      "title": "実際によく検索される疑問",
+      "subtitle": "税務トピックの一覧ではありません。英国の個人事業主・不動産オーナー・会社役員が実際に検索する疑問と、それぞれに答えるガイドです。",
+      "viewAll": "すべてのガイド"
     },
     "finalCta": {
       "title1": "もう書類仕事に",
@@ -296,6 +315,8 @@
       "taxIdsSubtitle": "HMRC Self Assessment 申告に必須。",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "形式：英字 2 文字 + 数字 6 桁 + 英字 1 文字 —— P60 や HMRC 書類で確認可。",
+      "vrnLabel": "VAT登録番号 (VRN)",
+      "vrnHelp": "9桁の数字で、VAT証明書に記載されています。「GB」の接頭辞やスペースが含まれていても保存時に整形されます。",
       "saving": "保存中…",
       "save": "保存",
       "saved": "✓ 保存しました"
@@ -321,7 +342,12 @@
     "allTools": "すべての無料ツール",
     "penaltyCalculator": "加算税計算ツール",
     "poaCalculator": "予定納税計算ツール",
+    "taxCalendar": "税務期限カレンダー",
+    "rssFeed": "RSSフィード",
+    "deadlineWidget": "期限ウィジェット",
     "browseTopics": "トピックから探す",
+    "hmrcSignedMeUp": "HMRCにMTDへ登録された",
+    "mtdQuarterlyDeadlines": "MTD四半期更新の期限",
     "aboutUs": "私たちについて",
     "privacy": "プライバシー",
     "terms": "利用規約",

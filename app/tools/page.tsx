@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import TrackEvent from '@/components/TrackEvent';
@@ -16,7 +17,7 @@ import { TOOLS } from '@/lib/tools';
 // the generic "free UK tax calculator" queries that no single tool targets.
 
 export const metadata: Metadata = {
-  title: 'Free UK Tax Calculators & Tools — MTD deadlines, penalties, payments on account',
+  title: pageTitle('Free UK Tax Calculators & MTD Deadline Tools'),
   description:
     'Free tools for UK sole traders, landlords and small limited companies. Check whether you are in Making Tax Digital, work out a late filing penalty, and see what really leaves your account on 31 January. No signup, nothing stored.',
   keywords: [
@@ -136,6 +137,33 @@ export default function ToolsPage() {
             </li>
           ))}
         </ul>
+
+        {/* ── For the other audience ──
+            Everything above is addressed to someone who owes tax. This is
+            addressed to someone who writes for people who do, and it is on the
+            hub rather than only in the footer because an adviser who has come
+            looking for "a tax tool" is exactly the reader who would take one
+            away and put it on their own site. */}
+        <Link
+          href="/tools/embed"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl p-5 sm:p-6 mt-4"
+          style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D40', textDecoration: 'none' }}
+        >
+          <span className="block">
+            <span className="block text-xs font-medium mb-1" style={{ color: '#C4622D' }}>
+              Accountants, bookkeepers and advisers
+            </span>
+            <span className="block text-sm sm:text-base font-semibold" style={{ color: '#1C1208' }}>
+              Put the next MTD deadline on your own website — free
+            </span>
+            <span className="block text-sm mt-1" style={{ color: '#4A4035' }}>
+              One line of HTML. It updates itself every quarter, so you never edit the date again.
+            </span>
+          </span>
+          <span className="text-sm font-semibold whitespace-nowrap" style={{ color: '#C4622D' }}>
+            Get the widget →
+          </span>
+        </Link>
 
         {/* ── Why they are free ── */}
         <section className="mt-14">

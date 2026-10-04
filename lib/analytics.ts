@@ -36,11 +36,46 @@ export const EVENTS = {
   toolCompleted:       'tool_completed',
   toolCtaClick:        'tool_cta_click',
   topicHubViewed:      'topic_hub_viewed',
+  // Behaviour on a page, recorded at most once per view: how far down, how
+  // long, and whether anything was clicked or typed. It exists to answer a
+  // question page_view cannot — whether the handful of "human" visitors are
+  // reading or are automation with a browser User-Agent. See
+  // components/EngagementTracker.tsx.
+  pageEngaged:         'page_engaged',
   editorialViewed:     'editorial_standards_viewed',
   // Deadline-schedule capture. The address is given for something deliverable
   // today, so it is counted separately from the plain launch waitlist.
   scheduleRequested:   'schedule_requested',
   scheduleSent:        'schedule_sent',
+  // Recorded server-side by the .ics route. Not in /api/track's allowlist on
+  // purpose: nothing in the browser should be able to forge a subscription.
+  calendarFetched:     'calendar_fetched',
+  calendarCtaClick:    'calendar_cta_click',
+  // Recorded by /api/admin/reactivation when the owner sends the campaign to
+  // the existing account base. Listed here so that until it is sent it shows up
+  // in the endpoint's `never_fired` block rather than being invisible.
+  reactivationSent:    'reactivation_sent',
+  // Distribution: the four ways a page of ours can end up somewhere else.
+  // The click on a share control, and the copy of a result link. Both carry
+  // props.tool and props.channel; neither ever carries the figures, which are
+  // in the shared URL only because the reader put them there.
+  shareClick:          'share_click',
+  shareCopy:           'share_copy',
+  // Server-side, from the Open Graph route a shared result link points at. A
+  // hit is a platform scraping the card, which is the closest thing we get to
+  // proof that a link was actually posted somewhere.
+  shareCardServed:     'share_card_served',
+  // Server-side, from /embed/*. props.host is the site doing the embedding —
+  // in other words, a backlink, detected by us rather than waited for from
+  // Search Console.
+  embedServed:         'embed_served',
+  // Server-side, from the RSS/JSON feeds. A repeating fetch from the same
+  // reader user-agent is a subscription.
+  feedFetched:         'feed_fetched',
+  // Server-side, from /llms.txt and /llms-full.txt. props.file says which of
+  // the two, props.agent which crawler — the index being fetched is interest,
+  // the full text being fetched is the archive actually leaving with someone.
+  llmsFetched:         'llms_fetched',
 } as const;
 
 let warned = false;

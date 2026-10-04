@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { getValidToken, submitQuarterlyUpdate, type QuarterlyData } from '@/lib/hmrc';
+import { resolveBusinessId } from '@/lib/hmrc-business';
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -18,15 +19,24 @@ export async function POST(req: NextRequest) {
 
   if (!hmrc) return NextResponse.json({ error: 'No HMRC connection' }, { status: 404 });
 
-  const nino       = hmrc.nino       ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
-  const businessId = hmrc.business_id ?? (process.env.HMRC_ENV !== 'production' ? 'XAIS12345678910' : null);
-
-  if (!nino || !businessId) {
-    return NextResponse.json({ error: 'NINO or businessId missing' }, { status: 400 });
-  }
+  const nino = hmrc.nino ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
+  if (!nino) return NextResponse.json({ error: 'NINO missing' }, { status: 400 });
 
   try {
-    const token  = await getValidToken(profileId);
+    const token = await getValidToken(profileId);
+
+    // Resolved here rather than at connect time. The OAuth callback used to
+    // fetch this, and it is the one route that cannot attach a single
+    // Gov-Client-* device header — see lib/hmrc-business.ts. This request came
+    // from the dashboard through hmrcFetch, so it carries real device data,
+    // and the lookup only happens on the first filing for a connection.
+    const businessId = (await resolveBusinessId(profileId, nino, token, hmrc.business_id))
+      ?? (process.env.HMRC_ENV !== 'production' ? 'XAIS12345678910' : null);
+
+    if (!businessId) {
+      return NextResponse.json({ error: 'businessId missing' }, { status: 400 });
+    }
+
     const result = await submitQuarterlyUpdate(nino, businessId, body, token);
 
     const totalExpenses = Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0);

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Menu, X } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
+import MtdStatusBar from './MtdStatusBar';
 
 export default function SiteHeader() {
   const { data: session } = useSession();
@@ -13,6 +14,10 @@ export default function SiteHeader() {
 
   return (
     <header style={{ position: 'relative' }}>
+      {/* The mandate is live, and until now only the homepage said so. Putting
+          it in the shared header is what makes that true of every page. */}
+      <MtdStatusBar />
+
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex justify-between items-center">
         <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#C4622D', letterSpacing: '-0.01em', textDecoration: 'none' }}>
           EasyTax

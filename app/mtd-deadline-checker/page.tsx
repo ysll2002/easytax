@@ -1,13 +1,16 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import DeadlineChecker from '@/components/DeadlineChecker';
 import { quartersForTaxYear, finalDeclarationFor } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
+import CalendarSubscribe from '@/components/CalendarSubscribe';
 import ToolCrossLinks from '@/components/ToolCrossLinks';
+import { decodeDeadline, encodeDeadline, deadlineCard, toSearchParams } from '@/lib/share-results';
 
-export const metadata: Metadata = {
-  title: 'MTD Deadline Checker — Am I in Making Tax Digital, and when are my deadlines?',
+const BASE: Metadata = {
+  title: pageTitle('MTD Deadline Checker — Am I in Making Tax Digital?'),
   description:
     'Free checker for UK sole traders and landlords. Enter your income and get the exact tax year you come into MTD for Income Tax, your four quarterly update deadlines (7 Aug, 7 Nov, 7 Feb, 7 May) and your final declaration date.',
   keywords: [
@@ -35,7 +38,40 @@ export const metadata: Metadata = {
   },
 };
 
-export default function DeadlineCheckerPage() {
+type Search = Promise<Record<string, string | string[] | undefined>>;
+
+/** A shared result link carries its answer into the title, description and
+ *  preview card. The canonical stays on the clean URL — a pre-filled form is
+ *  the same page, not a new one. */
+export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
+  const shared = decodeDeadline(toSearchParams(await searchParams));
+  if (!shared) return BASE;
+
+  const card = deadlineCard(shared);
+  const image = `/og/mtd-deadline?${encodeDeadline(shared)}`;
+
+  return {
+    ...BASE,
+    title: card.metaTitle,
+    description: card.metaDescription,
+    openGraph: {
+      ...BASE.openGraph,
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [{ url: image, width: 1200, height: 630, alt: card.title }],
+    },
+    twitter: {
+      ...BASE.twitter,
+      card: 'summary_large_image',
+      title: card.metaTitle,
+      description: card.metaDescription,
+      images: [image],
+    },
+  };
+}
+
+export default async function DeadlineCheckerPage({ searchParams }: { searchParams: Search }) {
+  const shared = decodeDeadline(toSearchParams(await searchParams));
   const q2627 = quartersForTaxYear(2026);
   const final2627 = finalDeclarationFor(2026);
 
@@ -125,7 +161,7 @@ export default function DeadlineCheckerPage() {
           you do not need an account.
         </p>
 
-        <DeadlineChecker />
+        <DeadlineChecker initial={shared} />
 
         {/* ── Why the dates catch people out ── */}
         <section className="mt-14">
@@ -193,6 +229,12 @@ export default function DeadlineCheckerPage() {
             ))}
           </div>
         </section>
+
+        {/* The checker tells you which deadlines apply; this is how you keep
+            them. Directly after the result is the moment that matters. */}
+        <div className="mt-12">
+          <CalendarSubscribe placement="mtd_deadline_checker" />
+        </div>
 
         <p className="text-xs leading-relaxed mt-12" style={{ color: '#9A8F83' }}>
           This tool gives general information about HMRC&apos;s published MTD for Income Tax rules

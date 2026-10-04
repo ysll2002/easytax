@@ -4,6 +4,24 @@ import { getTranslations } from 'next-intl/server';
 import { ChevronRight, User, Building2, RefreshCw } from 'lucide-react';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import ActivationChecklist from '@/components/ActivationChecklist';
+import FilingStatus from '@/components/FilingStatus';
+
+/** Whether this address is already on the launch list, so the banner does not
+ *  offer a subscription somebody has already taken. Any failure reads as "not
+ *  subscribed": showing the button twice is a far smaller cost than hiding it
+ *  from someone who has not signed up. */
+async function isOnLaunchList(email: string | null | undefined): Promise<boolean> {
+  if (!email) return false;
+  try {
+    const { count } = await supabase
+      .from('launch_subscribers')
+      .select('id', { head: true, count: 'exact' })
+      .eq('email', email.toLowerCase());
+    return (count ?? 0) > 0;
+  } catch {
+    return false;
+  }
+}
 
 /** Which setup steps this user has completed. Errors are treated as "not
  *  connected": a failed lookup should show an extra nudge, never blank the
@@ -38,7 +56,10 @@ export default async function DashboardHome() {
   const t = await getTranslations('dashboard.home');
   const name = session?.user.name ?? session?.user.email ?? 'there';
   const firstName = name.split(' ')[0];
-  const activation = await getActivationState(session?.user?.profileId);
+  const [activation, onLaunchList] = await Promise.all([
+    getActivationState(session?.user?.profileId),
+    isOnLaunchList(session?.user?.email),
+  ]);
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
@@ -48,6 +69,12 @@ export default async function DashboardHome() {
         </h1>
         <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>{t('question')}</p>
       </div>
+
+      {/* Above the checklist deliberately. The checklist asks the user to do
+          things; this says what those things will and will not get them today.
+          Putting the ask first and the caveat underneath is how people end up
+          feeling misled by a product that was only ever early. */}
+      <FilingStatus initiallySubscribed={onLaunchList} />
 
       <ActivationChecklist
         hmrcConnected={activation.hmrcConnected}

@@ -14,6 +14,13 @@
     "language": "语言",
     "trust": "安全与信任"
   },
+  "mtdBar": {
+    "live": "MTD ITSA 已正式生效。",
+    "preMandate": "MTD ITSA 将于 2026 年 4 月 6 日生效。",
+    "due": "{quarter} 季度申报（{period}）截止日期为 {date}",
+    "daysLeft": "剩余 {days} 天",
+    "cta": "查看你的截止日期"
+  },
   "home": {
     "announcement": {
       "live": "数字化税务（MTD）已开始。",
@@ -31,6 +38,7 @@
       "badgeNoCard": "注册无需信用卡",
       "badgeHmrc": "基于 HMRC 官方 API",
       "ctaPrimary": "开始 MTD 申报 →",
+      "ctaChecker": "查询我的 MTD 截止日期 →",
       "ctaSecondary": "查看支持范围 →"
     },
     "trust": {
@@ -39,6 +47,11 @@
       "fast": "ICO 注册号 ZA540758",
       "ai": "Finance Panda Limited",
       "company": "支持有限公司"
+    },
+    "tools": {
+      "title": "现在就能用的免费工具",
+      "subtitle": "无需注册、无需银行卡，也不必等待 HMRC 审批。三个计算器，回答访客真正带来的问题。",
+      "all": "查看全部免费工具 →"
     },
     "services": {
       "title1": "全面覆盖，",
@@ -109,6 +122,12 @@
       "readMore": "继续阅读 →",
       "empty": "明早 8 点见首篇文章。",
       "visit": "访问报税小贴士 →"
+    },
+    "questions": {
+      "kicker": "这里有答案",
+      "title": "人们真正会问的问题",
+      "subtitle": "不是一份税务主题清单，而是英国自雇人士、房东和公司董事真正会搜索的问题，以及回答每个问题的指南。",
+      "viewAll": "全部指南"
     },
     "finalCta": {
       "title1": "别再害怕",
@@ -296,6 +315,8 @@
       "taxIdsSubtitle": "用于 HMRC Self Assessment 申报所必需。",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "格式：2 个字母 + 6 位数字 + 1 个字母 —— 可在 P60 或 HMRC 信件中找到。",
+      "vrnLabel": "增值税登记号 (VRN)",
+      "vrnHelp": "9 位数字，在你的 VAT 证书上。可以带 GB 前缀和空格，保存时会自动整理。",
       "saving": "保存中…",
       "save": "保存",
       "saved": "✓ 已保存"
@@ -321,7 +342,12 @@
     "allTools": "全部免费工具",
     "penaltyCalculator": "罚款计算器",
     "poaCalculator": "预缴税款计算器",
+    "taxCalendar": "税务截止日期日历",
+    "rssFeed": "RSS 订阅",
+    "deadlineWidget": "截止日期挂件",
     "browseTopics": "按主题浏览",
+    "hmrcSignedMeUp": "HMRC 把我登记进了 MTD",
+    "mtdQuarterlyDeadlines": "MTD 季度申报截止日期",
     "aboutUs": "关于我们",
     "privacy": "隐私",
     "terms": "条款",

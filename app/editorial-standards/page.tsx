@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import TrackEvent from '@/components/TrackEvent';
@@ -19,7 +20,7 @@ import SiteFooter from '@/components/SiteFooter';
 // something wrong.
 
 export const metadata: Metadata = {
-  title: 'Editorial standards — how EasyTax writes and checks its tax guides',
+  title: pageTitle('Editorial standards — how we write our tax guides'),
   description:
     'How the EasyTax Tax Tips archive is produced: AI-drafted from HMRC guidance and UK legislation, human-reviewed before publication, corrected when wrong. What we check, what we do not, and how to report an error.',
   alternates: { canonical: 'https://easytax.vip/editorial-standards' },

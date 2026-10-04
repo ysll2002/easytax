@@ -10,6 +10,9 @@ import ArticleCta from '../_components/ArticleCta';
 import SiteFooter from '@/components/SiteFooter';
 import ArticleProvenance, { ArticleSources } from '../_components/ArticleProvenance';
 import { selectPublished } from '../_lib/review';
+import { pageTitle, metaDescription } from '@/lib/seo-meta';
+import { extractHeadings, faqJsonLd, withHeadingIds } from '@/lib/article-structure';
+import { articleQuestion, withCommissionedQuestion } from '@/lib/article-question';
 
 export const revalidate = 3600;
 
@@ -25,8 +28,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!data) return {};
 
   return {
-    title: `${data.title} | EasyTax`,
-    description: data.excerpt,
+    // `pageTitle` applies the brand exactly once and drops it when the
+    // headline needs the room. Appending it here, as this line used to, put
+    // `| EasyTax | EasyTax` on all 113 articles — the root layout's title
+    // template had already added one.
+    title: pageTitle(data.title),
+    description: metaDescription(data.excerpt),
     // Without this, every article inherited the site-wide canonical pointing
     // at the homepage, telling Google these 109 pages were duplicates of it.
     alternates: { canonical: `https://easytax.vip/tax-tips/${slug}` },
@@ -99,6 +106,26 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     isAccessibleForFree: true,
   };
 
+  // Anchors on every heading, and a contents list built from the same walk, so
+  // a section of an article has a URL. Done at render rather than at insert:
+  // the transform is over markup sanitiseArticleHtml has already cleaned, and
+  // doing it here means the 113 pages already in the table get it without a
+  // backfill.
+  const bodyHtml = withHeadingIds(article.content);
+  const headings = extractHeadings(article.content);
+
+  // Only for the articles that genuinely are question-and-answer pages — see
+  // lib/article-structure.ts for why this test is the strict one.
+  // The search this piece was commissioned to answer, where we know it. Every
+  // search referral this site has ever had landed on one of these pages from a
+  // long-tail question query, and until now the page never said which question
+  // it was written for — the pipeline knew and threw it away.
+  const pageUrl = `https://easytax.vip/tax-tips/${slug}`;
+  const question = articleQuestion(article);
+  const jsonLdFaq = question
+    ? withCommissionedQuestion(faqJsonLd(article.content, pageUrl), question, pageUrl)
+    : faqJsonLd(article.content, pageUrl);
+
   const jsonLdBreadcrumb = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -113,6 +140,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdArticle) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdBreadcrumb) }} />
+      {jsonLdFaq && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }} />
+      )}
       <SiteHeader />
 
       <main className="flex-grow">
@@ -131,6 +161,20 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2, marginBottom: '1.25rem' }}>
             {article.title}
           </h1>
+
+          {/* The question, above the answer. The excerpt already *is* the short
+              answer — it is written by the same run and reviewed by the same
+              person — so this labels it rather than repeating it in new words.
+              Rendering a second, generated summary here would be unreviewed tax
+              guidance reaching the page through a side door. */}
+          {question && (
+            <p
+              className="text-sm mb-2"
+              style={{ color: '#9A8F83', fontWeight: 600, lineHeight: 1.5 }}
+            >
+              {question.question}
+            </p>
+          )}
 
           <p className="text-lg leading-relaxed mb-6" style={{ color: '#4A4035' }}>
             {article.excerpt}
@@ -173,9 +217,46 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             reviewedBy={article.reviewed_by ?? null}
           />
 
+          {/* "On this page". Only where there is enough structure for it to be
+              navigation rather than decoration — a contents list over two
+              sections just repeats the top of the article. It is also the
+              visible half of the anchors: the ids exist for Google's jump
+              links and for an answer engine citing one section, and a reader
+              who can see them gets the same benefit. */}
+          {headings.length >= 4 && (
+            <nav
+              className="mb-8 p-4 sm:p-5 rounded-xl"
+              style={{ backgroundColor: '#F7F3EC', border: '1px solid #E8E2DA' }}
+              aria-labelledby="on-this-page"
+            >
+              <p
+                id="on-this-page"
+                className="text-xs uppercase tracking-wide m-0 mb-2.5"
+                style={{ color: '#9A8F83' }}
+              >
+                On this page
+              </p>
+              <ul className="list-none p-0 m-0 space-y-1.5">
+                {headings
+                  .filter(h => h.level === 2)
+                  .map(h => (
+                    <li key={h.id} style={{ lineHeight: 1.5 }}>
+                      <a
+                        href={`#${h.id}`}
+                        className="text-sm"
+                        style={{ color: '#4A4035', textDecoration: 'none' }}
+                      >
+                        {h.text}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
+          )}
+
           <div
             className="prose-article"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: bodyHtml }}
           />
 
           <ArticleSources sources={article.sources} />

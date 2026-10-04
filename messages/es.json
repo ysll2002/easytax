@@ -14,6 +14,13 @@
     "language": "Idioma",
     "trust": "Confianza y seguridad"
   },
+  "mtdBar": {
+    "live": "MTD ITSA ya está en vigor.",
+    "preMandate": "MTD ITSA comienza el 6 de abril de 2026.",
+    "due": "Actualización {quarter} ({period}), fecha límite {date}",
+    "daysLeft": "quedan {days} días",
+    "cta": "Consulta tus plazos"
+  },
   "home": {
     "announcement": {
       "live": "Making Tax Digital ya ha comenzado.",
@@ -31,6 +38,7 @@
       "badgeNoCard": "Sin tarjeta para registrarte",
       "badgeHmrc": "Basado en las API de HMRC",
       "ctaPrimary": "Prepárate para MTD →",
+      "ctaChecker": "Consultar mis plazos de MTD →",
       "ctaSecondary": "Ver qué cubrimos →"
     },
     "trust": {
@@ -39,6 +47,11 @@
       "fast": "Registro ICO ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Sociedades limitadas"
+    },
+    "tools": {
+      "title": "Herramientas gratuitas que puedes usar ahora",
+      "subtitle": "Sin cuenta, sin tarjeta y sin esperar la aprobación de HMRC. Tres calculadoras que responden a las preguntas con las que la gente llega.",
+      "all": "Todas las herramientas gratuitas →"
     },
     "services": {
       "title1": "Todo cubierto,",
@@ -110,6 +123,12 @@
       "empty": "Primer artículo mañana a las 8.",
       "visit": "Visita Consejos fiscales →"
     },
+    "questions": {
+      "kicker": "Respondido aquí",
+      "title": "Las preguntas que la gente hace de verdad",
+      "subtitle": "No es una lista de temas fiscales: es lo que autónomos, propietarios y directores de empresas del Reino Unido escriben en un buscador, y la guía que responde a cada pregunta.",
+      "viewAll": "Todas las guías"
+    },
     "finalCta": {
       "title1": "Deja de temer",
       "title2": "el papeleo.",
@@ -123,8 +142,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "EasyTax — Software MTD ITSA para autónomos y sociedades del Reino Unido",
-      "description": "Software MTD ITSA para autónomos, arrendadores y sociedades limitadas del Reino Unido. Envía actualizaciones trimestrales a HMRC, presenta Self Assessment, IVA y CT600. £24 por envío, sin suscripción — sin tarjeta para registrarte."
+      "title": "Software MTD ITSA para autónomos en el Reino Unido",
+      "description": "Software MTD ITSA para autónomos, arrendadores y sociedades del Reino Unido. Actualizaciones trimestrales a HMRC, Self Assessment, IVA y CT600 desde £24."
     },
     "toolsStrip": {
       "kicker": "Gratis · sin cuenta",
@@ -296,6 +315,8 @@
       "taxIdsSubtitle": "Necesarios para presentar Self Assessment ante HMRC.",
       "ninoLabel": "National Insurance Number (NINO)",
       "ninoHelp": "Formato: 2 letras, 6 dígitos, 1 letra — lo encuentras en tu P60 o cartas de HMRC.",
+      "vrnLabel": "Número de registro de IVA (VRN)",
+      "vrnHelp": "9 dígitos, en su certificado de IVA. Puede incluir el prefijo «GB» y espacios: lo normalizamos al guardar.",
       "saving": "Guardando…",
       "save": "Guardar",
       "saved": "✓ Guardado"
@@ -321,7 +342,12 @@
     "allTools": "Todas las herramientas",
     "penaltyCalculator": "Calculadora de sanciones",
     "poaCalculator": "Calculadora de pagos a cuenta",
+    "taxCalendar": "Calendario de plazos fiscales",
+    "rssFeed": "Feed RSS",
+    "deadlineWidget": "Widget de plazos",
     "browseTopics": "Explorar por tema",
+    "hmrcSignedMeUp": "HMRC me inscribió en MTD",
+    "mtdQuarterlyDeadlines": "Plazos de actualizaciones trimestrales MTD",
     "aboutUs": "Sobre nosotros",
     "privacy": "Privacidad",
     "terms": "Términos",

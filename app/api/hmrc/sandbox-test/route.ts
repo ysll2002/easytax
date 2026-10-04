@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken, fraudHeaders } from '@/lib/hmrc';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -58,38 +58,46 @@ async function call(
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   // Top-level catch so we always return valid JSON even if something crashes
   try {
-    // Two auth modes:
-    //  1. Interactive: normal user session, runs against the caller's own
-    //     HMRC connection (dashboard button).
-    //  2. Cron: Vercel cron with Authorization: Bearer $CRON_SECRET. Picks
-    //     the first hmrc_connections row so the harness stays "warm" against
-    //     HMRC's 30-day rolling test log even when nobody clicks the button.
-    const cronSecret = process.env.CRON_SECRET;
-    const authHeader = req.headers.get('authorization') ?? '';
-    const isCron     = cronSecret != null && authHeader === `Bearer ${cronSecret}`;
-
-    let profileId: string;
-    if (isCron) {
-      const { data: anyConn } = await supabase
-        .from('hmrc_connections')
-        .select('user_id')
-        .limit(1)
-        .maybeSingle();
-      if (!anyConn?.user_id) {
-        return NextResponse.json(
-          { error: 'Cron: no hmrc_connections row available to test with.' },
-          { status: 400 },
-        );
-      }
-      profileId = anyConn.user_id;
-    } else {
-      const session = await auth();
-      if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      profileId = session.user.profileId;
+    // One auth mode: a signed-in user, running the harness against their own
+    // HMRC connection.
+    //
+    // There used to be a second — `Authorization: Bearer $CRON_SECRET`, which
+    // picked the first `hmrc_connections` row via `.limit(1)` so the harness
+    // could stay "warm" against HMRC's 30-day rolling log without anybody
+    // clicking the button. It is gone, for two reasons.
+    //
+    // The first is fraud prevention headers. A cron has no browser, so
+    // `fraudHeaders()` finds no device data and the nine Gov-Client-* headers
+    // come out empty and are dropped. That is exactly the traffic HMRC's FPH
+    // review sampled on 2026-09-01 and reported three times over; the
+    // twice-monthly `vercel.json` entry that produced it was removed on
+    // 2026-09-07, and this branch was the other half of the same mechanism —
+    // one line in `vercel.json` away from firing again, at the precise moment
+    // HMRC's fraud header team is running a full review.
+    //
+    // The second is worse and is the reason this is a removal rather than a
+    // guard. The harness is not read-only: it makes 11 POSTs, 12 PUTs and 8
+    // DELETEs, including `POST /organisations/vat/{vrn}/returns` and
+    // `POST .../self-employment/.../period`. Under the cron branch those ran
+    // against whichever user's stored access token happened to sort first in
+    // the table, with no session and no consent. In the sandbox that is
+    // harmless noise. With `HMRC_ENV=production` set — which is the whole
+    // point of the approval this project is working toward — it would be
+    // filing tax data to HMRC on a real person's behalf, triggered by a shared
+    // secret rather than by them.
+    //
+    // If automated keep-alive is ever wanted, it cannot be a cron: there is no
+    // browser, so there are no device headers, so the requests would be
+    // non-compliant by construction. It needs a different design, not this
+    // branch back.
+    const session = await auth();
+    if (!session?.user?.profileId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const profileId = session.user.profileId;
 
     let token: string;
     try {
@@ -114,8 +122,26 @@ export async function GET(req: NextRequest) {
       .eq('user_id', profileId)
       .single();
 
+    // No guessed VRN.
+    //
+    // This used to read `conn?.vrn ?? '999999999'`. On 2026-09-14 that cost an
+    // hour: the four VAT calls returned CLIENT_OR_AGENT_NOT_AUTHORISED, and
+    // because the fallback and the stored value were the same string, the
+    // result page gave no way to tell whether the VRN had come from the
+    // connection or been invented here. The real VRN for that test user was
+    // 308930751, sitting in an older `hmrc_connections` row.
+    //
+    // A default that can never work is worse than no default: it makes the VAT
+    // section *look* exercised while guaranteeing a 403, and it hides the one
+    // fact needed to fix it. With no VRN we now skip those calls and say so.
+    //
+    // The NINO default is kept — `GW460330D` is a working HMRC sandbox NINO and
+    // roughly sixty calls depend on it — but its provenance is now reported
+    // too, so the same ambiguity cannot recur silently for either value.
     const nino = conn?.nino ?? 'GW460330D';
-    const vrn  = conn?.vrn  ?? '999999999';
+    const ninoSource = conn?.nino ? 'from your HMRC connection' : 'sandbox default (none stored)';
+    const vrn: string | null = conn?.vrn ?? null;
+    const vrnSource = vrn ? 'from your HMRC connection' : 'not set — add it in Profile';
 
     // Current UK tax year (April 6 → April 5)
     const now = new Date();
@@ -679,6 +705,26 @@ export async function GET(req: NextRequest) {
     const to   = new Date().toISOString().slice(0, 10);
     const from = new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
+    if (!vrn) {
+      // Reported as five explicit skips rather than silently omitted, so the
+      // harness still accounts for every endpoint it claims to cover.
+      for (const [name, method, path] of [
+        ['VAT – Obligations',     'GET',  '/organisations/vat/{vrn}/obligations'],
+        ['VAT – Submit Return',   'POST', '/organisations/vat/{vrn}/returns'],
+        ['VAT – Retrieve Return', 'GET',  '/organisations/vat/{vrn}/returns/18A2'],
+        ['VAT – Liabilities',     'GET',  '/organisations/vat/{vrn}/liabilities'],
+        ['VAT – Payments',        'GET',  '/organisations/vat/{vrn}/payments'],
+      ] as const) {
+        results.push({
+          name, endpoint: `${method} ${path}`, method, status: null, ok: false,
+          error: 'Skipped: no VAT registration number on this HMRC connection. '
+            + 'Add the VRN your test user is enrolled for in Profile — it must match '
+            + 'the enrolment on the connected account, or HMRC returns 403 '
+            + 'CLIENT_OR_AGENT_NOT_AUTHORISED.',
+        });
+      }
+    } else {
+
     const vatOblData = await call(results, 'VAT – Obligations', `/organisations/vat/${vrn}/obligations?from=${from}&to=${to}`, 'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json' });
 
     // Find any fulfilled period key (for Retrieve) and any open one (for Submit)
@@ -719,6 +765,8 @@ export async function GET(req: NextRequest) {
     // upstream test backend has no row matching real-date queries.
     await call(results, 'VAT – Liabilities',         `/organisations/vat/${vrn}/liabilities?from=${from}&to=${to}`,             'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_LIABILITY' });
     await call(results, 'VAT – Payments',            `/organisations/vat/${vrn}/payments?from=${from}&to=${to}`,                'GET', token, fph, { accept: 'application/vnd.hmrc.1.0+json', scenario: 'SINGLE_PAYMENT' });
+
+    }
     // Penalties API + Financial Details are not in our production subscription scope
     // (declared out of scope in 9 Jun 2026 email to Ciaran). Excluded from the harness.
 
@@ -734,7 +782,11 @@ export async function GET(req: NextRequest) {
         tokenLen:   token.length,
         tokenStart: token.substring(0, 8),
       },
-      context: { nino, vrn, businessId: resolvedBusinessId, taxYear },
+      context: {
+        nino, ninoSource,
+        vrn: vrn || '(not set)', vrnSource,
+        businessId: resolvedBusinessId, taxYear,
+      },
       results,
     });
 

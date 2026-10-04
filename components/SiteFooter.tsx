@@ -103,6 +103,16 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
               { href: '/self-assessment-penalty-calculator',     label: t('penaltyCalculator') },
               { href: '/payments-on-account-calculator',         label: t('poaCalculator') },
               { href: '/timetable',                              label: nav('timetable') },
+              // The .ics feed. Linked here as well as on the two deadline
+              // pages, because it is the one thing on the site a visitor can
+              // take away and keep while filing is still closed.
+              { href: '/calendar/uk-tax-deadlines.ics',           label: t('taxCalendar') },
+              // The embeddable deadline widget. Linked from the footer as well
+              // as the tools hub because the person who would use it — an
+              // accountant or a bookkeeper writing for their own clients — is
+              // not the person the tool pages are addressed to, and is likelier
+              // to be scanning the footer of a page they were sent.
+              { href: '/tools/embed',                            label: t('deadlineWidget') },
             ]}
           />
           <Column
@@ -110,6 +120,16 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
             links={[
               { href: '/tax-tips',            label: nav('taxTips') },
               { href: '/tax-tips/topics',     label: t('browseTopics') },
+              // Site-wide inbound link for the September 2026 auto-enrolment
+              // page. A new route with no internal links is a page a crawler
+              // reaches only via the sitemap, and the demand it is aimed at is
+              // measured in weeks, not quarters.
+              { href: '/hmrc-signed-me-up-for-mtd', label: t('hmrcSignedMeUp') },
+              { href: '/mtd-quarterly-update-deadlines', label: t('mtdQuarterlyDeadlines') },
+              // A feed is the one distribution route that does not depend on a
+              // search engine choosing to send someone: it lets a reader, an
+              // aggregator or another site carry the archive away.
+              { href: '/tax-tips/feed.xml',   label: t('rssFeed') },
               { href: '/#faq',                label: nav('faq') },
             ]}
           />
