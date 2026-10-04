@@ -39,7 +39,12 @@ self-assessment-software）公开声称能提交 CT600、final declaration、Sel
   （分支 `agent/2026-10-04-fix-sandbox-api-test`，对 staging，**从 main 切出**，因为 staging 落后 main 33 个提交，而 production 从 main 构建）。
   改动：scope 加上 write:self-assessment-assist；sandbox-test 页面只改显示（跳过的调用显示成灰色、去掉「GET GET」、错误代码直接显示）。
   没碰 app/api/hmrc/**、lib/hmrc*、fraud headers、auth。tsc 通过。
-**学到 / 决定**：HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
+- owner 让我合并 PR。我指出这和「绝不 merge PR / 绝不部署」护栏冲突，并问要不要破例；owner 选了「只合到 staging」。
+  已合并 PR #26 进 staging（2026-10-04 19:20 UTC），并开了 [PR #27](https://github.com/ysll2002/easytax/pull/27)（staging→main，
+  只含 #26 的改动），由 owner 来合，合进 main 才会上线 production。确认 sandbox 应用 EasyTax 订阅了 SA Assist 1.0，所以 Produce 报
+  INVALID_SCOPE 的原因还没定，等上线并重新授权后再验证。
+**学到 / 决定**：护栏的边界：owner 明确要求时，可以合进 staging（这次 owner 授权的）；合进 main 等于部署 production，这次仍由
+owner 亲自做。这是一次性的授权，不能当作以后可以自己合 staging 的许可。HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
 的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
 
 ---
