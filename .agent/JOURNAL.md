@@ -21,7 +21,7 @@
 production 申请；2026–27 只继续审 8-10 之前提交的申请（以及季度已获批产品的年终功能申请）；不达标的会被拒；2027–28 的流程
 预计 2027 年初公布。我们 7-08 提交 checklist，**在范围内**，stg-007 结案。另外查到 owner 已在 9-25 16:01 UTC 发出 FPH 回信，
 HMRC 9-29 回复「已转 fraud headers team」。
-**发现**：被拒的代价变成「等到 2027–28」，所以 readiness 标准成了关键。核对后发现营销页（alternative 页、mtd-software、
+**发现**：被拒的代价可能是「等到 2027–28」（推断，owner 追问原文后已更正：信里只说不达标会 refused、2026–27 不收新申请、2027–28 信息 2027 年初公布，没说被拒后能否在原申请内重提），所以 readiness 标准成了关键。核对后发现营销页（alternative 页、mtd-software、
 self-assessment-software）公开声称能提交 CT600、final declaration、Self Assessment，以及能处理 landlord 收入，但代码里都没有
 （没有 CT600 提交代码，没有 final declaration 端点，没有 property API）。这和给 HMRC 的「仅年内、仅 self-employment」声明，
 以及 dashboard 页脚的说明直接矛盾，有违反 ToU「accurate representation」的风险。新建 stg-010，排 #1。

@@ -9,7 +9,7 @@
 - Production 审批：**PENDING**。App 已完整对接 HMRC sandbox（ITSA + VAT 两条路径都有调用）。
 - FPH 审查进行中，对接人：Aleesah Sher / Ciaran McLaughlin（HMRC）。
 - ✅ **申请窗口问题已解决（2026-10-04，HMRC Louise Tarpy 的正式说明）**：8-10 之前提交的申请继续审。我们 7-08 提交，**在范围内**。
-  但不达标会被拒，而被拒后最早要等 2027 年初公布的 2027–28 流程。readiness 标准包含 ToU「accurate representation」和 AI 内容审核条款。
+  但不达标会被拒。被拒后要等 2027 年初公布的 2027–28 流程是**推断**，HMRC 没有明确说，也没说能否在原申请内补材料重提。readiness 标准包含 ToU「accurate representation」和 AI 内容审核条款。
 - ⚠️ **新风险（2026-10-04 发现）**：多个公开营销页（`app/*-alternative/page.tsx`、`app/mtd-software`、`app/self-assessment-software`）
   声称 EasyTax 能提交 CT600、final declaration、Self Assessment、landlord/property 收入，但代码里没有这些提交功能，
   和我们向 HMRC 声明的「仅年内季度更新、仅 self-employment」以及 dashboard 页脚的说明矛盾。见 BACKLOG stg-010。
