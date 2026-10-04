@@ -35,6 +35,10 @@ self-assessment-software）公开声称能提交 CT600、final declaration、Sel
   「do not advertise my software」（实际有大量营销页）；pen test「Yes」（需要有报告可以拿出来）。网站文案上：privacy/trust 页说
   「HMRC access tokens are stored encrypted」，但代码直接写进 Supabase 列，只有平台的静态加密；onboarding 页说「never stored permanently」，
   和数字记录保存的要求矛盾。都归入 stg-010。
+- owner 说「先把 sandbox api test 的问题修复好」，已实现：[PR #26](https://github.com/ysll2002/easytax/pull/26)
+  （分支 `agent/2026-10-04-fix-sandbox-api-test`，对 staging，**从 main 切出**，因为 staging 落后 main 33 个提交，而 production 从 main 构建）。
+  改动：scope 加上 write:self-assessment-assist；sandbox-test 页面只改显示（跳过的调用显示成灰色、去掉「GET GET」、错误代码直接显示）。
+  没碰 app/api/hmrc/**、lib/hmrc*、fraud headers、auth。tsc 通过。
 **学到 / 决定**：HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
 的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
 

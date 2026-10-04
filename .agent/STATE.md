@@ -72,6 +72,8 @@
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)（待合 staging，之后还需进 main）
 - `agent/2026-09-22-hero-friendly-flat-preview` → [PR #25](https://github.com/ysll2002/easytax/pull/25)（待 owner 看 Vercel preview）
 
+- `agent/2026-10-04-fix-sandbox-api-test` → [PR #26](https://github.com/ysll2002/easytax/pull/26)（SA Assist scope + sandbox 测试页显示；从 main 切出，合进 staging 会顺带把 staging 追平到 main）
+
 ## 待复盘的 metric
 
 - PR #24 **上线到 production 后**（不是合进 staging 后）7 天：`schedule_requested` /
