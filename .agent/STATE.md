@@ -72,7 +72,7 @@
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)（待合 staging，之后还需进 main）
 - `agent/2026-09-22-hero-friendly-flat-preview` → [PR #25](https://github.com/ysll2002/easytax/pull/25)（待 owner 看 Vercel preview）
 
-- [PR #26](https://github.com/ysll2002/easytax/pull/26) **已合进 staging**（2026-10-04，owner 授权）；[PR #27](https://github.com/ysll2002/easytax/pull/27) staging→main 等 owner 合。staging 现在 = main + #26
+- [PR #26](https://github.com/ysll2002/easytax/pull/26) **已合进 staging**（2026-10-04，owner 授权）；[PR #27](https://github.com/ysll2002/easytax/pull/27) **已合进 main**（`c8e7104`，owner 授权）。staging = main
 
 ## 待复盘的 metric
 

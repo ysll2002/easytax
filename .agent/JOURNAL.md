@@ -43,8 +43,10 @@ self-assessment-software）公开声称能提交 CT600、final declaration、Sel
   已合并 PR #26 进 staging（2026-10-04 19:20 UTC），并开了 [PR #27](https://github.com/ysll2002/easytax/pull/27)（staging→main，
   只含 #26 的改动），由 owner 来合，合进 main 才会上线 production。确认 sandbox 应用 EasyTax 订阅了 SA Assist 1.0，所以 Produce 报
   INVALID_SCOPE 的原因还没定，等上线并重新授权后再验证。
-**学到 / 决定**：护栏的边界：owner 明确要求时，可以合进 staging（这次 owner 授权的）；合进 main 等于部署 production，这次仍由
-owner 亲自做。这是一次性的授权，不能当作以后可以自己合 staging 的许可。HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
+- 随后 owner 明确要求「合并 PR 并上线」。已合并 [PR #27](https://github.com/ysll2002/easytax/pull/27) 进 main（2026-10-04 19:24 UTC，
+  merge commit `c8e7104`，只含 #26 的 2 个文件）。没有跑 `vercel deploy`，production 由 Vercel 从 main 自动构建。
+**学到 / 决定**：护栏的边界：owner 明确要求时，可以合进 staging（这次 owner 授权的）；合进 main 等于部署 production，owner 第二次明确要求后才做。两次都是针对单个 PR 的一次性授权，
+不能当作以后可以自己合 PR 或部署的许可，下次仍要先问。HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
 的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
 
 ---
