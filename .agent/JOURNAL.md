@@ -15,6 +15,21 @@
 
 ---
 
+## 2026-10-04（owner 实时对话，非定时运行）
+
+**HMRC**：owner 转来 HMRC Louise Tarpy（Head of External Software Integration）的正式说明：2026-08-10 起暂停新的 MTD ITSA
+production 申请；2026–27 只继续审 8-10 之前提交的申请（以及季度已获批产品的年终功能申请）；不达标的会被拒；2027–28 的流程
+预计 2027 年初公布。我们 7-08 提交 checklist，**在范围内**，stg-007 结案。另外查到 owner 已在 9-25 16:01 UTC 发出 FPH 回信，
+HMRC 9-29 回复「已转 fraud headers team」。
+**发现**：被拒的代价变成「等到 2027–28」，所以 readiness 标准成了关键。核对后发现营销页（alternative 页、mtd-software、
+self-assessment-software）公开声称能提交 CT600、final declaration、Self Assessment，以及能处理 landlord 收入，但代码里都没有
+（没有 CT600 提交代码，没有 final declaration 端点，没有 property API）。这和给 HMRC 的「仅年内、仅 self-employment」声明，
+以及 dashboard 页脚的说明直接矛盾，有违反 ToU「accurate representation」的风险。新建 stg-010，排 #1。
+**学到 / 决定**：HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
+的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
+
+---
+
 ## 2026-09-25（owner 实时对话，非定时运行）
 
 **HMRC**：owner 贴来 2026-09-24 12:25 UTC 的 FPH 回信（CMQAA-923 / 2026-NQM717，Aleesah Sher）。审的是 9-23 12:16 UTC

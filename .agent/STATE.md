@@ -2,17 +2,17 @@
 
 > 每日 agent 每次运行后**覆盖写**这个文件。要看历史请查 `JOURNAL.md`。
 
-**最后更新：2026-09-25（owner 对话：HMRC FPH 回信；指标仍是 2026-09-23 18:34 UTC 快照）**
+**最后更新：2026-10-04（owner 对话：HMRC 正式说明申请窗口；指标仍是 2026-09-23 18:34 UTC 快照）**
 
 ## HMRC
 
 - Production 审批：**PENDING**。App 已完整对接 HMRC sandbox（ITSA + VAT 两条路径都有调用）。
 - FPH 审查进行中，对接人：Aleesah Sher / Ciaran McLaughlin（HMRC）。
-- ⚠️ **新的外部风险（2026-09-23 发现）**：HMRC Developer Hub *Income Tax MTD end-to-end service guide*
-  （Updated 15 Sep 2026）Overview 横幅：「no longer accepting production credential access requests for
-  new 2026–27 quarterly update products, as the market window for these products has now closed」。
-  页面没说在审申请怎么处理，也没说 2027–28 何时重开。**需要 owner 向 HMRC 书面确认（BACKLOG stg-007）。**
-  VAT 路径不在该横幅范围内。
+- ✅ **申请窗口问题已解决（2026-10-04，HMRC Louise Tarpy 的正式说明）**：8-10 之前提交的申请继续审。我们 7-08 提交，**在范围内**。
+  但不达标会被拒，而被拒后最早要等 2027 年初公布的 2027–28 流程。readiness 标准包含 ToU「accurate representation」和 AI 内容审核条款。
+- ⚠️ **新风险（2026-10-04 发现）**：多个公开营销页（`app/*-alternative/page.tsx`、`app/mtd-software`、`app/self-assessment-software`）
+  声称 EasyTax 能提交 CT600、final declaration、Self Assessment、landlord/property 收入，但代码里没有这些提交功能，
+  和我们向 HMRC 声明的「仅年内季度更新、仅 self-employment」以及 dashboard 页脚的说明矛盾。见 BACKLOG stg-010。
 - **2026-09-24 12:25 UTC HMRC FPH 团队回信**（ITSA 工单 CMQAA-923 / 2026-NQM717，Aleesah Sher）：
   审了 2026-09-23 12:16–12:17 UTC 的 sandbox 流量（11 个 ITSA API）。
   - `Gov-Client-Multi-Factor`：同意省略（继续不发；将来加了应用内 MFA 要通知 HMRC）。
@@ -21,7 +21,7 @@
   - 正面信号：截止日（9-15）之后他们还在审我们的申请。
 - **owner 选了方案 A（2026-09-25）**：先回信解释、不改代码。回信草稿已存进 Gmail（在该 HMRC 线程里，未发送），
   内容：正式通知按次收费（£20+VAT/每次申报）但不发许可证密钥所以省略 License-IDs、请求像 MFA 一样记录；承诺用不同设备和用户重测；
-  并问 2026–27 截止令是否影响我们 7 月提交的申请。**等 owner 审阅后发送，并亲自做多设备重测。**
+  并问截止令的影响。**owner 已在 2026-09-25 16:01 UTC 发出；HMRC 9-29 回复已转给 FPH 团队，等结果。**
 - 影响：**pre-revenue**。/pricing 标价 £20+VAT 每次申报，但 `app/payment/page.tsx` 仍是模拟支付、没接 Stripe；没有真实申报。
 
 ## 指标（2026-09-23 18:34 UTC，对比 2026-09-22 06:40 UTC）
