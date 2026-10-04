@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { CheckCircle2, XCircle, Loader2, Play } from 'lucide-react';
+import { CheckCircle2, XCircle, MinusCircle, Loader2, Play } from 'lucide-react';
 import Link from 'next/link';
 import { hmrcFetch } from '@/lib/hmrc-client';
 
@@ -27,6 +27,30 @@ type TestReport = {
   };
   results: ApiResult[];
 };
+
+// The route reports calls it deliberately did not make (no VRN, no open VAT
+// obligation, no calculationId) as `status: null` with an error starting
+// "Skipped:". Those are not failures and should not look like them.
+function isSkipped(r: ApiResult) {
+  return r.status === null && (r.error ?? '').startsWith('Skipped');
+}
+
+// Skipped rows carry "GET /path" in `endpoint`; executed rows carry the bare
+// path. Strip the method so the row never reads "GET GET /path".
+function displayEndpoint(r: ApiResult) {
+  const prefix = `${r.method} `;
+  return r.endpoint.startsWith(prefix) ? r.endpoint.slice(prefix.length) : r.endpoint;
+}
+
+// HMRC's error code (e.g. INVALID_SCOPE, DUPLICATE_SUBMISSION), so a failed
+// row says why without having to expand it.
+function hmrcErrorCode(r: ApiResult): string | null {
+  if (r.ok || !r.data || typeof r.data !== 'object') return null;
+  const d = r.data as { code?: string; errors?: { code?: string }[] };
+  const nested = d.errors?.[0]?.code;
+  if (nested && d.code === 'BUSINESS_ERROR') return nested;
+  return d.code ?? nested ?? null;
+}
 
 export default function SandboxTestPage() {
   const [running,  setRunning]  = useState(false);
@@ -145,35 +169,50 @@ export default function SandboxTestPage() {
 
           {/* Results list */}
           <div className="space-y-2">
-            {report.results.map((r, i) => (
-              <div key={i} className="rounded-xl overflow-hidden" style={{ border: `1.5px solid ${r.ok ? '#D1FAE5' : '#FEE2E2'}` }}>
+            {report.results.map((r, i) => {
+              const skipped = isSkipped(r);
+              const code    = hmrcErrorCode(r);
+              const tone = r.ok
+                ? { border: '#D1FAE5', bg: '#F0FDF4', pillBg: '#DCFCE7', pillFg: '#16A34A' }
+                : skipped
+                  ? { border: '#E8E2DA', bg: '#FAF8F4', pillBg: '#F0EBE1', pillFg: '#7A6F63' }
+                  : { border: '#FEE2E2', bg: '#FFF5F5', pillBg: '#FEE2E2', pillFg: '#DC2626' };
+              return (
+              <div key={i} className="rounded-xl overflow-hidden" style={{ border: `1.5px solid ${tone.border}` }}>
                 <button
                   className="w-full flex items-center gap-3 px-4 py-3 text-left"
-                  style={{ backgroundColor: r.ok ? '#F0FDF4' : '#FFF5F5', cursor: 'pointer', border: 'none' }}
+                  style={{ backgroundColor: tone.bg, cursor: 'pointer', border: 'none' }}
                   onClick={() => setExpanded(expanded === `${i}` ? null : `${i}`)}
                 >
                   {r.ok
                     ? <CheckCircle2 size={16} color="#16A34A" className="flex-shrink-0" />
-                    : <XCircle     size={16} color="#DC2626" className="flex-shrink-0" />}
+                    : skipped
+                      ? <MinusCircle size={16} color="#7A6F63" className="flex-shrink-0" />
+                      : <XCircle     size={16} color="#DC2626" className="flex-shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>{r.name}</p>
-                    <p className="text-xs font-mono truncate" style={{ color: '#9A8F83' }}>{r.method} {r.endpoint}</p>
+                    <p className="text-xs font-mono truncate" style={{ color: '#9A8F83' }}>{r.method} {displayEndpoint(r)}</p>
+                    {skipped && <p className="text-xs mt-0.5" style={{ color: '#7A6F63' }}>{r.error}</p>}
                   </div>
+                  {code && (
+                    <span className="text-xs font-mono flex-shrink-0" style={{ color: '#DC2626' }}>{code}</span>
+                  )}
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
-                    style={{ backgroundColor: r.ok ? '#DCFCE7' : '#FEE2E2', color: r.ok ? '#16A34A' : '#DC2626' }}>
-                    {r.status ?? '—'}
+                    style={{ backgroundColor: tone.pillBg, color: tone.pillFg }}>
+                    {skipped ? 'Skipped' : (r.status ?? '—')}
                   </span>
                 </button>
                 {expanded === `${i}` && (
-                  <div className="px-4 pb-4 pt-1" style={{ backgroundColor: r.ok ? '#F0FDF4' : '#FFF5F5', borderTop: '1px solid #E8E2DA' }}>
-                    {r.error && <p className="text-xs mb-2" style={{ color: '#DC2626' }}>Error: {r.error}</p>}
+                  <div className="px-4 pb-4 pt-1" style={{ backgroundColor: tone.bg, borderTop: '1px solid #E8E2DA' }}>
+                    {r.error && !skipped && <p className="text-xs mb-2" style={{ color: '#DC2626' }}>Error: {r.error}</p>}
                     <pre className="text-xs overflow-auto p-3 rounded-lg" style={{ backgroundColor: '#1C1208', color: '#C4622D', maxHeight: '240px' }}>
                       {JSON.stringify(r.data ?? {}, null, 2)}
                     </pre>
                   </div>
                 )}
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
