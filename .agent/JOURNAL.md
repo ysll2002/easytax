@@ -25,6 +25,16 @@ HMRC 9-29 回复「已转 fraud headers team」。
 self-assessment-software）公开声称能提交 CT600、final declaration、Self Assessment，以及能处理 landlord 收入，但代码里都没有
 （没有 CT600 提交代码，没有 final declaration 端点，没有 property API）。这和给 HMRC 的「仅年内、仅 self-employment」声明，
 以及 dashboard 页脚的说明直接矛盾，有违反 ToU「accurate representation」的风险。新建 stg-010，排 #1。
+**补充（同日，sandbox 测试 + production 申请表核对）**：
+- owner 的 sandbox test 62/65 通过。VAT Submit 是 `DUPLICATE_SUBMISSION`（正常）。SA Assist 两个是 `INVALID_SCOPE`：根据 HMRC
+  官方 OAS，Produce 要 `read:self-assessment-assist`，Acknowledge 要 `write:self-assessment-assist`，而
+  `app/dashboard/individual/hmrc/page.tsx` 的 scope 列表只有 read（确定的 bug）。这次 read 也失败，怀疑是重新授权后 sandbox 应用
+  没有订阅 SA Assist，待 owner 去 Developer Hub 查。改 scope 要等 owner 说「改 scope」。
+- 两个 production 申请里，`EasyTax VIP` 是主申请（7-08 邮件里请 HMRC 关掉 `EasyTax.VIP`，但它还在列表里），订阅了 14 个 API，含 VAT、SA Assist、BSAS。
+- 申请表里有几处回答和仓库现状可能对不上：「servers in the UK」（vercel.json 没设 region，Vercel 默认是 US iad1，要去 Vercel 控制台确认）；
+  「do not advertise my software」（实际有大量营销页）；pen test「Yes」（需要有报告可以拿出来）。网站文案上：privacy/trust 页说
+  「HMRC access tokens are stored encrypted」，但代码直接写进 Supabase 列，只有平台的静态加密；onboarding 页说「never stored permanently」，
+  和数字记录保存的要求矛盾。都归入 stg-010。
 **学到 / 决定**：HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
 的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
 
