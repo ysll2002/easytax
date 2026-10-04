@@ -45,6 +45,9 @@ self-assessment-software）公开声称能提交 CT600、final declaration、Sel
   INVALID_SCOPE 的原因还没定，等上线并重新授权后再验证。
 - 随后 owner 明确要求「合并 PR 并上线」。已合并 [PR #27](https://github.com/ysll2002/easytax/pull/27) 进 main（2026-10-04 19:24 UTC，
   merge commit `c8e7104`，只含 #26 的 2 个文件）。没有跑 `vercel deploy`，production 由 Vercel 从 main 自动构建。
+- 上线后 owner 重新授权 HMRC（新 token）并重跑：**64/65**。SA Assist 两个都通过（200 / 204），stg-011 已验证。剩下的
+  VAT Submit `DUPLICATE_SUBMISSION` 是预期错误，新的页面直接显示了错误代码。这说明 Produce 之前报 INVALID_SCOPE 是旧 token 的问题，
+  重新授权就解决了。后续：新建 VAT 测试机构用户（stg-012），以及按 HMRC 要求换设备、换用户各跑一次。
 **学到 / 决定**：护栏的边界：owner 明确要求时，可以合进 staging（这次 owner 授权的）；合进 main 等于部署 production，owner 第二次明确要求后才做。两次都是针对单个 PR 的一次性授权，
 不能当作以后可以自己合 PR 或部署的许可，下次仍要先问。HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
 的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
