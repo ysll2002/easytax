@@ -25,6 +25,11 @@
 **提醒 owner 的风险**：① 文案准确性：现在不能向 HMRC 正式提交，也没有 agent 授权，不能承诺「代提交」；和 HMRC ToU 的
 「accurate representation」是同一个问题。② PECR：发给 Ltd/LLP 的 B2B 冷邮件可以不事先取得同意，但要表明身份并提供退订方式；
 Kirk Newsholme 的法律形式没写，发之前要查 Companies House。③ 这些事务所大多已经是 Xero/QuickBooks 合作伙伴，需要明确的差异点。
+**补充**：owner 给了一封英文邮件模板，让我「发邮件」。按护栏只做了 `create_draft`：14 封个性化草稿都已在 Gmail 里，
+主题是「Customising the MTD in-year workflow for <firm>」。对模板改了几处：① 删掉「thanks for registering with us the other day」，
+因为这些事务所从没注册过，这句话不属实；② 把模板里遗留的「accountantplus」换成各家的名字；③ 加上公司主体和退订语句（PECR 要求）；
+④ 小语法修正（「the multi-client dashboard and document collection」）。另查了 Companies House：Kirk Newsholme 是 KIRK NEWSHOLME LTD
+（03492421，存续）。14 家都是公司主体。
 **学到 / 决定**：外联只起草不发送（护栏不变）。
 
 ---
