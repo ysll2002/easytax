@@ -15,6 +15,20 @@
 
 ---
 
+## 2026-10-05（owner 实时对话）
+
+**今日执行**：owner 想新增面向会计师事务所的功能，并让我找英国事务所的邮箱，打算发邮件说「我们可以给你们定制 MTD 报税流程」。
+用 WebSearch 找候选，再用 WebFetch 逐家在官网核实，整理出 14 家（Manchester / Bristol / Leeds / London / Lancaster 等），
+存在 `/Users/linli/Documents/EasyTax/outreach/uk-accountancy-firms-2026-10-05.csv`，每行都有来源 URL 和核实日期。
+只收通用邮箱（info@ / help@ / enquiries@），搜索结果里出现的个人邮箱一律没收。未能核实的（Elite Financial、DWilkinson
+返回 403；Gondal 的邮箱被混淆；76 Chartered、Jack Ross 页面没有邮箱）都没放进清单。
+**提醒 owner 的风险**：① 文案准确性：现在不能向 HMRC 正式提交，也没有 agent 授权，不能承诺「代提交」；和 HMRC ToU 的
+「accurate representation」是同一个问题。② PECR：发给 Ltd/LLP 的 B2B 冷邮件可以不事先取得同意，但要表明身份并提供退订方式；
+Kirk Newsholme 的法律形式没写，发之前要查 Companies House。③ 这些事务所大多已经是 Xero/QuickBooks 合作伙伴，需要明确的差异点。
+**学到 / 决定**：外联只起草不发送（护栏不变）。
+
+---
+
 ## 2026-10-04（owner 实时对话，非定时运行）
 
 **HMRC**：owner 转来 HMRC Louise Tarpy（Head of External Software Integration）的正式说明：2026-08-10 起暂停新的 MTD ITSA
