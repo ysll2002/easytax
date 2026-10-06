@@ -35,6 +35,7 @@ const SOURCE_HOSTS = [
 ];
 
 import { TITLE_BUDGET } from './seo-meta';
+import { titleSimilarity, DUPLICATE_THRESHOLD } from './article-clusters';
 
 export const STANDARD = {
   minWords: 1100,
@@ -296,7 +297,12 @@ function titleStem(title: string): string {
 /** Stems shorter than this are too generic to treat as a claim on a subject. */
 const MIN_STEM_CHARS = 20;
 
-export type TitleCollision = { kind: 'exact' | 'stem'; match: string };
+export type TitleCollision = {
+  kind: 'exact' | 'stem' | 'similar';
+  match: string;
+  /** Set for `similar` only: how alike the two headlines are, 0 to 1. */
+  similarity?: number;
+};
 
 /**
  * Whether a proposed headline collides with one the archive already has.
@@ -328,9 +334,46 @@ export function findTitleCollision(candidate: string, existing: string[]): Title
   }
 
   const stem = titleStem(candidate);
-  if (stem.length < MIN_STEM_CHARS) return null;
-  for (const other of existing) {
-    if (titleStem(other) === stem) return { kind: 'stem', match: other };
+  if (stem.length >= MIN_STEM_CHARS) {
+    for (const other of existing) {
+      if (titleStem(other) === stem) return { kind: 'stem', match: other };
+    }
   }
-  return null;
+
+  // `exact` and `stem` are both equality tests, and both compare a *fixed*
+  // piece of the headline. That leaves two gaps the archive fell through.
+  //
+  // One word inside the stem, and the stems are simply unequal strings:
+  //
+  //   Capital Allowances for Plant & Machinery: Maximise Your Tax Relief
+  //   Capital Allowances on Plant & Machinery: Maximise Your First Year Relief
+  //
+  // — "for" against "on", written five weeks apart, both published. And a
+  // headline with no colon at all has the whole title as its stem, so one
+  // synonym anywhere defeats it:
+  //
+  //   Allowable Expenses UK Freelancers Miss on Their Self Assessment
+  //   Allowable Expenses UK Freelancers Forget on Their Self Assessment
+  //
+  // — the same page, published on the same day, under two headlines.
+  //
+  // Replaying the 113 published articles in publication order through this
+  // function: `stem` refuses 16 of them and is doing most of the work, and the
+  // similarity test refuses 2 more that it structurally cannot see. That is
+  // the honest size of this addition — it is a gap-filler on a check that
+  // mostly works, not a replacement for it.
+  //
+  // Threshold and rationale live in lib/article-clusters.ts, and are
+  // deliberately the same number the published archive is consolidated on: a
+  // headline this refuses to write is exactly a headline that would have been
+  // canonicalised away the day after it was published, and the two rules
+  // disagreeing would mean writing pages in order to bury them.
+  let best: TitleCollision | null = null;
+  for (const other of existing) {
+    const s = titleSimilarity(candidate, other);
+    if (s >= DUPLICATE_THRESHOLD && (!best || s > (best.similarity ?? 0))) {
+      best = { kind: 'similar', match: other, similarity: +s.toFixed(2) };
+    }
+  }
+  return best;
 }

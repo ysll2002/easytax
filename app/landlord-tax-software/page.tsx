@@ -8,7 +8,7 @@ import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: pageTitle('Landlord Tax Software — MTD ITSA for UK Landlords'),
-  description: 'MTD ITSA software built for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105 property supplement) directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription, no accountant required.',
+  description: 'MTD ITSA software for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105) to HMRC for £24 per submission. No subscription, no accountant.',
   alternates: { canonical: 'https://easytax.vip/landlord-tax-software' },
   openGraph: {
     title: 'Landlord Tax Software — MTD ITSA, SA100 + SA105, £24 per Filing',

@@ -20,7 +20,7 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: 'Security & Trust',
   description:
-    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and exactly where we are in HMRC approval.',
+    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and where HMRC approval stands.',
   alternates: { canonical: 'https://easytax.vip/trust' },
 };
 

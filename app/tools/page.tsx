@@ -19,7 +19,7 @@ import { TOOLS } from '@/lib/tools';
 export const metadata: Metadata = {
   title: pageTitle('Free UK Tax Calculators & MTD Deadline Tools'),
   description:
-    'Free tools for UK sole traders, landlords and small limited companies. Check whether you are in Making Tax Digital, work out a late filing penalty, and see what really leaves your account on 31 January. No signup, nothing stored.',
+    'Free tools for UK sole traders and landlords: check if you are in Making Tax Digital, price a late filing penalty, see what leaves your account on 31 January.',
   keywords: [
     'free UK tax calculator',
     'self assessment calculator',

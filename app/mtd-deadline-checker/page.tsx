@@ -12,7 +12,7 @@ import { decodeDeadline, encodeDeadline, deadlineCard, toSearchParams } from '@/
 const BASE: Metadata = {
   title: pageTitle('MTD Deadline Checker — Am I in Making Tax Digital?'),
   description:
-    'Free checker for UK sole traders and landlords. Enter your income and get the exact tax year you come into MTD for Income Tax, your four quarterly update deadlines (7 Aug, 7 Nov, 7 Feb, 7 May) and your final declaration date.',
+    'Enter your income and get the tax year you come into MTD for Income Tax, your four quarterly deadlines (7 Aug, 7 Nov, 7 Feb, 7 May) and your final declaration.',
   keywords: [
     'MTD deadline checker',
     'am I in MTD for income tax',

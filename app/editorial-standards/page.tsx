@@ -22,7 +22,7 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: pageTitle('Editorial standards — how we write our tax guides'),
   description:
-    'How the EasyTax Tax Tips archive is produced: AI-drafted from HMRC guidance and UK legislation, human-reviewed before publication, corrected when wrong. What we check, what we do not, and how to report an error.',
+    'How the Tax Tips archive is produced: AI-drafted from HMRC guidance and legislation, human-reviewed before publication, corrected when wrong, errors reportable.',
   alternates: { canonical: 'https://easytax.vip/editorial-standards' },
   openGraph: {
     type: 'article',

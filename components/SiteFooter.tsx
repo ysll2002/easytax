@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import NotifyMeForm from './NotifyMeForm';
+import { COMPETITORS } from '@/lib/competitors';
 
 // One footer for the whole public site.
 //
@@ -20,18 +21,11 @@ import NotifyMeForm from './NotifyMeForm';
 
 const DISPLAY = 'var(--font-display), Playfair Display, Georgia, serif';
 
-/** The eight competitor comparison pages. All were orphaned. */
-const COMPARISONS: { href: string; label: string }[] = [
-  { href: '/quickbooks-alternative', label: 'QuickBooks' },
-  { href: '/xero-alternative',       label: 'Xero' },
-  { href: '/freeagent-alternative',  label: 'FreeAgent' },
-  { href: '/sage-alternative',       label: 'Sage' },
-  { href: '/crunch-alternative',     label: 'Crunch' },
-  { href: '/coconut-alternative',    label: 'Coconut' },
-  { href: '/kashflow-alternative',   label: 'KashFlow' },
-  { href: '/bokio-alternative',      label: 'Bokio' },
-  { href: '/taxscouts-alternative',  label: 'TaxScouts' },
-];
+/** The nine competitor comparison pages, from the one list that describes
+ *  them. This used to be a second copy of the same nine paths kept here by
+ *  hand; a tenth comparison page would have had to be added in two files and
+ *  would have been added to one. See lib/competitors.ts. */
+const COMPARISONS = COMPETITORS.map(c => ({ href: c.href, label: c.name }));
 
 function Column({ title, links }: { title: string; links: { href: string; label: string }[] }) {
   return (
@@ -153,7 +147,16 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
             className="text-xs font-semibold uppercase tracking-wider mb-3"
             style={{ color: '#9A8F83' }}
           >
-            {t('compare')}
+            {/* The heading is now the hub. Nine bare product names with no
+                parent was the whole of these pages' internal linking, and all
+                nine had zero page views across 30 days. */}
+            <Link
+              href="/compare"
+              className="hover:text-[#C4622D] transition-colors"
+              style={{ color: '#9A8F83', textDecoration: 'none' }}
+            >
+              {t('compare')}
+            </Link>
           </p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
             {COMPARISONS.map(c => (
