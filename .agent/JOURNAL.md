@@ -24,6 +24,7 @@ repo：staging `04ba5ae` 没有新提交，本地工作区干净，开着的 PR 
 **Top 5**：沿用上一条：1. stg-010 2. stg-013 3. stg-008 4. stg-002b 5. stg-009
 **学到 / 决定**：同一天被触发了两次，第二次不重复分析，只补一条短记录。
 **失败**：① Gmail MCP 仍需重新授权（search_threads / create_draft 都用不了），日报只在会话里输出。
+**补充（owner 实时对话）**：owner 转来 Vercel「Preview deployment failed」邮件（`agent/journal` @ `ca3566d`）。原因：orphan 分支没有应用代码，每次镜像 push 都会触发预览构建并失败（09-18 起一直如此）。经 owner 同意（「do it」），在 `agent/journal` 根目录加了 `vercel.json`（`git.deploymentEnabled: false`），commit `1b363cf`。只改 journal 分支，没碰 main/staging。下次镜像 push 后应该不会再收到失败邮件。
 
 ---
 
