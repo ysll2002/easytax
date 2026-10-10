@@ -25,6 +25,7 @@ repo：staging `04ba5ae` 没有新提交，本地工作区干净，开着的 PR 
 **学到 / 决定**：同一天被触发了两次，第二次不重复分析，只补一条短记录。
 **失败**：① Gmail MCP 仍需重新授权（search_threads / create_draft 都用不了），日报只在会话里输出。
 **补充（owner 实时对话）**：owner 转来 Vercel「Preview deployment failed」邮件（`agent/journal` @ `ca3566d`）。原因：orphan 分支没有应用代码，每次镜像 push 都会触发预览构建并失败（09-18 起一直如此）。经 owner 同意（「do it」），在 `agent/journal` 根目录加了 `vercel.json`（`git.deploymentEnabled: false`），commit `1b363cf`。只改 journal 分支，没碰 main/staging。下次镜像 push 后应该不会再收到失败邮件。
+**补充 2（owner 实时对话）**：owner 让我修 sandbox test 的 429。改 `app/api/hmrc/sandbox-test/route.ts`（加 429 重试）的操作被权限检查拦下，**没改代码**。owner 改为单标签页重跑：**64/65**，429 全部消失，唯一失败是预期的 VAT `DUPLICATE_SUBMISSION`。证实 56/65 是同一个 token 上同时跑了两轮造成的限流，集成本身没问题。stg-013 的代码重试降为可选加固；剩下要做的是 HMRC 要求的多设备/多用户重测（owner 亲自做）和 stg-012（新建 VAT 测试用户）。
 
 ---
 
