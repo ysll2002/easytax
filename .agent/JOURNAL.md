@@ -15,6 +15,23 @@
 
 ---
 
+## 2026-10-10（定时运行，上次定时运行是 2026-09-23）
+
+**HMRC**：⚠️ **Gmail 连接器今天报权限不足，没能查邮件**，HMRC 有没有新回信不知道。最后已知状态：9-29 HMRC 已把我们的 FPH 回信转给 fraud headers team，在等结果。
+运行中 owner 贴来新一轮 sandbox 覆盖测试：**56/65**。其中 8 个是 `429 MESSAGE_THROTTLED_OUT`（SE Period Summary POST、Dividends 的 4 个调用、Directorship Retrieve、Reliefs investment/other Create），1 个是预期的 VAT `DUPLICATE_SUBMISSION`。
+诊断（只读，没改代码）：`app/api/hmrc/sandbox-test/route.ts` 本来就是串行调用，每次间隔 900ms（约 1.1 次/秒），10-04 同一份代码跑出 64/65。
+所以更可能是有两轮测试同时在跑（比如点了两次，或者开着两个标签页），或者 HMRC sandbox 那边临时限流，不是我们的集成坏了。建议：等 2–3 分钟，只开一个标签页，点一次再跑。
+如果想让测试页遇到 429 自动等待后重试，要改 `app/api/hmrc/**`，属于合规禁区，需要 owner 明确批准（新建 stg-013）。
+**指标**（08:23 UTC，对比 09-23）：注册 50(+2) · HMRC 连接 18(+0, 转化 36%) · 申报 0(+0) · MRR £0。7d 注册 0，30d 注册 5。
+7d human visitors 32（持平），human_share 90.7%。**GA4 7d：google organic 17 用户 / 18 sessions（09-23 是 6）**，direct 14，bing 这周没出现。
+Production = main `c8e7104`（PR #27），构建于 10-04。PR #21/#22/#23（另一系统）和 #24/#25（本 agent）都还没合。
+**今日执行**：**没有实现**。Top 1（stg-010 修正营销页里的不实声明）Risk=MEDIUM，而且和另一系统负责的页面重叠，需要 owner 授权，不满足自主实现条件，按护栏不顺延到 Top 2。
+**Top 5**：1. stg-010 营销页不实声明 2. stg-013 sandbox 测试 429 + HMRC 要求的多设备/多用户重测 3. stg-008 把 PR #24 送上 production 4. stg-002b schedule_sent 埋点 5. stg-009 会计师外联（14 封草稿是否已发，今天查不到）
+**学到 / 决定**：sandbox 测试的 429 不是集成问题，是限流，单线程重跑即可。Google organic 一周从 6 涨到 17，是近期最大的流量变化，下次看 landing page 分布。
+**失败**：① Gmail MCP：`search_threads` 报「This connector requires additional permissions」，需要 owner 在 claude.ai 连接器设置里重新连接 Gmail；所以 HMRC 邮件监控和日报草稿都没做，日报只写在这里和会话里。② GA4 第一次请求字段名写错（session_source），改成 source/medium 后成功。
+
+---
+
 ## 2026-10-05（owner 实时对话）
 
 **今日执行**：owner 想新增面向会计师事务所的功能，并让我找英国事务所的邮箱，打算发邮件说「我们可以给你们定制 MTD 报税流程」。
