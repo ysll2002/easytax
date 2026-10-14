@@ -21,7 +21,7 @@ import { decodePenalty, encodePenalty, penaltyCard, toSearchParams } from '@/lib
 const BASE: Metadata = {
   title: pageTitle('Self Assessment Late Filing Penalty Calculator'),
   description:
-    'Free calculator for a late Self Assessment return. Enter the tax year, when you filed and what you owe to see the £100 penalty, £10 daily charges, the 6 and 12 month penalties and the 5% late payment charges — itemised, with the dates each one bites.',
+    'Free calculator for a late Self Assessment return: the £100 penalty, £10 daily charges, the 6 and 12 month penalties and 5% late payment charges, itemised.',
   keywords: [
     'self assessment penalty calculator',
     'late filing penalty calculator',

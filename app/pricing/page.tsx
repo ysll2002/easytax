@@ -6,14 +6,15 @@ import NotifyMeForm from '@/components/NotifyMeForm';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { OFFER_JSONLD, PRICE_DISPLAY, PRICE_MODEL, TYPICAL_ANNUAL_COST } from '@/lib/pricing';
 
 export const metadata: Metadata = {
-  title: pageTitle('Pricing — £24 per HMRC filing, no subscription'),
-  description: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600. No monthly subscription. No card needed to sign up.',
+  title: pageTitle('Pricing — free, no subscription, no filing fee'),
+  description: 'EasyTax is free. MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600 — no monthly subscription, no per-filing fee, no card needed to sign up.',
   alternates: { canonical: 'https://easytax.vip/pricing' },
   openGraph: {
-    title: 'EasyTax Pricing — £24 per Filing, No Subscription',
-    description: 'File MTD ITSA, Self Assessment, VAT returns and CT600 to HMRC for £24 per submission (inc. VAT). No monthly subscription, no card needed to sign up.',
+    title: 'EasyTax Pricing — Free, No Subscription',
+    description: 'File MTD ITSA, Self Assessment, VAT returns and CT600 to HMRC for free. No monthly subscription, no per-filing fee, no card needed to sign up.',
     url: 'https://easytax.vip/pricing',
     type: 'website',
     locale: 'en_GB',
@@ -21,8 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EasyTax Pricing — £24 per HMRC Filing, No Subscription',
-    description: 'MTD ITSA, Self Assessment, VAT, CT600 — £24 per submission (inc. VAT). No monthly fee.',
+    title: 'EasyTax Pricing — Free, No Subscription',
+    description: 'MTD ITSA, Self Assessment, VAT, CT600 — free. No monthly fee, no filing fee.',
   },
 };
 
@@ -40,14 +41,14 @@ const included: CompRow[] = [
   { feature: 'AI expense categorisation (Claude)', included: true },
   { feature: 'AI bank reconciliation chat', included: true },
   { feature: 'No monthly subscription', included: true },
+  { feature: 'No per-filing fee', included: true },
   { feature: 'No credit card to sign up', included: true },
-  { feature: 'Founder price locked in for life', included: true, note: 'Early-access signups lock in £20+VAT per filing forever' },
 ];
 
 type RivalRow = { name: string; model: string; typical: string };
 
 const rivals: RivalRow[] = [
-  { name: 'EasyTax',     model: '£24 per filing (inc. VAT)',     typical: '~£120 / year' },
+  { name: 'EasyTax',     model: PRICE_MODEL,                    typical: TYPICAL_ANNUAL_COST },
   { name: 'FreeAgent',   model: '£19–£29 / month subscription',  typical: '£228–£348 / year' },
   { name: 'Xero',        model: '£16–£59 / month subscription',  typical: '£192–£708 / year' },
   { name: 'QuickBooks',  model: '£14–£90 / month subscription',  typical: '£168–£1,080 / year' },
@@ -68,20 +69,15 @@ export default async function PricingPage() {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: 'EasyTax — MTD ITSA Filing Software',
-    description: 'MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600 filing for UK sole traders and limited companies. Pay per submission, no subscription.',
+    description: 'MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600 filing for UK sole traders and limited companies. Free — no subscription, no per-filing fee.',
     brand: { '@type': 'Organization', name: 'Finance Panda Limited' },
     url: 'https://easytax.vip',
+    // Shares one Offer with the SoftwareApplication node in lib/site-entity.ts.
+    // PreOrder, not InStock: the app is usable today but HMRC filing is still
+    // waiting on production approval, so the thing this page offers is not yet
+    // something a visitor can do.
     offers: {
-      '@type': 'Offer',
-      priceCurrency: 'GBP',
-      price: '20.00',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: '20.00',
-        priceCurrency: 'GBP',
-        referenceQuantity: { '@type': 'QuantitativeValue', value: '1', unitText: 'HMRC submission' },
-      },
-      description: '£20 + VAT (£24 inc. VAT) per HMRC submission. No monthly subscription.',
+      ...OFFER_JSONLD,
       availability: 'https://schema.org/PreOrder',
       url: 'https://easytax.vip/register',
     },
@@ -96,15 +92,15 @@ export default async function PricingPage() {
         name: 'How much does EasyTax cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission. There is no monthly subscription fee. For a typical sole trader with 4 quarterly MTD ITSA updates and 1 final declaration, the annual cost is approximately £120.',
+          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates and 1 final declaration pays £0 for the year.',
         },
       },
       {
         '@type': 'Question',
-        name: 'What does one "filing" mean?',
+        name: 'What is included?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'One filing = one HMRC submission: a quarterly MTD ITSA update, a Self Assessment return (SA100), a VAT return, or a CT600 Corporation Tax return. Bank connection and AI categorisation are included at no extra charge.',
+          text: 'Every HMRC submission type — quarterly MTD ITSA updates, Self Assessment (SA100, SA103, SA105), VAT returns and CT600 Corporation Tax — plus Open Banking import, AI expense categorisation and the reconciliation chat. There is no paid tier.',
         },
       },
       {
@@ -112,15 +108,15 @@ export default async function PricingPage() {
         name: 'Do I need a credit card to sign up?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. You can sign up, connect your bank, and categorise expenses for free. You only pay when you are ready to submit a return to HMRC.',
+          text: 'No. There is nothing to pay at any point, so EasyTax never asks for card details.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Will the price go up in future?',
+        name: 'How is it free?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Early-access signups lock in the £20 + VAT founder price for life. Sign up now to secure this rate before it rises.',
+          text: 'EasyTax is built by Finance Panda Limited and is not yet monetised. HMRC filing is still going through production approval; getting the software used and the filings right matters more right now than charging for them. If that changes, existing accounts will be told before anything does.',
         },
       },
       {
@@ -128,7 +124,7 @@ export default async function PricingPage() {
         name: 'Does EasyTax support limited companies?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. EasyTax supports both sole traders / landlords (MTD ITSA, Self Assessment) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet and P&L). The same £24 per filing price applies.',
+          text: 'Yes. EasyTax supports both sole traders / landlords (MTD ITSA, Self Assessment) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet and P&L). All of it is free.',
         },
       },
     ],
@@ -147,14 +143,14 @@ export default async function PricingPage() {
         <section className="pt-12 sm:pt-16 pb-12 sm:pb-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> Simple, pay-per-filing pricing
+              <Sparkles size={12} /> Free — no subscription, no filing fee
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Pay per filing.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Never per month.</em>
+              Nothing per month.<br />
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Nothing per filing.</em>
             </h1>
             <p className="text-base sm:text-lg leading-relaxed mb-8 mx-auto" style={{ color: '#4A4035', maxWidth: '560px' }}>
-              EasyTax charges a flat <strong style={{ color: '#1C1208' }}>£24 per HMRC submission</strong> (inc. VAT). No subscription, no card needed to sign up. Bank connection and AI categorisation are always free.
+              EasyTax is <strong style={{ color: '#1C1208' }}>free to use</strong>. No subscription, no charge when you file, no card needed to sign up. Open Banking import and AI categorisation are included.
             </p>
           </div>
         </section>
@@ -166,12 +162,12 @@ export default async function PricingPage() {
 
               {/* header */}
               <div className="px-6 sm:px-8 py-6 sm:py-8" style={{ backgroundColor: '#1C1208' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>Early access — founder price</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>Every feature, every filing type</p>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span style={{ fontFamily: display, fontSize: 'clamp(3rem, 8vw, 4.5rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1 }}>£24</span>
+                  <span style={{ fontFamily: display, fontSize: 'clamp(3rem, 8vw, 4.5rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1 }}>{PRICE_DISPLAY}</span>
                   <span className="text-base font-medium" style={{ color: '#9A8F83' }}>/ filing</span>
                 </div>
-                <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>£20 + VAT. Locked in for life for early-access signups.</p>
+                <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>No subscription, no per-filing fee. There is no paid tier to upgrade to.</p>
               </div>
 
               {/* features */}
@@ -191,7 +187,7 @@ export default async function PricingPage() {
                 <Link href={ctaHref} className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
                   Get started free <ArrowRight size={16} />
                 </Link>
-                <p className="text-center text-xs mt-3" style={{ color: '#9A8F83' }}>No card required · Pay only when you file</p>
+                <p className="text-center text-xs mt-3" style={{ color: '#9A8F83' }}>No card required · Nothing to pay</p>
               </div>
             </div>
           </div>
@@ -206,6 +202,7 @@ export default async function PricingPage() {
               </h2>
               <p style={{ color: '#4A4035', fontSize: '1rem', maxWidth: '480px', margin: '0 auto' }}>
                 Based on a typical sole trader filing 4 quarterly updates + 1 final declaration per year.
+                The subscriptions below are charged whether you file once or twelve times.
               </p>
             </div>
 
@@ -215,7 +212,7 @@ export default async function PricingPage() {
                 <div key={r.name} className="p-4 rounded-2xl" style={{ backgroundColor: r.name === 'EasyTax' ? '#1C1208' : '#FFFFFF', border: `1px solid ${r.name === 'EasyTax' ? '#C4622D' : '#E8E2DA'}` }}>
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-sm" style={{ color: r.name === 'EasyTax' ? '#FDFCF8' : '#1C1208' }}>{r.name}</span>
-                    {r.name === 'EasyTax' && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>Best value</span>}
+                    {r.name === 'EasyTax' && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>Free</span>}
                   </div>
                   <p className="text-xs mb-0.5" style={{ color: r.name === 'EasyTax' ? '#9A8F83' : '#4A4035' }}>{r.model}</p>
                   <p className="text-sm font-semibold" style={{ color: r.name === 'EasyTax' ? '#6B8E6E' : '#C4622D' }}>Typical: {r.typical}</p>
@@ -238,7 +235,7 @@ export default async function PricingPage() {
                     <tr key={r.name} style={{ borderBottom: i < rivals.length - 1 ? '1px solid #F0EBE1' : 'none', backgroundColor: r.name === 'EasyTax' ? '#F7F3EE' : 'transparent' }}>
                       <td className="px-6 py-4 font-bold" style={{ color: '#1C1208' }}>
                         {r.name}
-                        {r.name === 'EasyTax' && <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>Best value</span>}
+                        {r.name === 'EasyTax' && <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>Free</span>}
                       </td>
                       <td className="px-6 py-4" style={{ color: '#4A4035' }}>{r.model}</td>
                       <td className="px-6 py-4 font-semibold" style={{ color: r.name === 'EasyTax' ? '#6B8E6E' : '#C4622D' }}>{r.typical}</td>
@@ -261,27 +258,27 @@ export default async function PricingPage() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: '£20 + VAT (£24 inc. VAT) per HMRC submission. There is no monthly subscription. A typical sole trader with 4 quarterly MTD ITSA updates and 1 final declaration per year pays approximately £120 in total.',
+                  a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates and 1 final declaration pays £0 for the year.',
                 },
                 {
-                  q: 'What counts as one filing?',
-                  a: 'One filing = one HMRC submission: a quarterly MTD ITSA update, a Self Assessment return (SA100/SA103/SA105), a VAT return, or a CT600 Corporation Tax return. Bank connection and AI categorisation are always included at no extra charge.',
+                  q: 'What is included?',
+                  a: 'Every HMRC submission type — quarterly MTD ITSA updates, Self Assessment (SA100/SA103/SA105), VAT returns and CT600 Corporation Tax — plus Open Banking import, AI expense categorisation and the reconciliation chat. There is no paid tier, so there is nothing held back.',
                 },
                 {
                   q: 'Do I need a credit card to sign up?',
-                  a: 'No. You can create an account, connect your bank via Open Banking, and use AI categorisation for free. You only pay when you choose to submit a return to HMRC.',
+                  a: 'No. There is nothing to pay at any point, so EasyTax never asks for card details.',
                 },
                 {
-                  q: 'Will the £24 price go up?',
-                  a: 'Early-access signups lock in the £20 + VAT founder price for life. The price may increase for new signups in future, but your rate will never change.',
+                  q: 'How is it free? What is the catch?',
+                  a: 'EasyTax is built by Finance Panda Limited and is not monetised. HMRC filing is still going through production approval; getting the software used and the filings right matters more right now than charging for them. Your data is not sold or shared — see /trust and /privacy for exactly what is stored and who it goes to. If the pricing ever changes, existing accounts will be told before it does.',
                 },
                 {
                   q: 'Does EasyTax work for limited companies?',
-                  a: 'Yes. EasyTax supports both sole traders and landlords (MTD ITSA quarterly updates, Self Assessment) and limited companies (VAT returns, CT600 Corporation Tax, P&L and Balance Sheet). The same £24 per filing price applies to all submission types.',
+                  a: 'Yes. EasyTax supports both sole traders and landlords (MTD ITSA quarterly updates, Self Assessment) and limited companies (VAT returns, CT600 Corporation Tax, P&L and Balance Sheet). All of it is free.',
                 },
                 {
                   q: 'Is there a free trial?',
-                  a: 'The app is free to use until you submit a return to HMRC. Connect your bank, import transactions, and let AI categorise everything — then pay only when you are ready to file.',
+                  a: 'There is nothing to trial — the whole product is free, with no time limit and no feature locked behind a plan.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-5 sm:py-6" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -311,10 +308,10 @@ export default async function PricingPage() {
         <section className="py-16 sm:py-20" style={{ backgroundColor: '#1C1208' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#FDFCF8', marginBottom: '1rem' }}>
-              Lock in your founder price today
+              Start filing without paying for it
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', maxWidth: '460px', margin: '0 auto 2rem' }}>
-              Sign up for free — no card required. Start filing MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission.
+              Sign up free — no card required, nothing to pay. MTD ITSA, Self Assessment, VAT and CT600, all included.
             </p>
             <Link href={ctaHref} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
               Get started free <ArrowRight size={16} />

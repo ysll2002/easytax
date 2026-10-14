@@ -12,7 +12,7 @@ import { decodePoa, encodePoa, poaCard, toSearchParams } from '@/lib/share-resul
 const BASE: Metadata = {
   title: pageTitle('UK Payments on Account Calculator'),
   description:
-    'Free calculator for Self Assessment payments on account. Enter your tax bill and see what actually leaves your account on 31 January and 31 July, including the two advance payments HMRC adds towards next year.',
+    'Free payments on account calculator. Enter your tax bill and see what leaves your account on 31 January and 31 July, including the advance payments HMRC adds.',
   keywords: [
     'payments on account calculator',
     'what are payments on account',

@@ -20,7 +20,7 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: 'Security & Trust',
   description:
-    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and exactly where we are in HMRC approval.',
+    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and where HMRC approval stands.',
   alternates: { canonical: 'https://easytax.vip/trust' },
 };
 
@@ -254,8 +254,8 @@ export default function TrustPage() {
                 What it costs
               </p>
               <p className="text-sm mb-4" style={{ color: '#4A4035', lineHeight: 1.7 }}>
-                £20 + VAT (£24 inc. VAT) per submission to HMRC. No monthly subscription, no card
-                required to create an account, and no charge until you actually file something.
+                Nothing. EasyTax is free to use: no monthly subscription, no per-filing fee, and no
+                card required to create an account. There is no paid tier.
               </p>
               <Link
                 href="/pricing"

@@ -38,7 +38,7 @@ const MOCK_ACTIONS: ActionItem[] = [
     title: 'File 2025/26 Self Assessment',
     description: 'Deadline: 31 Jan 2027. You have £45,000 in untaxed income to declare for 2025/26.',
     cta: 'Start Filing',
-    ctaLink: '/payment',
+    ctaLink: '/dashboard/individual/calculate',
     completed: false,
   },
   {
