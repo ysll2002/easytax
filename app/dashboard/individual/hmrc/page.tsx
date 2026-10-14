@@ -14,7 +14,11 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
     'write:self-assessment',
     'read:vat',
     'write:vat',
+    // Produce Report needs read:, Acknowledge Report needs write: (HMRC's
+    // Self Assessment Assist 1.0 OAS). Without write: Acknowledge returns
+    // 403 INVALID_SCOPE.
     'read:self-assessment-assist',
+    'write:self-assessment-assist',
   ].join('+');
 
   const authUrl = `https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
