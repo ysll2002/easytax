@@ -185,8 +185,8 @@ export default function ToolsPage() {
               can offer them without an account.
             </p>
             <p>
-              What EasyTax charges for is the filing itself: quarterly MTD updates, Self Assessment,
-              VAT returns and CT600, at £20 + VAT per submission with no subscription. Our HMRC
+              The rest of EasyTax — the filing itself: quarterly MTD updates, Self Assessment, VAT
+              returns and CT600 — is free as well. No subscription, no per-filing fee. Our HMRC
               production access is still going through approval, so we cannot take live submissions
               yet.
             </p>

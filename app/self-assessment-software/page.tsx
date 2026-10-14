@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { OFFER_JSONLD, PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
-  title: pageTitle('Self Assessment Software UK — £24 per Filing'),
-  description: 'Self Assessment software on the HMRC MTD API for UK sole traders. File SA100, SA103, SA105 and MTD ITSA updates for £24 per submission. No monthly subscription.',
+  title: pageTitle('Self Assessment Software UK — Free, No Subscription'),
+  description: 'Self Assessment software on the HMRC MTD API for UK sole traders. File SA100, SA103, SA105 and MTD ITSA updates free. No monthly subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/self-assessment-software' },
   openGraph: {
-    title: 'Self Assessment Software UK — EasyTax, £24 per Filing',
-    description: 'Self Assessment software built on the HMRC MTD API for sole traders. SA100, SA103, SA105, and MTD ITSA quarterly updates — £24 per filing, no subscription.',
+    title: 'Self Assessment Software UK — EasyTax, Free',
+    description: 'Self Assessment software built on the HMRC MTD API for sole traders. SA100, SA103, SA105, and MTD ITSA quarterly updates — free, no subscription.',
     url: 'https://easytax.vip/self-assessment-software',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Self Assessment Software UK — EasyTax, £24 per Filing',
-    description: 'Self Assessment software built on the HMRC MTD API. No subscription — pay only when you file.',
+    title: 'Self Assessment Software UK — EasyTax, Free',
+    description: 'Self Assessment software built on the HMRC MTD API. Free — no subscription, no filing fee.',
   },
 };
 
@@ -39,17 +40,7 @@ export default async function SelfAssessmentSoftware() {
     operatingSystem: 'Web',
     description: 'Self Assessment software built on the HMRC MTD API for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC.',
     url: 'https://easytax.vip',
-    offers: {
-      '@type': 'Offer',
-      price: '24',
-      priceCurrency: 'GBP',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: '24',
-        priceCurrency: 'GBP',
-        unitText: 'per HMRC submission (inc. VAT)',
-      },
-    },
+    offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/self-assessment-software',
   };
@@ -79,7 +70,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'How much does EasyTax self assessment software cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. A sole trader who files one annual SA100 per year pays just £24. If you are also doing MTD ITSA quarterly updates, the full annual cycle (4 quarterly updates + 1 final declaration) costs around £120. Connecting your bank and HMRC accounts is always free.',
+          text: 'Nothing. EasyTax is free to use — no monthly subscription and no per-filing fee. A sole trader filing one annual SA100 pays £0, and so does one running the full MTD ITSA cycle of 4 quarterly updates plus a final declaration. Connecting your bank and HMRC accounts is free too.',
         },
       },
       {
@@ -137,7 +128,7 @@ export default async function SelfAssessmentSoftware() {
     { feature: 'AI expense categorisation', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: false },
     { feature: 'No monthly subscription', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: true },
     { feature: 'No card required to start', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: true },
-    { feature: 'Pricing', easytax: '£24 / filing', taxcalc: '£99–£199 / yr', taxfiler: '£50–£130 / yr', hmrcPortal: 'Free (basic)' },
+    { feature: 'Pricing', easytax: PRICE_TABLE_CELL, taxcalc: '£99–£199 / yr', taxfiler: '£50–£130 / yr', hmrcPortal: 'Free (basic)' },
   ];
 
   return (
@@ -156,13 +147,13 @@ export default async function SelfAssessmentSoftware() {
               <Sparkles size={12} /> Self Assessment software built on the HMRC MTD API
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Self assessment software for UK sole traders — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>£24 per filing, no subscription</em>
+              Self assessment software for UK sole traders — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>free, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>Self Assessment software built on the HMRC MTD API</strong> built for UK sole traders, the self-employed, and landlords. File your SA100 (plus SA103 and SA105 supplementary pages), quarterly MTD ITSA updates, VAT returns and CT600 directly to HMRC — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription. No card to start.
+              EasyTax is <strong style={{ color: '#1C1208' }}>Self Assessment software built on the HMRC MTD API</strong> built for UK sole traders, the self-employed, and landlords. File your SA100 (plus SA103 and SA105 supplementary pages), quarterly MTD ITSA updates, VAT returns and CT600 directly to HMRC — <strong style={{ color: '#6B8E6E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA103 · SA105 included</span>
@@ -266,7 +257,7 @@ export default async function SelfAssessmentSoftware() {
               EasyTax vs other UK self assessment software
             </h2>
             <p className="text-base leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Most self assessment software charges a flat annual fee — even in years where you barely use it. EasyTax charges per submission only, and is the only option with both MTD ITSA quarterly updates and AI Open Banking categorisation built in.
+              Most self assessment software charges a flat annual fee — even in years where you barely use it. EasyTax charges nothing at all, and is the only option with both MTD ITSA quarterly updates and AI Open Banking categorisation built in.
             </p>
             <div className="overflow-x-auto rounded-2xl" style={{ border: '1px solid #DDD5C8' }}>
               <table className="w-full text-sm" style={{ backgroundColor: '#FFFFFF', borderCollapse: 'collapse' }}>
@@ -323,8 +314,8 @@ export default async function SelfAssessmentSoftware() {
             <div className="grid sm:grid-cols-2 gap-6">
               {[
                 {
-                  title: 'Pay only when you file — no subscription',
-                  body: 'Most self assessment software charges £50–£199 per year, whether you file once or use it every month. EasyTax charges £20 + VAT per HMRC submission. If you file one SA100 per year, you pay £24. That\'s it.',
+                  title: 'Free — no subscription, no filing fee',
+                  body: 'Most self assessment software charges £50–£199 per year, whether you file once or use it every month. EasyTax charges nothing, whichever you do. That\'s it.',
                 },
                 {
                   title: 'MTD ITSA ready from day one',
@@ -446,7 +437,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   q: 'How much does EasyTax self assessment software cost?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. A sole trader filing one annual SA100 pays £24. The full MTD ITSA annual cycle (4 quarterly updates + 1 final declaration) costs around £120. Connecting your bank and HMRC is always free.',
+                  a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing one annual SA100 pays £0; so does the full MTD ITSA annual cycle of 4 quarterly updates plus a final declaration. Connecting your bank and HMRC is free too.',
                 },
                 {
                   q: 'Which SA supplementary pages does EasyTax support?',
@@ -485,7 +476,7 @@ export default async function SelfAssessmentSoftware() {
         <section className="py-20 sm:py-24" style={{ backgroundColor: '#1C1208' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
-              Self assessment software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>per filing</em>, not per year.
+              Self assessment software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>nothing</em>, per filing or per year.
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. SA100 · SA103 · SA105 · MTD ITSA. Built on the HMRC MTD API.

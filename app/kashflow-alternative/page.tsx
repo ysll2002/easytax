@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('KashFlow Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a KashFlow alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription, no card to sign up.',
+  description: 'Looking for a KashFlow alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/kashflow-alternative' },
   openGraph: {
     title: 'KashFlow Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'KashFlow charges £10–27+VAT/month on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission — no subscription.',
+    description: 'KashFlow charges £10–27+VAT/month on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free — no subscription, no filing fee.',
     url: 'https://easytax.vip/kashflow-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'KashFlow Alternative — MTD ITSA Software, £24 per Filing',
-    description: 'KashFlow charges £120–324+VAT/year. EasyTax charges £24 per submission, no subscription.',
+    title: 'KashFlow Alternative — MTD ITSA Software, Free',
+    description: 'KashFlow charges £120–324+VAT/year. EasyTax charges nothing, with no subscription.',
   },
 };
 
@@ -30,8 +31,8 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; kashflow: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: '£24 per filing',  kashflow: 'From £10+VAT/mo',    note: 'KashFlow charges a monthly subscription; EasyTax charges £20+VAT per HMRC submission' },
-  { feature: 'Typical annual cost',                   easytax: '~£120',            kashflow: '£120–324+VAT',        note: 'Based on 4 quarterly updates + 1 final declaration for EasyTax; KashFlow Starter–Business plans' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  kashflow: 'From £10+VAT/mo',    note: 'KashFlow charges a monthly subscription; EasyTax charges nothing' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            kashflow: '£120–324+VAT',        note: 'EasyTax is free however many times you file; KashFlow Starter–Business plans' },
   { feature: 'No card to sign up',                    easytax: true,              kashflow: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,              kashflow: true },
   { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,              kashflow: true },
@@ -61,7 +62,7 @@ export default async function KashFlowAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'KashFlow Alternative — MTD ITSA Software for UK Freelancers',
-    description: 'Side-by-side comparison of EasyTax and KashFlow for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission with no subscription.',
+    description: 'Side-by-side comparison of EasyTax and KashFlow for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free, with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/kashflow-alternative',
@@ -82,13 +83,13 @@ export default async function KashFlowAlternative() {
               <Sparkles size={12} /> The no-subscription KashFlow alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£120–324/year</em> for KashFlow? EasyTax files the same returns for £24 each.
+              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£120–324/year</em> for KashFlow? EasyTax files the same returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              KashFlow is solid bookkeeping software — but if you are a UK freelancer or sole trader who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying a monthly subscription for features you will never use. EasyTax covers all the same HMRC filings for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> — no monthly fee, no card required to start.
+              KashFlow is solid bookkeeping software — but if you are a UK freelancer or sole trader who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying a monthly subscription for features you will never use. EasyTax covers all the same HMRC filings <strong style={{ color: '#6B8E6E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
@@ -142,7 +143,7 @@ export default async function KashFlowAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>KashFlow</p>
@@ -257,7 +258,7 @@ export default async function KashFlowAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. You only pay when you actually file. Users who sign up during the current early-access period lock in this founder price for life. There is no charge to connect your bank or HMRC accounts.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file, however many returns you send. There is no charge to connect your bank or HMRC accounts either.',
                 },
                 {
                   q: 'I use KashFlow for invoicing. What do I do?',
@@ -281,7 +282,7 @@ export default async function KashFlowAlternative() {
                 },
                 {
                   q: 'Can I try EasyTax before committing?',
-                  a: 'Yes — sign up free with no card required. You only pay when you submit a return to HMRC. You can connect your bank, review your transactions, and explore the dashboard without spending anything.',
+                  a: 'Yes — sign up free with no card required, and there is nothing to pay afterwards either. Connect your bank, review your transactions, file to HMRC and use the dashboard without spending anything.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -301,7 +302,7 @@ export default async function KashFlowAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop paying a monthly fee just to stay HMRC-compliant.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for £24 a filing.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.

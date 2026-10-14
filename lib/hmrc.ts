@@ -110,6 +110,14 @@ export async function fraudHeaders(): Promise<Record<string, string>> {
   // Gov-Vendor-License-IDs is also intentionally omitted. EasyTax does not
   // issue per-user licences (free to all), so any value we send would be a
   // dummy/hash and HMRC's FPH review explicitly flagged that as prohibited.
+  //
+  // That parenthesis is load-bearing and it is what we told HMRC. The product
+  // was charged at £20+VAT per submission between 2026-08-25 and 2026-10-14,
+  // during which this comment was simply wrong; it is free again now, which is
+  // what the FPH submission says. HMRC's reply asked to be told "as soon as
+  // possible" if the licensing position changes, so if a charge is ever
+  // reintroduced this header has to be revisited AND SDST notified — see
+  // lib/pricing.ts, which is the source of truth for what the product costs.
 
   const raw: Record<string, string> = {
     'Gov-Client-Connection-Method':     'WEB_APP_VIA_SERVER',

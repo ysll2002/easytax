@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Landlord Tax Software — MTD ITSA for UK Landlords'),
-  description: 'MTD ITSA software for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105) to HMRC for £24 per submission. No subscription, no accountant.',
+  description: 'MTD ITSA software for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105) to HMRC free. No subscription, no filing fee, no accountant.',
   alternates: { canonical: 'https://easytax.vip/landlord-tax-software' },
   openGraph: {
-    title: 'Landlord Tax Software — MTD ITSA, SA100 + SA105, £24 per Filing',
-    description: 'EasyTax files MTD ITSA quarterly updates and Self Assessment (including SA105 property income) for UK landlords. £24 per submission, no monthly subscription, no accountant needed.',
+    title: 'Landlord Tax Software — MTD ITSA, SA100 + SA105, Free',
+    description: 'EasyTax files MTD ITSA quarterly updates and Self Assessment (including SA105 property income) for UK landlords. Free, no monthly subscription, no accountant needed.',
     url: 'https://easytax.vip/landlord-tax-software',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Landlord Tax Software — MTD ITSA + SA105, £24 per Filing',
-    description: 'MTD ITSA quarterly updates and Self Assessment for UK landlords — £24 per submission, no subscription, no accountant required.',
+    title: 'Landlord Tax Software — MTD ITSA + SA105, Free',
+    description: 'MTD ITSA quarterly updates and Self Assessment for UK landlords — free, no subscription, no accountant required.',
   },
 };
 
@@ -30,7 +31,7 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; accountant: string | boolean; suite: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                              easytax: '£24 per filing',   accountant: '£400–£1,200/yr',   suite: '£144–£708/yr',   note: 'EasyTax charges per HMRC submission; accountants charge annually; software suites charge monthly subscription' },
+  { feature: 'Pricing model',                              easytax: PRICE_TABLE_CELL,   accountant: '£400–£1,200/yr',   suite: '£144–£708/yr',   note: 'EasyTax charges nothing at all; accountants charge annually; software suites charge monthly subscription' },
   { feature: 'MTD ITSA quarterly updates',                 easytax: true,               accountant: true,               suite: true },
   { feature: 'Self Assessment — SA100',                    easytax: true,               accountant: true,               suite: true },
   { feature: 'Property income supplement — SA105',         easytax: true,               accountant: true,               suite: true,             note: 'EasyTax files the SA105 property pages alongside the SA100 main return' },
@@ -90,8 +91,8 @@ export default async function LandlordTaxSoftware() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Landlord Tax Software — MTD ITSA Filing for UK Landlords, £24 per Submission',
-    description: 'MTD ITSA quarterly updates and Self Assessment (SA100 + SA105 property supplement) filed directly to HMRC for UK landlords. £24 per submission, no subscription.',
+    headline: 'Landlord Tax Software — MTD ITSA Filing for UK Landlords, Free',
+    description: 'MTD ITSA quarterly updates and Self Assessment (SA100 + SA105 property supplement) filed directly to HMRC for UK landlords. Free, no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/landlord-tax-software',
@@ -124,13 +125,13 @@ export default async function LandlordTaxSoftware() {
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               Landlord tax software.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>MTD ITSA + SA105. £24 per filing. No subscription.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>MTD ITSA + SA105. Free. No subscription.</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              UK landlords with income above £50,000 must now file quarterly updates to HMRC under Making Tax Digital. EasyTax handles your <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and your <strong style={{ color: '#1C1208' }}>Self Assessment — including the SA105 property income supplement</strong> — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription, no accountant required.
+              UK landlords with income above £50,000 must now file quarterly updates to HMRC under Making Tax Digital. EasyTax handles your <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and your <strong style={{ color: '#1C1208' }}>Self Assessment — including the SA105 property income supplement</strong> — <strong style={{ color: '#6B8E6E' }}>free</strong>. No monthly subscription, no per-filing fee, no accountant required.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA105 property supplement</span>
@@ -186,7 +187,7 @@ export default async function LandlordTaxSoftware() {
                   </div>
                   <div className="px-3 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                     <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                    <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
+                    <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                   </div>
                   <div className="px-3 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                     <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Accountant</p>
@@ -279,7 +280,7 @@ export default async function LandlordTaxSoftware() {
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>You have one to a handful of buy-to-let or residential rental properties.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Your main goal is HMRC compliance at the lowest cost — not full bookkeeping software.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>You want Open Banking to automate income/expense tracking so you are not manually entering data.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>You are paying £400–£1,200/year for an accountant to do a straightforward landlord Self Assessment — and want to do it yourself for £120/year.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>You are paying £400–£1,200/year for an accountant to do a straightforward landlord Self Assessment — and want to do it yourself for nothing.</span></li>
                 </ul>
               </div>
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D30' }}>
@@ -320,7 +321,7 @@ export default async function LandlordTaxSoftware() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               MTD ITSA is here for landlords.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>File for £24 a submission — not £1,000/year.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>File for nothing — not £1,000/year.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Connect your bank and file your first quarterly update in under 10 minutes.

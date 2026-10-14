@@ -49,6 +49,11 @@ export const dynamic = 'force-dynamic';
 // else's page. Counting an impression of a 560×190 widget as a visit to this
 // site would inflate the same number the 2026-09-08 round spent a change
 // deflating. It is measured separately, by host, in `distribution.embeds`.
+//
+// `/payment` no longer exists — the checkout was removed on 2026-10-14 when the
+// product went back to being free. It stays in this list because
+// `analytics_events` still holds rows for it, and dropping it would silently
+// start counting those historical hits as public content views.
 const NON_CONTENT_PREFIXES = [
   '/dashboard', '/api', '/onboarding', '/payment', '/actions',
   '/login', '/register', '/forgot-password', '/reset-password',

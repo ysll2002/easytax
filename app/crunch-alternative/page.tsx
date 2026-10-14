@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Crunch Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a Crunch alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription.',
+  description: 'Looking for a Crunch alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — no monthly subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/crunch-alternative' },
   openGraph: {
     title: 'Crunch Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Crunch charges £35–110+VAT/month for software + accountancy. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission — no subscription.',
+    description: 'Crunch charges £35–110+VAT/month for software + accountancy. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free — no subscription, no filing fee.',
     url: 'https://easytax.vip/crunch-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Crunch Alternative — MTD ITSA Software, £24 per Filing',
-    description: 'Crunch charges £420–1320+VAT/year. EasyTax charges £24 per submission, no subscription.',
+    title: 'Crunch Alternative — MTD ITSA Software, Free',
+    description: 'Crunch charges £420–1320+VAT/year. EasyTax charges nothing, with no subscription.',
   },
 };
 
@@ -30,8 +31,8 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; crunch: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: '£24 per filing',  crunch: 'From £35+VAT/mo',       note: 'Crunch bundles software + accountancy; EasyTax charges £20+VAT per HMRC submission' },
-  { feature: 'Typical annual cost',                   easytax: '~£120',            crunch: '£420–1,320+VAT',         note: 'Based on 4 quarterly updates + 1 final declaration for EasyTax; Crunch Sole Trader to Limited plans' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  crunch: 'From £35+VAT/mo',       note: 'Crunch bundles software + accountancy; EasyTax charges nothing' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            crunch: '£420–1,320+VAT',         note: 'EasyTax is free however many times you file; Crunch Sole Trader to Limited plans' },
   { feature: 'No card to sign up',                    easytax: true,              crunch: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,              crunch: true },
   { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,              crunch: true },
@@ -61,7 +62,7 @@ export default async function CrunchAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Crunch Alternative — MTD ITSA Software for UK Freelancers',
-    description: 'Side-by-side comparison of EasyTax and Crunch for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission with no subscription.',
+    description: 'Side-by-side comparison of EasyTax and Crunch for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free, with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/crunch-alternative',
@@ -82,13 +83,13 @@ export default async function CrunchAlternative() {
               <Sparkles size={12} /> The no-subscription Crunch alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£420–1,320/year</em> for Crunch? EasyTax files the same returns for £24 each.
+              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£420–1,320/year</em> for Crunch? EasyTax files the same returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Crunch bundles software with accountancy support — a useful combination if you want a human accountant in the loop. But if you are a UK freelancer who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong> yourself, you are paying a significant monthly fee for a service tier you may not need. EasyTax covers all the same HMRC filings for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> — no monthly fee, no card required to start.
+              Crunch bundles software with accountancy support — a useful combination if you want a human accountant in the loop. But if you are a UK freelancer who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong> yourself, you are paying a significant monthly fee for a service tier you may not need. EasyTax covers all the same HMRC filings <strong style={{ color: '#6B8E6E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
@@ -142,7 +143,7 @@ export default async function CrunchAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Crunch</p>
@@ -257,7 +258,7 @@ export default async function CrunchAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. You only pay when you actually file. Users who sign up during the current early-access period lock in this founder price for life.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file, however many returns you send.',
                 },
                 {
                   q: "I use Crunch for accountancy advice, not just software. Is EasyTax a like-for-like replacement?",
@@ -277,7 +278,7 @@ export default async function CrunchAlternative() {
                 },
                 {
                   q: 'Can I try EasyTax before committing?',
-                  a: 'Yes — sign up free with no card required. You only pay when you submit a return to HMRC. You can connect your bank, review your transactions, and explore the dashboard without spending anything.',
+                  a: 'Yes — sign up free with no card required, and there is nothing to pay afterwards either. Connect your bank, review your transactions, file to HMRC and use the dashboard without spending anything.',
                 },
                 {
                   q: 'I use Crunch for invoicing. What do I use instead?',
@@ -301,7 +302,7 @@ export default async function CrunchAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop paying a monthly subscription just to file your taxes.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for £24 a filing.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.

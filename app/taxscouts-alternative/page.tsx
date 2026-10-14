@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('TaxScouts Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a TaxScouts alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — software you control, no waiting for an accountant.',
+  description: 'Looking for a TaxScouts alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — software you control, no waiting for an accountant.',
   alternates: { canonical: 'https://easytax.vip/taxscouts-alternative' },
   openGraph: {
-    title: 'TaxScouts Alternative — MTD ITSA + Self Assessment, £24 per Filing',
-    description: 'TaxScouts charges £119–169+ per year and assigns you an accountant. EasyTax lets you file MTD ITSA quarterly updates and Self Assessment yourself for £24 per submission.',
+    title: 'TaxScouts Alternative — MTD ITSA + Self Assessment, Free',
+    description: 'TaxScouts charges £119–169+ per year and assigns you an accountant. EasyTax lets you file MTD ITSA quarterly updates and Self Assessment yourself, free.',
     url: 'https://easytax.vip/taxscouts-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TaxScouts Alternative — MTD ITSA Software, £24 per Filing',
-    description: 'TaxScouts uses an accountant. EasyTax is software — file MTD ITSA and Self Assessment yourself for £24.',
+    title: 'TaxScouts Alternative — MTD ITSA Software, Free',
+    description: 'TaxScouts uses an accountant. EasyTax is software — file MTD ITSA and Self Assessment yourself, free.',
   },
 };
 
@@ -30,8 +31,8 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; taxscouts: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: '£24 per filing',  taxscouts: 'From £119/year',      note: 'EasyTax charges £20+VAT per HMRC submission; TaxScouts charges a fixed annual fee per return' },
-  { feature: 'Typical annual cost',                   easytax: '~£120',            taxscouts: '£119–169+',           note: 'EasyTax: 4 quarterly MTD updates + 1 final declaration; TaxScouts: one Self Assessment filing per year' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  taxscouts: 'From £119/year',      note: 'EasyTax charges nothing; TaxScouts charges a fixed annual fee per return' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            taxscouts: '£119–169+',           note: 'EasyTax is free however many times you file; TaxScouts: one Self Assessment filing per year' },
   { feature: 'No card to sign up',                    easytax: true,               taxscouts: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               taxscouts: false,                 note: 'TaxScouts focuses on annual Self Assessment; EasyTax is built for the new mandatory quarterly MTD cycle' },
   { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,               taxscouts: true },
@@ -61,7 +62,7 @@ export default async function TaxScoutsAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'TaxScouts Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and TaxScouts for UK sole traders and landlords. EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for £24 per submission — no waiting for an accountant.',
+    description: 'Side-by-side comparison of EasyTax and TaxScouts for UK sole traders and landlords. EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 free — no waiting for an accountant.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/taxscouts-alternative',
@@ -82,13 +83,13 @@ export default async function TaxScoutsAlternative() {
               <Sparkles size={12} /> File MTD ITSA yourself — no accountant queue
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£119+ for TaxScouts</em>? EasyTax files the same returns for £24 each — instantly.
+              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£119+ for TaxScouts</em>? EasyTax files the same returns for nothing — instantly.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              TaxScouts is a great service — but from <strong style={{ color: '#1C1208' }}>6 April 2026</strong>, UK sole traders must file <strong style={{ color: '#1C1208' }}>quarterly MTD ITSA updates</strong>, not just one annual return. TaxScouts currently focuses on Self Assessment; EasyTax is built for the new quarterly cycle. File directly to HMRC for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> — no subscription, no waiting for an accountant.
+              TaxScouts is a great service — but from <strong style={{ color: '#1C1208' }}>6 April 2026</strong>, UK sole traders must file <strong style={{ color: '#1C1208' }}>quarterly MTD ITSA updates</strong>, not just one annual return. TaxScouts currently focuses on Self Assessment; EasyTax is built for the new quarterly cycle. File directly to HMRC <strong style={{ color: '#6B8E6E' }}>free</strong> — no subscription, no filing fee, no waiting for an accountant.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>File on your own schedule</span>
@@ -142,7 +143,7 @@ export default async function TaxScoutsAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>TaxScouts</p>
@@ -257,7 +258,7 @@ export default async function TaxScoutsAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription, no annual fee. You only pay when you actually file. Users who sign up during the current early-access period lock in this founder price for life.',
+                  a: 'Nothing. There is no monthly subscription, no annual fee and no charge when you file, however many returns you send.',
                 },
                 {
                   q: 'Does EasyTax replace a human accountant?',
@@ -301,7 +302,7 @@ export default async function TaxScoutsAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               MTD ITSA is quarterly now — file yourself, instantly.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for £24 a filing.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.

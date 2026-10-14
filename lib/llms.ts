@@ -303,6 +303,6 @@ export const KEY_PAGES: readonly { url: string; title: string; note: string }[] 
   {
     url: `${SITE}/pricing`,
     title: 'Pricing',
-    note: 'What EasyTax costs and what is free.',
+    note: 'What EasyTax costs: nothing. No subscription, no per-filing fee.',
   },
 ];

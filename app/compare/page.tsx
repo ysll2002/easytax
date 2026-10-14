@@ -34,7 +34,7 @@ import { ArrowRight } from 'lucide-react';
 export const metadata: Metadata = {
   title: pageTitle('Compare MTD Software for UK Sole Traders & Landlords'),
   description:
-    'EasyTax vs QuickBooks, Xero, FreeAgent, Sage, Crunch, Coconut, KashFlow, Bokio and TaxScouts for MTD ITSA, Self Assessment, VAT and CT600. £24 per submission.',
+    'EasyTax vs QuickBooks, Xero, FreeAgent, Sage, Crunch, Coconut, KashFlow, Bokio and TaxScouts for MTD ITSA, Self Assessment, VAT and CT600. Free, no subscription.',
   keywords: [
     'MTD software comparison',
     'best MTD software UK',
@@ -48,12 +48,12 @@ export const metadata: Metadata = {
     url: 'https://easytax.vip/compare',
     title: 'Compare MTD Software for UK Sole Traders & Landlords',
     description:
-      'Nine side-by-side comparisons. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC for £24 per submission — no monthly fee.',
+      'Nine side-by-side comparisons. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no monthly fee, no filing fee.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Compare MTD Software — UK Sole Traders & Landlords',
-    description: 'EasyTax vs QuickBooks, Xero, FreeAgent, Sage and five more. £24 per filing, no subscription.',
+    description: 'EasyTax vs QuickBooks, Xero, FreeAgent, Sage and five more. Free, no subscription.',
   },
 };
 
@@ -122,8 +122,8 @@ export default function ComparePage() {
         </p>
 
         <p className="text-sm sm:text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: 680 }}>
-          EasyTax charges <strong style={{ color: '#1C1208' }}>£24 per submission</strong> (£20 + VAT) and
-          nothing else. That is the whole difference, and whether it is the right trade depends
+          EasyTax is <strong style={{ color: '#1C1208' }}>free</strong> — no subscription and no
+          per-filing fee. That is the whole difference, and whether it is the right trade depends
           entirely on how much bookkeeping you actually need — so each page below says what the other
           product is genuinely better at before it says why you might leave.
         </p>
@@ -213,7 +213,7 @@ export default function ComparePage() {
                 textDecoration: 'none',
               }}
             >
-              See what £24 covers
+              See what it covers
             </Link>
           </div>
         </section>

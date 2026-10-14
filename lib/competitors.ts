@@ -109,6 +109,6 @@ export const COMPETITORS: readonly Competitor[] = [
     href: '/taxscouts-alternative',
     price: '£119–£169+ per year',
     who: 'People who want a human accountant to prepare the return.',
-    switchReason: 'One return costs more than a year of filings here.',
+    switchReason: 'One return costs more than every filing you will ever make here.',
   },
 ];

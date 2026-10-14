@@ -39,6 +39,8 @@
 // somebody else is worse than no entry. Add each URL here only once the
 // listing is live and names Finance Panda Limited or EasyTax.
 
+import { OFFER_JSONLD } from './pricing';
+
 export const SITE_URL = 'https://easytax.vip';
 
 export const ORG_ID = `${SITE_URL}/#organization`;
@@ -119,16 +121,13 @@ const software = {
   operatingSystem: 'Web',
   url: SITE_URL,
   description:
-    'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC for £24 per submission, no subscription.',
-  // Was price '0' / "Free", which contradicted the £24 Offer on the homepage
-  // and pricing page. Conflicting Offer nodes on the same URL are a rich-result
-  // liability and read as a bait-and-switch to anyone who checks.
-  offers: {
-    '@type': 'Offer',
-    price: '24',
-    priceCurrency: 'GBP',
-    description: '£20 + VAT (£24 inc. VAT) per HMRC submission — no subscription, no card to sign up',
-  },
+    'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC — free, no subscription.',
+  // Read from lib/pricing.ts rather than restated. This node and the Product
+  // node on /pricing were allowed to contradict each other once — a `price: 0`
+  // here against a £24 Offer there, two conflicting Offers for one product,
+  // which is a rich-result liability and reads as a bait-and-switch to anyone
+  // who checks. They now share one object and cannot drift.
+  offers: OFFER_JSONLD,
   featureList: [
     'Self Assessment (SA100)',
     'Making Tax Digital for Income Tax (MTD ITSA)',

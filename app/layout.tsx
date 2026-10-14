@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   // 146 characters. The previous text ran to 253 and was inherited by every
   // page without its own, so the site's most-used description was cut off in
   // results mid-clause.
-  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 from £24.',
+  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free to use.',
   keywords: [
     'MTD ITSA software',
     'MTD for income tax UK',
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     url: 'https://easytax.vip',
     siteName: 'EasyTax',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — £24 per submission, no subscription.',
+    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — free, no subscription.',
     // No `images` here on purpose. This used to name `/og-image.png`, a file
     // that has never existed in `public/` — so every page on the site
     // advertised a preview image that returned 404, and every link the last
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — £24 per submission.',
+    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free, no subscription.',
     // Likewise: inherited from the generated Open Graph card.
   },
   alternates: { canonical: 'https://easytax.vip' },
