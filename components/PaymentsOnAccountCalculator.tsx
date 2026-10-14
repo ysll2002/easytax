@@ -336,8 +336,8 @@ function Result({ result }: { result: PoaResult }) {
 
       <div className="mt-7 pt-6" style={{ borderTop: '1px solid #F0EBE1' }}>
         <p className="text-sm mb-4" style={{ color: '#4A4035' }}>
-          EasyTax works your liability out from your bank transactions and files it for £20 + VAT,
-          with no subscription. HMRC approved our production access on 11 November 2026, so live
+          EasyTax works your liability out from your bank transactions and files it free, with no
+          subscription and no per-filing fee. HMRC approved our production access on 11 November 2026, so live
           submissions are open.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">

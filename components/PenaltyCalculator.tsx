@@ -419,7 +419,7 @@ function Panel({
       <div className="mt-7 pt-6" style={{ borderTop: '1px solid #F0EBE1' }}>
         <p className="text-sm mb-4" style={{ color: '#4A4035' }}>
           Filing on time is the only way to avoid all of this. EasyTax files Self Assessment and MTD
-          quarterly updates for £20 + VAT each, with no subscription. HMRC approved our production
+          quarterly updates free, with no subscription and no per-filing fee. HMRC approved our production
           access on 11 November 2026, so live submissions are open.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">

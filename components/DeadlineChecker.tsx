@@ -343,7 +343,7 @@ function Panel({
         />
 
         <p className="text-sm mt-5 mb-3" style={{ color: '#4A4035' }}>
-          EasyTax files these updates for £20 + VAT each, with no subscription. HMRC approved our
+          EasyTax files these updates free, with no subscription and no per-filing fee. HMRC approved our
           production access on 11 November 2026, so live submissions are open — the email above is
           still how we will remind you before each deadline.
         </p>
