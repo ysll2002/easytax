@@ -7,7 +7,11 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 export const maxDuration = 120;
 
 // Always target the sandbox — sandbox tokens are required
-const BASE = 'https://test-api.service.hmrc.gov.uk';
+// Sandbox on purpose, and it must NEVER follow HMRC_ENV — see the note further
+// down: this harness makes 11 POSTs, 12 PUTs and 8 DELETEs including
+// `POST /organisations/vat/{vrn}/returns`. Against production that is filing
+// real tax data. The constant makes the intent explicit.
+import { HMRC_SANDBOX_BASE as BASE } from '@/lib/hmrc-env';
 
 type ApiResult = {
   name: string;

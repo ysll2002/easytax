@@ -9,6 +9,7 @@ import ContactWidget from "@/components/ContactWidget";
 import PageViewTracker from "@/components/PageViewTracker";
 import EngagementTracker from "@/components/EngagementTracker";
 import { isRtl } from '@/i18n/routing';
+import { siteEntityGraph } from '@/lib/site-entity';
 
 const playfair = Playfair_Display({
   variable: "--font-display",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   // 146 characters. The previous text ran to 253 and was inherited by every
   // page without its own, so the site's most-used description was cut off in
   // results mid-clause.
-  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 from £24.',
+  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free to use.',
   keywords: [
     'MTD ITSA software',
     'MTD for income tax UK',
@@ -73,7 +74,7 @@ export const metadata: Metadata = {
     url: 'https://easytax.vip',
     siteName: 'EasyTax',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — £24 per submission, no subscription.',
+    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — free, no subscription.',
     // No `images` here on purpose. This used to name `/og-image.png`, a file
     // that has never existed in `public/` — so every page on the site
     // advertised a preview image that returned 404, and every link the last
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — £24 per submission.',
+    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free, no subscription.',
     // Likewise: inherited from the generated Open Graph card.
   },
   alternates: { canonical: 'https://easytax.vip' },
@@ -131,50 +132,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           title="EasyTax Tax Tips"
           href="https://easytax.vip/tax-tips/feed.json"
         />
+        {/* Organization + WebSite + SoftwareApplication, one @graph, defined in
+            lib/site-entity.ts. The SoftwareApplication node used to be written
+            out here inline with a bare `publisher` string and no Organization
+            entity behind it; see that file for what Search Console showed
+            about our own brand queries and why the entity is now explicit. */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'SoftwareApplication',
-              // Shared @id with the node on the homepage so Google treats the
-              // two as one entity rather than two competing descriptions of
-              // the same app.
-              '@id': 'https://easytax.vip/#software',
-              name: 'EasyTax',
-              applicationCategory: 'FinanceApplication',
-              operatingSystem: 'Web',
-              url: 'https://easytax.vip',
-              description: 'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC for £24 per submission, no subscription.',
-              // Was price '0' / "Free", which contradicted the £24 Offer on the
-              // homepage and pricing page. Conflicting Offer nodes on the same
-              // URL are a rich-result liability and read as a bait-and-switch
-              // to anyone who checks.
-              offers: {
-                '@type': 'Offer',
-                price: '24',
-                priceCurrency: 'GBP',
-                description: '£20 + VAT (£24 inc. VAT) per HMRC submission — no subscription, no card to sign up',
-              },
-              featureList: [
-                'Self Assessment (SA100)',
-                'Making Tax Digital for Income Tax (MTD ITSA)',
-                'Quarterly HMRC updates',
-                'VAT returns (MTD VAT)',
-                'CT600 Corporation Tax',
-                'Balance Sheet',
-                'Profit & Loss',
-                'Open Banking integration',
-                'AI expense categorisation',
-              ],
-              publisher: { '@type': 'Organization', name: 'Finance Panda Limited', url: 'https://easytax.vip' },
-              audience: {
-                '@type': 'Audience',
-                audienceType: 'UK freelancers, sole traders, contractors, and limited companies',
-                geographicArea: { '@type': 'Country', name: 'United Kingdom' },
-              },
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteEntityGraph) }}
         />
       </head>
       <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>

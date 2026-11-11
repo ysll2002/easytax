@@ -31,10 +31,10 @@
       "pill": "下一次 MTD ITSA 季度申报：{date}，还有 {days} 天",
       "title1": "MTD ITSA 来了。",
       "title2": "向 HMRC 季度申报",
-      "title3": "每次 £24。",
+      "title3": "完全免费。",
       "subtitle": "从 2026 年 4 月起，年收入超过 5 万英镑的个体户和房东必须每季度向 HMRC 上报数据。EasyTax 几分钟内搞定 —— 同时支持 Self Assessment、VAT 和完整的公司账目。",
-      "subtitleEmph": "无订阅 —— 只在申报时付费。",
-      "badgeFree": "无订阅",
+      "subtitleEmph": "无订阅费，也无单次申报费 —— EasyTax 免费使用。",
+      "badgeFree": "免费使用",
       "badgeNoCard": "注册无需信用卡",
       "badgeHmrc": "基于 HMRC 官方 API",
       "ctaPrimary": "开始 MTD 申报 →",
@@ -52,6 +52,12 @@
       "title": "现在就能用的免费工具",
       "subtitle": "无需注册、无需银行卡，也不必等待 HMRC 审批。三个计算器，回答访客真正带来的问题。",
       "all": "查看全部免费工具 →"
+    },
+    "compare": {
+      "title": "已经在为别的软件付费？",
+      "subtitle": "英国大多数会计软件按月订阅，因为它们本质上是记账工具，顺带报税。九组逐项对比，每一组都会如实说明对方更擅长什么。",
+      "vs": "对比 {name}",
+      "all": "查看全部九组对比 →"
     },
     "services": {
       "title1": "全面覆盖，",
@@ -88,8 +94,8 @@
       "title1": "5 分钟搞定，",
       "title2": "而不是 5 小时。",
       "body": "只需一次连接你的银行和 HMRC 账户。EasyTax 自动拉取数据、AI 智能分类，然后帮你申报 —— 不论是 Self Assessment、VAT 还是完整公司账目。",
-      "priceLabel": "£24 / 次",
-      "priceCaption": "无月度订阅费。每次向 HMRC 提交申报 £24（含 VAT）。早期注册用户可终身锁定此创始价。",
+      "priceLabel": "免费",
+      "priceCaption": "无月度订阅费，也无单次申报费。连接银行和 HMRC、AI 归类、向 HMRC 提交申报，全部免费。",
       "cta": "开始申报 →",
       "step1Title": "连接你的账户",
       "step1Desc": "绑定你的 Government Gateway ID 和企业银行账户。我们自动拉取记录 —— 不需要手动录入。",
@@ -102,7 +108,7 @@
       "title1": "你的疑问，",
       "title2": "我们解答。",
       "q1Q": "EasyTax 支持有限公司吗？",
-      "q1A": "支持。EasyTax 既适用于个体户/自由职业者（Self Assessment、MTD ITSA），也适用于有限公司（VAT 申报、CT600 公司所得税、资产负债表、损益表）。价格：每次向 HMRC 提交申报 £24（含 VAT），无月度订阅费。早期注册用户可锁定 £20 + VAT 的创始价。",
+      "q1A": "支持。EasyTax 既适用于个体户/自由职业者（Self Assessment、MTD ITSA），也适用于有限公司（VAT 申报、CT600 公司所得税、资产负债表、损益表）。价格：完全免费 —— 无月度订阅费，也无单次申报费。",
       "q2Q": "你们支持哪些 VAT 计划？",
       "q2A": "我们支持标准计划、Flat Rate 和年度 VAT 会计计划，通过 MTD 兼容 API 直接提交 HMRC。",
       "q3Q": "资产负债表如何生成？",
@@ -132,7 +138,7 @@
     "finalCta": {
       "title1": "别再害怕",
       "title2": "繁琐的报税。",
-      "subtitle": "面向英国自由职业者和有限公司。连接账户，几分钟内向 HMRC 提交申报 —— 每次 £24，无订阅。",
+      "subtitle": "面向英国自由职业者和有限公司。连接账户，几分钟内向 HMRC 提交申报 —— 完全免费，无订阅。",
       "button": "开始申报 →"
     },
     "footer": {
@@ -143,7 +149,7 @@
     },
     "meta": {
       "title": "EasyTax — 英国个体户与有限公司的 MTD ITSA 软件",
-      "description": "面向英国个体户、房东和有限公司的 MTD ITSA 软件。向 HMRC 季度上报、申报 Self Assessment、VAT 和 CT600。每次提交 £24，无订阅 —— 注册无需信用卡。"
+      "description": "面向英国个体户、房东和有限公司的 MTD ITSA 软件。向 HMRC 季度上报、申报 Self Assessment、VAT 和 CT600。完全免费，无订阅 —— 注册无需信用卡。"
     },
     "toolsStrip": {
       "kicker": "免费 · 无需注册",

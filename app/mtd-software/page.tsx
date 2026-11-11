@@ -5,14 +5,16 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { COMPETITORS } from '@/lib/competitors';
+import { OFFER_JSONLD, PRICE_CHIP } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('MTD Software UK — Making Tax Digital for Income Tax'),
-  description: 'EasyTax is MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT per submission. No monthly subscription.',
+  description: 'MTD ITSA software on the HMRC MTD API for UK sole traders and landlords. Quarterly updates, Self Assessment, VAT and CT600 — free, no subscription.',
   alternates: { canonical: 'https://easytax.vip/mtd-software' },
   openGraph: {
-    title: 'MTD ITSA Software — EasyTax, £24 per Filing, No Subscription',
-    description: 'Making Tax Digital software built on the HMRC MTD API for sole traders and landlords. Quarterly updates, Self Assessment, VAT, CT600 — £24 per filing, no monthly fee.',
+    title: 'MTD ITSA Software — EasyTax, Free, No Subscription',
+    description: 'Making Tax Digital software built on the HMRC MTD API for sole traders and landlords. Quarterly updates, Self Assessment, VAT, CT600 — free, no monthly fee.',
     url: 'https://easytax.vip/mtd-software',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'MTD ITSA Software — EasyTax, £24 per Filing',
-    description: 'Making Tax Digital software built on the HMRC MTD API. No subscription — pay only when you file.',
+    title: 'MTD ITSA Software — EasyTax, Free to Use',
+    description: 'Making Tax Digital software built on the HMRC MTD API. Free — no subscription, no filing fee.',
   },
 };
 
@@ -39,17 +41,7 @@ export default async function MtdSoftware() {
     operatingSystem: 'Web',
     description: 'MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File Making Tax Digital quarterly updates, Self Assessment, VAT and CT600 directly to HMRC.',
     url: 'https://easytax.vip',
-    offers: {
-      '@type': 'Offer',
-      price: '24',
-      priceCurrency: 'GBP',
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: '24',
-        priceCurrency: 'GBP',
-        unitText: 'per HMRC submission (inc. VAT)',
-      },
-    },
+    offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/mtd-software',
   };
@@ -79,7 +71,7 @@ export default async function MtdSoftware() {
         name: 'How much does EasyTax MTD software cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission. There is no monthly subscription — you only pay when you actually file. Connecting your bank and HMRC accounts is always free.',
+          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. Connecting your bank and HMRC accounts is free too.',
         },
       },
     ],
@@ -101,13 +93,13 @@ export default async function MtdSoftware() {
               <Sparkles size={12} /> MTD ITSA software built on the HMRC MTD API
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              MTD software for UK sole traders and landlords — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>£24 per filing, no subscription</em>
+              MTD software for UK sole traders and landlords — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>free, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong>. No monthly subscription. No card to sign up.
+              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — and it is <strong style={{ color: '#6B8E6E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to sign up.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No subscription</span>
@@ -235,8 +227,8 @@ export default async function MtdSoftware() {
             <div className="grid sm:grid-cols-2 gap-6">
               {[
                 {
-                  title: 'No subscription — pay only when you file',
-                  body: 'Most MTD software charges £20–30 per month whether or not you do anything that month. EasyTax charges £20 + VAT per HMRC submission. For a typical sole trader (4 quarterly updates + 1 final declaration), that is around £120 per year — versus £240–360 with subscription tools.',
+                  title: 'Free — no subscription, no filing fee',
+                  body: 'Most MTD software charges £20–30 per month whether or not you do anything that month. A typical sole trader (4 quarterly updates + 1 final declaration) pays £240–360 a year for that. EasyTax costs nothing: no monthly fee, and no charge when you file.',
                 },
                 {
                   title: 'Built from the ground up for MTD ITSA',
@@ -248,7 +240,7 @@ export default async function MtdSoftware() {
                 },
                 {
                   title: 'No card required to start',
-                  body: 'Sign up with Google or email in under 60 seconds. Connect your bank and HMRC accounts for free. You only pay when you click Submit and EasyTax sends a filing to HMRC.',
+                  body: 'Sign up with Google or email in under 60 seconds. Connect your bank and HMRC accounts for free. Clicking Submit sends the filing to HMRC and costs nothing.',
                 },
                 {
                   title: 'Direct HMRC API connection',
@@ -336,7 +328,7 @@ export default async function MtdSoftware() {
                 },
                 {
                   q: 'How much does MTD software cost with EasyTax?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. Most sole traders file 4 quarterly updates plus 1 final declaration per year, coming to around £120. Connecting your bank and HMRC accounts is always free.',
+                  a: 'Nothing. There is no monthly subscription and no per-filing fee. Most sole traders file 4 quarterly updates plus 1 final declaration a year; with EasyTax that costs £0. Connecting your bank and HMRC accounts is free too.',
                 },
                 {
                   q: 'Can I use EasyTax for Self Assessment as well as quarterly updates?',
@@ -367,11 +359,45 @@ export default async function MtdSoftware() {
           </div>
         </section>
 
+        {/* ── Comparisons ──
+            This page is the obvious topical parent of "which MTD software
+            should I use", and until 2026-09-17 it linked to none of the nine
+            comparison pages that answer it product by product. All nine had
+            zero page views over 30 days. A reader who has got this far is
+            shopping; the next thing they want is the name of what they are
+            currently paying for. */}
+        <section className="py-16 sm:py-20" style={{ backgroundColor: '#FDFCF8' }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+              Already paying for something else?
+            </h2>
+            <p className="text-sm sm:text-base mb-8" style={{ color: '#4A4035', maxWidth: 640, lineHeight: 1.6 }}>
+              Nine side-by-side comparisons, each one honest about what the other product is better
+              at. Start with whichever name you recognise.
+            </p>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {COMPETITORS.map(c => (
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className="inline-block px-4 py-2.5 rounded-full text-sm font-medium"
+                  style={{ backgroundColor: '#F0EBE1', color: '#1C1208', border: '1px solid #DDD5C8', textDecoration: 'none', minHeight: '44px', lineHeight: '1.4' }}
+                >
+                  vs {c.name}
+                </Link>
+              ))}
+            </div>
+            <Link href="/compare" className="inline-block mt-6 text-sm font-medium" style={{ color: '#C4622D', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              Compare all nine side by side →
+            </Link>
+          </div>
+        </section>
+
         {/* ── CTA ── */}
         <section className="py-20 sm:py-24" style={{ backgroundColor: '#1C1208' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
-              MTD ITSA software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>per filing</em>, not per month.
+              MTD ITSA software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>nothing at all</em>.
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes. Built on the HMRC MTD API.

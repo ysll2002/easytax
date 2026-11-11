@@ -56,7 +56,7 @@ const CANONICAL = 'https://easytax.vip/mtd-quarterly-update-deadlines';
 export const metadata: Metadata = {
   title: pageTitle('MTD Quarterly Update Deadlines 2026/27'),
   description:
-    'The four Making Tax Digital for Income Tax quarterly update deadlines, what goes in an update, and what HMRC actually charges for a late one. There are no late submission penalties for missed quarterly updates in 2026/27 — but paying late is charged separately.',
+    'The four MTD for Income Tax quarterly deadlines, what goes in an update, and what a late one costs. No submission penalties in 2026/27 — paying late still is.',
   keywords: [
     'MTD quarterly update deadlines',
     'making tax digital income tax deadlines 2026 27',

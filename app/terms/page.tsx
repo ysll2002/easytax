@@ -29,7 +29,7 @@ export default function Terms() {
           Terms of Service
         </h1>
         <p style={{ color: '#9A8F83', fontSize: '0.875rem', marginBottom: '3rem' }}>
-          Last updated: 12 May 2026 &nbsp;·&nbsp; Effective: 12 May 2026
+          Last updated: 14 October 2026 &nbsp;·&nbsp; Effective: 14 October 2026
         </p>
 
         <div style={{ color: '#4A4035', lineHeight: 1.8 }} className="space-y-10">
@@ -128,13 +128,15 @@ export default function Terms() {
           <section>
             <H2>8. Fees and Payment</H2>
             <P>
-              EasyTax charges a flat fee of <strong>£20 + VAT per tax return</strong>. This is charged when you confirm submission of your return to HMRC. Payment is processed securely by Stripe.
+              EasyTax is <strong>free to use</strong>. There is no subscription charge and no fee for
+              submitting a return to HMRC. We do not ask for card or other payment details, and we do
+              not take payments.
             </P>
             <div style={{ marginTop: '1rem' }} className="space-y-3">
               {[
-                ['Founder pricing', 'Users who sign up during our early-access period lock in the £20 price for life, regardless of future price changes.'],
-                ['Refunds', 'Once a return has been successfully submitted to HMRC, the fee is non-refundable. If a submission fails due to a technical error on our part, you will not be charged.'],
-                ['Failed submissions', 'If HMRC rejects your return due to errors in the data you provided, the fee is non-refundable but we will assist you in correcting and resubmitting at no additional charge.'],
+                ['No charge for any filing', 'Every submission type the Service supports — MTD ITSA quarterly updates, Self Assessment, VAT returns and CT600 — is included at no cost. There is no paid tier and no usage limit.'],
+                ['If this ever changes', 'We may introduce charges in future. If we do, we will give you at least 30 days’ notice by email to the address on your account, and no charge will ever apply to a submission you made before that notice.'],
+                ['Failed submissions', 'If HMRC rejects your return because of errors in the data you provided, we will help you correct and resubmit it. As there is no fee, nothing is charged or refunded either way.'],
               ].map(([title, desc]) => (
                 <div key={title} style={{ padding: '0.875rem 1rem', backgroundColor: '#F5EDDC', borderRadius: '0.75rem', borderLeft: '3px solid #C9963D' }}>
                   <p style={{ fontWeight: 600, color: '#1C1208', marginBottom: '0.25rem', fontSize: '0.9rem' }}>{title}</p>
@@ -181,7 +183,7 @@ export default function Terms() {
               <li>The Service is provided "as is" without warranties of any kind, express or implied</li>
               <li>We are not liable for any HMRC penalties, interest, or surcharges arising from data you provided</li>
               <li>We are not liable for any indirect, incidental, or consequential loss</li>
-              <li>Our total aggregate liability to you shall not exceed the fees paid by you in the 12 months preceding the claim</li>
+              <li>Our total aggregate liability to you shall not exceed £100. The Service is supplied free of charge, so a cap set at "the fees you have paid" would be a cap of nil; this is a stated figure instead</li>
             </ul>
             <P>
               Nothing in these Terms excludes liability for death or personal injury caused by negligence, fraud, or any other liability that cannot be excluded under English law.

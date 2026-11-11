@@ -13,6 +13,7 @@ import { selectPublished } from '../_lib/review';
 import { pageTitle, metaDescription } from '@/lib/seo-meta';
 import { extractHeadings, faqJsonLd, withHeadingIds } from '@/lib/article-structure';
 import { articleQuestion, withCommissionedQuestion } from '@/lib/article-question';
+import { duplicateCanonicalMap } from '@/lib/article-canonical';
 
 export const revalidate = 3600;
 
@@ -27,6 +28,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   });
   if (!data) return {};
 
+  // A page the archive has written more than once points at the version that
+  // keeps its place in the index, rather than at itself. See
+  // lib/article-clusters.ts: on 2026-09-17 fourteen of the 113 published
+  // articles were one of six pages written two or three times each, and a
+  // low-authority domain competing with itself for a query ranks for it with
+  // none of them. The page still renders in full and the URL still resolves —
+  // only the indexing signal changes.
+  const duplicates = await duplicateCanonicalMap();
+  const canonicalSlug = duplicates.get(slug) ?? slug;
+
   return {
     // `pageTitle` applies the brand exactly once and drops it when the
     // headline needs the room. Appending it here, as this line used to, put
@@ -36,7 +47,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: metaDescription(data.excerpt),
     // Without this, every article inherited the site-wide canonical pointing
     // at the homepage, telling Google these 109 pages were duplicates of it.
-    alternates: { canonical: `https://easytax.vip/tax-tips/${slug}` },
+    alternates: { canonical: `https://easytax.vip/tax-tips/${canonicalSlug}` },
     openGraph: {
       type: 'article',
       title: data.title,

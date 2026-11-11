@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { getValidToken, fraudHeaders } from '@/lib/hmrc';
 
-const SANDBOX = 'https://test-api.service.hmrc.gov.uk';
+// Sandbox on purpose: the Test Fraud Prevention Headers API is sandbox-only.
+import { HMRC_SANDBOX_BASE as SANDBOX } from '@/lib/hmrc-env';
 
 // Diagnostic endpoint — hits HMRC's own fraud-prevention-headers validator
 // with the exact headers our regular API paths would send, so we can see

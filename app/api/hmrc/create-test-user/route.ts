@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 
-const SANDBOX = 'https://test-api.service.hmrc.gov.uk';
+// Sandbox on purpose: Create Test User has no production equivalent.
+import { HMRC_SANDBOX_BASE as SANDBOX } from '@/lib/hmrc-env';
 
 // Gets an application-restricted (server) token via client_credentials grant
 async function getAppToken(): Promise<string> {
