@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import NotifyMeForm from '@/components/NotifyMeForm';
 import TrackedCta from '@/components/TrackedCta';
 import { TOOLS } from '@/lib/tools';
+import { COMPETITORS } from '@/lib/competitors';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -400,6 +401,46 @@ export default async function Home() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* ── Comparisons ──
+            The homepage is the only page on this site that a search engine has
+            ever surfaced — a `site:` query on 2026-09-17 returned it and
+            nothing else — and it took 44 of the week's 94 public page views.
+            The nine comparison pages took none, across 30 days, because the
+            only internal path to them was a row of product names in the
+            footer.
+            This strip is here rather than higher up on purpose: somebody who
+            has read as far as the services section is weighing the product,
+            and "what am I using instead" is the question at that point. It is
+            also the one band of intent on this site where the visitor is
+            already spending money on the problem. */}
+        <section className="py-14 sm:py-16" style={{ backgroundColor: '#FDFCF8', borderTop: '1px solid #E8E2DA' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+              {t('compare.title')}
+            </h2>
+            <p className="mb-7" style={{ color: '#9A8F83', fontSize: '1rem', lineHeight: 1.6, maxWidth: '640px' }}>
+              {t('compare.subtitle')}
+            </p>
+            <div className="flex flex-wrap gap-2 sm:gap-3">
+              {COMPETITORS.map(c => (
+                <TrackedCta
+                  key={c.href}
+                  href={c.href}
+                  placement={`home_compare_${c.name.toLowerCase()}`}
+                  event="compare_cta_click"
+                  className="inline-block px-4 py-2.5 rounded-full text-sm font-medium"
+                  style={{ backgroundColor: '#F0EBE1', color: '#1C1208', border: '1px solid #DDD5C8', textDecoration: 'none', minHeight: '44px', lineHeight: '1.4' }}
+                >
+                  {t('compare.vs', { name: c.name })}
+                </TrackedCta>
+              ))}
+            </div>
+            <Link href="/compare" className="inline-block mt-6 text-sm font-medium" style={{ color: '#C4622D', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+              {t('compare.all')}
+            </Link>
           </div>
         </section>
 

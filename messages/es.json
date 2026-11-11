@@ -53,6 +53,12 @@
       "subtitle": "Sin cuenta, sin tarjeta y sin esperar la aprobación de HMRC. Tres calculadoras que responden a las preguntas con las que la gente llega.",
       "all": "Todas las herramientas gratuitas →"
     },
+    "compare": {
+      "title": "¿Ya pagas por otro programa?",
+      "subtitle": "Casi todo el software contable británico se vende por suscripción mensual, porque en el fondo es contabilidad que además presenta declaraciones. Nueve comparativas, cada una honesta sobre en qué es mejor el otro producto.",
+      "vs": "frente a {name}",
+      "all": "Comparar las nueve →"
+    },
     "services": {
       "title1": "Todo cubierto,",
       "title2": "seas quien seas.",

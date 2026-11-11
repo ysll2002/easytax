@@ -53,6 +53,12 @@
       "subtitle": "No account, no card, no waiting on HMRC approval. Three calculators that answer the questions people actually arrive with.",
       "all": "All free tools →"
     },
+    "compare": {
+      "title": "Already paying for something else?",
+      "subtitle": "Most UK accounting software is a monthly subscription, because most of it is bookkeeping that also files. Nine side-by-side comparisons, each honest about what the other product is better at.",
+      "vs": "vs {name}",
+      "all": "Compare all nine side by side →"
+    },
     "services": {
       "title1": "Everything covered,",
       "title2": "whoever you are.",

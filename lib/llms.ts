@@ -32,6 +32,10 @@ import { hasSupabaseEnv, type ArticleSummary } from '@/app/tax-tips/_lib/article
 import { selectPublished } from '@/app/tax-tips/_lib/review';
 import { track } from '@/lib/analytics';
 import { botProps } from '@/lib/bot-detection';
+import { withoutDuplicates } from '@/lib/article-canonical';
+import { MTD_THRESHOLDS, quartersForTaxYear, finalDeclarationFor } from '@/lib/mtd-dates';
+import { getMtdStatus, mandateSentence } from '@/lib/mtd-status';
+import { currentPenaltyRegime, SOFT_LANDING_TAX_YEAR } from '@/lib/mtd-penalties';
 
 export const SITE = 'https://easytax.vip';
 
@@ -69,6 +73,84 @@ export const SITE_SUMMARY = [
   'today.',
 ].join('\n');
 
+/**
+ * The dated, checkable facts about Making Tax Digital for Income Tax, as a
+ * Markdown block an answer engine can lift whole.
+ *
+ * Why this is in the index rather than left to the archive. Over the seven days
+ * to 2026-09-17 the machines reading this site outnumbered the humans arriving
+ * from search by four to one — GPTBot 14 fetches, meta-externalagent 10,
+ * OAI-SearchBot 2, PerplexityBot 1, against six search-referred visitors — and
+ * OAI-SearchBot is the one that matters most, because it is the crawler behind
+ * ChatGPT's answers rather than its training set. A 113-article archive is not
+ * what gets cited in an answer to "when is my next MTD update due". A short
+ * list of dates and thresholds, each stated once with its units, is.
+ *
+ * Every number is computed from `lib/mtd-dates.ts`, `lib/mtd-status.ts` and
+ * `lib/mtd-penalties.ts` — the same functions the deadline checker, the
+ * timetable and the penalty calculator render from. Nothing here is a second
+ * copy of a figure that could drift from the one on the page, which is the
+ * property that makes it safe to invite a model to quote it. Being cited
+ * accurately is the point; being cited saying something we have since
+ * corrected everywhere else would be worse than not being cited.
+ */
+export function keyFacts(now: Date = new Date()): string {
+  const status = getMtdStatus(now);
+  const regime = currentPenaltyRegime(now);
+  const quarters = quartersForTaxYear(status.taxYearStart);
+  const finalDec = finalDeclarationFor(status.taxYearStart);
+
+  const lines: string[] = [
+    '## Key facts: Making Tax Digital for Income Tax (MTD ITSA)',
+    '',
+    `_Stated as at ${now.toISOString().slice(0, 10)}. Source: HMRC. Figures are computed by EasyTax from the published rules, not transcribed._`,
+    '',
+    `- ${mandateSentence(status)}`,
+    '- Qualifying income means **gross** self-employment turnover plus **gross** property income, added together, before any expenses are deducted.',
+  ];
+
+  lines.push(
+    ...MTD_THRESHOLDS.map(
+      t =>
+        `- From 6 April ${t.from}, the qualifying-income threshold is £${t.threshold.toLocaleString('en-GB')}.`,
+    ),
+  );
+
+  lines.push(
+    '',
+    `### Quarterly update deadlines, ${status.taxYear}`,
+    '',
+    ...quarters.map(q => `- ${q.key} (${q.periodLabel}): due **${q.deadlineLabel}**.`),
+    `- Final Declaration for ${status.taxYear}: due **${finalDec.deadlineLabel}**.`,
+  );
+
+  if (status.dueQuarter) {
+    lines.push(
+      '',
+      `The next quarterly update due is ${status.dueQuarter.key} of ${status.dueQuarter.taxYear}, covering ${status.dueQuarter.periodLabel}, on ${status.dueQuarter.deadlineLabel}.`,
+    );
+  }
+
+  const ls = regime.lateSubmission;
+  const lp = regime.latePayment;
+  lines.push(
+    '',
+    `### Penalties, ${regime.taxYear}`,
+    '',
+    ls.quarterlyUpdatesEarnPoints
+      ? `- A late quarterly update earns one penalty point. At ${ls.pointsThreshold} points a £${ls.chargeAtThresholdGbp} charge is issued, and again on every later miss.`
+      : `- Late quarterly updates do **not** earn penalty points in ${regime.taxYear} — this is the first-year soft landing, and it applies to quarterly updates only.`,
+    `- A late tax return earns a penalty point in every year, including ${SOFT_LANDING_TAX_YEAR}/${String(SOFT_LANDING_TAX_YEAR + 1).slice(-2)}. The soft landing does not cover it.`,
+    `- Late payment: ${lp.firstPenaltyPct}% of the outstanding balance after ${lp.firstPenaltyAfterDays} days` +
+      (lp.secondPenaltyAtDay && lp.secondPenaltyPct
+        ? `, a further ${lp.secondPenaltyPct}% on anything still outstanding at day ${lp.secondPenaltyAtDay}`
+        : '') +
+      `, then interest accruing daily at an annualised ${lp.dailyPenaltyAnnualPct}% until it is cleared.`,
+  );
+
+  return lines.join('\n');
+}
+
 export type LlmsArticle = ArticleSummary & { content?: string };
 
 /**
@@ -92,14 +174,21 @@ export async function publishedArticles(
     ? 'title, slug, excerpt, published_at, content'
     : 'title, slug, excerpt, published_at';
 
+  // Over-fetched and then de-duplicated: an answer engine reading this index
+  // should see each subject once. The archive had written the trading
+  // allowance five times and VAT partial exemption three times, twice under a
+  // byte-identical headline — listing all of them spends a model's fetch
+  // budget on repetition and gives it three plausible citations for one fact.
+  // See lib/article-clusters.ts.
   const { data } = await selectPublished(gated => {
     const q = supabase.from('tax_articles').select(columns);
     return (gated ? q.eq('review_status', 'published') : q)
       .order('published_at', { ascending: false })
-      .limit(limit);
+      .limit(limit * 2);
   });
 
-  return (data ?? []) as unknown as LlmsArticle[];
+  const rows = (data ?? []) as unknown as LlmsArticle[];
+  return (await withoutDuplicates(rows)).slice(0, limit);
 }
 
 /**

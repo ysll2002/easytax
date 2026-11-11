@@ -5,6 +5,10 @@ import { deploymentInfo } from '@/lib/deployment';
 import { readQueue } from '@/lib/review-queue';
 import { existingArticleRun } from '@/lib/editorial-run';
 import { coverage } from '@/lib/search-queries';
+import { clusterArticles, reviewCandidates, titleSimilarity } from '@/lib/article-clusters';
+import { schemaState } from '@/lib/schema-state';
+import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
+import { selectPublished } from '@/app/tax-tips/_lib/review';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -1001,6 +1005,71 @@ async function lastSnapshotBlock(key: 'seo' | 'indexnow'): Promise<Record<string
   return { ...seo, from_snapshot: takenOn, age_days: ageDays };
 }
 
+/**
+ * How much of the published archive is the same page written twice, and which
+ * pages those are.
+ *
+ * Reported in full rather than as a count because the count alone is not
+ * actionable: "14 duplicates" tells a reader nothing they can check, whereas
+ * the elected primary and the headlines consolidated into it can be disagreed
+ * with. `review_candidates` is the pairs that look alike but sit below the
+ * threshold for acting on automatically — deliberately surfaced and
+ * deliberately not touched, because which of two overlapping angles should
+ * survive is an editorial judgement and not an agent's to make quietly.
+ */
+async function archiveDuplicationBlock(): Promise<Record<string, unknown>> {
+  if (!hasSupabaseEnv()) return { error: 'No Supabase credentials in this environment.' };
+
+  const { data, error } = await selectPublished(gated => {
+    const q = supabase.from('tax_articles').select('slug, title, published_at');
+    return (gated ? q.eq('review_status', 'published') : q)
+      .order('published_at', { ascending: false })
+      .limit(1000);
+  });
+
+  if (error || !data) {
+    return { error: `Archive unreadable: ${error?.message ?? 'no rows'}` };
+  }
+
+  const rows = data as unknown as { slug: string; title: string; published_at: string }[];
+  const clusters = clusterArticles(rows);
+  const canonicalised = clusters.reduce((n, c) => n + c.secondaries.length, 0);
+  const candidates = reviewCandidates(rows);
+
+  return {
+    note:
+      'Near-duplicate published articles, grouped by headline similarity. ' +
+      'Secondaries keep their URLs and still render — they carry a canonical tag ' +
+      'pointing at the primary and are dropped from the sitemap, the feeds and ' +
+      'llms.txt. Nothing here is deleted or unpublished. See lib/article-clusters.ts.',
+    published: rows.length,
+    clusters: clusters.length,
+    canonicalised,
+    indexable: rows.length - canonicalised,
+    duplication_rate: rows.length > 0 ? +(canonicalised / rows.length).toFixed(3) : 0,
+    sets: clusters.map(c => ({
+      primary: c.primary.title,
+      primary_slug: c.primary.slug,
+      canonicalised: c.secondaries.map(s => ({
+        title: s.title,
+        slug: s.slug,
+        similarity: +titleSimilarity(c.primary.title, s.title).toFixed(2),
+      })),
+    })),
+    review_candidates: {
+      note:
+        'Below the automatic threshold and left alone. A person decides whether ' +
+        'these are two angles or one page written twice.',
+      count: candidates.length,
+      pairs: candidates.slice(0, 10).map(p => ({
+        similarity: p.similarity,
+        a: p.a.title,
+        b: p.b.title,
+      })),
+    },
+  };
+}
+
 export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
   const now      = new Date();
   const since24h = new Date(now.getTime() - 24  * 60 * 60 * 1000).toISOString();
@@ -1253,6 +1322,21 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       // person, and how many articles are actually live. A queue that only
       // grows means the gate has become a bottleneck rather than a standard.
       editorial: editorial.editorial,
+
+      // How much of the archive is the same page written more than once.
+      // On 2026-09-17 this was 14 of 113 published articles across six
+      // subjects, on a site drawing six search visitors a week and surfacing
+      // exactly one page — the homepage — for a `site:` query. Duplicates are
+      // consolidated by canonical tag rather than deleted, so
+      // `canonicalised` is how many URLs still exist and resolve but are no
+      // longer offered to a crawler as separate pages.
+      archive_duplication: await archiveDuplicationBlock(),
+
+      // Which migrations in supabase/migrations/ have actually run. Added
+      // after F47 shipped on 2026-09-16 with a migration that was never
+      // applied, degraded silently exactly as designed, and did nothing for a
+      // day without a single counter moving. `pending` must be empty.
+      schema: await schemaState(),
 
       // Stored daily snapshots, which is what makes the weekly review a
       // comparison rather than a reading.
