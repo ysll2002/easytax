@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import Link from 'next/link';
+import { HMRC_API_BASE } from '@/lib/hmrc-env';
 
 export default async function HmrcConnectPage({ searchParams }: { searchParams: Promise<{ error?: string; detail?: string; status?: string }> }) {
   const session = await auth();
@@ -21,7 +22,15 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
     'write:self-assessment-assist',
   ].join('+');
 
-  const authUrl = `https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+  // HMRC_API_BASE, not a literal. This line said
+  // 'https://test-api.service.hmrc.gov.uk' until 2026-11-11, when production
+  // access was granted and HMRC_CLIENT_ID became the production application's
+  // id: a production client_id sent to the sandbox authorize endpoint is
+  // answered with `{"error":"invalid_request","error_description":"client_id
+  // is invalid"}`, and because every other HMRC call had already switched to
+  // production, the only symptom was that nobody could connect. See
+  // lib/hmrc-env.ts.
+  const authUrl = `${HMRC_API_BASE}/oauth/authorize?response_type=code&client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">

@@ -2,9 +2,7 @@ import { cookies, headers } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { auth } from '@/auth';
 
-const BASE = process.env.HMRC_ENV === 'production'
-  ? 'https://api.service.hmrc.gov.uk'
-  : 'https://test-api.service.hmrc.gov.uk';
+import { HMRC_API_BASE as BASE } from '@/lib/hmrc-env';
 
 // Cache server outbound IP for 10 minutes to avoid fetching on every request
 let cachedVendorIp = { ip: '', expiresAt: 0 };
