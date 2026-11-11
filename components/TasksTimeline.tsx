@@ -252,11 +252,37 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
                   <Link href="/dashboard/individual" style={{ color: '#C4622D' }}>{t('errNotConnectedCta')}</Link>
                 </p>
               </>
-            ) : error === 'NINO_MISMATCH' ? (
+            ) : error === 'CLIENT_OR_AGENT_NOT_AUTHORISED' ? (
+              // Four causes, ranked, because HMRC tells us only "not
+              // authorised". Naming one of them as fact is what sent the first
+              // real user who hit this to re-enter a NINO that was right.
               <>
-                <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>{t('errNinoMismatchTitle')}</p>
-                <p className="mb-3" style={{ color: '#7F1D1D', lineHeight: 1.6 }}>{t('errNinoMismatchBody')}</p>
-                <Link href="/dashboard/individual" style={{ color: '#C4622D', fontWeight: 600 }}>{t('errNinoMismatchCta')}</Link>
+                <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>{t('errNotAuthorisedTitle')}</p>
+                <p className="mb-2" style={{ color: '#7F1D1D', lineHeight: 1.6 }}>{t('errNotAuthorisedIntro')}</p>
+                <ol className="mb-3 space-y-2" style={{ color: '#7F1D1D', lineHeight: 1.6, paddingLeft: '1.1rem', listStyle: 'decimal' }}>
+                  <li>
+                    {t('errNotAuthorisedCause1')}{' '}
+                    <a
+                      href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: '#C4622D', fontWeight: 600, whiteSpace: 'nowrap' }}
+                    >
+                      {t('errNotAuthorisedCause1Cta')}
+                    </a>
+                  </li>
+                  <li>{t('errNotAuthorisedCause2')}</li>
+                  <li>{t('errNotAuthorisedCause3')}</li>
+                  <li>
+                    {t('errNotAuthorisedCause4')}{' '}
+                    <Link href="/dashboard/individual" style={{ color: '#C4622D', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                      {t('errNotAuthorisedCause4Cta')}
+                    </Link>
+                  </li>
+                </ol>
+                <p className="text-xs" style={{ color: '#9A8F83' }}>
+                  {t('errNotAuthorisedCode', { code: 'CLIENT_OR_AGENT_NOT_AUTHORISED' })}
+                </p>
               </>
             ) : (
               <>

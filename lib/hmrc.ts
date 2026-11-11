@@ -145,8 +145,23 @@ async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
   });
   if (!res.ok) {
     const body = await res.text().catch(() => '');
+    // HMRC's own code, passed through unchanged. This used to be re-labelled
+    // `NINO_MISMATCH`, and the UI told the user their NINO and their
+    // Government Gateway account belonged to different people — a specific
+    // diagnosis HMRC never gave us.
+    //
+    // CLIENT_OR_AGENT_NOT_AUTHORISED means only "not authorised for this
+    // record". A wrong NINO is one cause and not the common one. The usual
+    // cause is that the taxpayer is not signed up for MTD for Income Tax at
+    // all: an HMRC account and a National Insurance number are not the same
+    // thing as an MTD enrolment, and the sandbox never showed this because its
+    // test users are pre-enrolled. Others are a sign-up HMRC is still
+    // processing (up to 72 hours) and an income source not registered for MTD.
+    //
+    // Asserting one of four causes sent the first real user who hit this to
+    // re-enter a NINO that was correct all along. The UI now lists them.
     if (res.status === 403 && body.includes('CLIENT_OR_AGENT_NOT_AUTHORISED')) {
-      throw new Error('NINO_MISMATCH');
+      throw new Error('CLIENT_OR_AGENT_NOT_AUTHORISED');
     }
     throw new Error(`HMRC ${res.status}: ${body}`);
   }

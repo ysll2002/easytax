@@ -350,9 +350,6 @@
       "errNotConnectedTitle": "HMRC no conectado",
       "errNotConnectedBody": "Completa primero los dos primeros pasos de Self Assessment.",
       "errNotConnectedCta": "Ir a la configuración →",
-      "errNinoMismatchTitle": "El NINO no coincide con tu acceso a HMRC",
-      "errNinoMismatchBody": "El NINO que introdujiste en el Paso 1 y la cuenta de Government Gateway que usaste para conectar con HMRC pertenecen a personas distintas. Comprueba que coincidan y vuelve a conectar.",
-      "errNinoMismatchCta": "Revisar mi NINO →",
       "errGenericTitle": "No se pudieron cargar los datos de HMRC",
       "errUnreachable": "No se pudo contactar con HMRC",
       "paid": "Pagado",
@@ -372,7 +369,16 @@
       "subQuarterly": "MTD ITSA · Año fiscal {taxYear}",
       "subSaFiling": "Año fiscal {taxYear} · Vence el {date}",
       "subVat": "Making Tax Digital · IVA · Vence el {date}",
-      "subPayment": "Self Assessment {taxYear} · Vence el {date}"
+      "subPayment": "Self Assessment {taxYear} · Vence el {date}",
+      "errNotAuthorisedTitle": "HMRC no ha autorizado el acceso a este registro",
+      "errNotAuthorisedIntro": "HMRC rechazó la solicitud sin indicar el motivo. Estas son las causas habituales, de más a menos probable:",
+      "errNotAuthorisedCause1": "No estás dado de alta en Making Tax Digital for Income Tax. Tener una cuenta de HMRC y un número de seguridad social no es lo mismo: MTD requiere un alta aparte.",
+      "errNotAuthorisedCause1Cta": "Comprobar o darse de alta en GOV.UK →",
+      "errNotAuthorisedCause2": "Te diste de alta hace poco y HMRC aún lo está procesando. Suele tardar hasta 72 horas.",
+      "errNotAuthorisedCause3": "Tu fuente de ingresos por autoempleo o alquiler no está registrada en MTD dentro de tu cuenta de HMRC. Eso es independiente de conectar el software.",
+      "errNotAuthorisedCause4": "El número de seguridad social registrado pertenece a una persona distinta de la cuenta de Government Gateway con la que te conectaste.",
+      "errNotAuthorisedCause4Cta": "Revisar mi NINO →",
+      "errNotAuthorisedCode": "Código de error de HMRC: {code}"
     }
   },
   "footer": {
