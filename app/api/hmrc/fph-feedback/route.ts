@@ -23,7 +23,12 @@ const FEEDBACK_APIS = [
   'vat-mtd',
 ];
 
-const SANDBOX = 'https://test-api.service.hmrc.gov.uk';
+// Sandbox on purpose, and it must NOT follow HMRC_ENV. The endpoint below is
+// `/test/fraud-prevention-headers/…` — the Test Fraud Prevention Headers API,
+// which exists only in the sandbox. In production the equivalent is the
+// 'Fraud prevention' panel on Developer Hub (HMRC, 2026-11-11), so pointing
+// this at api.service.hmrc.gov.uk would simply 404.
+import { HMRC_SANDBOX_BASE as SANDBOX } from '@/lib/hmrc-env';
 
 type HeaderFeedback = {
   header: string;

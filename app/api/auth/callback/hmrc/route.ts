@@ -2,9 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 
-const BASE = process.env.HMRC_ENV === 'production'
-  ? 'https://api.service.hmrc.gov.uk'
-  : 'https://test-api.service.hmrc.gov.uk';
+import { HMRC_API_BASE as BASE } from '@/lib/hmrc-env';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
