@@ -185,10 +185,10 @@ export default function ToolsPage() {
               can offer them without an account.
             </p>
             <p>
-              What EasyTax charges for is the filing itself: quarterly MTD updates, Self Assessment,
-              VAT returns and CT600, at £20 + VAT per submission with no subscription. Our HMRC
-              production access is still going through approval, so we cannot take live submissions
-              yet.
+              What EasyTax charges for is the filing itself, at £20 + VAT per submission with no
+              subscription. HMRC approved our production access on 11 November 2026 for MTD ITSA
+              quarterly updates, Self Assessment and VAT returns, so those are open. Corporation Tax
+              (CT600) is not something we can file yet.
             </p>
             <p>
               If the tools are useful, the most helpful thing you can do is{' '}

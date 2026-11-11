@@ -324,7 +324,7 @@ export default async function MtdSoftware() {
               {[
                 {
                   q: 'Is EasyTax recognised by HMRC for MTD ITSA?',
-                  a: 'Not yet. EasyTax (by Finance Panda Limited) is built directly against HMRC\'s official Making Tax Digital APIs and works fully against HMRC\'s sandbox, but we are still going through HMRC\'s production approval process — which every MTD vendor must complete before it can send live submissions. You can create an account, connect HMRC and set everything up today; live filing switches on when approval completes. See our HMRC status page for exactly where we are.',
+                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates, Self Assessment and VAT. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s. See our HMRC status page for exactly what our access covers.',
                 },
                 {
                   q: 'What does MTD ITSA software actually do?',

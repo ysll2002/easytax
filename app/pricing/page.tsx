@@ -302,7 +302,7 @@ export default async function PricingPage() {
             <NotifyMeForm
               source="pricing"
               heading="Not filing yet?"
-              blurb="Quarterly MTD ITSA updates open as soon as HMRC signs off our production access. Leave your email and we'll tell you the day it goes live — nothing else, unsubscribe in one click."
+              blurb="Not signed up for Making Tax Digital yet? Leave your email and we'll remind you before each quarterly deadline — nothing else, unsubscribe in one click."
             />
           </div>
         </section>

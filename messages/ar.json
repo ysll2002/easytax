@@ -25,7 +25,7 @@
     "announcement": {
       "live": "بدأ نظام Making Tax Digital.",
       "nextUpdate": "الإقرار الربعي التالي: {date}.",
-      "status": "أدوات المواعيد مجانية الآن — وسيُفتح التقديم عند موافقة HMRC."
+      "status": "تمت الموافقة على وصولنا إلى بيئة الإنتاج لدى HMRC — التقديم عبر MTD ITSA وSelf Assessment وVAT متاح الآن."
     },
     "hero": {
       "pill": "التحديث الربعي التالي لـ MTD ITSA: {date} — متبقٍ {days} يوماً",
@@ -404,7 +404,7 @@
     "terms": "الشروط",
     "vs": "EasyTax مقابل {name}",
     "tagline": "Finance Panda Limited. صُمم في لندن.",
-    "disclaimer": "EasyTax منتج من Finance Panda Limited. توفر الأدوات المجانية معلومات عامة عن القواعد المنشورة من HMRC وليست استشارة ضريبية. لا يزال وصولنا إلى بيئة الإنتاج لدى HMRC قيد الموافقة.",
+    "disclaimer": "EasyTax منتج من Finance Panda Limited. توفر الأدوات المجانية معلومات عامة عن القواعد المنشورة من HMRC وليست استشارة ضريبية. وافقت HMRC في 11 نوفمبر 2026 على وصولنا إلى بيئة الإنتاج لـ MTD ITSA وSelf Assessment وVAT.",
     "notifyHeading": "كن أول من يقدّم إقراره",
     "notifyBlurb": "سنراسلك يوم فتح التقديم عبر MTD — لا شيء غير ذلك، وإلغاء الاشتراك بنقرة واحدة."
   }

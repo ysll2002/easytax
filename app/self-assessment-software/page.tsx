@@ -95,7 +95,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'Is EasyTax recognised by HMRC for self assessment?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Not yet. EasyTax (by Finance Panda Limited) is built directly against HMRC\'s official Self Assessment and MTD ITSA APIs and works fully against HMRC\'s sandbox, but we are still going through HMRC\'s production approval process — which every vendor must complete before it can send live submissions. You can create an account and set everything up today; live filing switches on when approval completes.',
+          text: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates, Self Assessment and VAT. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
         },
       },
       {
@@ -450,11 +450,11 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   q: 'Which SA supplementary pages does EasyTax support?',
-                  a: 'EasyTax supports SA100 (main return), SA103 (self-employment), and SA105 (property income). CT600 Corporation Tax and MTD VAT are also supported for limited companies and VAT-registered businesses.',
+                  a: 'EasyTax supports SA100 (main return), SA103 (self-employment) and SA105 (property income), plus MTD VAT for VAT-registered businesses. Corporation Tax (CT600) is not supported — it is not part of the Making Tax Digital APIs.',
                 },
                 {
                   q: 'Is EasyTax recognised by HMRC for self assessment?',
-                  a: 'Not yet. EasyTax (by Finance Panda Limited) is built directly against HMRC\'s official Self Assessment and MTD ITSA APIs and works fully against HMRC\'s sandbox, but we are still going through HMRC\'s production approval process — which every vendor must complete before it can send live submissions. You can create an account and set everything up today; live filing switches on when approval completes.',
+                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates, Self Assessment and VAT. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
                 },
                 {
                   q: 'What is MTD ITSA and how does it affect my self assessment?',

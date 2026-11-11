@@ -4,7 +4,7 @@ import { trackAsync, EVENTS } from '@/lib/analytics';
 
 // Launch-list capture.
 //
-// HMRC production approval is still pending, so an interested visitor cannot
+// Before 2026-11-11, HMRC production approval was pending and a visitor could not
 // be converted into a paying customer today. Without a capture they leave and
 // become unreachable — which is the position we are in now: five months of
 // traffic, 45 accounts, and no way to tell anyone when filing goes live.

@@ -14,13 +14,13 @@ import SiteFooter from '@/components/SiteFooter';
 // question is answered somewhere — either here, or by the visitor leaving.
 //
 // The tone is deliberately plain about what is *not* done yet. HMRC production
-// approval is still pending, and a page that implied otherwise would be both
+// approval landed on 2026-11-11, and a page that overstated its scope would be both
 // dishonest and a compliance problem during an active HMRC review.
 
 export const metadata: Metadata = {
   title: 'Security & Trust',
   description:
-    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and exactly where we are in HMRC approval.',
+    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and exactly what our HMRC production access covers.',
   alternates: { canonical: 'https://easytax.vip/trust' },
 };
 
@@ -110,16 +110,17 @@ export default function TrustPage() {
                 </p>
               </div>
               <p className="text-sm mb-4" style={{ color: '#B8ADA1', lineHeight: 1.7 }}>
-                EasyTax is built directly against HMRC&apos;s Making Tax Digital APIs and is fully
-                working against HMRC&apos;s sandbox environment. We are currently going through
-                HMRC&apos;s production approval process, which every MTD software vendor must
-                complete before it can send live submissions.
+                EasyTax is built directly against HMRC&apos;s Making Tax Digital APIs. On 11 November
+                2026 HMRC completed the production approval process that every MTD software vendor
+                must pass before it can send live submissions, and granted us production access for
+                MTD ITSA, Self Assessment and VAT.
               </p>
               <div className="space-y-2.5">
                 {[
                   [true,  'You can create an account, connect HMRC and set everything up today.'],
                   [true,  'Signing up is free and takes no card details.'],
-                  [false, 'Live submissions to HMRC are not enabled until production approval completes.'],
+                  [true,  'Live submissions to HMRC are enabled, for MTD ITSA, Self Assessment and VAT.'],
+                  [false, 'Corporation Tax (CT600) is not something we can file. It is not part of the MTD APIs we hold.'],
                 ].map(([ok, text], i) => (
                   <div key={i} className="flex items-start gap-2.5">
                     {ok ? (
@@ -273,13 +274,13 @@ export default function TrustPage() {
             anything afterwards. It ended on a form offering a message at an
             unknown future date — nothing you can hold. Someone who has just
             read how we handle their data has earned something concrete for it,
-            and the same address is still the list we email on approval day. */}
+            and the same address is still the list we email about deadlines. */}
         <section className="pb-16 sm:pb-20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6">
             <DeadlineScheduleForm
               source="trust"
               heading="Something useful, before you trust us with anything"
-              blurb="No account, no card, no bank connection. Tell us your qualifying income and we'll email you your Making Tax Digital dates — and, once, the day HMRC approval completes and filing opens."
+              blurb="No account, no card, no bank connection. Tell us your qualifying income and we'll email you your Making Tax Digital dates, and remind you before each one."
             />
             <p className="text-xs mt-4 text-center" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
               We also publish{' '}

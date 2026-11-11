@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital ya ha comenzado.",
       "nextUpdate": "Próxima declaración trimestral: {date}.",
-      "status": "Herramientas de plazos gratis — la presentación se abrirá cuando HMRC nos apruebe."
+      "status": "Acceso de producción aprobado por HMRC: la presentación de MTD ITSA, Self Assessment e IVA ya está abierta."
     },
     "hero": {
       "pill": "Próxima actualización trimestral de MTD ITSA: {date} — faltan {days} días",
@@ -404,7 +404,7 @@
     "terms": "Términos",
     "vs": "EasyTax frente a {name}",
     "tagline": "Finance Panda Limited. Hecho en Londres.",
-    "disclaimer": "EasyTax es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no son asesoramiento fiscal. Nuestro acceso de producción a HMRC sigue en proceso de aprobación.",
+    "disclaimer": "EasyTax es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no son asesoramiento fiscal. HMRC aprobó nuestro acceso de producción el 11 de noviembre de 2026 para MTD ITSA, Self Assessment e IVA.",
     "notifyHeading": "Presenta el primero",
     "notifyBlurb": "Te escribiremos el día que se abran las declaraciones MTD; nada más, y puedes darte de baja con un clic."
   }

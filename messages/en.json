@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital has started.",
       "nextUpdate": "Next quarterly update: {date}.",
-      "status": "Free deadline tools now — filing opens when HMRC approves us."
+      "status": "HMRC production access approved — MTD ITSA, Self Assessment and VAT filing are open."
     },
     "hero": {
       "pill": "Next MTD ITSA quarterly update: {date} — {days} days to go",
@@ -404,7 +404,7 @@
     "terms": "Terms",
     "vs": "EasyTax vs {name}",
     "tagline": "Finance Panda Limited. Built in London.",
-    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. Our HMRC production access is still going through approval.",
+    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA, Self Assessment and VAT.",
     "notifyHeading": "Be first to file",
     "notifyBlurb": "We will email you the day MTD filing opens — nothing else, unsubscribe in one click."
   }

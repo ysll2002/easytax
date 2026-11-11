@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital が始まりました。",
       "nextUpdate": "次回の四半期申告：{date}。",
-      "status": "期限ツールは無料で利用可能 — 申告機能は HMRC の承認後に開始します。"
+      "status": "HMRC の本番アクセスが承認されました —— MTD ITSA・Self Assessment・VAT の申告が利用可能です。"
     },
     "hero": {
       "pill": "次回の MTD ITSA 四半期申告：{date}（あと {days} 日）",
@@ -404,7 +404,7 @@
     "terms": "利用規約",
     "vs": "EasyTax と {name} の比較",
     "tagline": "Finance Panda Limited. ロンドン発。",
-    "disclaimer": "EasyTax は Finance Panda Limited のプロダクトです。無料ツールは HMRC が公表する規則の一般的な情報を示すものであり、税務アドバイスではありません。HMRC の本番アクセスは現在承認手続き中です。",
+    "disclaimer": "EasyTax は Finance Panda Limited のプロダクトです。無料ツールは HMRC が公表する規則の一般的な情報を示すものであり、税務アドバイスではありません。HMRC は 2026 年 11 月 11 日に、MTD ITSA・Self Assessment・VAT を対象として当社の本番アクセスを承認しました。",
     "notifyHeading": "誰よりも早く申告を",
     "notifyBlurb": "MTD 申告が開始された日にメールでお知らせします。それ以外の配信はなく、ワンクリックで解除できます。"
   }

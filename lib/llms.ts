@@ -63,10 +63,11 @@ export const SITE_SUMMARY = [
   'and small limited companies, built against HMRC Making Tax Digital (MTD) APIs',
   'by Finance Panda Limited.',
   '',
-  'Status: HMRC production approval is pending. The app is fully built against',
-  "HMRC's sandbox, and MTD filing is not yet available to the public. The free",
-  'calculators, the deadline checker and the Tax Tips archive are live and usable',
-  'today.',
+  'Status: HMRC granted production access on 11 November 2026, covering MTD ITSA',
+  'quarterly updates, Self Assessment and VAT. Filing is open to the public. The',
+  'user must be signed up for Making Tax Digital with HMRC in their own right.',
+  'Corporation Tax (CT600) is not supported. The free calculators, the deadline',
+  'checker and the Tax Tips archive remain free and need no account.',
 ].join('\n');
 
 export type LlmsArticle = ArticleSummary & { content?: string };
