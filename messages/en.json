@@ -350,9 +350,6 @@
       "errNotConnectedTitle": "HMRC not connected",
       "errNotConnectedBody": "Please complete the first two Self Assessment steps.",
       "errNotConnectedCta": "Go to setup →",
-      "errNinoMismatchTitle": "NINO does not match your HMRC sign-in",
-      "errNinoMismatchBody": "The NINO you entered in Step 1 and the Government Gateway account you used to connect to HMRC belong to different people. Make sure they match, then reconnect.",
-      "errNinoMismatchCta": "Check my NINO →",
       "errGenericTitle": "Could not load HMRC data",
       "errUnreachable": "Could not reach HMRC",
       "paid": "Paid",
@@ -372,7 +369,16 @@
       "subQuarterly": "MTD ITSA · Tax year {taxYear}",
       "subSaFiling": "Tax year {taxYear} · Due {date}",
       "subVat": "Making Tax Digital · VAT · Due {date}",
-      "subPayment": "Self Assessment {taxYear} · Due {date}"
+      "subPayment": "Self Assessment {taxYear} · Due {date}",
+      "errNotAuthorisedTitle": "HMRC has not authorised access to this record",
+      "errNotAuthorisedIntro": "HMRC refused the request without saying why. These are the usual causes, most likely first:",
+      "errNotAuthorisedCause1": "You are not signed up for Making Tax Digital for Income Tax. Having an HMRC account and a National Insurance number is not the same thing — MTD is a separate sign-up.",
+      "errNotAuthorisedCause1Cta": "Check or sign up on GOV.UK →",
+      "errNotAuthorisedCause2": "You signed up recently and HMRC is still processing it. This usually takes up to 72 hours.",
+      "errNotAuthorisedCause3": "Your self-employment or property income source is not registered for MTD in your HMRC account. That is separate from connecting software.",
+      "errNotAuthorisedCause4": "The National Insurance number on file belongs to someone other than the Government Gateway account you connected with.",
+      "errNotAuthorisedCause4Cta": "Check my NINO →",
+      "errNotAuthorisedCode": "HMRC error code: {code}"
     }
   },
   "footer": {

@@ -350,9 +350,6 @@
       "errNotConnectedTitle": "HMRC غير متصل",
       "errNotConnectedBody": "يرجى إكمال أول خطوتين من Self Assessment أولاً.",
       "errNotConnectedCta": "الانتقال إلى الإعداد →",
-      "errNinoMismatchTitle": "رقم NINO لا يطابق حساب تسجيل الدخول إلى HMRC",
-      "errNinoMismatchBody": "رقم NINO الذي أدخلته في الخطوة 1 وحساب Government Gateway الذي استخدمته للاتصال بـ HMRC يعودان لشخصين مختلفين. تأكد من تطابقهما ثم أعد الاتصال.",
-      "errNinoMismatchCta": "مراجعة رقم NINO →",
       "errGenericTitle": "تعذّر تحميل بيانات HMRC",
       "errUnreachable": "تعذّر الوصول إلى HMRC",
       "paid": "مدفوعة",
@@ -372,7 +369,16 @@
       "subQuarterly": "MTD ITSA · السنة الضريبية {taxYear}",
       "subSaFiling": "السنة الضريبية {taxYear} · تستحق في {date}",
       "subVat": "Making Tax Digital · VAT · تستحق في {date}",
-      "subPayment": "Self Assessment {taxYear} · تستحق في {date}"
+      "subPayment": "Self Assessment {taxYear} · تستحق في {date}",
+      "errNotAuthorisedTitle": "لم تصرّح HMRC بالوصول إلى هذا السجل",
+      "errNotAuthorisedIntro": "رفضت HMRC الطلب دون بيان السبب. هذه هي الأسباب المعتادة، مرتّبة من الأرجح إلى الأقل:",
+      "errNotAuthorisedCause1": "أنت غير مسجَّل في Making Tax Digital for Income Tax. امتلاك حساب لدى HMRC ورقم تأمين وطني ليس كالتسجيل في MTD — فالتسجيل في MTD منفصل.",
+      "errNotAuthorisedCause1Cta": "تحقّق أو سجّل عبر GOV.UK →",
+      "errNotAuthorisedCause2": "سجّلت مؤخراً وما زالت HMRC تعالج طلبك. يستغرق ذلك عادةً حتى 72 ساعة.",
+      "errNotAuthorisedCause3": "مصدر دخلك من العمل الحر أو العقارات غير مسجَّل في MTD داخل حسابك لدى HMRC. وهذا منفصل عن ربط البرنامج.",
+      "errNotAuthorisedCause4": "رقم التأمين الوطني المسجَّل يعود إلى شخص آخر غير حساب Government Gateway الذي استخدمته للربط.",
+      "errNotAuthorisedCause4Cta": "مراجعة رقم NINO →",
+      "errNotAuthorisedCode": "رمز خطأ HMRC: {code}"
     }
   },
   "footer": {

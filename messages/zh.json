@@ -350,9 +350,6 @@
       "errNotConnectedTitle": "HMRC 未连接",
       "errNotConnectedBody": "请先完成 Self Assessment 的前两个步骤。",
       "errNotConnectedCta": "前往设置 →",
-      "errNinoMismatchTitle": "NINO 与 HMRC 登录账号不匹配",
-      "errNinoMismatchBody": "你在 Step 1 填写的 NINO，与连接 HMRC 时使用的 Government Gateway 账号不属于同一个用户。请确认两者一致，然后重新连接。",
-      "errNinoMismatchCta": "去检查 NINO →",
       "errGenericTitle": "无法加载 HMRC 数据",
       "errUnreachable": "无法连接 HMRC",
       "paid": "已付",
@@ -372,7 +369,16 @@
       "subQuarterly": "MTD ITSA · 税年 {taxYear}",
       "subSaFiling": "税年 {taxYear} · {date} 到期",
       "subVat": "Making Tax Digital · VAT · {date} 到期",
-      "subPayment": "Self Assessment {taxYear} · {date} 到期"
+      "subPayment": "Self Assessment {taxYear} · {date} 到期",
+      "errNotAuthorisedTitle": "HMRC 未授权访问此记录",
+      "errNotAuthorisedIntro": "HMRC 拒绝了请求，但没有说明原因。常见原因如下，按可能性排序：",
+      "errNotAuthorisedCause1": "你尚未注册 Making Tax Digital for Income Tax。有 HMRC 账号和国民保险号，与已登记 MTD 是两回事 —— MTD 需要单独注册。",
+      "errNotAuthorisedCause1Cta": "在 GOV.UK 查询或注册 →",
+      "errNotAuthorisedCause2": "你刚注册不久，HMRC 还在处理中。通常需要最多 72 小时。",
+      "errNotAuthorisedCause3": "你的自雇或房产收入来源尚未在 HMRC 账户中登记进 MTD。这和连接软件是两件事。",
+      "errNotAuthorisedCause4": "系统中保存的国民保险号，与你连接时使用的 Government Gateway 账号不属于同一个人。",
+      "errNotAuthorisedCause4Cta": "去检查 NINO →",
+      "errNotAuthorisedCode": "HMRC 错误码：{code}"
     }
   },
   "footer": {

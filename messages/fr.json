@@ -350,9 +350,6 @@
       "errNotConnectedTitle": "HMRC non connecté",
       "errNotConnectedBody": "Veuillez d'abord terminer les deux premières étapes de Self Assessment.",
       "errNotConnectedCta": "Aller à la configuration →",
-      "errNinoMismatchTitle": "Le NINO ne correspond pas à votre connexion HMRC",
-      "errNinoMismatchBody": "Le NINO saisi à l'étape 1 et le compte Government Gateway utilisé pour vous connecter au HMRC n'appartiennent pas à la même personne. Vérifiez qu'ils correspondent, puis reconnectez-vous.",
-      "errNinoMismatchCta": "Vérifier mon NINO →",
       "errGenericTitle": "Impossible de charger les données HMRC",
       "errUnreachable": "Impossible de joindre le HMRC",
       "paid": "Payé",
@@ -372,7 +369,16 @@
       "subQuarterly": "MTD ITSA · Année fiscale {taxYear}",
       "subSaFiling": "Année fiscale {taxYear} · Échéance le {date}",
       "subVat": "Making Tax Digital · TVA · Échéance le {date}",
-      "subPayment": "Self Assessment {taxYear} · Échéance le {date}"
+      "subPayment": "Self Assessment {taxYear} · Échéance le {date}",
+      "errNotAuthorisedTitle": "Le HMRC n'a pas autorisé l'accès à cet enregistrement",
+      "errNotAuthorisedIntro": "Le HMRC a refusé la demande sans en donner la raison. Voici les causes habituelles, de la plus à la moins probable :",
+      "errNotAuthorisedCause1": "Vous n'êtes pas inscrit à Making Tax Digital for Income Tax. Avoir un compte HMRC et un numéro d'assurance nationale n'est pas la même chose : MTD fait l'objet d'une inscription distincte.",
+      "errNotAuthorisedCause1Cta": "Vérifier ou s'inscrire sur GOV.UK →",
+      "errNotAuthorisedCause2": "Vous vous êtes inscrit récemment et le HMRC traite encore la demande. Cela prend généralement jusqu'à 72 heures.",
+      "errNotAuthorisedCause3": "Votre source de revenus (activité indépendante ou location) n'est pas enregistrée pour MTD dans votre compte HMRC. C'est distinct de la connexion du logiciel.",
+      "errNotAuthorisedCause4": "Le numéro d'assurance nationale enregistré appartient à une autre personne que le compte Government Gateway utilisé pour la connexion.",
+      "errNotAuthorisedCause4Cta": "Vérifier mon NINO →",
+      "errNotAuthorisedCode": "Code d'erreur HMRC : {code}"
     }
   },
   "footer": {
