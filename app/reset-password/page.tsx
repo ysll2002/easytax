@@ -60,7 +60,7 @@ function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <p className="text-center text-sm" style={{ color: '#C4622D' }}>
+      <p className="text-center text-sm" style={{ color: '#A04E1C' }}>
         Invalid reset link.{' '}
         <Link href="/forgot-password" style={{ fontWeight: 600 }}>Request a new one →</Link>
       </p>
@@ -73,7 +73,7 @@ function ResetPasswordForm() {
         <label htmlFor="password" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
           New password
         </label>
-        <input
+        <input autoComplete="new-password"
           id="password"
           type="password"
           required
@@ -87,7 +87,7 @@ function ResetPasswordForm() {
         <label htmlFor="confirm" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
           Confirm new password
         </label>
-        <input
+        <input autoComplete="new-password"
           id="confirm"
           type="password"
           required
@@ -99,7 +99,7 @@ function ResetPasswordForm() {
       </div>
 
       {error && (
-        <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>
+        <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>
           {error}
         </p>
       )}
@@ -109,7 +109,7 @@ function ResetPasswordForm() {
         disabled={loading}
         className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2"
         style={{
-          backgroundColor: loading ? '#DDD5C8' : '#C4622D',
+          backgroundColor: loading ? '#DDD5C8' : '#A04E1C',
           color: '#FDFCF8',
           cursor: loading ? 'not-allowed' : 'pointer',
         }}
@@ -134,23 +134,23 @@ export default function ResetPassword() {
   return (
     <div className="flex flex-col min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
       <SiteHeader />
-      <div className="flex flex-col items-center justify-center flex-1 py-12">
+      <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
             <h1 style={{ fontFamily: display, fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
               Set a new password
             </h1>
-            <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>
+            <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>
               Choose a new password for your EasyTax account.
             </p>
           </div>
           <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-            <Suspense fallback={<p className="text-sm text-center" style={{ color: '#9A8F83' }}>Loading…</p>}>
+            <Suspense fallback={<p className="text-sm text-center" style={{ color: '#6B6256' }}>Loading…</p>}>
               <ResetPasswordForm />
             </Suspense>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

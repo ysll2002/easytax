@@ -133,10 +133,10 @@ export default async function DeadlineCheckerPage({ searchParams }: { searchPara
 
       <SiteHeader />
 
-      <main className="flex-grow w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      <main id="main-content" className="flex-grow w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <div
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
-          style={{ backgroundColor: '#FDFCF8', color: '#C4622D', border: '1px solid #C4622D30' }}
+          style={{ backgroundColor: '#FDFCF8', color: '#A04E1C', border: '1px solid #A04E1C30' }}
         >
           Free tool · no signup
         </div>
@@ -236,7 +236,7 @@ export default async function DeadlineCheckerPage({ searchParams }: { searchPara
           <CalendarSubscribe placement="mtd_deadline_checker" />
         </div>
 
-        <p className="text-xs leading-relaxed mt-12" style={{ color: '#9A8F83' }}>
+        <p className="text-xs leading-relaxed mt-12" style={{ color: '#6B6256' }}>
           This tool gives general information about HMRC&apos;s published MTD for Income Tax rules
           and thresholds. It is not tax advice and does not account for individual circumstances
           such as partnerships, trusts or exemptions. Check{' '}
@@ -244,12 +244,12 @@ export default async function DeadlineCheckerPage({ searchParams }: { searchPara
             href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax"
             rel="noopener nofollow"
             target="_blank"
-            style={{ color: '#9A8F83', textDecoration: 'underline' }}
+            style={{ color: '#6B6256', textDecoration: 'underline' }}
           >
             HMRC&apos;s own guidance
           </a>{' '}
           or speak to an accountant if you are unsure. See{' '}
-          <Link href="/trust" style={{ color: '#9A8F83', textDecoration: 'underline' }}>
+          <Link href="/trust" style={{ color: '#6B6256', textDecoration: 'underline' }}>
             where EasyTax stands with HMRC
           </Link>
           .

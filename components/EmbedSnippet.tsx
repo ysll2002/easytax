@@ -52,7 +52,7 @@ export default function EmbedSnippet({ snippet }: { snippet: string }) {
         className="mt-3 inline-flex items-center gap-2 px-5 rounded-full text-sm font-semibold transition-all"
         style={{
           minHeight: 44,
-          backgroundColor: copied ? '#3F7D5C' : '#C4622D',
+          backgroundColor: copied ? '#3F7D5C' : '#A04E1C',
           color: '#FDFCF8',
         }}
       >

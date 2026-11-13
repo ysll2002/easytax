@@ -16,19 +16,19 @@ export default function Privacy() {
       {/* Nav */}
       <nav style={{ borderBottom: '1px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
         <div className="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
-          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
+          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#A04E1C', textDecoration: 'none' }}>
             EasyTax
           </Link>
-          <Link href="/" style={{ fontSize: '0.875rem', color: '#9A8F83', textDecoration: 'none' }}>← Back to Home</Link>
+          <Link href="/" style={{ fontSize: '0.875rem', color: '#6B6256', textDecoration: 'none' }}>← Back to Home</Link>
         </div>
       </nav>
 
-      <main className="flex-grow max-w-4xl mx-auto px-6 py-16 w-full">
+      <main id="main-content" className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
 
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
           Privacy Policy
         </h1>
-        <p style={{ color: '#9A8F83', fontSize: '0.875rem', marginBottom: '3rem' }}>
+        <p style={{ color: '#6B6256', fontSize: '0.875rem', marginBottom: '3rem' }}>
           Last updated: 12 May 2026 &nbsp;·&nbsp; Effective: 12 May 2026
         </p>
 
@@ -88,6 +88,7 @@ export default function Privacy() {
           {/* 3 */}
           <section>
             <H2>3. How Long We Keep Your Data</H2>
+            <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', marginTop: '1rem' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #DDD5C8' }}>
@@ -109,17 +110,18 @@ export default function Privacy() {
                   <tr key={type} style={{ borderBottom: '1px solid #E8E2DA' }}>
                     <td style={{ padding: '0.6rem 0.75rem', fontWeight: 500, color: '#1C1208' }}>{type}</td>
                     <td style={{ padding: '0.6rem 0.75rem' }}>{period}</td>
-                    <td style={{ padding: '0.6rem 0.75rem', color: '#9A8F83', fontSize: '0.825rem' }}>{reason}</td>
+                    <td style={{ padding: '0.6rem 0.75rem', color: '#6B6256', fontSize: '0.825rem' }}>{reason}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
           </section>
 
           {/* 4 */}
           <section>
             <H2>4. Your Rights Under UK GDPR</H2>
-            <P>You have the following rights regarding your personal data. To exercise any of them, email <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a>. We will respond within 30 days.</P>
+            <P>You have the following rights regarding your personal data. To exercise any of them, email <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a>. We will respond within 30 days.</P>
             <div className="space-y-3" style={{ marginTop: '1rem' }}>
               {[
                 ['Right of access', 'Request a copy of all personal data we hold about you (Subject Access Request).'],
@@ -172,11 +174,11 @@ export default function Privacy() {
           <section>
             <H2>9. How to Complain</H2>
             <P>
-              If you are unhappy with how we handle your data, please contact us first at <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a>. If you remain unsatisfied, you have the right to lodge a complaint with the UK's supervisory authority:
+              If you are unhappy with how we handle your data, please contact us first at <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a>. If you remain unsatisfied, you have the right to lodge a complaint with the UK's supervisory authority:
             </P>
             <div style={{ padding: '1rem 1.25rem', backgroundColor: '#F0EBE1', borderRadius: '0.75rem', marginTop: '0.75rem', fontSize: '0.9rem' }}>
               <p style={{ fontWeight: 600, color: '#1C1208', marginBottom: '0.25rem' }}>Information Commissioner's Office (ICO)</p>
-              <p style={{ color: '#4A4035' }}>Website: <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" style={{ color: '#C4622D' }}>ico.org.uk</a></p>
+              <p style={{ color: '#4A4035' }}>Website: <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C' }}>ico.org.uk</a></p>
               <p style={{ color: '#4A4035' }}>Helpline: 0303 123 1113</p>
             </div>
           </section>
@@ -185,7 +187,7 @@ export default function Privacy() {
           <section>
             <H2>10. Contact Us</H2>
             <P>For any privacy-related questions or to exercise your rights:</P>
-            <P><strong>Email:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a></P>
+            <P><strong>Email:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a></P>
             <P>We aim to respond to all requests within <strong>30 days</strong>. For complex requests we may extend this by a further two months, in which case we will notify you.</P>
           </section>
 
@@ -226,15 +228,16 @@ function Legal({ basis, detail }: { basis: string; detail: string }) {
   };
   const c = colors[basis] ?? colors['Contract'];
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', padding: '0.5rem 0.75rem', backgroundColor: c.bg, border: `1px solid ${c.border}`, borderRadius: '0.5rem', marginTop: '0.4rem', marginBottom: '0.75rem', fontSize: '0.825rem' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: '0.25rem 0.5rem', padding: '0.5rem 0.75rem', backgroundColor: c.bg, border: `1px solid ${c.border}`, borderRadius: '0.5rem', marginTop: '0.4rem', marginBottom: '0.75rem', fontSize: '0.825rem' }}>
       <span style={{ fontWeight: 700, color: c.label, flexShrink: 0 }}>Legal basis: {basis}</span>
-      <span style={{ color: '#4A4035' }}>— {detail}</span>
+      <span style={{ color: '#4A4035', minWidth: 0, flex: '1 1 12rem' }}>— {detail}</span>
     </div>
   );
 }
 
 function Table({ rows }: { rows: [string, string][] }) {
   return (
+    <div style={{ overflowX: 'auto' }}>
     <table style={{ borderCollapse: 'collapse', fontSize: '0.875rem', marginTop: '0.75rem', marginBottom: '1rem', width: '100%' }}>
       <tbody>
         {rows.map(([k, v]) => (
@@ -245,5 +248,6 @@ function Table({ rows }: { rows: [string, string][] }) {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }

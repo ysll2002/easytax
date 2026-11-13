@@ -101,7 +101,7 @@ export default function DeadlineChecker({ initial }: { initial?: DeadlineShare |
           <legend className="text-sm font-semibold mb-1 p-0" style={{ color: '#1C1208' }}>
             1. What kind of income do you have?
           </legend>
-          <p className="text-xs mb-4" style={{ color: '#9A8F83' }}>Select all that apply.</p>
+          <p className="text-xs mb-4" style={{ color: '#6B6256' }}>Select all that apply.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {KINDS.map(k => {
               const on = kinds.includes(k.value);
@@ -115,11 +115,11 @@ export default function DeadlineChecker({ initial }: { initial?: DeadlineShare |
                   style={{
                     minHeight: 64,
                     backgroundColor: on ? '#F5E4D8' : '#F0EBE1',
-                    border: `1px solid ${on ? '#C4622D' : '#DDD5C8'}`,
+                    border: `1px solid ${on ? '#A04E1C' : '#DDD5C8'}`,
                   }}
                 >
                   <span className="block text-sm font-medium" style={{ color: '#1C1208' }}>{k.label}</span>
-                  <span className="block text-xs mt-0.5" style={{ color: '#9A8F83' }}>{k.hint}</span>
+                  <span className="block text-xs mt-0.5" style={{ color: '#6B6256' }}>{k.hint}</span>
                 </button>
               );
             })}
@@ -130,12 +130,12 @@ export default function DeadlineChecker({ initial }: { initial?: DeadlineShare |
           <label htmlFor="qualifying-income" className="block text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>
             2. Combined gross income from those sources
           </label>
-          <p className="text-xs mb-3" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mb-3" style={{ color: '#6B6256' }}>
             Turnover and rent <strong>before</strong> deducting any expenses — HMRC calls this your
             qualifying income. Employment and dividend income do not count.
           </p>
           <div className="relative" style={{ maxWidth: 260 }}>
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
             <input
               id="qualifying-income"
               type="text"
@@ -155,8 +155,8 @@ export default function DeadlineChecker({ initial }: { initial?: DeadlineShare |
           className="inline-flex items-center gap-2 px-7 rounded-full text-sm font-semibold transition-all"
           style={{
             minHeight: 48,
-            backgroundColor: canSubmit ? '#C4622D' : '#DDD5C8',
-            color: canSubmit ? '#FDFCF8' : '#9A8F83',
+            backgroundColor: canSubmit ? '#A04E1C' : '#DDD5C8',
+            color: canSubmit ? '#FDFCF8' : '#6B6256',
             cursor: canSubmit ? 'pointer' : 'not-allowed',
           }}
         >
@@ -228,9 +228,9 @@ function Result({ mandatedFrom, income }: { mandatedFrom: number | null; income:
       {showCountdown && upcoming && (
         <div
           className="flex items-start gap-3 rounded-xl px-4 py-3 my-5"
-          style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D40' }}
+          style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C40' }}
         >
-          <CalendarClock size={18} style={{ color: '#C4622D', flexShrink: 0, marginTop: 2 }} />
+          <CalendarClock size={18} style={{ color: '#A04E1C', flexShrink: 0, marginTop: 2 }} />
           <p className="text-sm m-0" style={{ color: '#1C1208' }}>
             <strong>Your next deadline is {upcoming.deadlineLabel}</strong> — {daysUntil(upcoming.deadline, now)}{' '}
             days away. That is the {upcoming.key} update, covering {upcoming.periodLabel}.
@@ -267,17 +267,17 @@ function Result({ mandatedFrom, income }: { mandatedFrom: number | null; income:
             <span className="text-sm font-medium sm:w-36 sm:flex-shrink-0" style={{ color: '#1C1208' }}>
               {row.label}
             </span>
-            <span className="text-xs sm:text-sm sm:flex-1" style={{ color: '#9A8F83' }}>
+            <span className="text-xs sm:text-sm sm:flex-1" style={{ color: '#6B6256' }}>
               {row.period}
             </span>
-            <span className="text-sm font-semibold sm:text-right sm:flex-shrink-0" style={{ color: '#C4622D' }}>
+            <span className="text-sm font-semibold sm:text-right sm:flex-shrink-0" style={{ color: '#A04E1C' }}>
               Due {row.due}
             </span>
           </li>
         ))}
       </ul>
 
-      <p className="text-xs mt-4" style={{ color: '#9A8F83' }}>
+      <p className="text-xs mt-4" style={{ color: '#6B6256' }}>
         Quarterly updates report cumulative totals since 6 April, so each one restates the year so
         far rather than just the new quarter. Deadlines fall on the 7th — one month and two days
         after the quarter ends.

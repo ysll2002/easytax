@@ -53,7 +53,7 @@ export default function FilingStatus({ initiallySubscribed = false }: { initiall
       style={{ backgroundColor: '#FBF0E6', border: '1px solid #E8C9A8' }}
     >
       <div className="flex items-start gap-3">
-        <Clock size={18} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+        <Clock size={18} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
           <p className="font-semibold text-sm mb-1" style={{ color: '#7A4A1E' }}>
             Filing to HMRC is not open yet
@@ -70,7 +70,7 @@ export default function FilingStatus({ initiallySubscribed = false }: { initiall
               className="text-xs inline-flex items-center gap-1.5 rounded-lg px-3 py-2"
               style={{ color: '#1C1208', backgroundColor: '#F0EBE1', minHeight: 36 }}
             >
-              <Check size={14} color="#6B8E6E" strokeWidth={2.5} />
+              <Check size={14} color="#4B6A4E" strokeWidth={2.5} />
               We&apos;ll email you the day filing opens.
             </p>
           ) : (
@@ -84,7 +84,7 @@ export default function FilingStatus({ initiallySubscribed = false }: { initiall
                 // one action on the screen — it is not going to be a 28px link.
                 style={{
                   minHeight: 44,
-                  backgroundColor: '#C4622D',
+                  backgroundColor: '#A04E1C',
                   color: '#FDFCF8',
                   border: 'none',
                   cursor: state === 'loading' ? 'default' : 'pointer',

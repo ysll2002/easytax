@@ -50,14 +50,14 @@ export default function Login() {
   return (
     <div className="flex flex-col min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
       <SiteHeader />
-      <div className="flex flex-col items-center justify-center flex-1 py-12">
+      <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
       <div className="w-full max-w-md">
 
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
             {t('title')}
           </h1>
-          <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>
+          <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>
             {t('subtitle')}
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function Login() {
           {/* Divider */}
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
-            <span className="text-xs" style={{ color: '#9A8F83' }}>{t('or')}</span>
+            <span className="text-xs" style={{ color: '#6B6256' }}>{t('or')}</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
           </div>
 
@@ -106,7 +106,7 @@ export default function Login() {
               <label htmlFor="email" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
                 {t('email')}
               </label>
-              <input
+              <input autoComplete="email"
                 id="email"
                 type="email"
                 required
@@ -122,11 +122,11 @@ export default function Login() {
                 <label htmlFor="password" className="block text-sm font-semibold" style={{ color: '#1C1208' }}>
                   {t('password')}
                 </label>
-                <Link href="/forgot-password" className="text-xs" style={{ color: '#C4622D' }}>
+                <Link href="/forgot-password" className="text-xs" style={{ color: '#A04E1C' }}>
                   {t('forgotPassword')}
                 </Link>
               </div>
-              <input
+              <input autoComplete="current-password"
                 id="password"
                 type="password"
                 required
@@ -137,14 +137,14 @@ export default function Login() {
               />
             </div>
 
-            {error && <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>{error}</p>}
+            {error && <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
               className="w-full py-3.5 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2"
               style={{
-                backgroundColor: loading ? '#DDD5C8' : '#C4622D',
+                backgroundColor: loading ? '#DDD5C8' : '#A04E1C',
                 color: '#FDFCF8',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 marginTop: '0.25rem',
@@ -162,15 +162,15 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="text-center text-sm mt-6" style={{ color: '#9A8F83' }}>
+          <p className="text-center text-sm mt-6" style={{ color: '#6B6256' }}>
             {t('noAccount')}{' '}
-            <Link href="/register" style={{ color: '#C4622D', fontWeight: 600 }}>
+            <Link href="/register" style={{ color: '#A04E1C', fontWeight: 600 }}>
               {t('createAccount')}
             </Link>
           </p>
         </div>
       </div>
-      </div>
+      </main>
     </div>
   );
 }

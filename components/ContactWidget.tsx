@@ -57,10 +57,10 @@ export default function ContactWidget() {
         style={{
           position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 50,
           width: 52, height: 52, borderRadius: '50%',
-          backgroundColor: '#C4622D', color: '#FDFCF8',
+          backgroundColor: '#A04E1C', color: '#FDFCF8',
           border: 'none', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 16px #C4622D50',
+          boxShadow: '0 4px 16px #A04E1C50',
           transition: 'transform 0.2s, box-shadow 0.2s',
         }}
         className="hover:scale-110"
@@ -80,36 +80,36 @@ export default function ContactWidget() {
           {/* Header */}
           <div style={{ backgroundColor: '#1C1208', padding: '16px 20px' }}>
             <p style={{ margin: 0, color: '#FDFCF8', fontWeight: 700, fontSize: '0.95rem' }}>Contact us</p>
-            <p style={{ margin: '2px 0 0', color: '#9A8F83', fontSize: '0.75rem' }}>We usually reply within one business day.</p>
+            <p style={{ margin: '2px 0 0', color: '#A89D90', fontSize: '0.75rem' }}>We usually reply within one business day.</p>
           </div>
 
           {/* Body */}
           <div style={{ backgroundColor: '#FDFCF8', padding: '20px' }}>
             {sent ? (
               <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <CheckCircle2 size={40} color="#6B8E6E" style={{ margin: '0 auto 12px' }} />
+                <CheckCircle2 size={40} color="#4B6A4E" style={{ margin: '0 auto 12px' }} />
                 <p style={{ fontWeight: 700, color: '#1C1208', marginBottom: 4 }}>Message sent!</p>
-                <p style={{ color: '#9A8F83', fontSize: '0.85rem' }}>We&apos;ll be in touch soon.</p>
-                <button onClick={handleClose} style={{ marginTop: 16, fontSize: '0.85rem', color: '#C4622D', background: 'none', border: 'none', cursor: 'pointer' }}>
+                <p style={{ color: '#6B6256', fontSize: '0.85rem' }}>We&apos;ll be in touch soon.</p>
+                <button onClick={handleClose} style={{ marginTop: 16, fontSize: '0.85rem', color: '#A04E1C', background: 'none', border: 'none', cursor: 'pointer' }}>
                   Close
                 </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {error && (
-                  <p style={{ fontSize: '0.8rem', color: '#EF4444', margin: 0 }}>{error}</p>
+                  <p style={{ fontSize: '0.8rem', color: '#B3261E', margin: 0 }}>{error}</p>
                 )}
-                <input
+                <input autoComplete="name" aria-label="Your name"
                   required value={name} onChange={e => setName(e.target.value)}
                   placeholder="Your name"
                   style={{ padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E8E2DA', fontSize: '0.875rem', outline: 'none', color: '#1C1208', backgroundColor: '#FFFFFF' }}
                 />
-                <input
+                <input autoComplete="email" aria-label="Your email"
                   required type="email" value={email} onChange={e => setEmail(e.target.value)}
                   placeholder="Your email"
                   style={{ padding: '10px 12px', borderRadius: 8, border: '1.5px solid #E8E2DA', fontSize: '0.875rem', outline: 'none', color: '#1C1208', backgroundColor: '#FFFFFF' }}
                 />
-                <textarea
+                <textarea aria-label="Your message"
                   required value={message} onChange={e => setMessage(e.target.value)}
                   placeholder="How can we help?"
                   rows={4}
@@ -120,7 +120,7 @@ export default function ContactWidget() {
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                     padding: '10px', borderRadius: 8, border: 'none', cursor: submitting ? 'wait' : 'pointer',
-                    backgroundColor: '#C4622D', color: '#FDFCF8', fontWeight: 600, fontSize: '0.875rem',
+                    backgroundColor: '#A04E1C', color: '#FDFCF8', fontWeight: 600, fontSize: '0.875rem',
                     opacity: submitting ? 0.7 : 1,
                   }}
                 >

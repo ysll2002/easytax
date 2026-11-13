@@ -1,12 +1,19 @@
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import DeviceDataCollector from '@/components/DeviceDataCollector';
 import SidebarNav from '@/components/SidebarNav';
 import LogoutButton from '@/components/LogoutButton';
 import MobileNav from '@/components/MobileNav';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import HomepageLink from '@/components/HomepageLink';
+
+// Default <title> for dashboard pages (WCAG 2.4.2); each route's own layout
+// overrides it.
+export const metadata: Metadata = {
+  title: { default: 'Dashboard', template: '%s | EasyTax' },
+};
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -19,7 +26,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Sidebar — desktop only */}
       <aside className="hidden md:flex" style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
-        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#C4622D', padding: '0 1.5rem', marginBottom: '2.5rem', display: 'block' }}>
+        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '2.5rem', display: 'block' }}>
           EasyTax
         </Link>
 
@@ -30,13 +37,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
             {user.image ? (
               <img src={user.image} alt="" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
             ) : (
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#C4622D', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600 }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#A04E1C', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600 }}>
                 {user.name?.charAt(0) ?? user.email?.charAt(0) ?? '?'}
               </div>
             )}
             <div style={{ overflow: 'hidden' }}>
               <p style={{ color: '#FDFCF8', fontSize: '0.8rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.name ?? 'User'}</p>
-              <p style={{ color: '#4A4035', fontSize: '0.7rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
+              <p style={{ color: '#A89D90', fontSize: '0.7rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
             </div>
           </div>
 
@@ -46,7 +53,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Mobile top bar */}
       <div className="flex md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
+        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#E8895A', textDecoration: 'none' }}>
           EasyTax
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -56,7 +63,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </div>
 
       {/* Main content */}
-      <main style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
+      <main id="main-content" style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
         {/* Desktop floating top-right controls */}
         <div className="hidden md:flex" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30, gap: '0.5rem' }}>
           <LanguageSwitcher />
@@ -69,13 +76,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {/* HMRC MTD-ITSA production requirement: signpost users with unsupported
             income types and unsupported end-of-year (Final Declaration) functionality
             to the official HMRC compatible-software directory. */}
-        <footer style={{ padding: '2rem 1.5rem 3rem', borderTop: '1px solid #EEE4D3', marginTop: '3rem', color: '#9A8F83', fontSize: '0.75rem', lineHeight: 1.5 }}>
+        <footer style={{ padding: '2rem 1.5rem 3rem', borderTop: '1px solid #EEE4D3', marginTop: '3rem', color: '#6B6256', fontSize: '0.75rem', lineHeight: 1.5 }}>
           <div style={{ maxWidth: '52rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <p>
               EasyTax supports Self Assessment for UK sole-trader freelancers (Self-Employment income). If you have income from UK property, foreign property, or other sources EasyTax doesn&apos;t currently cover, find compatible software at{' '}
               <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
                 target="_blank" rel="noopener noreferrer"
-                style={{ color: '#C4622D', textDecoration: 'underline' }}>
+                style={{ color: '#A04E1C', textDecoration: 'underline' }}>
                 gov.uk — Find software compatible with Making Tax Digital for Income Tax
               </a>.
             </p>
@@ -84,9 +91,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
               EasyTax currently supports in-year quarterly updates for Making Tax Digital for Income Tax only. It does <strong>not</strong> support end-of-year functionality, including the Final Declaration (crystallisation). To complete your end-of-year submission you will need to use additional software — find compatible software at{' '}
               <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
                 target="_blank" rel="noopener noreferrer"
-                style={{ color: '#C4622D', textDecoration: 'underline' }}>
+                style={{ color: '#A04E1C', textDecoration: 'underline' }}>
                 gov.uk — Find software compatible with Making Tax Digital for Income Tax
               </a>.
+            </p>
+            <p>
+              <Link href="/accessibility" style={{ color: '#A04E1C', textDecoration: 'underline' }}>Accessibility statement</Link>
             </p>
           </div>
         </footer>

@@ -173,16 +173,16 @@ export default async function PenaltyCalculatorPage({ searchParams }: { searchPa
 
       <SiteHeader />
 
-      <main className="flex-grow w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <nav className="text-xs mb-4" style={{ color: '#9A8F83' }}>
-          <Link href="/tools" style={{ color: '#9A8F83', textDecoration: 'none' }}>Free tax tools</Link>
+      <main id="main-content" className="flex-grow w-full max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <nav className="text-xs mb-4" style={{ color: '#6B6256' }}>
+          <Link href="/tools" style={{ color: '#6B6256', textDecoration: 'none' }}>Free tax tools</Link>
           <span aria-hidden> › </span>
           <span>Penalty calculator</span>
         </nav>
 
         <div
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
-          style={{ backgroundColor: '#FDFCF8', color: '#C4622D', border: '1px solid #C4622D30' }}
+          style={{ backgroundColor: '#FDFCF8', color: '#A04E1C', border: '1px solid #A04E1C30' }}
         >
           Free tool · no signup
         </div>
@@ -308,14 +308,14 @@ export default async function PenaltyCalculatorPage({ searchParams }: { searchPa
                   style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8', textDecoration: 'none' }}
                 >
                   <span className="block text-sm font-medium" style={{ color: '#1C1208' }}>{t.label}</span>
-                  <span className="block text-xs mt-1" style={{ color: '#9A8F83' }}>{t.hint}</span>
+                  <span className="block text-xs mt-1" style={{ color: '#6B6256' }}>{t.hint}</span>
                 </Link>
               </li>
             ))}
           </ul>
         </section>
 
-        <p className="text-xs leading-relaxed mt-12" style={{ color: '#9A8F83' }}>
+        <p className="text-xs leading-relaxed mt-12" style={{ color: '#6B6256' }}>
           This tool applies HMRC&apos;s published Self Assessment penalty rules, last reviewed on{' '}
           {RULES_REVIEWED}. It is not tax advice, it does not model interest, and it does not account
           for individual circumstances such as a reasonable excuse, a time to pay arrangement, or
@@ -324,12 +324,12 @@ export default async function PenaltyCalculatorPage({ searchParams }: { searchPa
             href={HMRC_PENALTIES_URL}
             rel="noopener nofollow"
             target="_blank"
-            style={{ color: '#9A8F83', textDecoration: 'underline' }}
+            style={{ color: '#6B6256', textDecoration: 'underline' }}
           >
             HMRC&apos;s own guidance
           </a>{' '}
           or speak to an accountant if you are unsure. See{' '}
-          <Link href="/trust" style={{ color: '#9A8F83', textDecoration: 'underline' }}>
+          <Link href="/trust" style={{ color: '#6B6256', textDecoration: 'underline' }}>
             where EasyTax stands with HMRC
           </Link>
           .

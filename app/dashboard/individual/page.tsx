@@ -28,7 +28,7 @@ export default async function TaxPage() {
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         {t('title')}
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2.5rem', fontSize: '0.9rem' }}>
+      <p style={{ color: '#6B6256', marginBottom: '2.5rem', fontSize: '0.9rem' }}>
         {t('subtitle')}
       </p>
 
@@ -44,10 +44,10 @@ export default async function TaxPage() {
           {hasHmrc ? (
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <CheckCircle2 size={18} color="#6B8E6E" />
+                <CheckCircle2 size={18} color="#4B6A4E" />
                 <div>
                   <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{t('hmrcConnected')}</p>
-                  <p className="text-xs" style={{ color: '#9A8F83' }}>
+                  <p className="text-xs" style={{ color: '#6B6256' }}>
                     {t('gatewayAuth')}
                     {hmrc?.connected_at ? ` · ${t('connectedOn', { date: formatDate(hmrc.connected_at) })}` : ''}
                   </p>
@@ -78,7 +78,7 @@ export default async function TaxPage() {
           {hasSA ? (
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9A8F83' }}>{t('tasksHeader')}</p>
+                <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#6B6256' }}>{t('tasksHeader')}</p>
               </div>
               <TasksTimeline />
               <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid #F0EBE1' }}>
@@ -103,7 +103,7 @@ export default async function TaxPage() {
               </div>
             </div>
           ) : (
-            <p className="text-sm" style={{ color: '#9A8F83' }}>
+            <p className="text-sm" style={{ color: '#6B6256' }}>
               {t('step3Locked')}
             </p>
           )}
@@ -113,8 +113,8 @@ export default async function TaxPage() {
 
       {hasSA && (
         <div className="mt-6 pt-6 flex items-center gap-2" style={{ borderTop: '1px solid #E8E2DA' }}>
-          <History size={14} color="#9A8F83" />
-          <Link href="/dashboard/individual/history" style={{ color: '#9A8F83', textDecoration: 'none', fontSize: '0.875rem' }}>
+          <History size={14} color="#6B6256" />
+          <Link href="/dashboard/individual/history" style={{ color: '#6B6256', textDecoration: 'none', fontSize: '0.875rem' }}>
             {t('filingHistory')}
           </Link>
         </div>
@@ -128,23 +128,23 @@ function Step({ n, title, done, locked, lockedLabel, children }: {
 }) {
   return (
     <div className="rounded-2xl overflow-hidden" style={{
-      border: `1.5px solid ${done ? '#6B8E6E40' : locked ? '#E8E2DA' : '#DDD5C8'}`,
+      border: `1.5px solid ${done ? '#4B6A4E40' : locked ? '#E8E2DA' : '#DDD5C8'}`,
       opacity: locked ? 0.4 : 1,
     }}>
       <div className="flex items-center gap-3 px-5 py-3.5" style={{
         backgroundColor: done ? '#F0F5F0' : locked ? '#FAFAF8' : '#F8F7F5',
-        borderBottom: `1px solid ${done ? '#6B8E6E20' : '#E8E2DA'}`,
+        borderBottom: `1px solid ${done ? '#4B6A4E20' : '#E8E2DA'}`,
       }}>
         <div style={{
           width: 26, height: 26, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '0.75rem', fontWeight: 700, flexShrink: 0,
-          backgroundColor: done ? '#6B8E6E' : locked ? '#E8E2DA' : '#1C1208',
-          color: locked && !done ? '#9A8F83' : '#FDFCF8',
+          backgroundColor: done ? '#4B6A4E' : locked ? '#E8E2DA' : '#1C1208',
+          color: locked && !done ? '#6B6256' : '#FDFCF8',
         }}>
           {done ? '✓' : n}
         </div>
-        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: done ? '#6B8E6E' : '#1C1208' }}>{title}</span>
-        {locked && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#9A8F83' }}>{lockedLabel}</span>}
+        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: done ? '#4B6A4E' : '#1C1208' }}>{title}</span>
+        {locked && <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#E8E2DA', color: '#6B6256' }}>{lockedLabel}</span>}
       </div>
       <div className="px-5 py-4" style={{ backgroundColor: '#FFFFFF' }}>{children}</div>
     </div>
@@ -163,11 +163,11 @@ function ActionLink({ href, label, desc, primary, done }: {
         <div>
           <div className="flex items-center gap-2">
             <p className="text-sm font-semibold" style={{ color: primary ? '#FDFCF8' : '#1C1208' }}>{label}</p>
-            {done && <CheckCircle2 size={14} color="#6B8E6E" />}
+            {done && <CheckCircle2 size={14} color="#4B6A4E" />}
           </div>
-          <p className="text-xs mt-0.5" style={{ color: primary ? '#9A8F83' : '#9A8F83' }}>{desc}</p>
+          <p className="text-xs mt-0.5" style={{ color: primary ? '#6B6256' : '#6B6256' }}>{desc}</p>
         </div>
-        <ChevronRight size={16} color={primary ? '#9A8F83' : '#C4622D'} />
+        <ChevronRight size={16} color={primary ? '#6B6256' : '#A04E1C'} />
       </div>
     </Link>
   );

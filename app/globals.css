@@ -8,19 +8,62 @@
   --color-cream-dark: #F0EBE1;
   --color-ink: #1C1208;
   --color-ink-light: #4A4035;
-  --color-terra: #C4622D;
+  --color-terra: #A04E1C;
   --color-terra-light: #E8895A;
   --color-terra-pale: #F5E4D8;
-  --color-sage: #6B8E6E;
+  --color-sage: #4B6A4E;
   --color-sage-pale: #E2EDE2;
   --color-gold: #C9963D;
-  --color-muted: #9A8F83;
+  --color-muted: #6B6256;
   --color-border: #DDD5C8;
   --color-border-dark: #C5BAB0;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* Accessibility (WCAG 2.1 AA). Keyboard focus is always visible: several
+   inputs set `outline: none` for mouse users, and the browser default ring is
+   faint on the cream background. :focus-visible only fires for keyboard (and
+   other non-pointer) focus, so mouse clicks are unaffected. */
+:focus-visible {
+  outline: 3px solid #1C1208 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 5px #FDFCF8 !important;
+}
+
+/* "Skip to main content": first focusable element on every page, hidden until
+   it receives keyboard focus (WCAG 2.4.1). */
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -100px;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #1C1208;
+  color: #FDFCF8;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.skip-link:focus { top: 0.75rem; }
+
+/* Links inside running text are underlined so they are not identified by
+   colour alone (WCAG 1.4.1). */
+p a[href]:not([class*="rounded"]), .prose-article a[href] {
+  text-decoration-line: underline;
+  text-underline-offset: 2px;
+}
+
+/* Respect the operating system's reduced-motion setting. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 body {
@@ -63,7 +106,7 @@ h1, h2, h3, h4, h5, h6 {
    be allowed to give the whole document a horizontal scrollbar on a phone. */
 .prose-article-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; }
 .prose-article table { width: 100%; min-width: 32rem; border-collapse: collapse; font-size: 0.9rem; }
-.prose-article caption { caption-side: bottom; padding-top: 0.5rem; font-size: 0.8rem; color: #9A8F83; text-align: left; }
+.prose-article caption { caption-side: bottom; padding-top: 0.5rem; font-size: 0.8rem; color: #6B6256; text-align: left; }
 .prose-article th { padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; color: #1C1208; background: #F0EBE1; border-bottom: 1px solid #DDD5C8; }
 .prose-article td { padding: 0.6rem 0.75rem; color: #4A4035; border-bottom: 1px solid #F0EBE1; vertical-align: top; }
 .prose-article tbody tr:last-child td { border-bottom: none; }

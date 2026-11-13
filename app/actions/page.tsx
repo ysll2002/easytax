@@ -62,9 +62,9 @@ const MOCK_ACTIONS: ActionItem[] = [
 ];
 
 const typeConfig = {
-  urgent:  { bar: '#C4622D', badge: { bg: '#F5E4D8', text: '#C4622D', label: 'Urgent' } },
+  urgent:  { bar: '#A04E1C', badge: { bg: '#F5E4D8', text: '#A04E1C', label: 'Urgent' } },
   warning: { bar: '#C9963D', badge: { bg: '#F5EDDC', text: '#C9963D', label: 'Action Required' } },
-  info:    { bar: '#6B8E6E', badge: { bg: '#E2EDE2', text: '#6B8E6E', label: 'Info' } },
+  info:    { bar: '#4B6A4E', badge: { bg: '#E2EDE2', text: '#4B6A4E', label: 'Info' } },
 };
 
 export default function Actions() {
@@ -92,11 +92,11 @@ export default function Actions() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen" style={{ backgroundColor: '#FDFCF8' }}>
-        <div className="w-14 h-14 rounded-full border-4 animate-spin mb-6" style={{ borderColor: '#DDD5C8', borderTopColor: '#C4622D' }} />
+        <div className="w-14 h-14 rounded-full border-4 animate-spin mb-6" style={{ borderColor: '#DDD5C8', borderTopColor: '#A04E1C' }} />
         <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
           Building a sample action plan
         </h2>
-        <p style={{ color: '#9A8F83' }}>Loading the sample action plan…</p>
+        <p style={{ color: '#6B6256' }}>Loading the sample action plan…</p>
       </div>
     );
   }
@@ -108,13 +108,13 @@ export default function Actions() {
         <DemoBanner />
 
         <div className="mb-12">
-          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', color: '#C4622D', fontWeight: 700, fontSize: '1.25rem', display: 'inline-block', marginBottom: '2rem' }}>
+          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', color: '#A04E1C', fontWeight: 700, fontSize: '1.25rem', display: 'inline-block', marginBottom: '2rem' }}>
             EasyTax
           </Link>
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
             Your Action Plan
           </h1>
-          <p style={{ color: '#9A8F83' }}>
+          <p style={{ color: '#6B6256' }}>
             A worked example of the action plan EasyTax builds once your account is connected.
           </p>
         </div>
@@ -142,7 +142,7 @@ export default function Actions() {
                             {cfg.badge.label}
                           </span>
                         )}
-                        <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: action.completed ? '#9A8F83' : '#1C1208', textDecoration: action.completed ? 'line-through' : 'none' }}>
+                        <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.2rem', fontWeight: 700, color: action.completed ? '#6B6256' : '#1C1208', textDecoration: action.completed ? 'line-through' : 'none' }}>
                           {action.title}
                         </h3>
                       </div>
@@ -170,7 +170,7 @@ export default function Actions() {
                           <Link
                             href={action.ctaLink}
                             className="inline-block px-5 py-2.5 rounded-full text-sm font-medium transition-all"
-                            style={{ backgroundColor: action.type === 'urgent' ? '#C4622D' : '#1C1208', color: '#FDFCF8' }}
+                            style={{ backgroundColor: action.type === 'urgent' ? '#A04E1C' : '#1C1208', color: '#FDFCF8' }}
                           >
                             {action.cta} →
                           </Link>
@@ -180,7 +180,7 @@ export default function Actions() {
 
                     <div className="flex-shrink-0 self-center w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: action.completed ? '#E2EDE2' : `${cfg.bar}15` }}>
                       {action.completed ? (
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="#6B8E6E">
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="#4B6A4E">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       ) : (
@@ -197,7 +197,7 @@ export default function Actions() {
         </div>
 
         <div className="mt-10 text-center">
-          <Link href="/dashboard" className="text-sm transition-colors" style={{ color: '#9A8F83' }}>
+          <Link href="/dashboard" className="text-sm transition-colors" style={{ color: '#6B6256' }}>
             Skip to full dashboard →
           </Link>
         </div>

@@ -120,12 +120,12 @@ export default function DeadlineScheduleForm({
     return (
       <div
         className="p-5 sm:p-6 rounded-2xl"
-        style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #6B8E6E40' }}
+        style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #4B6A4E40' }}
       >
         <div className="flex items-start gap-3 mb-4">
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ backgroundColor: '#6B8E6E' }}
+            style={{ backgroundColor: '#4B6A4E' }}
           >
             <Check size={16} color="#FDFCF8" strokeWidth={2.5} />
           </div>
@@ -156,7 +156,7 @@ export default function DeadlineScheduleForm({
                       className="text-xs"
                       style={{
                         padding: '8px 10px',
-                        color: '#9A8F83',
+                        color: '#6B6256',
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.04em',
@@ -174,10 +174,10 @@ export default function DeadlineScheduleForm({
                     <td className="text-sm" style={{ padding: '10px', color: '#1C1208', fontWeight: 600, borderBottom: '1px solid #F0EBE1' }}>
                       {r.label}
                     </td>
-                    <td className="text-xs" style={{ padding: '10px', color: '#9A8F83', borderBottom: '1px solid #F0EBE1' }}>
+                    <td className="text-xs" style={{ padding: '10px', color: '#6B6256', borderBottom: '1px solid #F0EBE1' }}>
                       {r.period}
                     </td>
-                    <td className="text-sm" style={{ padding: '10px', color: '#C4622D', fontWeight: 600, whiteSpace: 'nowrap', borderBottom: '1px solid #F0EBE1' }}>
+                    <td className="text-sm" style={{ padding: '10px', color: '#A04E1C', fontWeight: 600, whiteSpace: 'nowrap', borderBottom: '1px solid #F0EBE1' }}>
                       {r.due}
                     </td>
                   </tr>
@@ -187,7 +187,7 @@ export default function DeadlineScheduleForm({
           </div>
         )}
 
-        <p className="text-xs mt-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+        <p className="text-xs mt-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>
           We will email you before each of these deadlines, and once when MTD filing opens in
           EasyTax. Nothing else, and you can unsubscribe from any of it in one click.
         </p>
@@ -198,7 +198,7 @@ export default function DeadlineScheduleForm({
   return (
     <div className="p-5 sm:p-7 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E8E2DA' }}>
       <div className="flex items-center gap-2 mb-2">
-        <CalendarClock size={16} color="#C4622D" strokeWidth={2} />
+        <CalendarClock size={16} color="#A04E1C" strokeWidth={2} />
         <p
           style={{
             fontFamily: 'var(--font-display), Playfair Display, Georgia, serif',
@@ -210,11 +210,11 @@ export default function DeadlineScheduleForm({
           {heading}
         </p>
       </div>
-      <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{blurb}</p>
+      <p className="text-sm mb-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>{blurb}</p>
 
       <form onSubmit={submit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-3">
-          <input
+          <input autoComplete="email"
             type="email"
             required
             value={email}
@@ -239,7 +239,7 @@ export default function DeadlineScheduleForm({
           value={segment}
           onChange={e => setSegment(e.target.value)}
           aria-label="What best describes you?"
-          style={{ ...FIELD, color: segment ? '#1C1208' : '#9A8F83' }}
+          style={{ ...FIELD, color: segment ? '#1C1208' : '#6B6256' }}
         >
           <option value="">What best describes you? (optional)</option>
           {SEGMENTS.map(s => (
@@ -255,7 +255,7 @@ export default function DeadlineScheduleForm({
             padding: '0.8rem 1.75rem',
             borderRadius: '50px',
             border: 'none',
-            backgroundColor: state === 'loading' ? '#C4622D99' : '#C4622D',
+            backgroundColor: state === 'loading' ? '#A04E1C99' : '#A04E1C',
             color: '#FDFCF8',
             fontSize: '0.9rem',
             fontWeight: 600,
@@ -276,7 +276,7 @@ export default function DeadlineScheduleForm({
           <p className="text-sm" role="alert" style={{ color: '#B3261E' }}>{message}</p>
         )}
 
-        <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+        <p className="text-xs" style={{ color: '#6B6256', lineHeight: 1.6 }}>
           Qualifying income is gross self-employment turnover plus gross property income, before
           expenses. We use it once to work out your dates — no account needed.
         </p>

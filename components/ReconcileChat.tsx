@@ -67,7 +67,7 @@ export default function ReconcileChat({
           <button
             onClick={onUndo}
             className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium"
-            style={{ backgroundColor: '#F0EBE1', color: '#9A8F83', border: '1px solid #DDD5C8' }}
+            style={{ backgroundColor: '#F0EBE1', color: '#6B6256', border: '1px solid #DDD5C8' }}
           >
             ↩ Undo
           </button>
@@ -95,7 +95,7 @@ export default function ReconcileChat({
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="px-3 py-2 rounded-2xl text-sm" style={{ backgroundColor: '#F0EBE1', color: '#9A8F83', borderBottomLeftRadius: '4px' }}>
+            <div className="px-3 py-2 rounded-2xl text-sm" style={{ backgroundColor: '#F0EBE1', color: '#6B6256', borderBottomLeftRadius: '4px' }}>
               <span className="inline-flex gap-1">
                 <span className="animate-bounce" style={{ animationDelay: '0ms' }}>·</span>
                 <span className="animate-bounce" style={{ animationDelay: '150ms' }}>·</span>
@@ -133,7 +133,7 @@ export default function ReconcileChat({
             ↑
           </button>
         </div>
-        <p className="text-xs mt-2 text-center" style={{ color: '#BDB5AA' }}>
+        <p className="text-xs mt-2 text-center" style={{ color: '#6B6256' }}>
           Powered by Claude · Changes apply instantly
         </p>
       </div>

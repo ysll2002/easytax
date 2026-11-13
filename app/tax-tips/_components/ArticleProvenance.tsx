@@ -38,9 +38,9 @@ export default function ArticleProvenance({ publishedAt, reviewedAt, reviewedBy 
     >
       <div className="flex items-start gap-2.5">
         {reviewed ? (
-          <UserCheck size={16} color="#6B8E6E" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
+          <UserCheck size={16} color="#4B6A4E" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
         ) : (
-          <CircleAlert size={16} color="#9A8F83" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
+          <CircleAlert size={16} color="#6B6256" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
         )}
 
         <div className="min-w-0">
@@ -71,7 +71,7 @@ export default function ArticleProvenance({ publishedAt, reviewedAt, reviewedBy 
           <Link
             href="/editorial-standards"
             className="inline-flex items-center gap-1.5 text-xs mt-2.5 font-medium"
-            style={{ color: '#C4622D', textDecoration: 'none', minHeight: 32 }}
+            style={{ color: '#A04E1C', textDecoration: 'none', minHeight: 32 }}
           >
             <BookOpen size={13} /> How we write and check these articles
           </Link>
@@ -113,7 +113,7 @@ export function ArticleSources({ sources }: { sources: unknown }) {
                 href={s.url}
                 rel="nofollow noopener"
                 target="_blank"
-                style={{ color: '#C4622D', textDecoration: 'none' }}
+                style={{ color: '#A04E1C', textDecoration: 'none' }}
               >
                 {s.label}
               </a>

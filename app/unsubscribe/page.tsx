@@ -33,7 +33,7 @@ export default async function UnsubscribePage({
   return (
     <div style={{ backgroundColor: '#F0EBE1', minHeight: '100vh' }}>
       <SiteHeader />
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+      <main id="main-content" className="max-w-2xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div
           className="rounded-2xl p-6 sm:p-10"
           style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}
@@ -57,7 +57,7 @@ export default async function UnsubscribePage({
                 <strong style={{ color: '#1C1208' }}>{email}</strong>. You won&apos;t get any
                 further marketing email from us.
               </p>
-              <p className="mt-4 text-sm leading-relaxed" style={{ color: '#9A8F83' }}>
+              <p className="mt-4 text-sm leading-relaxed" style={{ color: '#6B6256' }}>
                 If you still have an EasyTax account, you&apos;ll continue to receive essential
                 service messages — password resets and submission receipts — because those
                 aren&apos;t marketing and we can&apos;t run your account without them.
@@ -65,7 +65,7 @@ export default async function UnsubscribePage({
             </>
           ) : (
             <>
-              <AlertCircle size={32} style={{ color: '#C4622D' }} />
+              <AlertCircle size={32} style={{ color: '#A04E1C' }} />
               <h1
                 className="mt-4 mb-3"
                 style={{
@@ -86,7 +86,7 @@ export default async function UnsubscribePage({
                 Email{' '}
                 <a
                   href="mailto:hello@easytax.vip?subject=Unsubscribe"
-                  style={{ color: '#C4622D', textDecoration: 'underline' }}
+                  style={{ color: '#A04E1C', textDecoration: 'underline' }}
                 >
                   hello@easytax.vip
                 </a>{' '}

@@ -148,9 +148,9 @@ export async function GET(req: NextRequest) {
 }
 
 const VERDICT_COLOUR: Record<TargetResult['verdict'], string> = {
-  hit: '#6B8E6E',
+  hit: '#4B6A4E',
   missed: '#B3261E',
-  insufficient_data: '#9A8F83',
+  insufficient_data: '#6B6256',
 };
 
 const VERDICT_LABEL: Record<TargetResult['verdict'], string> = {
@@ -173,7 +173,7 @@ function renderEmail(
             ${VERDICT_LABEL[t.verdict]} · ${escapeHtml(t.goal.toUpperCase())}
           </p>
           <p style="margin:0 0 4px;font-size:15px;font-weight:600;color:#1C1208">${escapeHtml(t.feature)}</p>
-          <p style="margin:0 0 6px;font-size:13px;color:#9A8F83">${escapeHtml(t.metric)}</p>
+          <p style="margin:0 0 6px;font-size:13px;color:#6B6256">${escapeHtml(t.metric)}</p>
           <p style="margin:0;font-size:13px;color:#4A4035;line-height:1.6">${escapeHtml(t.note)}</p>
         </td>
       </tr>`,
@@ -186,10 +186,10 @@ function renderEmail(
         m.change === null
           ? '—'
           : `${m.change > 0 ? '+' : ''}${m.change}`;
-      const colour = m.change === null ? '#9A8F83' : m.change > 0 ? '#6B8E6E' : m.change < 0 ? '#B3261E' : '#9A8F83';
+      const colour = m.change === null ? '#6B6256' : m.change > 0 ? '#4B6A4E' : m.change < 0 ? '#B3261E' : '#6B6256';
       return `<tr>
         <td style="padding:8px 10px;border-bottom:1px solid #F0EBE1;font-size:13px;color:#4A4035">${escapeHtml(m.label)}</td>
-        <td style="padding:8px 10px;border-bottom:1px solid #F0EBE1;font-size:13px;color:#9A8F83">${m.then ?? '—'}</td>
+        <td style="padding:8px 10px;border-bottom:1px solid #F0EBE1;font-size:13px;color:#6B6256">${m.then ?? '—'}</td>
         <td style="padding:8px 10px;border-bottom:1px solid #F0EBE1;font-size:13px;color:#1C1208;font-weight:600">${m.now ?? '—'}</td>
         <td style="padding:8px 10px;border-bottom:1px solid #F0EBE1;font-size:13px;color:${colour};font-weight:600">${change}</td>
       </tr>`;
@@ -212,13 +212,13 @@ function renderEmail(
         baselineDate
           ? `<table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #E8E2DA;border-radius:10px">
                <tr style="background:#F0EBE1">
-                 <th align="left" style="padding:8px 10px;font-size:11px;color:#9A8F83">Metric</th>
-                 <th align="left" style="padding:8px 10px;font-size:11px;color:#9A8F83">Then</th>
-                 <th align="left" style="padding:8px 10px;font-size:11px;color:#9A8F83">Now</th>
-                 <th align="left" style="padding:8px 10px;font-size:11px;color:#9A8F83">Δ</th>
+                 <th align="left" style="padding:8px 10px;font-size:11px;color:#6B6256">Metric</th>
+                 <th align="left" style="padding:8px 10px;font-size:11px;color:#6B6256">Then</th>
+                 <th align="left" style="padding:8px 10px;font-size:11px;color:#6B6256">Now</th>
+                 <th align="left" style="padding:8px 10px;font-size:11px;color:#6B6256">Δ</th>
                </tr>${movementRows}
              </table>`
-          : `<p style="margin:0;font-size:13px;color:#9A8F83;line-height:1.6">
+          : `<p style="margin:0;font-size:13px;color:#6B6256;line-height:1.6">
                No baseline snapshot at least five days old yet, so there is nothing to compare
                against. Snapshots are stored by calling this endpoint with <code>&amp;snapshot=1</code>.
              </p>`

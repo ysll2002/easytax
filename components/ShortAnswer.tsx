@@ -38,7 +38,7 @@ export default function ShortAnswer({
     >
       <p
         className="text-xs uppercase mb-2"
-        style={{ color: '#9A8F83', letterSpacing: '0.08em' }}
+        style={{ color: '#6B6256', letterSpacing: '0.08em' }}
       >
         {label}
       </p>

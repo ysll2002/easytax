@@ -19,7 +19,7 @@ export default function TasksPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/individual" className="text-sm mb-4 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-4 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
         {t('back')}
       </Link>
 
@@ -27,7 +27,7 @@ export default function TasksPage() {
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.6rem, 5vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
           {t('pageTitle')}
         </h1>
-        <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>{t('pageSubtitle')}</p>
+        <p style={{ color: '#6B6256', fontSize: '0.9rem' }}>{t('pageSubtitle')}</p>
       </div>
 
       <TasksTimeline />

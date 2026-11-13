@@ -80,7 +80,7 @@ export default function ReviewActions({
 
   if (state === 'done') {
     return (
-      <p className="text-sm flex items-center gap-1.5 m-0" style={{ color: '#6B8E6E' }}>
+      <p className="text-sm flex items-center gap-1.5 m-0" style={{ color: '#4B6A4E' }}>
         <Check size={15} strokeWidth={2.5} /> {message}
       </p>
     );
@@ -99,7 +99,7 @@ export default function ReviewActions({
             padding: '0.6rem 1.3rem',
             borderRadius: 50,
             border: 'none',
-            backgroundColor: state === 'working' ? '#6B8E6E99' : '#6B8E6E',
+            backgroundColor: state === 'working' ? '#4B6A4E99' : '#4B6A4E',
             color: '#FDFCF8',
             fontSize: '0.875rem',
             fontWeight: 600,

@@ -128,7 +128,7 @@ export default function HmrcSignedMeUpPage() {
 
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         <article className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
           {/* ── Answer first ──
@@ -137,7 +137,7 @@ export default function HmrcSignedMeUpPage() {
               what makes the page eligible for a featured snippet, which is the
               only realistic way a domain with our authority outranks GOV.UK
               for a long-tail query like this one. */}
-          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#C4622D' }}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>
             Making Tax Digital for Income Tax
           </p>
 
@@ -183,7 +183,7 @@ export default function HmrcSignedMeUpPage() {
             style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}
           >
             <div className="flex items-start gap-3">
-              <CalendarClock size={20} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+              <CalendarClock size={20} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
                 <p className="font-semibold mb-1.5" style={{ color: '#1C1208' }}>
                   Start by confirming what actually applies to you
@@ -212,7 +212,7 @@ export default function HmrcSignedMeUpPage() {
           >
             Your {status.taxYear} deadlines
           </h2>
-          <p className="text-sm mb-5" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+          <p className="text-sm mb-5" style={{ color: '#6B6256', lineHeight: 1.6 }}>
             Each quarterly update covers a three-month period and is due on the 7th of the
             following month. The final declaration replaces the Self Assessment return for
             this year.
@@ -222,9 +222,9 @@ export default function HmrcSignedMeUpPage() {
             <table className="w-full text-sm" style={{ borderCollapse: 'collapse', minWidth: '480px' }}>
               <thead>
                 <tr style={{ borderBottom: '1.5px solid #DDD5C8' }}>
-                  <th className="text-left py-2.5 pr-4 font-semibold" style={{ color: '#9A8F83' }}>Update</th>
-                  <th className="text-left py-2.5 pr-4 font-semibold" style={{ color: '#9A8F83' }}>Period covered</th>
-                  <th className="text-left py-2.5 font-semibold" style={{ color: '#9A8F83' }}>Due</th>
+                  <th className="text-left py-2.5 pr-4 font-semibold" style={{ color: '#6B6256' }}>Update</th>
+                  <th className="text-left py-2.5 pr-4 font-semibold" style={{ color: '#6B6256' }}>Period covered</th>
+                  <th className="text-left py-2.5 font-semibold" style={{ color: '#6B6256' }}>Due</th>
                 </tr>
               </thead>
               <tbody>
@@ -232,19 +232,19 @@ export default function HmrcSignedMeUpPage() {
                   const passed = q.deadline.getTime() < Date.now();
                   const isNext = due?.key === q.key && due?.taxYear === q.taxYear;
                   return (
-                    <tr key={q.key} style={{ borderBottom: '1px solid #E8E2DA', opacity: passed ? 0.5 : 1 }}>
+                    <tr key={q.key} style={{ borderBottom: '1px solid #E8E2DA' }}>
                       <td className="py-3 pr-4 font-medium" style={{ color: '#1C1208' }}>
                         {q.key}
                         {isNext && (
                           <span
                             className="ml-2 inline-block px-2 py-0.5 rounded-full text-xs font-semibold align-middle"
-                            style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}
+                            style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}
                           >
                             Next
                           </span>
                         )}
                         {passed && (
-                          <span className="ml-2 text-xs font-normal" style={{ color: '#9A8F83' }}>Passed</span>
+                          <span className="ml-2 text-xs font-normal" style={{ color: '#6B6256' }}>Passed</span>
                         )}
                       </td>
                       <td className="py-3 pr-4" style={{ color: '#4A4035' }}>{q.periodLabel}</td>
@@ -271,7 +271,7 @@ export default function HmrcSignedMeUpPage() {
             style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E8E2DA' }}
           >
             <div className="flex items-start gap-3">
-              <AlertTriangle size={20} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+              <AlertTriangle size={20} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold mb-1.5" style={{ color: '#1C1208' }}>
                   The expensive misunderstanding: qualifying income is not profit
@@ -303,7 +303,7 @@ export default function HmrcSignedMeUpPage() {
           {/* Send people to the source. A page about an HMRC letter that does
               not link HMRC is asking to be trusted for no reason, and the
               outbound link costs us nothing we were going to keep. */}
-          <p className="mt-8 text-sm flex items-center gap-1.5" style={{ color: '#9A8F83' }}>
+          <p className="mt-8 text-sm flex items-center gap-1.5" style={{ color: '#6B6256' }}>
             <ExternalLink size={14} strokeWidth={2} className="flex-shrink-0" />
             <span>
               HMRC&apos;s own guidance:{' '}
@@ -311,7 +311,7 @@ export default function HmrcSignedMeUpPage() {
                 href="https://www.gov.uk/guidance/find-out-if-and-when-you-need-to-use-making-tax-digital-for-income-tax"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                style={{ color: '#C4622D' }}
+                style={{ color: '#A04E1C' }}
               >
                 Find out if and when you need to use Making Tax Digital for Income Tax
               </a>
@@ -336,7 +336,7 @@ export default function HmrcSignedMeUpPage() {
               ].map(({ ok, text }) => (
                 <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: '#4A4035', lineHeight: 1.6 }}>
                   {ok
-                    ? <CheckCircle2 size={17} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+                    ? <CheckCircle2 size={17} color="#4B6A4E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
                     : <AlertTriangle size={17} color="#C9963D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />}
                   <span>{text}</span>
                 </li>
@@ -349,13 +349,13 @@ export default function HmrcSignedMeUpPage() {
               blurb={`You are in the regime now and we cannot file for you yet. Leave your email and we will tell you the day HMRC approves us — nothing else, unsubscribe in one click.${due ? ` If that is after ${due.deadlineLabel}, file that update elsewhere and do not wait for us.` : ''}`}
             />
 
-            <p className="mt-5 text-sm" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+            <p className="mt-5 text-sm" style={{ color: '#6B6256', lineHeight: 1.6 }}>
               More on what we do and do not claim:{' '}
-              <Link href="/trust" style={{ color: '#C4622D' }}>how we handle your data and your HMRC connection</Link>
+              <Link href="/trust" style={{ color: '#A04E1C' }}>how we handle your data and your HMRC connection</Link>
               {' · '}
-              <Link href="/timetable" style={{ color: '#C4622D' }}>the full MTD timetable</Link>
+              <Link href="/timetable" style={{ color: '#A04E1C' }}>the full MTD timetable</Link>
               {' · '}
-              <Link href="/mtd-software" style={{ color: '#C4622D' }}>what MTD-compatible software has to do</Link>
+              <Link href="/mtd-software" style={{ color: '#A04E1C' }}>what MTD-compatible software has to do</Link>
             </p>
           </div>
         </article>

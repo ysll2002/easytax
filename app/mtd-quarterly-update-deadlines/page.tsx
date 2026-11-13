@@ -84,7 +84,7 @@ export const metadata: Metadata = {
 
 const INK = '#1C1208';
 const BODY = '#4A4035';
-const MUTED = '#9A8F83';
+const MUTED = '#6B6256';
 const LINE = '#E8E2DA';
 
 function H2({ children }: { children: React.ReactNode }) {
@@ -193,7 +193,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
       <TrackEvent name="topic_hub_viewed" props={{ topic: 'mtd_quarterly_deadlines' }} />
       <SiteHeader />
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      <main id="main-content" className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <article>
           <p className="text-xs uppercase tracking-wider mb-3" style={{ color: MUTED, letterSpacing: '0.1em' }}>
             Making Tax Digital · {status.taxYear}
@@ -256,13 +256,13 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
                   const passed = q.deadline.getTime() < Date.now();
                   const isNext = due?.key === q.key && due?.taxYear === q.taxYear;
                   return (
-                    <tr key={q.key} style={{ borderBottom: `1px solid ${LINE}`, opacity: passed ? 0.5 : 1 }}>
+                    <tr key={q.key} style={{ borderBottom: `1px solid ${LINE}` }}>
                       <td className="py-3 pr-4 font-medium" style={{ color: INK }}>
                         {q.key}
                         {isNext && (
                           <span
                             className="ml-2 inline-block px-2 py-0.5 rounded-full text-xs font-semibold align-middle"
-                            style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}
+                            style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}
                           >
                             Next
                           </span>
@@ -293,7 +293,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
           <div className="flex flex-col gap-4">
             <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: `1.5px solid ${LINE}` }}>
               <div className="flex items-start gap-3">
-                <AlertTriangle size={20} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+                <AlertTriangle size={20} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold mb-1.5" style={{ color: INK }}>Your tax return is not covered</p>
                   <p className="text-sm" style={{ color: BODY, lineHeight: 1.7 }}>
@@ -320,7 +320,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
 
             <div className="p-5 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
               <div className="flex items-start gap-3">
-                <Info size={20} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+                <Info size={20} color="#4B6A4E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold mb-1.5" style={{ color: INK }}>And it expires</p>
                   <p className="text-sm" style={{ color: BODY, lineHeight: 1.7 }}>
@@ -340,7 +340,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
             style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}
           >
             <div className="flex items-start gap-3">
-              <CalendarClock size={20} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+              <CalendarClock size={20} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
                 <p className="font-semibold mb-1.5" style={{ color: INK }}>
                   Work out which deadlines are actually yours
@@ -378,7 +378,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
                 href="https://www.gov.uk/guidance/penalties-for-making-tax-digital-for-income-tax"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                style={{ color: '#C4622D' }}
+                style={{ color: '#A04E1C' }}
               >
                 Penalties for Making Tax Digital for Income Tax
               </a>
@@ -387,7 +387,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
                 href="https://www.gov.uk/guidance/use-making-tax-digital-for-income-tax/send-quarterly-updates"
                 target="_blank"
                 rel="noopener noreferrer nofollow"
-                style={{ color: '#C4622D' }}
+                style={{ color: '#A04E1C' }}
               >
                 Send quarterly updates
               </a>
@@ -404,7 +404,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
               ].map(({ ok, text }) => (
                 <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: BODY, lineHeight: 1.6 }}>
                   {ok
-                    ? <CheckCircle2 size={17} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+                    ? <CheckCircle2 size={17} color="#4B6A4E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
                     : <AlertTriangle size={17} color="#C9963D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />}
                   <span>{text}</span>
                 </li>
@@ -419,11 +419,11 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
 
             <p className="mt-5 text-sm" style={{ color: MUTED, lineHeight: 1.6 }}>
               Related:{' '}
-              <Link href="/hmrc-signed-me-up-for-mtd" style={{ color: '#C4622D' }}>HMRC signed me up for MTD — what now?</Link>
+              <Link href="/hmrc-signed-me-up-for-mtd" style={{ color: '#A04E1C' }}>HMRC signed me up for MTD — what now?</Link>
               {' · '}
-              <Link href="/self-assessment-penalty-calculator" style={{ color: '#C4622D' }}>what a late Self Assessment return costs</Link>
+              <Link href="/self-assessment-penalty-calculator" style={{ color: '#A04E1C' }}>what a late Self Assessment return costs</Link>
               {' · '}
-              <Link href="/timetable" style={{ color: '#C4622D' }}>the full MTD timetable</Link>
+              <Link href="/timetable" style={{ color: '#A04E1C' }}>the full MTD timetable</Link>
             </p>
           </div>
         </article>

@@ -21,7 +21,7 @@ export default async function ReconcilePage() {
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
           {t('title')}
         </h1>
-        <p style={{ color: '#9A8F83', marginBottom: '2rem', lineHeight: 1.7 }}>
+        <p style={{ color: '#6B6256', marginBottom: '2rem', lineHeight: 1.7 }}>
           {t('intro')}
         </p>
 
@@ -32,13 +32,13 @@ export default async function ReconcilePage() {
             </div>
             <div>
               <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{t('noBankTitle')}</p>
-              <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+              <p className="text-sm mb-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>
                 {t('noBankBody')}
               </p>
               <Link
                 href="/dashboard/banking"
                 className="inline-block px-5 py-2.5 rounded-full text-sm font-medium"
-                style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}
+                style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}
               >
                 {t('connectBank')}
               </Link>

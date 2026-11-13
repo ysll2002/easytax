@@ -30,7 +30,7 @@ export default function MobileNav() {
           <Link key={item.href} href={item.href} style={{
             flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
             justifyContent: 'center', gap: 3, padding: '10px 4px',
-            color: active ? '#FF6B35' : '#9A8F83', textDecoration: 'none',
+            color: active ? '#FF6B35' : '#A89D90', textDecoration: 'none',
           }}>
             <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
             <span style={{ fontSize: '0.6rem', fontWeight: active ? 700 : 400, whiteSpace: 'nowrap' }}>{item.label}</span>
@@ -40,7 +40,7 @@ export default function MobileNav() {
       <button onClick={() => signOut({ callbackUrl: '/' })} style={{
         flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
         justifyContent: 'center', gap: 3, padding: '10px 4px',
-        color: '#9A8F83', background: 'none', border: 'none', cursor: 'pointer',
+        color: '#A89D90', background: 'none', border: 'none', cursor: 'pointer',
       }}>
         <LogOut size={20} strokeWidth={1.8} />
         <span style={{ fontSize: '0.6rem' }}>{t('logout')}</span>

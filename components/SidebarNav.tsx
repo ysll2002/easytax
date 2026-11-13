@@ -40,7 +40,7 @@ export default function SidebarNav() {
     <nav style={{ flex: 1, padding: '0 0.75rem', overflowY: 'auto' }}>
       {groups.map((group, gi) => (
         <div key={group.label} style={{ marginBottom: gi < groups.length - 1 ? '1.25rem' : 0 }}>
-          <p style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#4A4035', padding: '0 0.75rem', marginBottom: '0.35rem' }}>
+          <p style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#A89D90', padding: '0 0.75rem', marginBottom: '0.35rem' }}>
             {group.label}
           </p>
           {group.items.map(item => {
@@ -53,7 +53,7 @@ export default function SidebarNav() {
                 style={{
                   display: 'flex', alignItems: 'center', gap: '0.75rem',
                   padding: '0.65rem 0.75rem', borderRadius: '0.75rem',
-                  color: active ? '#FF6B35' : '#9A8F83',
+                  color: active ? '#FF6B35' : '#A89D90',
                   backgroundColor: active ? '#2E2418' : 'transparent',
                   fontSize: '0.875rem', fontWeight: active ? 600 : 500,
                   marginBottom: '0.15rem', textDecoration: 'none',

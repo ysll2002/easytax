@@ -27,7 +27,7 @@ export default function DashboardNav() {
               gap: '0.75rem',
               padding: '0.75rem 0.75rem',
               borderRadius: '0.75rem',
-              color: active ? '#FDFCF8' : '#9A8F83',
+              color: active ? '#FDFCF8' : '#6B6256',
               backgroundColor: active ? '#ffffff14' : 'transparent',
               fontSize: '0.9rem',
               fontWeight: active ? 600 : 500,

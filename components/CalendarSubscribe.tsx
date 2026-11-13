@@ -18,10 +18,10 @@ export default function CalendarSubscribe({ placement }: { placement: string }) 
   return (
     <div
       className="p-5 sm:p-6 rounded-2xl"
-      style={{ backgroundColor: '#F0F5F0', border: '1px solid #6B8E6E40' }}
+      style={{ backgroundColor: '#F0F5F0', border: '1px solid #4B6A4E40' }}
     >
       <div className="flex items-start gap-3">
-        <CalendarPlus size={20} style={{ color: '#6B8E6E', flexShrink: 0, marginTop: 2 }} aria-hidden />
+        <CalendarPlus size={20} style={{ color: '#4B6A4E', flexShrink: 0, marginTop: 2 }} aria-hidden />
         <div className="flex-1 min-w-0">
           <p className="font-bold text-base mb-1" style={{ color: '#1C1208' }}>
             Put these deadlines in your calendar
@@ -36,7 +36,7 @@ export default function CalendarSubscribe({ placement }: { placement: string }) 
               href={WEBCAL_URL}
               onClick={() => trackClient('calendar_cta_click', { placement, mode: 'subscribe' })}
               className="inline-flex items-center justify-center px-5 rounded-full text-sm font-semibold"
-              style={{ minHeight: 44, backgroundColor: '#6B8E6E', color: '#FDFCF8', textDecoration: 'none' }}
+              style={{ minHeight: 44, backgroundColor: '#4B6A4E', color: '#FDFCF8', textDecoration: 'none' }}
             >
               Subscribe in your calendar
             </a>
@@ -44,12 +44,12 @@ export default function CalendarSubscribe({ placement }: { placement: string }) 
               href={FEED_PATH}
               onClick={() => trackClient('calendar_cta_click', { placement, mode: 'download' })}
               className="inline-flex items-center justify-center px-5 rounded-full text-sm font-medium"
-              style={{ minHeight: 44, border: '1px solid #6B8E6E60', color: '#4A4035', textDecoration: 'none' }}
+              style={{ minHeight: 44, border: '1px solid #4B6A4E60', color: '#4A4035', textDecoration: 'none' }}
             >
               Download the .ics file
             </a>
           </div>
-          <p className="text-xs mt-3 m-0" style={{ color: '#9A8F83', wordBreak: 'break-all' }}>
+          <p className="text-xs mt-3 m-0" style={{ color: '#6B6256', wordBreak: 'break-all' }}>
             Or paste this into your calendar app: {HTTPS_URL}
           </p>
         </div>

@@ -92,7 +92,7 @@ export default function VatPage() {
     <div key={key} className="flex justify-between items-start py-3" style={{ borderBottom: '1px solid #DDD5C8' }}>
       <div className="pr-4">
         <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{label}</p>
-        <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>{desc}</p>
+        <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>{desc}</p>
       </div>
       <input
         type="number" min="0" step="0.01"
@@ -113,7 +113,7 @@ export default function VatPage() {
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.75rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
         {alreadyFiled ? 'Already Filed' : 'VAT Return Submitted'}
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2rem' }}>
+      <p style={{ color: '#6B6256', marginBottom: '2rem' }}>
         {alreadyFiled
           ? `HMRC has on record that your return for ${selected?.start} – ${selected?.end} was already submitted. No further action needed.`
           : `Your return for period ${selected?.start} – ${selected?.end} has been sent to HMRC via MTD.`}
@@ -126,20 +126,20 @@ export default function VatPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         VAT Return
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2rem', fontSize: '0.9rem' }}>Making Tax Digital — VAT</p>
+      <p style={{ color: '#6B6256', marginBottom: '2rem', fontSize: '0.9rem' }}>Making Tax Digital — VAT</p>
 
-      {loading && <p style={{ color: '#9A8F83' }}>Loading obligations…</p>}
-      {error && <div className="p-4 rounded-xl mb-6" style={{ backgroundColor: '#F5E4D8', color: '#C4622D', fontSize: '0.9rem' }}>{error}</div>}
+      {loading && <p style={{ color: '#6B6256' }}>Loading obligations…</p>}
+      {error && <div className="p-4 rounded-xl mb-6" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C', fontSize: '0.9rem' }}>{error}</div>}
 
       {!loading && !error && (
         <>
           {/* Obligation selector */}
           <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: '#9A8F83' }}>Select Period</p>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: '#6B6256' }}>Select Period</p>
             <div className="space-y-2">
               {obligations.map(o => (
                 <button
@@ -148,17 +148,17 @@ export default function VatPage() {
                   className="w-full text-left p-4 rounded-xl flex justify-between items-center"
                   style={{
                     backgroundColor: selected?.periodKey === o.periodKey ? '#F0EBE1' : '#FDFCF8',
-                    border: `1.5px solid ${selected?.periodKey === o.periodKey ? '#C4622D40' : '#DDD5C8'}`,
-                    borderLeft: `4px solid ${o.status === 'F' ? '#6B8E6E' : '#C4622D'}`,
+                    border: `1.5px solid ${selected?.periodKey === o.periodKey ? '#A04E1C40' : '#DDD5C8'}`,
+                    borderLeft: `4px solid ${o.status === 'F' ? '#4B6A4E' : '#A04E1C'}`,
                   }}
                 >
                   <div>
                     <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{o.start} – {o.end}</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>Due {o.due}</p>
+                    <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>Due {o.due}</p>
                   </div>
                   <span className="text-xs font-semibold px-2 py-1 rounded-full" style={{
                     backgroundColor: o.status === 'F' ? '#E2EDE2' : '#F5E4D8',
-                    color: o.status === 'F' ? '#6B8E6E' : '#C4622D',
+                    color: o.status === 'F' ? '#4B6A4E' : '#A04E1C',
                   }}>
                     {o.status === 'F' ? 'Filed' : 'Open'}
                   </span>
@@ -178,7 +178,7 @@ export default function VatPage() {
                 <div className="flex justify-between items-center py-3" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <div>
                     <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>Box 3</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>Total VAT due (Box 1 + Box 2)</p>
+                    <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>Total VAT due (Box 1 + Box 2)</p>
                   </div>
                   <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>£{totalVatDue.toFixed(2)}</p>
                 </div>
@@ -186,7 +186,7 @@ export default function VatPage() {
                 <div className="flex justify-between items-center py-4" style={{ backgroundColor: '#1C1208', margin: '0 -1.5rem', padding: '1rem 1.5rem' }}>
                   <div>
                     <p className="text-sm font-semibold" style={{ color: '#FDFCF8' }}>Box 5 — Net VAT to pay</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>Box 3 minus Box 4</p>
+                    <p className="text-xs mt-0.5" style={{ color: '#A89D90' }}>Box 3 minus Box 4</p>
                   </div>
                   <p className="font-semibold" style={{ color: '#FDFCF8' }}>£{netVatDue.toFixed(2)}</p>
                 </div>
@@ -196,14 +196,14 @@ export default function VatPage() {
                 {field('totalAcquisitionsExVAT',        'Box 9', 'Total value of acquisitions from EU member states (ex VAT)')}
               </div>
               <div className="px-6 py-5" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
-                <p className="text-xs mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+                <p className="text-xs mb-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>
                   By submitting this return you are making a legal declaration that the information is true and complete. A false declaration can result in prosecution.
                 </p>
                 <button
                   onClick={handleSubmit}
                   disabled={submitting}
                   className="w-full py-3.5 rounded-xl text-sm font-semibold"
-                  style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: submitting ? 0.6 : 1 }}
+                  style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', opacity: submitting ? 0.6 : 1 }}
                 >
                   {submitting ? 'Submitting to HMRC…' : '🇬🇧 Submit VAT Return to HMRC'}
                 </button>

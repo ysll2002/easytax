@@ -43,14 +43,14 @@ export default function ForgotPassword() {
   return (
     <div className="flex flex-col min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
       <SiteHeader />
-      <div className="flex flex-col items-center justify-center flex-1 py-12">
+      <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
         <div className="w-full max-w-md">
 
           <div className="text-center mb-10">
             <h1 style={{ fontFamily: display, fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
               Reset your password
             </h1>
-            <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>
+            <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>
               Enter your email and we&apos;ll send a reset link.
             </p>
           </div>
@@ -62,7 +62,7 @@ export default function ForgotPassword() {
                 <p className="text-sm mb-6" style={{ color: '#4A4035' }}>
                   If an account exists for <strong>{email}</strong>, we&apos;ve sent a reset link. It expires in 1 hour.
                 </p>
-                <Link href="/login" className="text-sm font-semibold" style={{ color: '#C4622D' }}>
+                <Link href="/login" className="text-sm font-semibold" style={{ color: '#A04E1C' }}>
                   Back to login →
                 </Link>
               </div>
@@ -72,7 +72,7 @@ export default function ForgotPassword() {
                   <label htmlFor="email" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
                     Email address
                   </label>
-                  <input
+                  <input autoComplete="email"
                     id="email"
                     type="email"
                     required
@@ -84,7 +84,7 @@ export default function ForgotPassword() {
                 </div>
 
                 {error && (
-                  <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#C4622D' }}>
+                  <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>
                     {error}
                   </p>
                 )}
@@ -94,7 +94,7 @@ export default function ForgotPassword() {
                   disabled={loading}
                   className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2"
                   style={{
-                    backgroundColor: loading ? '#DDD5C8' : '#C4622D',
+                    backgroundColor: loading ? '#DDD5C8' : '#A04E1C',
                     color: '#FDFCF8',
                     cursor: loading ? 'not-allowed' : 'pointer',
                   }}
@@ -110,9 +110,9 @@ export default function ForgotPassword() {
                   ) : 'Send reset link →'}
                 </button>
 
-                <p className="text-center text-sm mt-4" style={{ color: '#9A8F83' }}>
+                <p className="text-center text-sm mt-4" style={{ color: '#6B6256' }}>
                   Remembered it?{' '}
-                  <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>
+                  <Link href="/login" style={{ color: '#A04E1C', fontWeight: 600 }}>
                     Back to login
                   </Link>
                 </p>
@@ -120,7 +120,7 @@ export default function ForgotPassword() {
             )}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

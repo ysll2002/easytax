@@ -83,28 +83,28 @@ export default async function MtdSoftware() {
 
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
 
         {/* ── Hero ── */}
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
               <Sparkles size={12} /> MTD ITSA software built on the HMRC MTD API
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              MTD software for UK sole traders and landlords — <em style={{ color: '#6B8E6E', fontStyle: 'italic' }}>free, no subscription</em>
+              MTD software for UK sole traders and landlords — <em style={{ color: '#4B6A4E', fontStyle: 'italic' }}>free, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — and it is <strong style={{ color: '#6B8E6E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to sign up.
+              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — and it is <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to sign up.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No subscription</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+              <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started free →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=MTD%20ITSA%20software%20question" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
@@ -130,7 +130,7 @@ export default async function MtdSoftware() {
                 { label: 'Already live', title: 'MTD VAT — £90k+', body: 'If you are VAT-registered above the £90,000 threshold, MTD VAT filing is already mandatory. EasyTax covers this too.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#C4622D' }}>{item.label}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>{item.label}</p>
                   <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{item.title}</p>
                   <p className="text-sm" style={{ color: '#4A4035' }}>{item.body}</p>
                 </div>
@@ -176,7 +176,7 @@ export default async function MtdSoftware() {
                 },
               ].map(item => (
                 <div key={item.title} className="p-6 rounded-2xl flex gap-4" style={{ backgroundColor: '#F8F5F0', border: '1px solid #E8E2DA' }}>
-                  <Check size={20} color="#6B8E6E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
+                  <Check size={20} color="#4B6A4E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{item.title}</p>
                     <p className="text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.body}</p>
@@ -251,7 +251,7 @@ export default async function MtdSoftware() {
                 },
               ].map(item => (
                 <div key={item.title} className="flex gap-4">
-                  <ArrowRight size={20} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-1" />
+                  <ArrowRight size={20} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{item.title}</p>
                     <p className="text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.body}</p>
@@ -292,7 +292,7 @@ export default async function MtdSoftware() {
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                     {i + 1}
                   </div>
                   <div>
@@ -349,7 +349,7 @@ export default async function MtdSoftware() {
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm" style={{ color: '#1C1208' }}>
                     {item.q}
-                    <span style={{ color: '#C4622D', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
+                    <span style={{ color: '#A04E1C', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
                   </summary>
                   <p className="mt-3 text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.a}</p>
                 </details>
@@ -362,13 +362,13 @@ export default async function MtdSoftware() {
         <section className="py-20 sm:py-24" style={{ backgroundColor: '#1C1208' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
-              MTD ITSA software that charges you <em style={{ color: '#C4622D', fontStyle: 'italic' }}>nothing at all</em>.
+              MTD ITSA software that charges you <em style={{ color: '#E8895A', fontStyle: 'italic' }}>nothing at all</em>.
             </h2>
-            <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
+            <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes. Built on the HMRC MTD API.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
-              <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+              <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started free →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=MTD%20ITSA%20software%20question" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>

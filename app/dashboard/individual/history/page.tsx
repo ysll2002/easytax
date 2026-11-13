@@ -51,7 +51,7 @@ function FilingCard({ filing }: { filing: Filing }) {
   const isFinal     = filing.filing_type === 'final_declaration';
 
   const typeLabel = isQuarterly ? 'Quarterly Update' : isFinal ? 'Final Declaration' : 'Adjustment';
-  const typeColor = isQuarterly ? '#C4622D' : isFinal ? '#6B8E6E' : '#7C3AED';
+  const typeColor = isQuarterly ? '#A04E1C' : isFinal ? '#4B6A4E' : '#7C3AED';
   const typeBg    = isQuarterly ? '#F5EDDC' : isFinal ? '#E8F5E8' : '#F5F0FF';
 
   return (
@@ -70,7 +70,7 @@ function FilingCard({ filing }: { filing: Filing }) {
             <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: typeBg, color: typeColor }}>
               {typeLabel}
             </span>
-            <span className="text-xs" style={{ color: '#9A8F83' }}>
+            <span className="text-xs" style={{ color: '#6B6256' }}>
               {filing.tax_year}
             </span>
           </div>
@@ -81,7 +81,7 @@ function FilingCard({ filing }: { filing: Filing }) {
               ? `Final Self Assessment · ${filing.tax_year}`
               : `Adjustment · ${filing.tax_year}`}
           </p>
-          <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>
             Submitted {fmtDateTime(filing.submitted_at)}
           </p>
         </div>
@@ -89,19 +89,19 @@ function FilingCard({ filing }: { filing: Filing }) {
         <div className="flex items-center gap-4 flex-shrink-0">
           {isQuarterly && filing.net_profit !== null && (
             <div className="text-right">
-              <p className="text-xs" style={{ color: '#9A8F83' }}>Net profit</p>
-              <p className="text-sm font-bold" style={{ color: filing.net_profit >= 0 ? '#6B8E6E' : '#EF4444' }}>
+              <p className="text-xs" style={{ color: '#6B6256' }}>Net profit</p>
+              <p className="text-sm font-bold" style={{ color: filing.net_profit >= 0 ? '#4B6A4E' : '#EF4444' }}>
                 £{filing.net_profit.toFixed(2)}
               </p>
             </div>
           )}
           {isFinal && (
-            <div className="flex items-center gap-1" style={{ color: '#6B8E6E' }}>
+            <div className="flex items-center gap-1" style={{ color: '#4B6A4E' }}>
               <CheckCircle2 size={16} />
               <span className="text-xs font-semibold">Filed</span>
             </div>
           )}
-          {expanded ? <ChevronUp size={16} color="#9A8F83" /> : <ChevronDown size={16} color="#9A8F83" />}
+          {expanded ? <ChevronUp size={16} color="#6B6256" /> : <ChevronDown size={16} color="#6B6256" />}
         </div>
       </button>
 
@@ -109,14 +109,14 @@ function FilingCard({ filing }: { filing: Filing }) {
         <div style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
           <div className="grid grid-cols-3 gap-0" style={{ borderBottom: '1px solid #F3F4F6' }}>
             {[
-              { label: 'Turnover', value: filing.turnover, icon: <TrendingUp size={14} color="#6B8E6E" />, color: '#6B8E6E' },
-              { label: 'Total expenses', value: filing.total_expenses, icon: <TrendingDown size={14} color="#C4622D" />, color: '#C4622D' },
-              { label: 'Net profit', value: filing.net_profit, icon: null, color: (filing.net_profit ?? 0) >= 0 ? '#6B8E6E' : '#EF4444' },
+              { label: 'Turnover', value: filing.turnover, icon: <TrendingUp size={14} color="#4B6A4E" />, color: '#4B6A4E' },
+              { label: 'Total expenses', value: filing.total_expenses, icon: <TrendingDown size={14} color="#A04E1C" />, color: '#A04E1C' },
+              { label: 'Net profit', value: filing.net_profit, icon: null, color: (filing.net_profit ?? 0) >= 0 ? '#4B6A4E' : '#EF4444' },
             ].map(r => (
               <div key={r.label} className="px-5 py-4" style={{ borderRight: '1px solid #F3F4F6' }}>
                 <div className="flex items-center gap-1 mb-1">
                   {r.icon}
-                  <span className="text-xs" style={{ color: '#9A8F83' }}>{r.label}</span>
+                  <span className="text-xs" style={{ color: '#6B6256' }}>{r.label}</span>
                 </div>
                 <p style={{ fontSize: '1.1rem', fontWeight: 700, color: r.color }}>
                   £{(r.value ?? 0).toFixed(2)}
@@ -145,11 +145,11 @@ function FilingCard({ filing }: { filing: Filing }) {
 
       {expanded && isFinal && (
         <div className="px-5 py-5" style={{ borderTop: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
-          <div className="flex items-center gap-2 p-4 rounded-xl" style={{ backgroundColor: '#E8F5E8', border: '1px solid #6B8E6E30' }}>
-            <CheckCircle2 size={20} color="#6B8E6E" />
+          <div className="flex items-center gap-2 p-4 rounded-xl" style={{ backgroundColor: '#E8F5E8', border: '1px solid #4B6A4E30' }}>
+            <CheckCircle2 size={20} color="#4B6A4E" />
             <div>
               <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>Final Declaration submitted</p>
-              <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>
+              <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>
                 Your Self Assessment for {filing.tax_year} was submitted to HMRC on {fmtDateTime(filing.submitted_at)}.
               </p>
             </div>
@@ -181,7 +181,7 @@ export default function HistoryPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/individual" className="text-sm mb-8 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-8 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
         ← Back
       </Link>
 
@@ -189,11 +189,11 @@ export default function HistoryPage() {
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
           Filing History
         </h1>
-        <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>All your Self Assessment submissions to HMRC.</p>
+        <p style={{ color: '#6B6256', fontSize: '0.9rem' }}>All your Self Assessment submissions to HMRC.</p>
       </div>
 
       {loading && (
-        <div className="flex items-center gap-3" style={{ color: '#9A8F83' }}>
+        <div className="flex items-center gap-3" style={{ color: '#6B6256' }}>
           <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
           Loading history…
         </div>
@@ -204,7 +204,7 @@ export default function HistoryPage() {
       )}
 
       {!loading && !error && filings.length === 0 && (
-        <div className="flex flex-col items-center py-16" style={{ color: '#9A8F83' }}>
+        <div className="flex flex-col items-center py-16" style={{ color: '#6B6256' }}>
           <FileText size={40} strokeWidth={1.2} style={{ marginBottom: '1rem', opacity: 0.4 }} />
           <p className="font-medium" style={{ color: '#4A4035' }}>No submissions yet</p>
           <p className="text-sm mt-1">Your quarterly updates and final declarations will appear here.</p>
@@ -219,9 +219,9 @@ export default function HistoryPage() {
       {!loading && taxYears.map(year => (
         <div key={year} className="mb-8">
           <div className="flex items-center gap-2 mb-4">
-            <Calendar size={15} color="#9A8F83" />
+            <Calendar size={15} color="#6B6256" />
             <span className="text-sm font-bold" style={{ color: '#1C1208' }}>Tax Year {year}</span>
-            <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0EBE1', color: '#9A8F83' }}>
+            <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#F0EBE1', color: '#6B6256' }}>
               {grouped[year].length} submission{grouped[year].length !== 1 ? 's' : ''}
             </span>
           </div>

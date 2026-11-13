@@ -30,8 +30,8 @@ export default function ArticleCardList({
             style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}
           >
             <div className="flex items-center gap-1.5 mb-2">
-              <Calendar size={12} color="#9A8F83" />
-              <span className="text-xs" style={{ color: '#9A8F83' }}>
+              <Calendar size={12} color="#6B6256" />
+              <span className="text-xs" style={{ color: '#6B6256' }}>
                 {new Date(a.published_at).toLocaleDateString('en-GB', {
                   day: 'numeric',
                   month: 'long',
@@ -46,7 +46,7 @@ export default function ArticleCardList({
               {a.title}
             </Heading>
             <p className="text-sm leading-relaxed" style={{ color: '#4A4035' }}>{a.excerpt}</p>
-            <p className="text-sm font-medium mt-3" style={{ color: '#C4622D' }}>Read more →</p>
+            <p className="text-sm font-medium mt-3" style={{ color: '#A04E1C' }}>Read more →</p>
           </div>
         </Link>
       ))}

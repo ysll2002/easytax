@@ -84,23 +84,23 @@ export default function ProfilePage() {
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
         {t('title')}
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2.5rem' }}>{t('subtitle')}</p>
+      <p style={{ color: '#6B6256', marginBottom: '2.5rem' }}>{t('subtitle')}</p>
 
       <div className="p-6 rounded-2xl mb-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
         <div className="flex items-center gap-4 pb-5 mb-5" style={{ borderBottom: '1px solid #DDD5C8' }}>
           {user?.image ? (
             <img src={user.image} alt="" style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover' }} />
           ) : (
-            <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#C4622D', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FDFCF8', fontSize: '1.25rem', fontWeight: 600 }}>
+            <div style={{ width: '56px', height: '56px', borderRadius: '50%', backgroundColor: '#A04E1C', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FDFCF8', fontSize: '1.25rem', fontWeight: 600 }}>
               {user?.name?.charAt(0) ?? '?'}
             </div>
           )}
           <div>
             <p style={{ fontWeight: 700, color: '#1C1208' }}>{user?.name ?? '—'}</p>
-            <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>{user?.email ?? '—'}</p>
+            <p style={{ color: '#6B6256', fontSize: '0.875rem' }}>{user?.email ?? '—'}</p>
           </div>
         </div>
-        <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>{t('accountId')}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#6B6256' }}>{t('accountId')}</p>
         <p style={{ color: '#4A4035', fontSize: '0.875rem', fontFamily: 'monospace' }}>{user?.profileId ?? '—'}</p>
       </div>
 
@@ -108,7 +108,7 @@ export default function ProfilePage() {
         <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
           Your data
         </h2>
-        <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>
+        <p className="text-sm mb-4" style={{ color: '#6B6256' }}>
           Download a JSON archive of everything EasyTax holds on you — profile, tax IDs, HMRC filings, bank connections. Your business data is yours to keep and move.
         </p>
         <button
@@ -127,7 +127,7 @@ export default function ProfilePage() {
           <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
             {t('taxIdsTitle')}
           </h2>
-          <p className="text-sm mb-5" style={{ color: '#9A8F83' }}>
+          <p className="text-sm mb-5" style={{ color: '#6B6256' }}>
             {t('taxIdsSubtitle')}
           </p>
 
@@ -143,7 +143,7 @@ export default function ProfilePage() {
               maxLength={13}
               style={{ ...inputStyle, minHeight: 44 }}
             />
-            <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>{t('ninoHelp')}</p>
+            <p className="text-xs mt-1" style={{ color: '#6B6256' }}>{t('ninoHelp')}</p>
           </div>
 
           <div className="mt-5">
@@ -161,7 +161,7 @@ export default function ProfilePage() {
               // CLAUDE.md. The shared inputStyle sets padding but not height.
               style={{ ...inputStyle, minHeight: 44 }}
             />
-            <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>{t('vrnHelp')}</p>
+            <p className="text-xs mt-1" style={{ color: '#6B6256' }}>{t('vrnHelp')}</p>
           </div>
 
           {warning && (
@@ -181,7 +181,7 @@ export default function ProfilePage() {
             >
               {saving ? t('saving') : t('save')}
             </button>
-            {saved && <span className="text-sm" style={{ color: '#6B8E6E' }}>{t('saved')}</span>}
+            {saved && <span className="text-sm" style={{ color: '#4B6A4E' }}>{t('saved')}</span>}
           </div>
         </div>
       </form>

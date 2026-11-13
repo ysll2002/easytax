@@ -20,10 +20,10 @@ export default function DemoBanner({
       style={{ backgroundColor: '#F5EDDC', border: '1px solid #E0CFA8' }}
       role="note"
     >
-      <FlaskConical size={18} style={{ color: '#9A6B1A', flexShrink: 0, marginTop: 2 }} />
+      <FlaskConical size={18} style={{ color: '#7A5410', flexShrink: 0, marginTop: 2 }} />
       <p className="text-xs sm:text-sm leading-relaxed m-0" style={{ color: '#7A5714' }}>
         <strong style={{ color: '#5E430F' }}>Demo.</strong> {children}{' '}
-        <Link href="/register" style={{ color: '#9A6B1A', textDecoration: 'underline' }}>
+        <Link href="/register" style={{ color: '#7A5410', textDecoration: 'underline' }}>
           Create an account
         </Link>{' '}
         to work with your own figures.

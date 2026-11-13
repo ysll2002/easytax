@@ -27,10 +27,10 @@ function AmountField({ label, hint, value, onChange }: {
     <div className="flex items-start justify-between gap-4">
       <div className="flex-1">
         <p className="text-sm font-medium" style={{ color: '#1C1208' }}>{label}</p>
-        {hint && <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>{hint}</p>}
+        {hint && <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>{hint}</p>}
       </div>
       <div className="relative flex-shrink-0">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
         <input
           type="number" min="0" step="0.01"
           value={value}
@@ -133,12 +133,12 @@ export default function AdjustmentsPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
 
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         Annual Adjustments
       </h1>
-      <p className="text-sm mb-6" style={{ color: '#9A8F83' }}>
+      <p className="text-sm mb-6" style={{ color: '#6B6256' }}>
         Tax year {taxYear} — add any year-end adjustments, other income, and reliefs before your final declaration.
         Leave fields blank if they don&apos;t apply.
       </p>
@@ -179,7 +179,7 @@ export default function AdjustmentsPage() {
           />
           <div className="rounded-xl p-4" style={{ backgroundColor: '#F5F0E6', border: '1px solid #E5DDD0' }}>
             <p className="text-sm font-medium mb-1" style={{ color: '#1C1208' }}>Foreign dividends</p>
-            <p className="text-xs mb-3" style={{ color: '#9A8F83' }}>
+            <p className="text-xs mb-3" style={{ color: '#6B6256' }}>
               Dividends from foreign shares or ETFs. UK dividends are reported automatically by HMRC and don&apos;t need to be added here.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -191,7 +191,7 @@ export default function AdjustmentsPage() {
                 style={inputStyle}
               />
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
                 <input
                   type="number" min="0" step="0.01"
                   value={foreignAmount}
@@ -201,7 +201,7 @@ export default function AdjustmentsPage() {
                 />
               </div>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
                 <input
                   type="number" min="0" step="0.01"
                   value={foreignTax}
@@ -225,7 +225,7 @@ export default function AdjustmentsPage() {
             hint="Total Gift Aid donations made during the tax year."
             value={giftAid} onChange={setGiftAid}
           />
-          <div className="pt-2 text-sm" style={{ color: '#9A8F83', borderTop: '1px solid #DDD5C8' }}>
+          <div className="pt-2 text-sm" style={{ color: '#6B6256', borderTop: '1px solid #DDD5C8' }}>
             <p className="font-medium mb-1" style={{ color: '#4A4035' }}>Personal Allowance</p>
             The standard Personal Allowance (£12,570) is applied automatically by HMRC — no action needed.
           </div>
@@ -235,14 +235,14 @@ export default function AdjustmentsPage() {
           type="submit"
           disabled={submitting}
           className="w-full py-3.5 rounded-xl font-medium text-sm"
-          style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: submitting ? 0.6 : 1, cursor: submitting ? 'wait' : 'pointer' }}
+          style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', opacity: submitting ? 0.6 : 1, cursor: submitting ? 'wait' : 'pointer' }}
         >
           {submitting ? 'Submitting to HMRC…' : 'Submit Adjustments →'}
         </button>
 
-        <p className="text-xs text-center mt-3" style={{ color: '#9A8F83' }}>
+        <p className="text-xs text-center mt-3" style={{ color: '#6B6256' }}>
           You can skip this step if you have no adjustments or additional income to declare.{' '}
-          <Link href="/dashboard/individual/tasks?adjustments=done" style={{ color: '#C4622D' }}>Skip →</Link>
+          <Link href="/dashboard/individual/tasks?adjustments=done" style={{ color: '#A04E1C' }}>Skip →</Link>
         </p>
       </form>
     </div>

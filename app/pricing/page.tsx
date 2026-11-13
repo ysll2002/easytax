@@ -57,7 +57,7 @@ const rivals: RivalRow[] = [
 ];
 
 function Cell({ included: v }: { included: boolean }) {
-  if (v) return <Check size={18} color="#6B8E6E" strokeWidth={2.5} className="mx-auto" />;
+  if (v) return <Check size={18} color="#4B6A4E" strokeWidth={2.5} className="mx-auto" />;
   return <X size={18} color="#C46262" strokeWidth={2.5} className="mx-auto" />;
 }
 
@@ -137,17 +137,17 @@ export default async function PricingPage() {
 
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
 
         {/* ── Hero ── */}
         <section className="pt-12 sm:pt-16 pb-12 sm:pb-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
               <Sparkles size={12} /> Free — no subscription, no filing fee
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               Nothing per month.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Nothing per filing.</em>
+              <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Nothing per filing.</em>
             </h1>
             <p className="text-base sm:text-lg leading-relaxed mb-8 mx-auto" style={{ color: '#4A4035', maxWidth: '560px' }}>
               EasyTax is <strong style={{ color: '#1C1208' }}>free to use</strong>. No subscription, no charge when you file, no card needed to sign up. Open Banking import and AI categorisation are included.
@@ -158,41 +158,41 @@ export default async function PricingPage() {
         {/* ── Price card ── */}
         <section className="pb-16 sm:pb-20">
           <div className="max-w-lg mx-auto px-4 sm:px-6">
-            <div className="rounded-3xl overflow-hidden" style={{ border: '2px solid #C4622D', boxShadow: '0 20px 60px rgba(196,98,45,0.15)' }}>
+            <div className="rounded-3xl overflow-hidden" style={{ border: '2px solid #A04E1C', boxShadow: '0 20px 60px rgba(196,98,45,0.15)' }}>
 
               {/* header */}
               <div className="px-6 sm:px-8 py-6 sm:py-8" style={{ backgroundColor: '#1C1208' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#9A8F83' }}>Every feature, every filing type</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: '#A89D90' }}>Every feature, every filing type</p>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span style={{ fontFamily: display, fontSize: 'clamp(3rem, 8vw, 4.5rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1 }}>{PRICE_DISPLAY}</span>
-                  <span className="text-base font-medium" style={{ color: '#9A8F83' }}>/ filing</span>
+                  <span className="text-base font-medium" style={{ color: '#A89D90' }}>/ filing</span>
                 </div>
-                <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>No subscription, no per-filing fee. There is no paid tier to upgrade to.</p>
+                <p style={{ color: '#A89D90', fontSize: '0.875rem' }}>No subscription, no per-filing fee. There is no paid tier to upgrade to.</p>
               </div>
 
               {/* features */}
               <div className="px-6 sm:px-8 py-6 sm:py-8" style={{ backgroundColor: '#FDFCF8' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-5" style={{ color: '#9A8F83' }}>What you get</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-5" style={{ color: '#6B6256' }}>What you get</p>
                 {/* The tick used to be unconditional, so `included: false` would
                     have rendered "CT600 — not supported" next to a green check.
                     The row now reads its own flag. */}
                 <ul className="space-y-3 mb-8">
                   {included.map((row) => (
-                    <li key={row.feature} className="flex gap-3 text-sm" style={{ color: row.included ? '#1C1208' : '#9A8F83' }}>
+                    <li key={row.feature} className="flex gap-3 text-sm" style={{ color: row.included ? '#1C1208' : '#6B6256' }}>
                       {row.included
-                        ? <Check size={16} color="#6B8E6E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
+                        ? <Check size={16} color="#4B6A4E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
                         : <X     size={16} color="#C46262" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />}
                       <span>
                         {row.feature}
-                        {row.note && <span style={{ color: '#9A8F83', marginLeft: '0.25rem' }}>— {row.note}</span>}
+                        {row.note && <span style={{ color: '#6B6256', marginLeft: '0.25rem' }}>— {row.note}</span>}
                       </span>
                     </li>
                   ))}
                 </ul>
-                <Link href={ctaHref} className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                <Link href={ctaHref} className="flex items-center justify-center gap-2 w-full py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                   Get started free <ArrowRight size={16} />
                 </Link>
-                <p className="text-center text-xs mt-3" style={{ color: '#9A8F83' }}>No card required · Nothing to pay</p>
+                <p className="text-center text-xs mt-3" style={{ color: '#6B6256' }}>No card required · Nothing to pay</p>
               </div>
             </div>
           </div>
@@ -214,13 +214,13 @@ export default async function PricingPage() {
             {/* mobile: stacked cards */}
             <div className="block sm:hidden space-y-3">
               {rivals.map((r) => (
-                <div key={r.name} className="p-4 rounded-2xl" style={{ backgroundColor: r.name === 'EasyTax' ? '#1C1208' : '#FFFFFF', border: `1px solid ${r.name === 'EasyTax' ? '#C4622D' : '#E8E2DA'}` }}>
+                <div key={r.name} className="p-4 rounded-2xl" style={{ backgroundColor: r.name === 'EasyTax' ? '#1C1208' : '#FFFFFF', border: `1px solid ${r.name === 'EasyTax' ? '#A04E1C' : '#E8E2DA'}` }}>
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-sm" style={{ color: r.name === 'EasyTax' ? '#FDFCF8' : '#1C1208' }}>{r.name}</span>
-                    {r.name === 'EasyTax' && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>Free</span>}
+                    {r.name === 'EasyTax' && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>Free</span>}
                   </div>
-                  <p className="text-xs mb-0.5" style={{ color: r.name === 'EasyTax' ? '#9A8F83' : '#4A4035' }}>{r.model}</p>
-                  <p className="text-sm font-semibold" style={{ color: r.name === 'EasyTax' ? '#6B8E6E' : '#C4622D' }}>Typical: {r.typical}</p>
+                  <p className="text-xs mb-0.5" style={{ color: r.name === 'EasyTax' ? '#6B6256' : '#4A4035' }}>{r.model}</p>
+                  <p className="text-sm font-semibold" style={{ color: r.name === 'EasyTax' ? '#4B6A4E' : '#A04E1C' }}>Typical: {r.typical}</p>
                 </div>
               ))}
             </div>
@@ -230,9 +230,9 @@ export default async function PricingPage() {
               <table className="w-full text-sm" style={{ borderCollapse: 'collapse', backgroundColor: '#FFFFFF' }}>
                 <thead>
                   <tr style={{ backgroundColor: '#1C1208' }}>
-                    <th className="text-left px-6 py-4 font-semibold" style={{ color: '#9A8F83', width: '30%' }}>Software</th>
-                    <th className="text-left px-6 py-4 font-semibold" style={{ color: '#9A8F83', width: '40%' }}>Pricing model</th>
-                    <th className="text-left px-6 py-4 font-semibold" style={{ color: '#9A8F83', width: '30%' }}>Typical annual cost</th>
+                    <th className="text-left px-6 py-4 font-semibold" style={{ color: '#C9BFB2', width: '30%' }}>Software</th>
+                    <th className="text-left px-6 py-4 font-semibold" style={{ color: '#C9BFB2', width: '40%' }}>Pricing model</th>
+                    <th className="text-left px-6 py-4 font-semibold" style={{ color: '#C9BFB2', width: '30%' }}>Typical annual cost</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -240,16 +240,16 @@ export default async function PricingPage() {
                     <tr key={r.name} style={{ borderBottom: i < rivals.length - 1 ? '1px solid #F0EBE1' : 'none', backgroundColor: r.name === 'EasyTax' ? '#F7F3EE' : 'transparent' }}>
                       <td className="px-6 py-4 font-bold" style={{ color: '#1C1208' }}>
                         {r.name}
-                        {r.name === 'EasyTax' && <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>Free</span>}
+                        {r.name === 'EasyTax' && <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>Free</span>}
                       </td>
                       <td className="px-6 py-4" style={{ color: '#4A4035' }}>{r.model}</td>
-                      <td className="px-6 py-4 font-semibold" style={{ color: r.name === 'EasyTax' ? '#6B8E6E' : '#C4622D' }}>{r.typical}</td>
+                      <td className="px-6 py-4 font-semibold" style={{ color: r.name === 'EasyTax' ? '#4B6A4E' : '#A04E1C' }}>{r.typical}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="text-xs text-center mt-4" style={{ color: '#9A8F83' }}>Competitor prices as of August 2026. Subscription costs exclude VAT where applicable.</p>
+            <p className="text-xs text-center mt-4" style={{ color: '#6B6256' }}>Competitor prices as of August 2026. Subscription costs exclude VAT where applicable.</p>
           </div>
         </section>
 
@@ -257,7 +257,7 @@ export default async function PricingPage() {
         <section className="py-16 sm:py-24" style={{ backgroundColor: '#FDFCF8' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 className="text-center mb-10" style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208' }}>
-              Pricing <em style={{ color: '#C4622D', fontStyle: 'italic' }}>questions</em>
+              Pricing <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>questions</em>
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
@@ -289,7 +289,7 @@ export default async function PricingPage() {
                 <details key={item.q} className="group py-5 sm:py-6" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm sm:text-base" style={{ color: '#1C1208' }}>
                     {item.q}
-                    <span style={{ color: '#C4622D', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
+                    <span style={{ color: '#A04E1C', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
                   </summary>
                   <p className="mt-4 text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.a}</p>
                 </details>
@@ -315,10 +315,10 @@ export default async function PricingPage() {
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#FDFCF8', marginBottom: '1rem' }}>
               Start filing without paying for it
             </h2>
-            <p style={{ color: '#9A8F83', fontSize: '1rem', maxWidth: '460px', margin: '0 auto 2rem' }}>
+            <p style={{ color: '#A89D90', fontSize: '1rem', maxWidth: '460px', margin: '0 auto 2rem' }}>
               Sign up free — no card required, nothing to pay. MTD ITSA, Self Assessment and VAT, all included.
             </p>
-            <Link href={ctaHref} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+            <Link href={ctaHref} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
               Get started free <ArrowRight size={16} />
             </Link>
           </div>
