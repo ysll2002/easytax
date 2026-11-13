@@ -29,6 +29,8 @@
 
 验证：tsc 和 build 通过；本地 34 个公开页面 axe 0 违规。**dashboard 没有在本地渲染过**（缺 auth env），季度申报的核对步骤要在 preview 上点一遍。
 **合并上线后要做**：① Software Choices 表 D28 改成 https://easytax.vip/accessibility ② WCAG 表里已修好的项从 Partially 改成 Supports ③ Paul 回信里「还没有无障碍声明」那段改掉。
+**上线（同日）**：owner 明确说「merge it an go live」。CI（Vercel preview）通过后合并了 PR #32 → main `a2d8b4c`。Vercel 的 Git 集成自动部署了 production（没有手动跑 deploy workflow），部署成功。线上验证：/accessibility 返回 200；登录页标题是「Log in | EasyTax」，有跳过链接；/、/login、/pricing、/accessibility、/trust 五个页面 axe 0 违规。这是针对这一个 PR 的一次性授权，下次合并或部署仍要先问。staging 没有同步，仍落后 main（护栏禁止 push staging）。
+已同步更新：Software Choices 表 D28 改成 https://easytax.vip/accessibility；WCAG 表现在是 37 Supports / 3 Partially（1.4.11、3.3.4 的 VAT 部分、4.1.2）/ 8 N/A；Paul 回信草稿的无障碍段落也改了。**dashboard 的季度申报核对步骤还没有人在线上点过。**
 **发现（不在本 PR）**：`app/onboarding/page.tsx` 有一个让用户输入 HMRC Gateway 密码的表单，看起来是遗留页面，值得 owner 确认是否还在用。HMRC 不允许第三方软件收集 Gateway 凭证。
 
 ---

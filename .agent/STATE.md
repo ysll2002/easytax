@@ -70,7 +70,7 @@
 
 ## 在飞的分支
 
-- `agent/2026-11-13-accessibility` → [PR #32](https://github.com/ysll2002/easytax/pull/32)（**对 main**，WCAG 修复 + /accessibility 声明，待 owner 看 preview 后合并；上线后更新 Software Choices D28、WCAG 表和 Paul 回信）
+- [PR #32](https://github.com/ysll2002/easytax/pull/32) **已合进 main 并上线**（`a2d8b4c`，2026-11-13，owner 授权）：WCAG 修复 + https://easytax.vip/accessibility。两张 HMRC 表和 Paul 回信已同步更新。待办：线上点一遍季度申报的核对步骤；VAT 核对步骤、屏幕阅读器测试、dashboard 非文本对比度要在 2027-03-31 前完成（声明里写了这个日期）。staging 仍落后 main。
 
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)（待合 staging，之后还需进 main）
 - `agent/2026-09-22-hero-friendly-flat-preview` → [PR #25](https://github.com/ysll2002/easytax/pull/25)（待 owner 看 Vercel preview）
