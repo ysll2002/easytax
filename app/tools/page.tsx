@@ -77,10 +77,10 @@ export default function ToolsPage() {
 
       <SiteHeader />
 
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      <main id="main-content" className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         <div
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
-          style={{ backgroundColor: '#FDFCF8', color: '#C4622D', border: '1px solid #C4622D30' }}
+          style={{ backgroundColor: '#FDFCF8', color: '#A04E1C', border: '1px solid #A04E1C30' }}
         >
           Free · no signup · nothing stored
         </div>
@@ -112,7 +112,7 @@ export default function ToolsPage() {
                 className="flex flex-col h-full rounded-2xl p-5 sm:p-6 transition-all"
                 style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8', textDecoration: 'none' }}
               >
-                <span className="text-xs font-medium mb-3" style={{ color: '#C4622D' }}>
+                <span className="text-xs font-medium mb-3" style={{ color: '#A04E1C' }}>
                   {tool.for}
                 </span>
                 <span
@@ -130,7 +130,7 @@ export default function ToolsPage() {
                 <span className="block text-sm leading-relaxed flex-grow" style={{ color: '#4A4035' }}>
                   {tool.blurb}
                 </span>
-                <span className="block text-sm font-semibold mt-4" style={{ color: '#C4622D' }}>
+                <span className="block text-sm font-semibold mt-4" style={{ color: '#A04E1C' }}>
                   Open the {tool.name} →
                 </span>
               </Link>
@@ -147,10 +147,10 @@ export default function ToolsPage() {
         <Link
           href="/tools/embed"
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl p-5 sm:p-6 mt-4"
-          style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D40', textDecoration: 'none' }}
+          style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C40', textDecoration: 'none' }}
         >
           <span className="block">
-            <span className="block text-xs font-medium mb-1" style={{ color: '#C4622D' }}>
+            <span className="block text-xs font-medium mb-1" style={{ color: '#A04E1C' }}>
               Accountants, bookkeepers and advisers
             </span>
             <span className="block text-sm sm:text-base font-semibold" style={{ color: '#1C1208' }}>
@@ -160,7 +160,7 @@ export default function ToolsPage() {
               One line of HTML. It updates itself every quarter, so you never edit the date again.
             </span>
           </span>
-          <span className="text-sm font-semibold whitespace-nowrap" style={{ color: '#C4622D' }}>
+          <span className="text-sm font-semibold whitespace-nowrap" style={{ color: '#A04E1C' }}>
             Get the widget →
           </span>
         </Link>
@@ -192,7 +192,7 @@ export default function ToolsPage() {
             </p>
             <p>
               If the tools are useful, the most helpful thing you can do is{' '}
-              <Link href="/tax-tips" style={{ color: '#C4622D', textDecoration: 'underline' }}>
+              <Link href="/tax-tips" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
                 read the guides
               </Link>{' '}
               or leave your email below — we will tell you the day filing opens and nothing else.
@@ -204,10 +204,10 @@ export default function ToolsPage() {
           <DeadlineScheduleForm source="tools" />
         </section>
 
-        <p className="text-xs leading-relaxed mt-12" style={{ color: '#9A8F83' }}>
+        <p className="text-xs leading-relaxed mt-12" style={{ color: '#6B6256' }}>
           These tools give general information about HMRC&apos;s published rules. They are not tax
           advice and do not account for individual circumstances. See{' '}
-          <Link href="/trust" style={{ color: '#9A8F83', textDecoration: 'underline' }}>
+          <Link href="/trust" style={{ color: '#6B6256', textDecoration: 'underline' }}>
             where EasyTax stands with HMRC
           </Link>
           .

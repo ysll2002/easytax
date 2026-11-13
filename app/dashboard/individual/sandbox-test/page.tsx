@@ -83,18 +83,18 @@ export default function SandboxTestPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
         ← Back to Self Assessment
       </Link>
 
       <div className="mb-6">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
           HMRC Sandbox
         </div>
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.75rem', fontWeight: 700, color: '#1C1208' }}>
           API Coverage Test
         </h1>
-        <p className="text-sm mt-1" style={{ color: '#9A8F83' }}>
+        <p className="text-sm mt-1" style={{ color: '#6B6256' }}>
           Calls all subscribed HMRC sandbox APIs and reports results.
         </p>
       </div>
@@ -103,7 +103,7 @@ export default function SandboxTestPage() {
         onClick={runTests}
         disabled={running}
         className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm mb-8"
-        style={{ backgroundColor: running ? '#9A8F83' : '#C4622D', color: '#FDFCF8', border: 'none', cursor: running ? 'not-allowed' : 'pointer' }}
+        style={{ backgroundColor: running ? '#6B6256' : '#A04E1C', color: '#FDFCF8', border: 'none', cursor: running ? 'not-allowed' : 'pointer' }}
       >
         {running
           ? <><Loader2 size={16} className="animate-spin" /> Running tests…</>
@@ -120,17 +120,17 @@ export default function SandboxTestPage() {
           <div className="p-5 rounded-2xl mb-6" style={{ backgroundColor: '#1C1208' }}>
             <div className="flex items-center justify-between flex-wrap gap-3">
               <div>
-                <p className="text-xs mb-1" style={{ color: '#9A8F83' }}>RESULTS</p>
+                <p className="text-xs mb-1" style={{ color: '#A89D90' }}>RESULTS</p>
                 <p className="font-bold text-lg" style={{ color: '#FDFCF8' }}>{report.summary}</p>
               </div>
               <div className="flex gap-4">
                 <div className="text-center">
-                  <p className="text-2xl font-bold" style={{ color: '#6B8E6E' }}>{report.passed}</p>
-                  <p className="text-xs" style={{ color: '#9A8F83' }}>passed</p>
+                  <p className="text-2xl font-bold" style={{ color: '#4B6A4E' }}>{report.passed}</p>
+                  <p className="text-xs" style={{ color: '#A89D90' }}>passed</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold" style={{ color: '#EF4444' }}>{report.failed}</p>
-                  <p className="text-xs" style={{ color: '#9A8F83' }}>failed</p>
+                  <p className="text-2xl font-bold" style={{ color: '#B3261E' }}>{report.failed}</p>
+                  <p className="text-xs" style={{ color: '#A89D90' }}>failed</p>
                 </div>
               </div>
             </div>
@@ -148,21 +148,21 @@ export default function SandboxTestPage() {
                 const source = sourceKey ? report.context[sourceKey] : null;
                 return (
                   <div key={k}>
-                    <p className="text-xs uppercase" style={{ color: '#4A4035' }}>{k}</p>
-                    <p className="text-xs font-mono font-semibold" style={{ color: '#C4622D' }}>{report.context[k]}</p>
+                    <p className="text-xs uppercase" style={{ color: '#A89D90' }}>{k}</p>
+                    <p className="text-xs font-mono font-semibold" style={{ color: '#E8895A' }}>{report.context[k]}</p>
                     {source && (
-                      <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>{source}</p>
+                      <p className="text-xs mt-0.5" style={{ color: '#A89D90' }}>{source}</p>
                     )}
                   </div>
                 );
               })}
             </div>
             <div className="mt-4 pt-4" style={{ borderTop: '1px solid #2E2418' }}>
-              <p className="text-xs mb-1" style={{ color: '#4A4035' }}>DEBUG</p>
-              <p className="text-xs font-mono" style={{ color: '#9A8F83' }}>
-                env: <span style={{ color: '#C4622D' }}>{report.debug.hmrcEnv}</span> ·
-                base: <span style={{ color: '#C4622D' }}>{report.debug.baseUrl}</span> ·
-                token: <span style={{ color: '#C4622D' }}>{report.debug.tokenStart}… ({report.debug.tokenLen} chars)</span>
+              <p className="text-xs mb-1" style={{ color: '#A89D90' }}>DEBUG</p>
+              <p className="text-xs font-mono" style={{ color: '#A89D90' }}>
+                env: <span style={{ color: '#E8895A' }}>{report.debug.hmrcEnv}</span> ·
+                base: <span style={{ color: '#E8895A' }}>{report.debug.baseUrl}</span> ·
+                token: <span style={{ color: '#E8895A' }}>{report.debug.tokenStart}… ({report.debug.tokenLen} chars)</span>
               </p>
             </div>
           </div>
@@ -191,11 +191,11 @@ export default function SandboxTestPage() {
                       : <XCircle     size={16} color="#DC2626" className="flex-shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>{r.name}</p>
-                    <p className="text-xs font-mono truncate" style={{ color: '#9A8F83' }}>{r.method} {displayEndpoint(r)}</p>
+                    <p className="text-xs font-mono truncate" style={{ color: '#6B6256' }}>{r.method} {displayEndpoint(r)}</p>
                     {skipped && <p className="text-xs mt-0.5" style={{ color: '#7A6F63' }}>{r.error}</p>}
                   </div>
                   {code && (
-                    <span className="text-xs font-mono flex-shrink-0" style={{ color: '#DC2626' }}>{code}</span>
+                    <span className="text-xs font-mono flex-shrink-0" style={{ color: '#B3261E' }}>{code}</span>
                   )}
                   <span className="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
                     style={{ backgroundColor: tone.pillBg, color: tone.pillFg }}>
@@ -204,8 +204,8 @@ export default function SandboxTestPage() {
                 </button>
                 {expanded === `${i}` && (
                   <div className="px-4 pb-4 pt-1" style={{ backgroundColor: tone.bg, borderTop: '1px solid #E8E2DA' }}>
-                    {r.error && !skipped && <p className="text-xs mb-2" style={{ color: '#DC2626' }}>Error: {r.error}</p>}
-                    <pre className="text-xs overflow-auto p-3 rounded-lg" style={{ backgroundColor: '#1C1208', color: '#C4622D', maxHeight: '240px' }}>
+                    {r.error && !skipped && <p className="text-xs mb-2" style={{ color: '#B3261E' }}>Error: {r.error}</p>}
+                    <pre className="text-xs overflow-auto p-3 rounded-lg" style={{ backgroundColor: '#1C1208', color: '#A04E1C', maxHeight: '240px' }}>
                       {JSON.stringify(r.data ?? {}, null, 2)}
                     </pre>
                   </div>

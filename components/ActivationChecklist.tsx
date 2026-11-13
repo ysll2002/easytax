@@ -63,7 +63,7 @@ export default function ActivationChecklist({ hmrcConnected, bankConnected }: Pr
         >
           {t('title')}
         </p>
-        <p className="text-xs font-semibold flex-shrink-0" style={{ color: '#9A8F83' }}>
+        <p className="text-xs font-semibold flex-shrink-0" style={{ color: '#6B6256' }}>
           {t('progress', { done: doneCount, total: steps.length })}
         </p>
       </div>
@@ -81,7 +81,7 @@ export default function ActivationChecklist({ hmrcConnected, bankConnected }: Pr
               >
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#6B8E6E' }}
+                  style={{ backgroundColor: '#4B6A4E' }}
                 >
                   <Check size={15} color="#FDFCF8" strokeWidth={2.6} />
                 </div>
@@ -108,7 +108,7 @@ export default function ActivationChecklist({ hmrcConnected, bankConnected }: Pr
               >
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: '#C4622D' }}
+                  style={{ backgroundColor: '#A04E1C' }}
                 >
                   <Icon size={16} color="#FDFCF8" strokeWidth={1.9} />
                 </div>
@@ -116,11 +116,11 @@ export default function ActivationChecklist({ hmrcConnected, bankConnected }: Pr
                   <p className="text-sm font-semibold mb-0.5" style={{ color: '#1C1208' }}>
                     {step.title}
                   </p>
-                  <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>
+                  <p className="text-xs" style={{ color: '#6B6256', lineHeight: 1.5 }}>
                     {step.desc}
                   </p>
                 </div>
-                <ChevronRight size={16} color="#C4622D" className="flex-shrink-0" />
+                <ChevronRight size={16} color="#A04E1C" className="flex-shrink-0" />
               </div>
             </Link>
           );

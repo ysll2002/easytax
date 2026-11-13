@@ -94,11 +94,11 @@ export default async function TopicPage({ params }: { params: Promise<Params> })
 
       <SiteHeader />
 
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <nav className="text-xs mb-4" style={{ color: '#9A8F83' }}>
-          <Link href="/tax-tips" style={{ color: '#9A8F83', textDecoration: 'none' }}>Tax Tips</Link>
+      <main id="main-content" className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <nav className="text-xs mb-4" style={{ color: '#6B6256' }}>
+          <Link href="/tax-tips" style={{ color: '#6B6256', textDecoration: 'none' }}>Tax Tips</Link>
           <span aria-hidden> › </span>
-          <Link href="/tax-tips/topics" style={{ color: '#9A8F83', textDecoration: 'none' }}>Topics</Link>
+          <Link href="/tax-tips/topics" style={{ color: '#6B6256', textDecoration: 'none' }}>Topics</Link>
           <span aria-hidden> › </span>
           <span>{topic.label}</span>
         </nav>
@@ -120,16 +120,16 @@ export default async function TopicPage({ params }: { params: Promise<Params> })
         <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: '#4A4035', maxWidth: 680 }}>
           {topic.intro}
         </p>
-        <p className="text-xs mb-10" style={{ color: '#9A8F83' }}>
+        <p className="text-xs mb-10" style={{ color: '#6B6256' }}>
           {articles.length} {articles.length === 1 ? 'guide' : 'guides'} in this topic.
         </p>
 
         {articles.length > 0 ? (
           <ArticleCardList articles={articles} />
         ) : (
-          <p className="text-sm" style={{ color: '#9A8F83' }}>
+          <p className="text-sm" style={{ color: '#6B6256' }}>
             No guides in this topic yet.{' '}
-            <Link href="/tax-tips" style={{ color: '#C4622D', textDecoration: 'underline' }}>
+            <Link href="/tax-tips" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
               Browse the full archive
             </Link>
             .
@@ -156,7 +156,7 @@ export default async function TopicPage({ params }: { params: Promise<Params> })
                     }}
                   >
                     {t.label}
-                    <span className="ml-2 text-xs" style={{ color: '#9A8F83' }}>{t.count}</span>
+                    <span className="ml-2 text-xs" style={{ color: '#6B6256' }}>{t.count}</span>
                   </Link>
                 </li>
               ))}

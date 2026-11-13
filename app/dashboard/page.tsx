@@ -67,7 +67,7 @@ export default async function DashboardHome() {
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
           {t('welcome', { name: firstName })}
         </h1>
-        <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>{t('question')}</p>
+        <p style={{ color: '#6B6256', fontSize: '0.9rem' }}>{t('question')}</p>
       </div>
 
       {/* Above the checklist deliberately. The checklist asks the user to do
@@ -85,15 +85,15 @@ export default async function DashboardHome() {
         {/* Self Assessment track */}
         <Link href="/dashboard/individual" style={{ textDecoration: 'none', display: 'block' }}>
           <div className="p-5 sm:p-6 rounded-2xl flex items-center gap-5 transition-all hover:shadow-md" style={{ backgroundColor: '#1C1208', border: '1px solid #2E2418' }}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#C4622D' }}>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A04E1C' }}>
               <User size={22} color="#FDFCF8" strokeWidth={1.8} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>{t('soleKicker')}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>{t('soleKicker')}</p>
               <p style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#FDFCF8', marginBottom: '0.25rem' }}>{t('soleTitle')}</p>
-              <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{t('soleDesc')}</p>
+              <p className="text-xs" style={{ color: '#A89D90', lineHeight: 1.5 }}>{t('soleDesc')}</p>
             </div>
-            <ChevronRight size={18} color="#9A8F83" className="flex-shrink-0" />
+            <ChevronRight size={18} color="#6B6256" className="flex-shrink-0" />
           </div>
         </Link>
 
@@ -104,18 +104,18 @@ export default async function DashboardHome() {
               <Building2 size={22} color="#1C1208" strokeWidth={1.8} />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>{t('companyKicker')}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#6B6256' }}>{t('companyKicker')}</p>
               <p style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>{t('companyTitle')}</p>
-              <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{t('companyDesc')}</p>
+              <p className="text-xs" style={{ color: '#6B6256', lineHeight: 1.5 }}>{t('companyDesc')}</p>
             </div>
-            <ChevronRight size={18} color="#C4622D" className="flex-shrink-0" />
+            <ChevronRight size={18} color="#A04E1C" className="flex-shrink-0" />
           </div>
         </Link>
       </div>
 
       {/* Quick access */}
       <div style={{ borderTop: '1px solid #E8E2DA', paddingTop: '1.5rem' }}>
-        <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#9A8F83' }}>{t('quickAccess')}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B6256' }}>{t('quickAccess')}</p>
         <Link href="/dashboard/reconcile" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1rem', borderRadius: '2rem', fontSize: '0.875rem', fontWeight: 500, color: '#1C1208', backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
           <RefreshCw size={14} strokeWidth={1.8} />
           {t('reconcileTransactions')}

@@ -45,6 +45,10 @@ function QuarterForm() {
   const [hinted,     setHinted]     = useState<string | null>(null);
   const [pulling,    setPulling]    = useState(false);
   const [pulledAt,   setPulledAt]   = useState<string | null>(null);
+  // Review step before anything is sent to HMRC (WCAG 3.3.4 Error Prevention:
+  // a submission has legal effect, so the figures are shown back for
+  // confirmation first).
+  const [confirming, setConfirming] = useState(false);
   const canSubmit = pulledAt != null;
 
   // HMRC MTD-ITSA production requirement (In-Year #6): quarterly submission
@@ -54,7 +58,7 @@ function QuarterForm() {
   // rendered read-only so corrections must be made in /dashboard/reconcile.
   async function handlePull() {
     if (!start || !end) { setError('Missing period dates in URL.'); return; }
-    setPulling(true); setError('');
+    setPulling(true); setError(''); setConfirming(false);
     try {
       const res  = await fetch(`/api/individual/quarter-totals?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
       const data = await res.json();
@@ -79,6 +83,7 @@ function QuarterForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!confirming) { setConfirming(true); return; }
     setError('');
     setSubmitting(true);
 
@@ -92,7 +97,7 @@ function QuarterForm() {
         body: JSON.stringify({ taxYear, periodStartDate: start, periodEndDate: end, turnover: income, expenses: expObj }),
       });
       const data = await res.json();
-      if (data.error) { setError(data.error); return; }
+      if (data.error) { setError(data.error); setConfirming(false); return; }
       setSubmitted(true);
     } catch {
       setError('Submission failed. Please try again.');
@@ -106,12 +111,12 @@ function QuarterForm() {
       <div className="p-4 sm:p-8 max-w-lg">
         <div className="flex flex-col items-center text-center py-12">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: '#F0EBE1' }}>
-            <CheckCircle2 size={36} color="#C4622D" />
+            <CheckCircle2 size={36} color="#A04E1C" />
           </div>
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.75rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
             Update Submitted
           </h1>
-          <p className="text-sm mb-2" style={{ color: '#9A8F83' }}>
+          <p className="text-sm mb-2" style={{ color: '#6B6256' }}>
             {start && end ? `${fmtDate(start)} – ${fmtDate(end)}` : taxYear}
           </p>
           <p className="text-sm mb-8" style={{ color: '#4A4035' }}>
@@ -129,22 +134,22 @@ function QuarterForm() {
 
   return (
     <div className="p-4 sm:p-8">
-      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
         ← Back to Filing Overview
       </Link>
 
       <div className="mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
           Quarterly Update · {taxYear}
         </div>
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208' }}>
           {start ? fmtDate(start) : 'Quarterly Update'}
         </h1>
-        {start && end && <p className="text-sm mt-1" style={{ color: '#9A8F83' }}>to {fmtDate(end)}</p>}
+        {start && end && <p className="text-sm mt-1" style={{ color: '#6B6256' }}>to {fmtDate(end)}</p>}
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
+        <div role="alert" className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
       )}
 
       {/* Digital-record source notice — HMRC MTD-ITSA compliance banner. */}
@@ -154,7 +159,7 @@ function QuarterForm() {
           <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Figures come from your digital record.</p>
           <p className="mb-2">
             HMRC rules for Making Tax Digital require the numbers you submit here to be derived from your reconciled bank transactions, not typed in on the submission screen. To correct any category, edit the transaction in{' '}
-            <Link href="/dashboard/reconcile" style={{ color: '#C4622D', fontWeight: 600, textDecoration: 'underline' }}>Reconcile</Link>, then re-pull below.
+            <Link href="/dashboard/reconcile" style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'underline' }}>Reconcile</Link>, then re-pull below.
           </p>
           <div className="flex items-center gap-3 flex-wrap">
             <button type="button" onClick={handlePull} disabled={pulling || !start || !end}
@@ -165,7 +170,7 @@ function QuarterForm() {
                 : <><RefreshCw size={12} />{pulledAt ? 'Re-pull from Reconciliation' : 'Pull from Reconciliation'}</>}
             </button>
             {pulledAt && (
-              <span className="text-[11px]" style={{ color: '#6B7F50' }}>
+              <span className="text-[11px]" style={{ color: '#4B6A4E' }}>
                 ✓ Populated {new Date(pulledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
               </span>
             )}
@@ -180,13 +185,13 @@ function QuarterForm() {
           <div className="flex-1 space-y-6">
             <div className="p-6 rounded-2xl" style={{ border: '1.5px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
               <div className="flex items-center gap-2 mb-4">
-                <TrendingUp size={18} color="#6B8E6E" />
+                <TrendingUp size={18} color="#4B6A4E" />
                 <h2 className="font-bold text-sm" style={{ color: '#1C1208' }}>Income</h2>
               </div>
               <label className="block">
                 <span className="text-sm block mb-1.5" style={{ color: '#4A4035' }}>Turnover for this quarter</span>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold" style={{ color: '#9A8F83' }}>£</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold" style={{ color: '#6B6256' }}>£</span>
                   <input
                     type="number" min="0" step="0.01" required readOnly
                     value={turnover} placeholder="0.00"
@@ -194,13 +199,13 @@ function QuarterForm() {
                     style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#F5F0E6', outline: 'none', color: '#1C1208' }}
                   />
                 </div>
-                <p className="text-xs mt-1.5" style={{ color: '#9A8F83' }}>Populated from Reconcile — edit transactions there to change.</p>
+                <p className="text-xs mt-1.5" style={{ color: '#6B6256' }}>Populated from Reconcile — edit transactions there to change.</p>
               </label>
             </div>
 
             <div className="p-6 rounded-2xl" style={{ border: '1.5px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
               <div className="flex items-center gap-2 mb-4">
-                <TrendingDown size={18} color="#C4622D" />
+                <TrendingDown size={18} color="#A04E1C" />
                 <h2 className="font-bold text-sm" style={{ color: '#1C1208' }}>Allowable Expenses</h2>
               </div>
               <div className="space-y-3">
@@ -209,17 +214,20 @@ function QuarterForm() {
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm" style={{ color: '#4A4035' }}>{f.label}</span>
                       <button type="button" onMouseEnter={() => setHinted(f.key)} onMouseLeave={() => setHinted(null)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#9A8F83' }}>
-                        <Info size={13} />
+                        onClick={() => setHinted(h => h === f.key ? null : f.key)}
+                        aria-label={`About ${f.label}`} aria-expanded={hinted === f.key}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#6B6256' }}>
+                        <Info size={13} aria-hidden />
                       </button>
                     </div>
                     {hinted === f.key && (
                       <p className="text-xs px-2 py-1 rounded-lg mb-1" style={{ backgroundColor: '#F0EBE1', color: '#4A4035' }}>{f.hint}</p>
                     )}
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
                       <input
                         type="number" min="0" step="0.01" readOnly
+                        aria-label={f.label}
                         value={expenses[f.key] ?? ''}
                         placeholder="0.00"
                         className="w-full pl-7 pr-3 py-2.5 rounded-xl text-sm cursor-not-allowed"
@@ -231,14 +239,33 @@ function QuarterForm() {
               </div>
             </div>
 
+            {confirming && canSubmit && (
+              <div role="region" aria-labelledby="confirm-heading" className="p-5 rounded-2xl" style={{ border: '1.5px solid #1C1208', backgroundColor: '#FFFFFF' }}>
+                <h2 id="confirm-heading" className="font-bold text-sm mb-3" style={{ color: '#1C1208' }}>Check before you submit to HMRC</h2>
+                <dl className="text-sm space-y-1.5 mb-3" style={{ color: '#1C1208' }}>
+                  <div className="flex justify-between gap-4"><dt>Period</dt><dd style={{ fontWeight: 600 }}>{start && end ? `${fmtDate(start)} – ${fmtDate(end)}` : taxYear}</dd></div>
+                  <div className="flex justify-between gap-4"><dt>Turnover</dt><dd style={{ fontWeight: 600 }}>£{income.toFixed(2)}</dd></div>
+                  <div className="flex justify-between gap-4"><dt>Total expenses</dt><dd style={{ fontWeight: 600 }}>£{totalExpenses.toFixed(2)}</dd></div>
+                </dl>
+                <p className="text-xs mb-4" style={{ color: '#4A4035', lineHeight: 1.55 }}>
+                  These figures will be sent to HMRC as your quarterly update. If something is wrong, go back and correct the transactions in Reconcile. You can also correct a quarterly update later by submitting it again.
+                </p>
+                <button type="button" onClick={() => setConfirming(false)} className="text-sm font-semibold" style={{ background: 'none', border: 'none', padding: 0, color: '#A04E1C', textDecoration: 'underline', cursor: 'pointer' }}>
+                  Go back and edit
+                </button>
+              </div>
+            )}
+
             <button type="submit" disabled={submitting || !canSubmit}
               className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold"
-              style={{ backgroundColor: '#C4622D', color: '#FDFCF8', opacity: (submitting || !canSubmit) ? 0.5 : 1, cursor: (submitting || !canSubmit) ? 'not-allowed' : 'pointer', border: 'none', fontSize: '0.95rem' }}
+              style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', opacity: (submitting || !canSubmit) ? 0.5 : 1, cursor: (submitting || !canSubmit) ? 'not-allowed' : 'pointer', border: 'none', fontSize: '0.95rem' }}
               title={!canSubmit ? 'Pull figures from Reconciliation first — the submission cannot be typed manually.' : undefined}>
               {submitting
                 ? <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />Submitting to HMRC…</>
+                : canSubmit && confirming
+                ? <>Confirm and submit to HMRC <ChevronRight size={16} /></>
                 : canSubmit
-                ? <>Submit Quarterly Update <ChevronRight size={16} /></>
+                ? <>Review and submit <ChevronRight size={16} /></>
                 : <>Pull figures first</>}
             </button>
           </div>
@@ -247,27 +274,27 @@ function QuarterForm() {
           <div className="w-full lg:w-72 lg:flex-shrink-0 lg:sticky lg:top-8">
             <div className="rounded-2xl overflow-hidden" style={{ border: '1.5px solid #DDD5C8' }}>
               <div className="px-5 py-4" style={{ backgroundColor: '#1C1208' }}>
-                <p className="text-xs font-semibold mb-1" style={{ color: '#9A8F83' }}>LIVE SUMMARY</p>
-                <p className="text-xs" style={{ color: '#4A4035' }}>
+                <p className="text-xs font-semibold mb-1" style={{ color: '#C9BFB2' }}>LIVE SUMMARY</p>
+                <p className="text-xs" style={{ color: '#A89D90' }}>
                   {start && end
                     ? `${new Date(start).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} – ${new Date(end).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`
                     : taxYear}
                 </p>
               </div>
               <div className="p-5 space-y-3" style={{ backgroundColor: '#FDFCF8' }}>
-                <div className="flex justify-between text-sm"><span style={{ color: '#9A8F83' }}>Turnover</span><span style={{ fontWeight: 600, color: '#6B8E6E' }}>+£{income.toFixed(2)}</span></div>
-                <div className="flex justify-between text-sm"><span style={{ color: '#9A8F83' }}>Total expenses</span><span style={{ fontWeight: 600, color: '#C4622D' }}>−£{totalExpenses.toFixed(2)}</span></div>
+                <div className="flex justify-between text-sm"><span style={{ color: '#6B6256' }}>Turnover</span><span style={{ fontWeight: 600, color: '#4B6A4E' }}>+£{income.toFixed(2)}</span></div>
+                <div className="flex justify-between text-sm"><span style={{ color: '#6B6256' }}>Total expenses</span><span style={{ fontWeight: 600, color: '#A04E1C' }}>−£{totalExpenses.toFixed(2)}</span></div>
                 <div style={{ borderTop: '1px solid #E8E2DA', paddingTop: '0.75rem' }}>
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-bold" style={{ color: '#1C1208' }}>Net profit</span>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 700, color: profit >= 0 ? '#6B8E6E' : '#EF4444' }}>£{profit.toFixed(2)}</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 700, color: profit >= 0 ? '#4B6A4E' : '#EF4444' }}>£{profit.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
               <div className="px-5 py-4" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #E8E2DA' }}>
-                <p className="text-xs mb-1" style={{ color: '#9A8F83' }}>Estimated tax on this quarter</p>
-                <p style={{ fontSize: '1.4rem', fontWeight: 700, color: '#C4622D' }}>£{estTax.toFixed(2)}</p>
-                <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>Indicative only — final bill calculated at year end.</p>
+                <p className="text-xs mb-1" style={{ color: '#6B6256' }}>Estimated tax on this quarter</p>
+                <p style={{ fontSize: '1.4rem', fontWeight: 700, color: '#A04E1C' }}>£{estTax.toFixed(2)}</p>
+                <p className="text-xs mt-1" style={{ color: '#6B6256' }}>Indicative only — final bill calculated at year end.</p>
               </div>
               {EXPENSE_FIELDS.some(f => parseFloat(expenses[f.key] || '0') > 0) && (
                 <div className="px-5 py-4" style={{ backgroundColor: '#F8F7F5', borderTop: '1px solid #E8E2DA' }}>

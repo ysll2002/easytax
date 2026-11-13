@@ -52,11 +52,11 @@ function Pagination({ page, totalPages }: { page: number; totalPages: number }) 
         const gap = i > 0 && n - pages[i - 1] > 1;
         return (
           <span key={n} className="flex items-center gap-2">
-            {gap && <span style={{ color: '#9A8F83', fontSize: '0.9rem' }}>…</span>}
+            {gap && <span style={{ color: '#6B6256', fontSize: '0.9rem' }}>…</span>}
             {n === page ? (
               <span
                 aria-current="page"
-                style={{ ...linkStyle, backgroundColor: '#C4622D', color: '#FDFCF8' }}
+                style={{ ...linkStyle, backgroundColor: '#A04E1C', color: '#FDFCF8' }}
               >
                 {n}
               </span>
@@ -106,13 +106,13 @@ export default function ArticleIndex({
     <div className="flex flex-col min-h-screen" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         <section className="pt-12 sm:pt-16 pb-16 sm:pb-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="mb-10">
               <div
                 className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
-                style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}
+                style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}
               >
                 Updated daily
               </div>
@@ -127,12 +127,12 @@ export default function ArticleIndex({
                 }}
               >
                 What you need to know<br />
-                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>about the tax.</em>
+                <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>about the tax.</em>
               </h1>
-              <p style={{ color: '#9A8F83', fontSize: '1.05rem', maxWidth: '520px' }}>
+              <p style={{ color: '#6B6256', fontSize: '1.05rem', maxWidth: '520px' }}>
                 Practical UK tax guidance for freelancers and self-employed professionals —
                 AI-drafted from HMRC guidance, checked by a person before it goes up.{' '}
-                <Link href="/editorial-standards" style={{ color: '#C4622D', textDecoration: 'none' }}>
+                <Link href="/editorial-standards" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
                   How we write these
                 </Link>
                 .
@@ -167,7 +167,7 @@ export default function ArticleIndex({
                         }}
                       >
                         {t.label}
-                        <span className="ml-2 text-xs" style={{ color: '#9A8F83' }}>{t.count}</span>
+                        <span className="ml-2 text-xs" style={{ color: '#6B6256' }}>{t.count}</span>
                       </Link>
                     </li>
                   ))}
@@ -176,7 +176,7 @@ export default function ArticleIndex({
             )}
 
             {articles.length === 0 ? (
-              <div className="py-20 text-center" style={{ color: '#9A8F83' }}>
+              <div className="py-20 text-center" style={{ color: '#6B6256' }}>
                 <p className="text-lg font-medium mb-2">First article coming tomorrow at 8am.</p>
                 <p className="text-sm">Check back soon.</p>
               </div>

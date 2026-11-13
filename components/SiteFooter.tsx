@@ -38,7 +38,7 @@ function Column({ title, links }: { title: string; links: { href: string; label:
     <div>
       <p
         className="text-xs font-semibold uppercase tracking-wider mb-3"
-        style={{ color: '#9A8F83' }}
+        style={{ color: '#A89D90' }}
       >
         {title}
       </p>
@@ -47,7 +47,7 @@ function Column({ title, links }: { title: string; links: { href: string; label:
           <li key={l.href}>
             <Link
               href={l.href}
-              className="text-sm hover:text-[#C4622D] transition-colors"
+              className="text-sm hover:text-[#E8895A] transition-colors"
               style={{ color: '#C9BFB2', textDecoration: 'none' }}
             >
               {l.label}
@@ -139,6 +139,7 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
               { href: '/trust',    label: t('aboutUs') },
               { href: '/privacy',  label: t('privacy') },
               { href: '/terms',    label: t('terms') },
+              { href: '/accessibility', label: t('accessibility') },
               { href: '/register', label: nav('register') },
               { href: '/login',    label: nav('login') },
             ]}
@@ -151,7 +152,7 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
         <div className="mb-10 pt-8" style={{ borderTop: '1px solid #2E2418' }}>
           <p
             className="text-xs font-semibold uppercase tracking-wider mb-3"
-            style={{ color: '#9A8F83' }}
+            style={{ color: '#A89D90' }}
           >
             {t('compare')}
           </p>
@@ -160,7 +161,7 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
               <Link
                 key={c.href}
                 href={c.href}
-                className="text-sm hover:text-[#C4622D] transition-colors"
+                className="text-sm hover:text-[#E8895A] transition-colors"
                 style={{ color: '#C9BFB2', textDecoration: 'none' }}
               >
                 {t('vs', { name: c.label })}
@@ -173,10 +174,10 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
           className="pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
           style={{ borderTop: '1px solid #2E2418' }}
         >
-          <div style={{ fontFamily: DISPLAY, fontSize: '1.05rem', color: '#9A8F83' }}>
+          <div style={{ fontFamily: DISPLAY, fontSize: '1.05rem', color: '#A89D90' }}>
             {t('tagline')}
           </div>
-          <p className="text-xs max-w-md md:text-right" style={{ color: '#4A4035', lineHeight: 1.6 }}>
+          <p className="text-xs max-w-md md:text-right" style={{ color: '#A89D90', lineHeight: 1.6 }}>
             {t('disclaimer')}
           </p>
         </div>

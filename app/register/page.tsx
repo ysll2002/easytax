@@ -104,19 +104,19 @@ export default function Register() {
   };
 
   const errorBoxStyle = {
-    backgroundColor: '#F5E4D8', color: '#C4622D',
+    backgroundColor: '#F5E4D8', color: '#A04E1C',
   };
 
   return (
     <div className="flex flex-col min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
       <SiteHeader />
-      <div className="flex flex-col items-center justify-center flex-1 py-12">
+      <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
             {t('title')}
           </h1>
-          <p style={{ color: '#9A8F83', fontSize: '0.95rem' }}>{t('subtitle')}</p>
+          <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>{t('subtitle')}</p>
         </div>
 
         <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
@@ -155,27 +155,27 @@ export default function Register() {
 
           <div className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
-            <span className="text-xs" style={{ color: '#9A8F83' }}>{t('or')}</span>
+            <span className="text-xs" style={{ color: '#6B6256' }}>{t('or')}</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
-                {t('fullName')} <span style={{ color: '#9A8F83', fontWeight: 400 }}>{t('nameOptional')}</span>
+                {t('fullName')} <span style={{ color: '#6B6256', fontWeight: 400 }}>{t('nameOptional')}</span>
               </label>
-              <input type="text" placeholder={t('namePlaceholder')} value={form.name}
+              <input autoComplete="name" type="text" placeholder={t('namePlaceholder')} value={form.name}
                 onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
             </div>
             <div>
               <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('email')}</label>
-              <input type="email" required placeholder={t('emailPlaceholder')} value={form.email}
+              <input autoComplete="email" type="email" required placeholder={t('emailPlaceholder')} value={form.email}
                 onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
             </div>
             <div>
               <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>{t('password')}</label>
               <div style={{ position: 'relative' }}>
-                <input
+                <input autoComplete="new-password"
                   type={showPwd ? 'text' : 'password'}
                   required
                   placeholder={t('passwordRuleLength')}
@@ -187,13 +187,13 @@ export default function Register() {
                   type="button"
                   onClick={() => setShowPwd(s => !s)}
                   className="text-xs font-semibold"
-                  style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#C4622D', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0.5rem' }}
+                  style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', color: '#A04E1C', background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem 0.5rem' }}
                 >
                   {showPwd ? t('passwordHide') : t('passwordShow')}
                 </button>
               </div>
               {pwdStarted && (
-                <p className="text-xs mt-2" style={{ color: pwdLongEnough ? '#2E7D5B' : '#9A8F83' }}>
+                <p className="text-xs mt-2" style={{ color: pwdLongEnough ? '#2E7D5B' : '#6B6256' }}>
                   {pwdLongEnough ? '✓' : '○'} {t('passwordRuleLength')}
                 </p>
               )}
@@ -205,13 +205,13 @@ export default function Register() {
                 type="checkbox"
                 checked={agreed}
                 onChange={e => { setAgreed(e.target.checked); if (e.target.checked) { setError(''); setGoogleError(''); } }}
-                style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#C4622D', cursor: 'pointer' }}
+                style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#A04E1C', cursor: 'pointer' }}
               />
               <span className="text-sm" style={{ color: '#4A4035', lineHeight: '1.5' }}>
                 {t('agreementPrefix')}{' '}
-                <Link href="/terms" style={{ color: '#C4622D', fontWeight: 600 }}>{t('terms')}</Link>
+                <Link href="/terms" style={{ color: '#A04E1C', fontWeight: 600 }}>{t('terms')}</Link>
                 {' '}{t('and')}{' '}
-                <Link href="/privacy" style={{ color: '#C4622D', fontWeight: 600 }}>{t('privacy')}</Link>
+                <Link href="/privacy" style={{ color: '#A04E1C', fontWeight: 600 }}>{t('privacy')}</Link>
               </span>
             </label>
 
@@ -221,7 +221,7 @@ export default function Register() {
 
             <button type="submit" disabled={loading}
               className="w-full py-3.5 rounded-xl font-medium text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-              style={{ backgroundColor: loading ? '#DDD5C8' : '#C4622D', color: '#FDFCF8', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '0.25rem' }}>
+              style={{ backgroundColor: loading ? '#DDD5C8' : '#A04E1C', color: '#FDFCF8', cursor: loading ? 'not-allowed' : 'pointer', marginTop: '0.25rem' }}>
               {loading ? (
                 <>
                   <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -234,18 +234,18 @@ export default function Register() {
             </button>
           </form>
 
-          <p className="text-xs text-center mt-6" style={{ color: '#9A8F83', lineHeight: '1.6' }}>
+          <p className="text-xs text-center mt-6" style={{ color: '#6B6256', lineHeight: '1.6' }}>
             <span style={{ marginRight: '0.5rem' }}>🔒</span>
             {t('trustSignal')}
           </p>
 
-          <p className="text-center text-sm mt-4" style={{ color: '#9A8F83' }}>
+          <p className="text-center text-sm mt-4" style={{ color: '#6B6256' }}>
             {t('haveAccount')}{' '}
-            <Link href="/login" style={{ color: '#C4622D', fontWeight: 600 }}>{t('logIn')}</Link>
+            <Link href="/login" style={{ color: '#A04E1C', fontWeight: 600 }}>{t('logIn')}</Link>
           </p>
         </div>
       </div>
-      </div>
+      </main>
     </div>
   );
 }

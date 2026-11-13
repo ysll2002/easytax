@@ -60,17 +60,17 @@ export default function CalculatePage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
         ← Back to Self Assessment
       </Link>
 
       <div className="flex items-center gap-3 mb-2">
-        <Calculator size={24} color="#C4622D" />
+        <Calculator size={24} color="#A04E1C" />
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208' }}>
           Tax Calculation
         </h1>
       </div>
-      <p className="text-sm mb-8" style={{ color: '#9A8F83' }}>
+      <p className="text-sm mb-8" style={{ color: '#6B6256' }}>
         Request an in-year tax calculation from HMRC based on the data you&apos;ve submitted for {taxYear}.
       </p>
 
@@ -109,7 +109,7 @@ export default function CalculatePage() {
           {calc.totalDue !== undefined && (
             <div className="flex justify-between text-sm font-bold pt-2 mt-1" style={{ color: '#1C1208', borderTop: '1px solid #E5CFA8' }}>
               <span>Total Due</span>
-              <span style={{ color: '#C4622D', fontSize: '1.15rem' }}>£{calc.totalDue.toFixed(2)}</span>
+              <span style={{ color: '#A04E1C', fontSize: '1.15rem' }}>£{calc.totalDue.toFixed(2)}</span>
             </div>
           )}
           {/* HMRC MTD-ITSA production requirement (Software Approvals checklist,
@@ -121,7 +121,7 @@ export default function CalculatePage() {
         </div>
       )}
 
-      <div className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.55 }}>
+      <div className="text-xs" style={{ color: '#6B6256', lineHeight: 1.55 }}>
         <p>
           This calculation reflects the current view HMRC has of your Self Assessment. It is an estimate — you can request an updated calculation any time before the final declaration deadline.
         </p>

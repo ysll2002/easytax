@@ -24,9 +24,9 @@ const MOCK_TRANSACTIONS: Transaction[] = [
 ];
 
 const confidenceStyle = {
-  high:   { bg: '#E2EDE2', text: '#4A7A4E' },
-  medium: { bg: '#F5EDDC', text: '#9A6B1A' },
-  low:    { bg: '#F5E4D8', text: '#C4622D' },
+  high:   { bg: '#E2EDE2', text: '#3E6642' },
+  medium: { bg: '#F5EDDC', text: '#7A5410' },
+  low:    { bg: '#F5E4D8', text: '#A04E1C' },
 };
 
 export default function Expenses() {
@@ -43,16 +43,16 @@ export default function Expenses() {
 
       <nav style={{ backgroundColor: '#FDFCF8', borderBottom: '1px solid #DDD5C8' }}>
         <div className="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center">
-          <Link href="/actions" className="flex items-center gap-2 text-sm font-medium transition-colors" style={{ color: '#9A8F83' }}>
+          <Link href="/actions" className="flex items-center gap-2 text-sm font-medium transition-colors" style={{ color: '#6B6256' }}>
             ← Back to Actions
           </Link>
-          <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: '#F5EDDC', color: '#C9963D' }}>
+          <span className="text-xs font-medium px-3 py-1.5 rounded-full" style={{ backgroundColor: '#F5EDDC', color: '#8A6418' }}>
             Sample data
           </span>
         </div>
       </nav>
 
-      <main className="max-w-4xl mx-auto px-6 pt-10">
+      <main id="main-content" className="max-w-4xl mx-auto px-6 pt-10">
 
         <DemoBanner>The transactions below are examples, not a real bank feed.</DemoBanner>
 
@@ -60,7 +60,7 @@ export default function Expenses() {
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
             Review Expenses
           </h1>
-          <p style={{ color: '#9A8F83' }}>
+          <p style={{ color: '#6B6256' }}>
             {pendingCount > 0
               ? <>In this example, EasyTax has flagged <strong style={{ color: '#1C1208' }}>{pendingCount}</strong> transactions for review. Approved expenses here total <strong style={{ color: '#1C1208' }}>£{approvedTotal.toFixed(2)}</strong>.</>
               : 'All transactions reviewed.'}
@@ -86,11 +86,11 @@ export default function Expenses() {
                   </p>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-xs" style={{ color: '#9A8F83' }}>{t.date}</span>
+                  <span className="text-xs" style={{ color: '#6B6256' }}>{t.date}</span>
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ backgroundColor: confidenceStyle[t.confidence].bg, color: confidenceStyle[t.confidence].text }}>
                     {t.confidence.toUpperCase()} confidence
                   </span>
-                  <span className="text-xs" style={{ color: '#9A8F83' }}>→ {t.category}</span>
+                  <span className="text-xs" style={{ color: '#6B6256' }}>→ {t.category}</span>
                 </div>
               </div>
 
@@ -100,7 +100,7 @@ export default function Expenses() {
                     <button
                       onClick={() => handleReject(t.id)}
                       className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                      style={{ border: '1.5px solid #DDD5C8', color: '#9A8F83', backgroundColor: '#FDFCF8' }}
+                      style={{ border: '1.5px solid #DDD5C8', color: '#6B6256', backgroundColor: '#FDFCF8' }}
                       title="Mark as personal"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,7 +110,7 @@ export default function Expenses() {
                     <button
                       onClick={() => handleApprove(t.id)}
                       className="w-9 h-9 rounded-full flex items-center justify-center transition-all"
-                      style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}
+                      style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}
                       title="Approve as business expense"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,7 +119,7 @@ export default function Expenses() {
                     </button>
                   </div>
                 ) : (
-                  <span className="text-xs font-medium" style={{ color: t.status === 'approved' ? '#6B8E6E' : '#9A8F83' }}>
+                  <span className="text-xs font-medium" style={{ color: t.status === 'approved' ? '#4B6A4E' : '#6B6256' }}>
                     {t.status === 'approved' ? 'Approved' : 'Personal'}
                   </span>
                 )}
@@ -129,7 +129,7 @@ export default function Expenses() {
         </div>
 
         {pendingCount === 0 && (
-          <div className="mt-10 text-center p-8 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #6B8E6E30' }}>
+          <div className="mt-10 text-center p-8 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
             <p style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
               All caught up.
             </p>

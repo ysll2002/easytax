@@ -406,6 +406,12 @@
     "tagline": "Finance Panda Limited. صُمم في لندن.",
     "disclaimer": "EasyTax منتج من Finance Panda Limited. توفر الأدوات المجانية معلومات عامة عن القواعد المنشورة من HMRC وليست استشارة ضريبية. وافقت HMRC في 11 نوفمبر 2026 على وصولنا إلى بيئة الإنتاج لـ MTD ITSA وSelf Assessment وVAT.",
     "notifyHeading": "كن أول من يقدّم إقراره",
-    "notifyBlurb": "سنراسلك يوم فتح التقديم عبر MTD — لا شيء غير ذلك، وإلغاء الاشتراك بنقرة واحدة."
+    "notifyBlurb": "سنراسلك يوم فتح التقديم عبر MTD — لا شيء غير ذلك، وإلغاء الاشتراك بنقرة واحدة.",
+    "accessibility": "إمكانية الوصول"
+  },
+  "a11y": {
+    "skipToContent": "انتقل إلى المحتوى الرئيسي",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة"
   }
 }

@@ -93,7 +93,7 @@ export default function FaqSection({
         {heading}
       </h2>
       {intro && (
-        <p className="text-sm mb-5" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+        <p className="text-sm mb-5" style={{ color: '#6B6256', lineHeight: 1.6 }}>
           {intro}
         </p>
       )}
@@ -102,7 +102,7 @@ export default function FaqSection({
         {faqs.map(({ q, a }) => (
           <div key={q}>
             <p className="font-semibold mb-1.5 flex items-start gap-2" style={{ color: '#1C1208' }}>
-              <HelpCircle size={16} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-1" />
+              <HelpCircle size={16} color="#4B6A4E" strokeWidth={2} className="flex-shrink-0 mt-1" />
               <span>{q}</span>
             </p>
             <p

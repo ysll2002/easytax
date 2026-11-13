@@ -60,7 +60,7 @@ const rows: Row[] = [
 ];
 
 function Cell({ value }: { value: string | boolean }) {
-  if (value === true)  return <Check size={18} color="#6B8E6E" strokeWidth={2.5} className="mx-auto" />;
+  if (value === true)  return <Check size={18} color="#4B6A4E" strokeWidth={2.5} className="mx-auto" />;
   if (value === false) return <X     size={18} color="#C46262" strokeWidth={2.5} className="mx-auto" />;
   return <span className="text-sm" style={{ color: '#1C1208' }}>{value}</span>;
 }
@@ -88,7 +88,7 @@ export default async function BokioAlternative() {
 
       {/* ── Urgency banner ── */}
       {daysLeft > 0 && (
-        <div style={{ backgroundColor: '#C4622D', color: '#FDFCF8', padding: '0.75rem 1rem', textAlign: 'center' }}>
+        <div style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', padding: '0.75rem 1rem', textAlign: 'center' }}>
           <p className="text-sm font-medium" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
             <AlertCircle size={14} />
             <span>Bokio UK closes <strong>{BOKIO_END_DATE_HUMAN}</strong> — <strong>{daysLeft} {daysLeft === 1 ? 'day' : 'days'} left</strong> to migrate</span>
@@ -96,28 +96,28 @@ export default async function BokioAlternative() {
         </div>
       )}
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
 
         {/* ── Hero ── */}
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
               <Sparkles size={12} /> The no-subscription Bokio alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Bokio is closing on <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to EasyTax in minutes.
+              Bokio is closing on <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to EasyTax in minutes.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC <strong style={{ color: '#6B8E6E' }}>free</strong>, with no monthly subscription and no filing fee — and since April 2026 you are legally required to file quarterly anyway.
+              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong>, with no monthly subscription and no filing fee — and since April 2026 you are legally required to file quarterly anyway.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready — mandatory since April 2026</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+              <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Start migration →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=Bokio%20CSV%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
@@ -138,12 +138,12 @@ export default async function BokioAlternative() {
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#C4622D' }}>Deadline 1</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>Deadline 1</p>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{BOKIO_END_DATE_HUMAN}</p>
                 <p className="text-sm" style={{ color: '#4A4035' }}>Bokio UK shuts down. Export your data before this date.</p>
               </div>
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#C4622D' }}>Deadline 2</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>Deadline 2</p>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>6 April 2026</p>
                 <p className="text-sm" style={{ color: '#4A4035' }}>MTD ITSA mandatory for self-employment / property income &gt; £50k.</p>
               </div>
@@ -155,20 +155,20 @@ export default async function BokioAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Bokio</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Bokio</em> vs EasyTax
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
                 {/* header */}
-                <div className="px-4 sm:px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9A8F83', backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
+                <div className="px-4 sm:px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#6B6256', backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   Feature
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Bokio</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#6B6256' }}>Bokio</p>
                   <p className="text-sm font-bold" style={{ color: '#1C1208' }}>£299.40 / year</p>
                 </div>
 
@@ -176,7 +176,7 @@ export default async function BokioAlternative() {
                   <div key={r.feature} className="contents">
                     <div className="px-4 sm:px-6 py-4 text-sm" style={{ borderBottom: i === rows.length - 1 ? 'none' : '1px solid #F0EBE1', color: '#1C1208' }}>
                       <p className="font-medium">{r.feature}</p>
-                      {r.note && <p className="text-xs mt-1" style={{ color: '#9A8F83' }}>{r.note}</p>}
+                      {r.note && <p className="text-xs mt-1" style={{ color: '#6B6256' }}>{r.note}</p>}
                     </div>
                     <div className="px-4 py-4 text-center flex items-center justify-center" style={{ borderBottom: i === rows.length - 1 ? 'none' : '1px solid #F0EBE1', backgroundColor: '#FFFFFF' }}>
                       <Cell value={r.easytax} />
@@ -188,7 +188,7 @@ export default async function BokioAlternative() {
                 ))}
               </div>
             </div>
-            <p className="text-xs mt-3" style={{ color: '#9A8F83' }}>
+            <p className="text-xs mt-3" style={{ color: '#6B6256' }}>
               Bokio pricing reflects the standard plan as of June 2026. Closure date taken from Bokio&apos;s own announcement to UK customers. We are not affiliated with Bokio.
             </p>
           </div>
@@ -224,7 +224,7 @@ export default async function BokioAlternative() {
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                     {i + 1}
                   </div>
                   <div>
@@ -244,23 +244,23 @@ export default async function BokioAlternative() {
               Honest tradeoffs
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
-              <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #6B8E6E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B8E6E' }}>Where EasyTax is better</p>
+              <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax is better</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>No subscription and no per-filing fee. Nothing to pay at all.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Files Self Assessment, MTD ITSA quarterly updates, and CT600 directly to HMRC.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>AI categorisation and AI reconciliation chat.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Still here on 8 July 2026.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No subscription and no per-filing fee. Nothing to pay at all.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Files Self Assessment, MTD ITSA quarterly updates, and CT600 directly to HMRC.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>AI categorisation and AI reconciliation chat.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Still here on 8 July 2026.</span></li>
                 </ul>
               </div>
-              <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#C4622D' }}>Where Bokio was better</p>
+              <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C30' }}>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>Where Bokio was better</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#C4622D" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping ledger (we do P&L and Balance Sheet for Ltd companies, not a full ledger).</span></li>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#C4622D" className="flex-shrink-0 mt-0.5" /><span>Native invoicing inside the same app (we pair with GrumpyWhales for that).</span></li>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#C4622D" className="flex-shrink-0 mt-0.5" /><span>A few more integrations on payroll / payments.</span></li>
+                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping ledger (we do P&L and Balance Sheet for Ltd companies, not a full ledger).</span></li>
+                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Native invoicing inside the same app (we pair with GrumpyWhales for that).</span></li>
+                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>A few more integrations on payroll / payments.</span></li>
                 </ul>
-                <p className="text-xs mt-3" style={{ color: '#9A8F83' }}>
+                <p className="text-xs mt-3" style={{ color: '#6B6256' }}>
                   None of which matters on 8 July — it&apos;s being switched off.
                 </p>
               </div>
@@ -296,7 +296,7 @@ export default async function BokioAlternative() {
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm" style={{ color: '#1C1208' }}>
                     {item.q}
-                    <span style={{ color: '#C4622D', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
+                    <span style={{ color: '#A04E1C', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
                   </summary>
                   <p className="mt-3 text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.a}</p>
                 </details>
@@ -310,13 +310,13 @@ export default async function BokioAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop watching the Bokio countdown.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Open an EasyTax account.</em>
+              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>Open an EasyTax account.</em>
             </h2>
-            <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
+            <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
               Move your data when you&apos;re ready. We&apos;ll still be here on 8 July.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
-              <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+              <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
               <a href="mailto:hello@easytax.vip?subject=Bokio%20CSV%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>

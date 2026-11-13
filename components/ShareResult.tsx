@@ -89,7 +89,7 @@ export default function ShareResult({ tool, path, query, summary }: ShareResultP
       <p className="text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>
         Send this answer to someone
       </p>
-      <p className="text-xs mb-4" style={{ color: '#8A7F73' }}>
+      <p className="text-xs mb-4" style={{ color: '#6B6256' }}>
         The link opens this page with your figures already filled in. Nothing is
         saved on our side, and the numbers only leave your browser if you share it.
       </p>
@@ -101,7 +101,7 @@ export default function ShareResult({ tool, path, query, summary }: ShareResultP
           className="inline-flex items-center justify-center gap-2 px-5 rounded-full text-sm font-semibold transition-all"
           style={{
             minHeight: 44,
-            backgroundColor: copied ? '#3F7D5C' : '#C4622D',
+            backgroundColor: copied ? '#3F7D5C' : '#A04E1C',
             color: '#FDFCF8',
           }}
         >

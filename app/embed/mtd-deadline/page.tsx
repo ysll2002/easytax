@@ -85,7 +85,7 @@ export default async function MtdDeadlineEmbed() {
           letterSpacing: 1.2,
           textTransform: 'uppercase',
           fontWeight: 600,
-          color: '#C4622D',
+          color: '#A04E1C',
         }}
       >
         {status.isLive ? 'Making Tax Digital is live' : 'Making Tax Digital for Income Tax'}
@@ -96,7 +96,7 @@ export default async function MtdDeadlineEmbed() {
           <p style={{ margin: '10px 0 0', fontSize: 'clamp(19px, 5vw, 24px)', fontWeight: 700, lineHeight: 1.25 }}>
             {q.taxYear} {q.key} quarterly update due {q.deadlineLabel}
           </p>
-          <p style={{ margin: '8px 0 0', fontSize: 15, color: '#8A7F73' }}>
+          <p style={{ margin: '8px 0 0', fontSize: 15, color: '#6B6256' }}>
             Covers {q.periodLabel} ·{' '}
             <strong style={{ color: '#1C1208' }}>
               {days === 0 ? 'due today' : days === 1 ? '1 day left' : `${days} days left`}
@@ -112,12 +112,12 @@ export default async function MtdDeadlineEmbed() {
       {/* The attribution link, and the reason this widget exists. `target`
           escapes the frame — a visitor who clicks should land on a full page,
           not navigate the host's iframe to our site. */}
-      <p style={{ margin: '16px 0 0', fontSize: 13, color: '#8A7F73' }}>
+      <p style={{ margin: '16px 0 0', fontSize: 13, color: '#6B6256' }}>
         <a
           href="https://easytax.vip/mtd-deadline-checker?utm_source=embed&utm_medium=widget&utm_campaign=mtd_deadline"
           target="_blank"
           rel="noopener"
-          style={{ color: '#C4622D', fontWeight: 600, textDecoration: 'none' }}
+          style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'none' }}
         >
           Check your own MTD deadlines
         </a>{' '}

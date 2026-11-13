@@ -29,7 +29,7 @@ export default function ToolCrossLinks({ current }: { current: ToolKey }) {
         <Link
           href="/tools"
           className="text-sm font-medium"
-          style={{ color: '#C4622D', textDecoration: 'none' }}
+          style={{ color: '#A04E1C', textDecoration: 'none' }}
         >
           All free tools →
         </Link>
@@ -45,12 +45,12 @@ export default function ToolCrossLinks({ current }: { current: ToolKey }) {
               <p className="font-semibold text-sm mb-1.5" style={{ color: '#1C1208' }}>
                 {t.name}
               </p>
-              <p className="text-xs flex-1 mb-3" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+              <p className="text-xs flex-1 mb-3" style={{ color: '#6B6256', lineHeight: 1.6 }}>
                 {t.question}
               </p>
               <span
                 className="inline-flex items-center gap-1.5 text-xs font-medium"
-                style={{ color: '#C4622D' }}
+                style={{ color: '#A04E1C' }}
               >
                 Open the calculator <ArrowRight size={13} />
               </span>

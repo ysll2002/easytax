@@ -92,9 +92,9 @@ export default function NotifyMeForm({
       return (
         <div
           className="p-4 rounded-xl flex items-start gap-2.5"
-          style={{ backgroundColor: '#F0EBE1', border: '1px solid #6B8E6E40' }}
+          style={{ backgroundColor: '#F0EBE1', border: '1px solid #4B6A4E40' }}
         >
-          <Check size={16} color="#6B8E6E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
+          <Check size={16} color="#4B6A4E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" />
           <p className="text-sm" style={{ color: '#1C1208', lineHeight: 1.5 }}>{message}</p>
         </div>
       );
@@ -103,13 +103,13 @@ export default function NotifyMeForm({
     return (
       <div>
         <div className="flex items-center gap-2 mb-1.5">
-          <Bell size={15} color="#C4622D" strokeWidth={2} className="flex-shrink-0" />
+          <Bell size={15} color="#A04E1C" strokeWidth={2} className="flex-shrink-0" />
           <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>{heading}</p>
         </div>
-        <p className="text-xs mb-3" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{blurb}</p>
+        <p className="text-xs mb-3" style={{ color: '#6B6256', lineHeight: 1.6 }}>{blurb}</p>
 
         <form onSubmit={submit} className="flex flex-col sm:flex-row gap-2">
-          <input
+          <input autoComplete="email"
             type="email"
             required
             value={email}
@@ -135,7 +135,7 @@ export default function NotifyMeForm({
               padding: '0.7rem 1.4rem',
               borderRadius: '50px',
               border: 'none',
-              backgroundColor: state === 'loading' ? '#C4622D99' : '#C4622D',
+              backgroundColor: state === 'loading' ? '#A04E1C99' : '#A04E1C',
               color: '#FDFCF8',
               fontSize: '0.875rem',
               fontWeight: 600,
@@ -158,11 +158,11 @@ export default function NotifyMeForm({
     return (
       <div
         className="p-5 sm:p-6 rounded-2xl flex items-start gap-3"
-        style={{ backgroundColor: '#F0EBE1', border: '1px solid #6B8E6E40' }}
+        style={{ backgroundColor: '#F0EBE1', border: '1px solid #4B6A4E40' }}
       >
         <div
           className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-          style={{ backgroundColor: '#6B8E6E' }}
+          style={{ backgroundColor: '#4B6A4E' }}
         >
           <Check size={16} color="#FDFCF8" strokeWidth={2.5} />
         </div>
@@ -182,7 +182,7 @@ export default function NotifyMeForm({
       style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E8E2DA' }}
     >
       <div className="flex items-center gap-2 mb-2">
-        <Bell size={16} color="#C4622D" strokeWidth={2} />
+        <Bell size={16} color="#A04E1C" strokeWidth={2} />
         <p
           style={{
             fontFamily: 'var(--font-display), Playfair Display, Georgia, serif',
@@ -194,10 +194,10 @@ export default function NotifyMeForm({
           {heading}
         </p>
       </div>
-      <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{blurb}</p>
+      <p className="text-sm mb-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>{blurb}</p>
 
       <form onSubmit={submit} className="flex flex-col gap-3">
-        <input
+        <input autoComplete="email"
           type="email"
           required
           value={email}
@@ -226,7 +226,7 @@ export default function NotifyMeForm({
             borderRadius: '0.75rem',
             border: '1px solid #DDD5C8',
             backgroundColor: '#FDFCF8',
-            color: segment ? '#1C1208' : '#9A8F83',
+            color: segment ? '#1C1208' : '#6B6256',
             fontSize: '0.95rem',
             minHeight: '44px',
           }}
@@ -245,7 +245,7 @@ export default function NotifyMeForm({
             padding: '0.8rem 1.75rem',
             borderRadius: '50px',
             border: 'none',
-            backgroundColor: state === 'loading' ? '#C4622D99' : '#C4622D',
+            backgroundColor: state === 'loading' ? '#A04E1C99' : '#A04E1C',
             color: '#FDFCF8',
             fontSize: '0.9rem',
             fontWeight: 600,

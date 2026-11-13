@@ -32,7 +32,9 @@ export default function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
-        aria-label={t('language')}
+        aria-label={`${t('language')}: ${localeNames[current]}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-colors"
         style={{ color: '#4A4035', backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8', cursor: 'pointer' }}
       >
@@ -74,7 +76,7 @@ export default function LanguageSwitcher() {
                   <span style={{ fontSize: '1.05rem', lineHeight: 1 }} aria-hidden>{localeFlags[loc]}</span>
                   <span>{localeNames[loc]}</span>
                 </span>
-                {active && <Check size={14} color="#6B8E6E" />}
+                {active && <Check size={14} color="#4B6A4E" />}
               </button>
             );
           })}

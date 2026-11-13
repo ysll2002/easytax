@@ -34,12 +34,12 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
-      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>← Back</Link>
+      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
 
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
         Connect HMRC
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2rem', lineHeight: 1.6 }}>
+      <p style={{ color: '#6B6256', marginBottom: '2rem', lineHeight: 1.6 }}>
         You&apos;ll be redirected to HMRC&apos;s secure website to sign in with your Government Gateway credentials and authorise EasyTax to access your Self Assessment data.
       </p>
 
@@ -47,7 +47,7 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
         <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>What we access</p>
         {['Your Self Assessment obligations and deadlines', 'VAT obligations and return submissions', 'Income and employment records (P60, P45)', 'Previously submitted returns'].map(item => (
           <div key={item} className="flex items-start gap-2 text-sm" style={{ color: '#4A4035' }}>
-            <span style={{ color: '#C9963D', marginTop: '2px' }}>✓</span> {item}
+            <span style={{ color: '#8A6418', marginTop: '2px' }}>✓</span> {item}
           </div>
         ))}
       </div>
@@ -61,11 +61,11 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
 
       <a href={authUrl}
         className="inline-block w-full text-center py-3.5 rounded-xl font-medium text-sm"
-        style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+        style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>
         Sign in with HMRC Government Gateway →
       </a>
 
-      <p className="text-xs text-center mt-4" style={{ color: '#9A8F83' }}>
+      <p className="text-xs text-center mt-4" style={{ color: '#6B6256' }}>
         Your credentials are entered directly on HMRC&apos;s site — EasyTax never sees your password.
       </p>
     </div>

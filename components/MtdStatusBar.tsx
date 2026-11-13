@@ -69,7 +69,7 @@ export default function MtdStatusBar() {
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-2 sm:py-2.5 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3 text-xs sm:text-sm">
         <span className="flex items-center gap-2" style={{ color: '#4A4035' }}>
-          <CalendarClock size={14} style={{ color: '#C4622D', flexShrink: 0 }} aria-hidden />
+          <CalendarClock size={14} style={{ color: '#A04E1C', flexShrink: 0 }} aria-hidden />
           <span>
             <strong style={{ color: '#1C1208' }}>
               {status.isLive ? t('live') : t('preMandate')}
@@ -85,7 +85,7 @@ export default function MtdStatusBar() {
                 {/* Only after mount: a build-time day count is wrong by however
                     long ago the deploy was. */}
                 {mounted && status.daysUntilDue !== null && (
-                  <span style={{ color: '#C4622D', fontWeight: 600 }}>
+                  <span style={{ color: '#A04E1C', fontWeight: 600 }}>
                     {' '}
                     · {t('daysLeft', { days: status.daysUntilDue })}
                   </span>
@@ -99,7 +99,7 @@ export default function MtdStatusBar() {
           href="/mtd-deadline-checker"
           onClick={() => trackClient('activation_cta_click', { placement: 'mtd_status_bar' })}
           className="inline-flex items-center gap-1 font-medium sm:ml-auto"
-          style={{ color: '#C4622D', textDecoration: 'none', minHeight: 24 }}
+          style={{ color: '#A04E1C', textDecoration: 'none', minHeight: 24 }}
         >
           {t('cta')}
           <ArrowRight size={13} aria-hidden />

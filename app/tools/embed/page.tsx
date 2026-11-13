@@ -48,8 +48,8 @@ export default function EmbedPage() {
     <div style={{ backgroundColor: '#F7F3EC', minHeight: '100vh' }}>
       <SiteHeader />
 
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#C4622D' }}>
+      <main id="main-content" className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>
           For accountants and advisers
         </p>
         <h1
@@ -81,7 +81,7 @@ export default function EmbedPage() {
             loading="lazy"
             style={{ border: '1px solid #DDD5C8', borderRadius: 16, maxWidth: 560, backgroundColor: '#FDFCF8' }}
           />
-          <p className="text-xs mt-3" style={{ color: '#8A7F73' }}>
+          <p className="text-xs mt-3" style={{ color: '#6B6256' }}>
             Live preview. Right now it reads:{' '}
             {status.dueQuarter && status.daysUntilDue !== null
               ? `${status.dueQuarter.taxYear} ${status.dueQuarter.key}, due ${status.dueQuarter.deadlineLabel}, ${status.daysUntilDue} days left.`
@@ -125,7 +125,7 @@ export default function EmbedPage() {
             <li>
               <strong style={{ color: '#1C1208' }}>Guidance, not advice.</strong> Dates come
               from HMRC&rsquo;s published deadlines. See our{' '}
-              <Link href="/editorial-standards" style={{ color: '#C4622D' }}>
+              <Link href="/editorial-standards" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
                 editorial standards
               </Link>
               .
@@ -136,7 +136,7 @@ export default function EmbedPage() {
         <p className="text-sm" style={{ color: '#5C5147' }}>
           Want something else on the page — a penalty calculator, a full deadline
           timetable?{' '}
-          <Link href="/tools" style={{ color: '#C4622D', fontWeight: 600 }}>
+          <Link href="/tools" style={{ color: '#A04E1C', fontWeight: 600 }}>
             See all the free tools
           </Link>
           , or tell us what you need and we will build it.

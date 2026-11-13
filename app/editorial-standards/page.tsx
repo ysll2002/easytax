@@ -33,10 +33,10 @@ export const metadata: Metadata = {
   },
 };
 
-const ACCENT = '#C4622D';
+const ACCENT = '#A04E1C';
 const INK = '#1C1208';
 const BODY = '#4A4035';
-const MUTED = '#9A8F83';
+const MUTED = '#6B6256';
 
 function H2({ children }: { children: React.ReactNode }) {
   return (
@@ -85,7 +85,7 @@ export default function EditorialStandardsPage() {
       <TrackEvent name="editorial_standards_viewed" />
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-10 pb-20">
           <div className="flex items-center gap-2 mb-3">
             <ScrollText size={16} color={ACCENT} />
@@ -133,7 +133,7 @@ export default function EditorialStandardsPage() {
                 'None of it is tax advice, and none of it is a substitute for an accountant who knows your situation.',
               ].map(line => (
                 <li key={line} className="flex items-start gap-2.5 text-sm" style={{ color: BODY, lineHeight: 1.6 }}>
-                  <CheckCircle2 size={15} color="#6B8E6E" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
+                  <CheckCircle2 size={15} color="#4B6A4E" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
                   <span>{line}</span>
                 </li>
               ))}
@@ -228,7 +228,7 @@ export default function EditorialStandardsPage() {
               a company registered in England and Wales and registered with the Information
               Commissioner&apos;s Office under reference ZA540758. More about what we store, what we
               can and cannot see, and where our HMRC approval currently stands is on the{' '}
-              <Link href="/trust" style={{ color: ACCENT, textDecoration: 'none' }}>
+              <Link href="/trust" style={{ color: ACCENT, textDecoration: 'underline' }}>
                 trust page
               </Link>
               .

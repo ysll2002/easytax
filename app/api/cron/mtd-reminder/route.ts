@@ -193,7 +193,7 @@ function reminderHtml({
       <table width="560" cellpadding="0" cellspacing="0" style="background:#FDFCF8;border-radius:16px;border:1px solid #DDD5C8;overflow:hidden">
         <tr>
           <td style="background:#1C1208;padding:28px 40px">
-            <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">EasyTax</p>
+            <p style="margin:0;font-size:22px;font-weight:700;color:#A04E1C;font-family:Georgia,serif">EasyTax</p>
           </td>
         </tr>
         <tr>
@@ -205,24 +205,24 @@ function reminderHtml({
               Your <strong>${quarter.key}</strong> quarterly update (${quarter.periodLabel})
               must reach HMRC by <strong>${quarter.deadlineLabel}</strong>.
             </p>
-            <p style="margin:0 0 24px;font-size:15px;color:#9A8F83;line-height:1.6">
+            <p style="margin:0 0 24px;font-size:15px;color:#6B6256;line-height:1.6">
               Quarterly updates report your cumulative income and expenses since 6 April.
               You can check your figures and deadlines in your EasyTax dashboard.
             </p>
             <a href="https://easytax.vip/dashboard/individual"
-              style="display:inline-block;background:#C4622D;color:#FDFCF8;text-decoration:none;font-size:14px;font-weight:600;padding:14px 28px;border-radius:50px">
+              style="display:inline-block;background:#A04E1C;color:#FDFCF8;text-decoration:none;font-size:14px;font-weight:600;padding:14px 28px;border-radius:50px">
               Open my dashboard →
             </a>
           </td>
         </tr>
         <tr>
           <td style="padding:20px 40px;border-top:1px solid #F0EBE1">
-            <p style="margin:0 0 6px;font-size:12px;color:#9A8F83">
-              EasyTax is a product of Finance Panda Limited · <a href="https://easytax.vip" style="color:#9A8F83">easytax.vip</a>
+            <p style="margin:0 0 6px;font-size:12px;color:#6B6256">
+              EasyTax is a product of Finance Panda Limited · <a href="https://easytax.vip" style="color:#6B6256">easytax.vip</a>
             </p>
-            <p style="margin:0;font-size:12px;color:#9A8F83">
+            <p style="margin:0;font-size:12px;color:#6B6256">
               You are receiving this because you have an EasyTax account.
-              <a href="${optOutUrl}" style="color:#9A8F83;text-decoration:underline">Unsubscribe from deadline reminders</a>.
+              <a href="${optOutUrl}" style="color:#6B6256;text-decoration:underline">Unsubscribe from deadline reminders</a>.
             </p>
           </td>
         </tr>

@@ -120,34 +120,34 @@ export default async function Home() {
           computed source as the hero pill, so it cannot drift again. */}
       <div style={{ backgroundColor: '#1C1208', padding: '0.6rem 1rem', textAlign: 'center' }}>
         <p style={{ color: '#FDFCF8', fontSize: '0.875rem', fontWeight: 600, margin: 0 }}>
-          <span style={{ color: '#C4622D' }}>{t('announcement.live')}</span>{' '}
+          <span style={{ color: '#E8895A' }}>{t('announcement.live')}</span>{' '}
           {nextDeadline && <>{t('announcement.nextUpdate', { date: nextDeadline.deadlineLabel })} </>}
-          <span style={{ color: '#6B8E6E' }}>{t('announcement.status')}</span>
+          <span style={{ color: '#4B6A4E' }}>{t('announcement.status')}</span>
         </p>
       </div>
 
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
 
         {/* ── Hero ── */}
         <section className="relative pt-12 sm:pt-16 pb-16 sm:pb-24 overflow-hidden">
-          <div className="absolute top-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #C4622D 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
+          <div className="absolute top-0 right-0 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] rounded-full opacity-10 pointer-events-none" style={{ background: 'radial-gradient(circle, #A04E1C 0%, transparent 70%)', transform: 'translate(30%, -30%)' }} />
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
               <div className="flex-1 min-w-0">
                 {nextDeadline && (
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #C4622D40', color: '#C4622D', backgroundColor: '#F0EBE1' }}>
-                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-6 sm:mb-8" style={{ border: '1px solid #A04E1C40', color: '#A04E1C', backgroundColor: '#F0EBE1' }}>
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#A04E1C' }} />
                     {t('hero.pill', { days: daysToNext, date: nextDeadline.deadlineLabel })}
                   </div>
                 )}
 
                 <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 5vw, 2.75rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', color: '#1C1208', marginBottom: '1.25rem', wordBreak: 'keep-all' }}>
                   {t('hero.title1')}<br />
-                  <span style={{ color: '#6B8E6E' }}>{t('hero.title2')}</span>{' '}
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('hero.title3')}</em>
+                  <span style={{ color: '#4B6A4E' }}>{t('hero.title2')}</span>{' '}
+                  <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{t('hero.title3')}</em>
                 </h1>
 
                 <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '520px' }}>
@@ -155,7 +155,7 @@ export default async function Home() {
                 </p>
 
                 <div className="flex items-center gap-3 mb-7 flex-wrap">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>
                     {t('hero.badgeFree')}
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
@@ -196,7 +196,7 @@ export default async function Home() {
                   </TrackedCta>
                 </div>
 
-                <a href="#services" className="inline-block mt-4 text-sm font-medium" style={{ color: '#9A8F83', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
+                <a href="#services" className="inline-block mt-4 text-sm font-medium" style={{ color: '#6B6256', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                   {t('hero.ctaSecondary')}
                 </a>
               </div>
@@ -222,7 +222,7 @@ export default async function Home() {
                 { Icon: CheckCircle2, label: t('trust.hmrc'),     color: '#059669' },
                 { Icon: ShieldCheck,  label: t('trust.security'), color: '#FF6B35' },
                 { Icon: Clock,        label: t('trust.fast'),     color: '#7C3AED' },
-                { Icon: Sparkles,     label: t('trust.ai'),       color: '#C9963D' },
+                { Icon: Sparkles,     label: t('trust.ai'),       color: '#8A6418' },
                 { Icon: Building2,    label: t('trust.company'),  color: '#1C1208' },
               ].map(({ Icon, label, color }) => (
                 <div key={label} className="flex items-center gap-2">
@@ -255,11 +255,11 @@ export default async function Home() {
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
                   {t('tools.title')}
                 </h2>
-                <p style={{ color: '#9A8F83', fontSize: '1rem', lineHeight: 1.6 }}>
+                <p style={{ color: '#6B6256', fontSize: '1rem', lineHeight: 1.6 }}>
                   {t('tools.subtitle')}
                 </p>
               </div>
-              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#A04E1C', textDecoration: 'none' }}>
                 {t('tools.all')}
               </Link>
             </div>
@@ -283,7 +283,7 @@ export default async function Home() {
                   <span className="text-sm block mb-4 flex-grow" style={{ color: '#4A4035', lineHeight: 1.6 }}>
                     {tool.short}
                   </span>
-                  <span className="text-sm font-medium inline-flex items-center gap-1.5" style={{ color: '#C4622D' }}>
+                  <span className="text-sm font-medium inline-flex items-center gap-1.5" style={{ color: '#A04E1C' }}>
                     {tool.name} <ArrowRight size={15} strokeWidth={2} />
                   </span>
                 </TrackedCta>
@@ -319,9 +319,9 @@ export default async function Home() {
             <div className="mb-14 max-w-2xl">
               <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1rem' }}>
                 {t('services.title1')}<br />
-                <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('services.title2')}</em>
+                <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{t('services.title2')}</em>
               </h2>
-              <p style={{ color: '#9A8F83', fontSize: '1.05rem', lineHeight: 1.7 }}>
+              <p style={{ color: '#6B6256', fontSize: '1.05rem', lineHeight: 1.7 }}>
                 {t('services.subtitle')}
               </p>
             </div>
@@ -335,7 +335,7 @@ export default async function Home() {
                     <User size={18} color="#FDFCF8" strokeWidth={1.8} />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>{t('services.freelancer.kicker')}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#6B6256' }}>{t('services.freelancer.kicker')}</p>
                     <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#1C1208' }}>{t('services.freelancer.title')}</h3>
                   </div>
                 </div>
@@ -347,10 +347,10 @@ export default async function Home() {
                     { icon: Receipt,   label: t('services.freelancer.f4Label'), desc: t('services.freelancer.f4Desc') },
                   ].map(({ icon: Icon, label, desc }) => (
                     <div key={label} className="flex gap-3 p-4 rounded-xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
-                      <Icon size={16} color="#6B8E6E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+                      <Icon size={16} color="#4B6A4E" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="font-semibold text-sm" style={{ color: '#1C1208' }}>{label}</p>
-                        <p className="text-xs mt-0.5" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{desc}</p>
+                        <p className="text-xs mt-0.5" style={{ color: '#6B6256', lineHeight: 1.5 }}>{desc}</p>
                       </div>
                     </div>
                   ))}
@@ -365,11 +365,11 @@ export default async function Home() {
               {/* Limited companies */}
               <div className="rounded-2xl p-6 sm:p-8" style={{ backgroundColor: '#1C1208', border: '1px solid #2E2418' }}>
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#C4622D' }}>
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#A04E1C' }}>
                     <Building2 size={18} color="#FDFCF8" strokeWidth={1.8} />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>{t('services.company.kicker')}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>{t('services.company.kicker')}</p>
                     <h3 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#FDFCF8' }}>{t('services.company.title')}</h3>
                   </div>
                 </div>
@@ -381,16 +381,16 @@ export default async function Home() {
                     { icon: FileText,   label: t('services.company.f4Label'), desc: t('services.company.f4Desc') },
                   ].map(({ icon: Icon, label, desc }) => (
                     <div key={label} className="flex gap-3 p-4 rounded-xl" style={{ backgroundColor: '#2E2418', border: '1px solid #3D3025' }}>
-                      <Icon size={16} color="#C4622D" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
+                      <Icon size={16} color="#A04E1C" strokeWidth={2} className="flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="font-semibold text-sm" style={{ color: '#FDFCF8' }}>{label}</p>
-                        <p className="text-xs mt-0.5" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{desc}</p>
+                        <p className="text-xs mt-0.5" style={{ color: '#A89D90', lineHeight: 1.5 }}>{desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
                 <div className="mt-6">
-                  <Link href={ctaHref} className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                  <Link href={ctaHref} className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                     {t('services.company.cta')}
                   </Link>
                 </div>
@@ -406,18 +406,18 @@ export default async function Home() {
               <div>
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208', marginBottom: '1.25rem' }}>
                   {t('how.title1')}<br />
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('how.title2')}</em>
+                  <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{t('how.title2')}</em>
                 </h2>
                 <p style={{ color: '#4A4035', lineHeight: 1.8, marginBottom: '1.75rem' }}>
                   {t('how.body')}
                 </p>
                 <div className="flex flex-col gap-2 mb-8">
                   <div className="flex items-baseline gap-2">
-                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.75rem', fontWeight: 700, color: '#6B8E6E', lineHeight: 1 }}>{t('how.priceLabel')}</span>
+                    <span style={{ fontFamily: 'var(--font-display)', fontSize: '2.75rem', fontWeight: 700, color: '#4B6A4E', lineHeight: 1 }}>{t('how.priceLabel')}</span>
                   </div>
-                  <p style={{ color: '#9A8F83', fontSize: '0.875rem' }}>{t('how.priceCaption')}</p>
+                  <p style={{ color: '#6B6256', fontSize: '0.875rem' }}>{t('how.priceCaption')}</p>
                 </div>
-                <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+                <Link href={ctaHref} className="inline-block px-8 py-3.5 rounded-full font-medium transition-all" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                   {t('how.cta')}
                 </Link>
               </div>
@@ -434,7 +434,7 @@ export default async function Home() {
                     </div>
                     <div>
                       <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{step.title}</p>
-                      <p className="text-sm" style={{ color: '#9A8F83', lineHeight: 1.6 }}>{step.desc}</p>
+                      <p className="text-sm" style={{ color: '#6B6256', lineHeight: 1.6 }}>{step.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -453,18 +453,18 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#6B8E6E15', color: '#6B8E6E', border: '1px solid #6B8E6E40' }}>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#4B6A4E15', color: '#4B6A4E', border: '1px solid #4B6A4E40' }}>
                   {t('toolsStrip.kicker')}
                 </div>
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2 }}>
                   {t('toolsStrip.title1')}<br />
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('toolsStrip.title2')}</em>
+                  <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{t('toolsStrip.title2')}</em>
                 </h2>
-                <p className="mt-3 text-sm max-w-xl" style={{ color: '#9A8F83', lineHeight: 1.7 }}>
+                <p className="mt-3 text-sm max-w-xl" style={{ color: '#6B6256', lineHeight: 1.7 }}>
                   {t('toolsStrip.subtitle')}
                 </p>
               </div>
-              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+              <Link href="/tools" className="text-sm font-medium flex-shrink-0" style={{ color: '#A04E1C', textDecoration: 'none' }}>
                 {t('toolsStrip.cta')} →
               </Link>
             </div>
@@ -478,13 +478,13 @@ export default async function Home() {
                 <Link key={href} href={href} style={{ textDecoration: 'none' }}>
                   <div className="h-full p-6 rounded-2xl transition-all hover:shadow-md flex flex-col" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#F0EBE1' }}>
-                      <Icon size={18} color="#C4622D" strokeWidth={1.9} />
+                      <Icon size={18} color="#A04E1C" strokeWidth={1.9} />
                     </div>
                     <h3 className="font-bold mb-2" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.05rem', color: '#1C1208', lineHeight: 1.35 }}>
                       {name}
                     </h3>
-                    <p className="text-xs leading-relaxed flex-1 mb-4" style={{ color: '#9A8F83' }}>{desc}</p>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: '#C4622D' }}>
+                    <p className="text-xs leading-relaxed flex-1 mb-4" style={{ color: '#6B6256' }}>{desc}</p>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium" style={{ color: '#A04E1C' }}>
                       {t('toolsStrip.openTool')} <ArrowRight size={13} />
                     </span>
                   </div>
@@ -514,7 +514,7 @@ export default async function Home() {
         {questions.length >= 3 && (
           <section className="py-14 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
             <div className="max-w-5xl mx-auto px-4 sm:px-6">
-              <p className="text-xs uppercase tracking-wide mb-2" style={{ color: '#9A8F83' }}>
+              <p className="text-xs uppercase tracking-wide mb-2" style={{ color: '#6B6256' }}>
                 {t('questions.kicker')}
               </p>
               <h2
@@ -547,7 +547,7 @@ export default async function Home() {
                       >
                         {q.question}
                       </span>
-                      <span className="block text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>
+                      <span className="block text-xs" style={{ color: '#6B6256', lineHeight: 1.5 }}>
                         {q.title}
                       </span>
                     </Link>
@@ -558,7 +558,7 @@ export default async function Home() {
               <Link
                 href="/tax-tips"
                 className="inline-block mt-6 text-sm font-semibold"
-                style={{ color: '#C4622D', textDecoration: 'none', minHeight: 44 }}
+                style={{ color: '#A04E1C', textDecoration: 'none', minHeight: 44 }}
               >
                 {t('questions.viewAll')} →
               </Link>
@@ -570,7 +570,7 @@ export default async function Home() {
         <section id="faq" className="py-20 sm:py-28" style={{ backgroundColor: '#FDFCF8' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 className="text-center mb-14" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#1C1208' }}>
-              {t('faq.title1')} <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('faq.title2')}</em>
+              {t('faq.title1')} <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{t('faq.title2')}</em>
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
@@ -584,7 +584,7 @@ export default async function Home() {
                 <details key={item.q} className="group py-5 sm:py-6" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm sm:text-base" style={{ color: '#1C1208' }}>
                     {item.q}
-                    <span style={{ color: '#C4622D', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
+                    <span style={{ color: '#A04E1C', fontSize: '1.25rem', lineHeight: 1, flexShrink: 0, marginLeft: '1rem' }}>+</span>
                   </summary>
                   <p className="mt-4 text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.a}</p>
                 </details>
@@ -598,16 +598,16 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#C4622D' }} />
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-3" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ backgroundColor: '#A04E1C' }} />
                   {t('tips.kicker')}
                 </div>
                 <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, color: '#1C1208', lineHeight: 1.2 }}>
                   {t('tips.title1')}<br />
-                  <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('tips.title2')}</em>
+                  <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{t('tips.title2')}</em>
                 </h2>
               </div>
-              <Link href="/tax-tips" className="text-sm font-medium flex-shrink-0" style={{ color: '#C4622D', textDecoration: 'none' }}>
+              <Link href="/tax-tips" className="text-sm font-medium flex-shrink-0" style={{ color: '#A04E1C', textDecoration: 'none' }}>
                 {t('tips.viewAll')}
               </Link>
             </div>
@@ -618,18 +618,18 @@ export default async function Home() {
                   <Link key={a.slug} href={`/tax-tips/${a.slug}`} style={{ textDecoration: 'none' }}>
                     <div className="h-full p-6 rounded-2xl transition-all hover:shadow-md flex flex-col" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
                       <div className="flex items-center gap-1.5 mb-3">
-                        <Calendar size={12} color="#9A8F83" />
-                        <span className="text-xs" style={{ color: '#9A8F83' }}>
+                        <Calendar size={12} color="#6B6256" />
+                        <span className="text-xs" style={{ color: '#6B6256' }}>
                           {new Date(a.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                       </div>
                       <h3 className="font-bold mb-2 flex-1" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1rem', color: '#1C1208', lineHeight: 1.4 }}>
                         {a.title}
                       </h3>
-                      <p className="text-xs leading-relaxed mb-4" style={{ color: '#9A8F83' }}>
+                      <p className="text-xs leading-relaxed mb-4" style={{ color: '#6B6256' }}>
                         {a.excerpt.slice(0, 100)}…
                       </p>
-                      <p className="text-xs font-medium" style={{ color: '#C4622D' }}>{t('tips.readMore')}</p>
+                      <p className="text-xs font-medium" style={{ color: '#A04E1C' }}>{t('tips.readMore')}</p>
                     </div>
                   </Link>
                 ))}
@@ -637,7 +637,7 @@ export default async function Home() {
             ) : (
               <div className="py-10 text-center rounded-2xl" style={{ backgroundColor: '#F8F5F0', border: '1px solid #E8E2DA' }}>
                 <p className="font-medium" style={{ color: '#4A4035' }}>{t('tips.empty')}</p>
-                <Link href="/tax-tips" className="text-sm mt-2 inline-block" style={{ color: '#C4622D' }}>{t('tips.visit')}</Link>
+                <Link href="/tax-tips" className="text-sm mt-2 inline-block" style={{ color: '#A04E1C' }}>{t('tips.visit')}</Link>
               </div>
             )}
           </div>
@@ -658,12 +658,12 @@ export default async function Home() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(2rem, 5vw, 3.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.1, marginBottom: '1.5rem' }}>
               {t('finalCta.title1')}<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>{t('finalCta.title2')}</em>
+              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>{t('finalCta.title2')}</em>
             </h2>
-            <p style={{ color: '#9A8F83', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
+            <p style={{ color: '#A89D90', fontSize: '1.1rem', marginBottom: '2.5rem' }}>
               {t('finalCta.subtitle')}
             </p>
-            <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
+            <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium text-lg transition-all" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
               {t('finalCta.button')}
             </Link>
           </div>

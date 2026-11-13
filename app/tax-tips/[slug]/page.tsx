@@ -145,15 +145,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       )}
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         <article className="max-w-3xl mx-auto px-4 sm:px-6 pt-10 pb-20">
-          <Link href="/tax-tips" className="inline-flex items-center gap-1 text-sm mb-8" style={{ color: '#9A8F83', textDecoration: 'none' }}>
+          <Link href="/tax-tips" className="inline-flex items-center gap-1 text-sm mb-8" style={{ color: '#6B6256', textDecoration: 'none' }}>
             <ChevronLeft size={14} /> Back to Tax Tips
           </Link>
 
           <div className="flex items-center gap-1.5 mb-4">
-            <Calendar size={13} color="#9A8F83" />
-            <span className="text-sm" style={{ color: '#9A8F83' }}>
+            <Calendar size={13} color="#6B6256" />
+            <span className="text-sm" style={{ color: '#6B6256' }}>
               {new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
             </span>
           </div>
@@ -170,7 +170,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           {question && (
             <p
               className="text-sm mb-2"
-              style={{ color: '#9A8F83', fontWeight: 600, lineHeight: 1.5 }}
+              style={{ color: '#6B6256', fontWeight: 600, lineHeight: 1.5 }}
             >
               {question.question}
             </p>
@@ -187,7 +187,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           {topics.length > 0 && (
             <nav className="mb-8 pb-8" style={{ borderBottom: '1px solid #E8E2DA' }} aria-label="Topics">
               <ul className="list-none p-0 m-0 flex flex-wrap items-center gap-2">
-                <li className="text-xs mr-1" style={{ color: '#9A8F83' }}>In this topic:</li>
+                <li className="text-xs mr-1" style={{ color: '#6B6256' }}>In this topic:</li>
                 {topics.map(t => (
                   <li key={t.slug}>
                     <Link
@@ -232,7 +232,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <p
                 id="on-this-page"
                 className="text-xs uppercase tracking-wide m-0 mb-2.5"
-                style={{ color: '#9A8F83' }}
+                style={{ color: '#6B6256' }}
               >
                 On this page
               </p>
@@ -283,7 +283,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                       <p className="text-sm font-semibold mb-1" style={{ color: '#1C1208', lineHeight: 1.4 }}>
                         {r.title}
                       </p>
-                      <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{r.excerpt}</p>
+                      <p className="text-xs" style={{ color: '#6B6256', lineHeight: 1.5 }}>{r.excerpt}</p>
                     </div>
                   </Link>
                 ))}
@@ -292,10 +292,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
           )}
 
           <div className="mt-12 pt-8" style={{ borderTop: '1px solid #E8E2DA' }}>
-            <p className="text-xs mb-4" style={{ color: '#9A8F83' }}>
+            <p className="text-xs mb-4" style={{ color: '#6B6256' }}>
               This article is for general information only and does not constitute tax advice. For your specific situation, consult a qualified accountant.
             </p>
-            <Link href="/tax-tips" className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: '#C4622D', textDecoration: 'none' }}>
+            <Link href="/tax-tips" className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: '#A04E1C', textDecoration: 'none' }}>
               ← More Tax Tips
             </Link>
           </div>

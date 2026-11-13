@@ -16,19 +16,19 @@ export default function Terms() {
       {/* Nav */}
       <nav style={{ borderBottom: '1px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
         <div className="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
-          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#C4622D', textDecoration: 'none' }}>
+          <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#A04E1C', textDecoration: 'none' }}>
             EasyTax
           </Link>
-          <Link href="/" style={{ fontSize: '0.875rem', color: '#9A8F83', textDecoration: 'none' }}>← Back to Home</Link>
+          <Link href="/" style={{ fontSize: '0.875rem', color: '#6B6256', textDecoration: 'none' }}>← Back to Home</Link>
         </div>
       </nav>
 
-      <main className="flex-grow max-w-4xl mx-auto px-6 py-16 w-full">
+      <main id="main-content" className="flex-grow max-w-4xl mx-auto px-6 py-16 w-full">
 
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
           Terms of Service
         </h1>
-        <p style={{ color: '#9A8F83', fontSize: '0.875rem', marginBottom: '3rem' }}>
+        <p style={{ color: '#6B6256', fontSize: '0.875rem', marginBottom: '3rem' }}>
           Last updated: 14 October 2026 &nbsp;·&nbsp; Effective: 14 October 2026
         </p>
 
@@ -79,7 +79,7 @@ export default function Terms() {
           <section>
             <H2>4. Your Account</H2>
             <P>
-              You are responsible for maintaining the confidentiality of your login credentials and for all activity that occurs under your account. Notify us immediately at <a href="mailto:support@easytax.vip" style={{ color: '#C4622D' }}>support@easytax.vip</a> if you suspect unauthorised access.
+              You are responsible for maintaining the confidentiality of your login credentials and for all activity that occurs under your account. Notify us immediately at <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a> if you suspect unauthorised access.
             </P>
             <P>
               You must provide accurate information when registering. We may suspend or terminate your account if we have reason to believe information you have provided is false or misleading.
@@ -205,13 +205,13 @@ export default function Terms() {
           <section>
             <H2>13. Termination</H2>
             <P>
-              You may close your account at any time by contacting <a href="mailto:support@easytax.vip" style={{ color: '#C4622D' }}>support@easytax.vip</a>. Upon termination, your right to use the Service ceases immediately.
+              You may close your account at any time by contacting <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a>. Upon termination, your right to use the Service ceases immediately.
             </P>
             <P>
               We may suspend or terminate your account if you breach these Terms, or if we are required to do so by law. We will give you reasonable notice unless the breach requires immediate action.
             </P>
             <P>
-              Following termination, we will retain your data in accordance with our <Link href="/privacy" style={{ color: '#C4622D' }}>Privacy Policy</Link> and applicable legal obligations.
+              Following termination, we will retain your data in accordance with our <Link href="/privacy" style={{ color: '#A04E1C' }}>Privacy Policy</Link> and applicable legal obligations.
             </P>
           </section>
 
@@ -230,15 +230,15 @@ export default function Terms() {
               These Terms are governed by the laws of England and Wales. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts of England and Wales.
             </P>
             <P>
-              Before pursuing legal action, we encourage you to contact us at <a href="mailto:support@easytax.vip" style={{ color: '#C4622D' }}>support@easytax.vip</a> so we can attempt to resolve the matter informally.
+              Before pursuing legal action, we encourage you to contact us at <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a> so we can attempt to resolve the matter informally.
             </P>
           </section>
 
           {/* 16 */}
           <section>
             <H2>16. Contact Us</H2>
-            <P><strong>Email:</strong> <a href="mailto:support@easytax.vip" style={{ color: '#C4622D' }}>support@easytax.vip</a></P>
-            <P><strong>Privacy:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a></P>
+            <P><strong>Email:</strong> <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a></P>
+            <P><strong>Privacy:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a></P>
             <P>Finance Panda Limited, London, United Kingdom.</P>
           </section>
 

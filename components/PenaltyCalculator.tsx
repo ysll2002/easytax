@@ -130,7 +130,7 @@ export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare 
           <legend className="text-sm font-semibold mb-1 p-0" style={{ color: '#1C1208' }}>
             1. Which tax year is the return for?
           </legend>
-          <p className="text-xs mb-4" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mb-4" style={{ color: '#6B6256' }}>
             The {taxYearLabel(taxYear)} return was due online by {formatDate(deadline)}.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -146,7 +146,7 @@ export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare 
                   style={{
                     minHeight: 48,
                     backgroundColor: on ? '#F5E4D8' : '#F0EBE1',
-                    border: `1px solid ${on ? '#C4622D' : '#DDD5C8'}`,
+                    border: `1px solid ${on ? '#A04E1C' : '#DDD5C8'}`,
                     color: '#1C1208',
                   }}
                 >
@@ -162,7 +162,7 @@ export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare 
           <label htmlFor="filing-date" className="block text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>
             2. When did you file, or when will you?
           </label>
-          <p className="text-xs mb-3" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mb-3" style={{ color: '#6B6256' }}>
             Leave it at today to see where you stand right now.
           </p>
           <input
@@ -186,12 +186,12 @@ export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare 
           <label htmlFor="tax-due" className="block text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>
             3. How much tax do you owe for that year?
           </label>
-          <p className="text-xs mb-3" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mb-3" style={{ color: '#6B6256' }}>
             Enter 0 if you owe nothing — the £100 penalty applies either way. The 6 and 12 month
             penalties are a percentage of this figure.
           </p>
           <div className="relative" style={{ maxWidth: 260 }}>
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
             <input
               id="tax-due"
               type="text"
@@ -226,11 +226,11 @@ export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare 
                   style={{
                     minHeight: 64,
                     backgroundColor: on ? '#F5E4D8' : '#F0EBE1',
-                    border: `1px solid ${on ? '#C4622D' : '#DDD5C8'}`,
+                    border: `1px solid ${on ? '#A04E1C' : '#DDD5C8'}`,
                   }}
                 >
                   <span className="block text-sm font-medium" style={{ color: '#1C1208' }}>{opt.label}</span>
-                  <span className="block text-xs mt-0.5" style={{ color: '#9A8F83' }}>{opt.hint}</span>
+                  <span className="block text-xs mt-0.5" style={{ color: '#6B6256' }}>{opt.hint}</span>
                 </button>
               );
             })}
@@ -243,8 +243,8 @@ export default function PenaltyCalculator({ initial }: { initial?: PenaltyShare 
           className="inline-flex items-center gap-2 px-7 rounded-full text-sm font-semibold transition-all"
           style={{
             minHeight: 48,
-            backgroundColor: canSubmit ? '#C4622D' : '#DDD5C8',
-            color: canSubmit ? '#FDFCF8' : '#9A8F83',
+            backgroundColor: canSubmit ? '#A04E1C' : '#DDD5C8',
+            color: canSubmit ? '#FDFCF8' : '#6B6256',
             cursor: canSubmit ? 'pointer' : 'not-allowed',
           }}
         >
@@ -300,7 +300,7 @@ function Result({ result }: { result: PenaltyResult }) {
   return (
     <Panel
       tone="warn"
-      icon={<AlertTriangle size={20} style={{ color: '#C4622D' }} />}
+      icon={<AlertTriangle size={20} style={{ color: '#A04E1C' }} />}
       title={`${gbp(result.total)} in penalties`}
     >
       <p>
@@ -317,16 +317,16 @@ function Result({ result }: { result: PenaltyResult }) {
 
       <div
         className="flex items-baseline justify-between gap-4 rounded-xl px-4 py-3 mt-6"
-        style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D40' }}
+        style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C40' }}
       >
         <span className="text-sm font-semibold" style={{ color: '#1C1208' }}>Total penalties</span>
-        <span className="text-lg font-bold" style={{ color: '#C4622D' }}>{gbp(result.total)}</span>
+        <span className="text-lg font-bold" style={{ color: '#A04E1C' }}>{gbp(result.total)}</span>
       </div>
 
-      <p className="text-xs mt-4" style={{ color: '#9A8F83' }}>
+      <p className="text-xs mt-4" style={{ color: '#6B6256' }}>
         HMRC also charges interest on tax paid late, which is not included above — the rate tracks
         the Bank of England base rate and changes through the year, so we would rather send you to{' '}
-        <a href={HMRC_PENALTIES_URL} rel="noopener nofollow" target="_blank" style={{ color: '#9A8F83', textDecoration: 'underline' }}>
+        <a href={HMRC_PENALTIES_URL} rel="noopener nofollow" target="_blank" style={{ color: '#6B6256', textDecoration: 'underline' }}>
           HMRC&apos;s current figures
         </a>{' '}
         than quote one that may be out of date. If you had a reasonable excuse — a serious illness or
@@ -334,11 +334,11 @@ function Result({ result }: { result: PenaltyResult }) {
       </p>
 
       {result.mtdCaveat && (
-        <p className="text-xs mt-3" style={{ color: '#9A8F83' }}>
+        <p className="text-xs mt-3" style={{ color: '#6B6256' }}>
           Note for {taxYearLabel(result.deadline.getUTCFullYear() - 2)} onwards: if you are mandated
           into Making Tax Digital for Income Tax, quarterly updates fall under a separate
           points-based penalty system rather than the amounts above.{' '}
-          <Link href="/mtd-deadline-checker" style={{ color: '#9A8F83', textDecoration: 'underline' }}>
+          <Link href="/mtd-deadline-checker" style={{ color: '#6B6256', textDecoration: 'underline' }}>
             Check whether you are in MTD
           </Link>
           .
@@ -365,10 +365,10 @@ function Section({ title, total, lines }: { title: string; total: number; lines:
             <span className="text-sm font-medium sm:w-40 sm:flex-shrink-0" style={{ color: '#1C1208' }}>
               {line.label}
             </span>
-            <span className="text-xs sm:text-sm sm:flex-1" style={{ color: '#9A8F83' }}>
+            <span className="text-xs sm:text-sm sm:flex-1" style={{ color: '#6B6256' }}>
               {line.basis}
             </span>
-            <span className="text-sm font-semibold sm:text-right sm:flex-shrink-0" style={{ color: '#C4622D' }}>
+            <span className="text-sm font-semibold sm:text-right sm:flex-shrink-0" style={{ color: '#A04E1C' }}>
               {gbp(line.amount)}
             </span>
           </li>
@@ -394,7 +394,7 @@ function Panel({
       className="rounded-2xl p-5 sm:p-8 mt-6"
       style={{
         backgroundColor: '#FDFCF8',
-        border: `1px solid ${tone === 'ok' ? '#3F7D5C40' : '#C4622D40'}`,
+        border: `1px solid ${tone === 'ok' ? '#3F7D5C40' : '#A04E1C40'}`,
       }}
       aria-live="polite"
     >

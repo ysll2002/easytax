@@ -72,7 +72,7 @@ export default function PLClient() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/company" className="text-sm mb-4 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>← Company Tax</Link>
+      <Link href="/dashboard/company" className="text-sm mb-4 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>← Company Tax</Link>
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
@@ -80,7 +80,7 @@ export default function PLClient() {
             Profit & Loss
           </h1>
           {data && (
-            <p style={{ color: '#9A8F83', fontSize: '0.85rem' }}>
+            <p style={{ color: '#6B6256', fontSize: '0.85rem' }}>
               {new Date(data.period.from).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} – {new Date(data.period.to).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
             </p>
           )}
@@ -94,7 +94,7 @@ export default function PLClient() {
                 padding: '0.35rem 0.875rem', borderRadius: '2rem', fontSize: '0.75rem', fontWeight: 500,
                 border: 'none', cursor: 'pointer',
                 backgroundColor: period === p.value ? '#1C1208' : 'transparent',
-                color: period === p.value ? '#FDFCF8' : '#9A8F83',
+                color: period === p.value ? '#FDFCF8' : '#6B6256',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -105,26 +105,26 @@ export default function PLClient() {
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '4rem', color: '#9A8F83' }}>Computing P&amp;L…</div>
+        <div style={{ textAlign: 'center', padding: '4rem', color: '#6B6256' }}>Computing P&amp;L…</div>
       ) : error === 'no_bank' || error === 'token_expired' ? (
         <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
           <p className="font-semibold mb-2" style={{ color: '#1C1208' }}>Bank account required</p>
-          <p className="text-sm mb-4" style={{ color: '#9A8F83' }}>Connect your business bank account to generate a P&amp;L from real transaction data.</p>
-          <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>Connect Bank →</Link>
+          <p className="text-sm mb-4" style={{ color: '#6B6256' }}>Connect your business bank account to generate a P&amp;L from real transaction data.</p>
+          <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>Connect Bank →</Link>
         </div>
       ) : error ? (
-        <div className="p-4 rounded-xl" style={{ backgroundColor: '#F5E4D8', color: '#C4622D', fontSize: '0.875rem' }}>{error}</div>
+        <div className="p-4 rounded-xl" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C', fontSize: '0.875rem' }}>{error}</div>
       ) : pl ? (
         <div>
           {/* Summary cards */}
           <div className="grid grid-cols-3 gap-3 mb-8">
             {[
-              { label: 'Revenue',        value: fmt(pl.totalIncome),   color: '#6B8E6E' },
-              { label: 'Expenses',       value: fmt(pl.totalExpenses), color: '#C4622D' },
-              { label: pl.netProfit >= 0 ? 'Net Profit' : 'Net Loss', value: fmt(pl.netProfit), color: pl.netProfit >= 0 ? '#1C1208' : '#C4622D' },
+              { label: 'Revenue',        value: fmt(pl.totalIncome),   color: '#4B6A4E' },
+              { label: 'Expenses',       value: fmt(pl.totalExpenses), color: '#A04E1C' },
+              { label: pl.netProfit >= 0 ? 'Net Profit' : 'Net Loss', value: fmt(pl.netProfit), color: pl.netProfit >= 0 ? '#1C1208' : '#A04E1C' },
             ].map(c => (
               <div key={c.label} className="p-4 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-                <p style={{ fontSize: '0.7rem', color: '#9A8F83', marginBottom: '0.4rem' }}>{c.label}</p>
+                <p style={{ fontSize: '0.7rem', color: '#6B6256', marginBottom: '0.4rem' }}>{c.label}</p>
                 <p style={{ fontSize: '1.1rem', fontWeight: 700, color: c.color }}>{c.value}</p>
               </div>
             ))}
@@ -134,36 +134,36 @@ export default function PLClient() {
           <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #DDD5C8' }}>
             {/* Revenue */}
             <div className="px-6 py-3" style={{ backgroundColor: '#F0EBE1', borderBottom: '1px solid #DDD5C8' }}>
-              <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowIncome(v => !v)}>
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#6B8E6E' }}>Revenue</span>
-                <span className="text-xs" style={{ color: '#9A8F83' }}>{showIncome ? '▲ hide lines' : '▼ show lines'}</span>
-              </div>
+              <button type="button" className="w-full flex items-center justify-between cursor-pointer" onClick={() => setShowIncome(v => !v)} aria-expanded={showIncome} style={{ background: 'none', border: 'none', padding: 0 }}>
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#4B6A4E' }}>Revenue</span>
+                <span className="text-xs" style={{ color: '#6B6256' }}>{showIncome ? '▲ hide lines' : '▼ show lines'}</span>
+              </button>
             </div>
             <div className="px-6" style={{ backgroundColor: '#FFFFFF' }}>
               {showIncome && pl.incomeLines.slice(0, 20).map((line, i) => (
-                <Row key={i} label={line.description} value={fmt(line.amount)} indent color="#6B8E6E" />
+                <Row key={i} label={line.description} value={fmt(line.amount)} indent color="#4B6A4E" />
               ))}
               {showIncome && pl.incomeLines.length > 20 && (
-                <div className="py-2 text-xs" style={{ color: '#9A8F83' }}>+ {pl.incomeLines.length - 20} more transactions</div>
+                <div className="py-2 text-xs" style={{ color: '#6B6256' }}>+ {pl.incomeLines.length - 20} more transactions</div>
               )}
-              <Row label="Total Revenue" value={fmt(pl.totalIncome)} bold color="#6B8E6E" />
+              <Row label="Total Revenue" value={fmt(pl.totalIncome)} bold color="#4B6A4E" />
             </div>
 
             {/* Expenses */}
             <div className="px-6 py-3" style={{ backgroundColor: '#F0EBE1', borderBottom: '1px solid #DDD5C8', borderTop: '1px solid #DDD5C8' }}>
-              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#C4622D' }}>Operating Expenses</span>
+              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#A04E1C' }}>Operating Expenses</span>
             </div>
             <div className="px-6" style={{ backgroundColor: '#FFFFFF' }}>
               {pl.expenseLines.map((line, i) => (
                 <Row key={i} label={line.account} value={fmt(line.amount)} indent />
               ))}
-              <Row label="Total Expenses" value={fmt(pl.totalExpenses)} bold color="#C4622D" />
+              <Row label="Total Expenses" value={fmt(pl.totalExpenses)} bold color="#A04E1C" />
             </div>
 
             {/* Net Profit */}
             <div className="px-6 py-4 flex justify-between items-center" style={{ backgroundColor: '#1C1208' }}>
               <span className="font-bold text-sm" style={{ color: '#FDFCF8' }}>{pl.netProfit >= 0 ? 'Net Profit' : 'Net Loss'}</span>
-              <span className="font-bold text-lg" style={{ color: pl.netProfit >= 0 ? '#6B8E6E' : '#C4622D', fontVariantNumeric: 'tabular-nums' }}>{fmt(pl.netProfit)}</span>
+              <span className="font-bold text-lg" style={{ color: pl.netProfit >= 0 ? '#4B6A4E' : '#A04E1C', fontVariantNumeric: 'tabular-nums' }}>{fmt(pl.netProfit)}</span>
             </div>
 
             {/* Corp tax estimate */}
@@ -171,14 +171,14 @@ export default function PLClient() {
               <div className="px-6 py-3 flex justify-between items-center" style={{ backgroundColor: '#F0EBE1', borderTop: '1px solid #DDD5C8' }}>
                 <div>
                   <span className="text-sm font-semibold" style={{ color: '#1C1208' }}>Corporation Tax estimate (25%)</span>
-                  <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>Indicative only — consult your accountant</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>Indicative only — consult your accountant</p>
                 </div>
-                <span className="font-semibold text-sm" style={{ color: '#C4622D', fontVariantNumeric: 'tabular-nums' }}>{fmt(pl.corpTaxEstimate)}</span>
+                <span className="font-semibold text-sm" style={{ color: '#A04E1C', fontVariantNumeric: 'tabular-nums' }}>{fmt(pl.corpTaxEstimate)}</span>
               </div>
             )}
           </div>
 
-          <p className="text-xs mt-4 text-center" style={{ color: '#BDB5AA' }}>
+          <p className="text-xs mt-4 text-center" style={{ color: '#6B6256' }}>
             Based on bank transactions · Expenses auto-categorised by description · For management use only
           </p>
         </div>

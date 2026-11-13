@@ -46,12 +46,12 @@ export default function NinoForm({ initialNino }: { initialNino: string }) {
     return (
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <CheckCircle2 size={18} color="#6B8E6E" />
+          <CheckCircle2 size={18} color="#4B6A4E" />
           <div>
             <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>
               {displayNino(nino)}
             </p>
-            <p className="text-xs" style={{ color: '#9A8F83' }}>National Insurance Number on file</p>
+            <p className="text-xs" style={{ color: '#6B6256' }}>National Insurance Number on file</p>
           </div>
         </div>
         <button onClick={() => { setInput(nino); setEditing(true); }}
@@ -68,7 +68,7 @@ export default function NinoForm({ initialNino }: { initialNino: string }) {
       <p className="text-sm mb-3" style={{ color: '#4A4035' }}>
         Your NINO is required for all HMRC Self Assessment submissions. You can find it on a payslip, P60, or letter from HMRC.
       </p>
-      {error && <p className="text-xs mb-2" style={{ color: '#EF4444' }}>{error}</p>}
+      {error && <p className="text-xs mb-2" style={{ color: '#B3261E' }}>{error}</p>}
       <div className="flex gap-2">
         <input
           value={displayNino(input)}
@@ -87,7 +87,7 @@ export default function NinoForm({ initialNino }: { initialNino: string }) {
         {nino && (
           <button type="button" onClick={() => setEditing(false)}
             className="px-4 py-2.5 rounded-xl text-sm"
-            style={{ border: '1px solid #DDD5C8', color: '#9A8F83', backgroundColor: 'transparent', cursor: 'pointer' }}>
+            style={{ border: '1px solid #DDD5C8', color: '#6B6256', backgroundColor: 'transparent', cursor: 'pointer' }}>
             Cancel
           </button>
         )}

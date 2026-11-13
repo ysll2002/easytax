@@ -44,7 +44,7 @@ function Card({
         className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
         style={{ backgroundColor: '#F0EBE1' }}
       >
-        <Icon size={19} color="#C4622D" strokeWidth={1.9} />
+        <Icon size={19} color="#A04E1C" strokeWidth={1.9} />
       </div>
       <p className="font-semibold mb-1.5" style={{ color: '#1C1208', fontSize: '0.98rem' }}>
         {title}
@@ -65,13 +65,13 @@ export default function TrustPage() {
       <TrackEvent name="trust_viewed" />
       <SiteHeader />
 
-      <main className="flex-grow">
+      <main id="main-content" className="flex-grow">
         {/* ── Hero ── */}
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <div
               className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
-              style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}
+              style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}
             >
               <ShieldCheck size={13} /> Security &amp; Trust
             </div>
@@ -85,9 +85,9 @@ export default function TrustPage() {
               }}
             >
               We&apos;re asking for your tax data.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Here&apos;s what happens to it.</em>
+              <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Here&apos;s what happens to it.</em>
             </h1>
-            <p style={{ color: '#9A8F83', fontSize: '1.05rem', lineHeight: 1.65 }}>
+            <p style={{ color: '#6B6256', fontSize: '1.05rem', lineHeight: 1.65 }}>
               EasyTax connects to HMRC and, optionally, to your bank. That is a lot to ask of a
               company you have not heard of. This page sets out exactly what we store, what we
               cannot do, who we are, and where we currently stand with HMRC — including the parts
@@ -104,7 +104,7 @@ export default function TrustPage() {
               style={{ backgroundColor: '#1C1208', border: '1px solid #2E2418' }}
             >
               <div className="flex items-center gap-2 mb-3">
-                <Landmark size={18} color="#C4622D" strokeWidth={1.9} />
+                <Landmark size={18} color="#A04E1C" strokeWidth={1.9} />
                 <p style={{ fontFamily: display, fontSize: '1.2rem', fontWeight: 700, color: '#FDFCF8' }}>
                   Where we are with HMRC
                 </p>
@@ -124,15 +124,15 @@ export default function TrustPage() {
                 ].map(([ok, text], i) => (
                   <div key={i} className="flex items-start gap-2.5">
                     {ok ? (
-                      <CheckCircle2 size={16} color="#6B8E6E" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
+                      <CheckCircle2 size={16} color="#4B6A4E" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
                     ) : (
-                      <XCircle size={16} color="#C4622D" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
+                      <XCircle size={16} color="#A04E1C" strokeWidth={2} style={{ flexShrink: 0, marginTop: 2 }} />
                     )}
                     <p className="text-sm" style={{ color: '#FDFCF8', lineHeight: 1.55 }}>{text}</p>
                   </div>
                 ))}
               </div>
-              <p className="text-xs mt-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+              <p className="text-xs mt-4" style={{ color: '#A89D90', lineHeight: 1.6 }}>
                 We would rather tell you this up front than have you find out after handing over
                 your details. Add your email below and we will write to you the day filing opens.
               </p>
@@ -159,7 +159,7 @@ export default function TrustPage() {
               <Card icon={ShieldCheck} title="Encrypted in transit and at rest">
                 Traffic runs over TLS, data is encrypted at rest, and HMRC access tokens are stored
                 encrypted. Full detail is in our{' '}
-                <Link href="/privacy" style={{ color: '#C4622D' }}>Privacy Policy</Link>.
+                <Link href="/privacy" style={{ color: '#A04E1C' }}>Privacy Policy</Link>.
               </Card>
               <Card icon={Landmark} title="Your NINO is used for one thing">
                 Your National Insurance number identifies you to HMRC when we retrieve your
@@ -172,7 +172,7 @@ export default function TrustPage() {
               <Card icon={XCircle} title="You can have it deleted">
                 Under UK GDPR you can ask us to erase your data where we have no legal obligation to
                 keep it. Email{' '}
-                <a href="mailto:privacy@easytax.vip" style={{ color: '#C4622D' }}>privacy@easytax.vip</a>.
+                <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a>.
               </Card>
             </div>
           </div>
@@ -182,7 +182,7 @@ export default function TrustPage() {
         <section className="py-12 sm:py-16">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <div className="flex items-center gap-2 mb-4">
-              <Building2 size={19} color="#C4622D" strokeWidth={1.9} />
+              <Building2 size={19} color="#A04E1C" strokeWidth={1.9} />
               <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3.5vw, 2rem)', fontWeight: 700 }}>
                 Who we are
               </h2>
@@ -207,7 +207,7 @@ export default function TrustPage() {
                         href="https://ico.org.uk/register/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#C4622D' }}
+                        style={{ color: '#A04E1C' }}
                       >
                         ICO public register
                       </a>
@@ -228,7 +228,7 @@ export default function TrustPage() {
                 >
                   <p
                     className="text-xs font-semibold uppercase tracking-wider sm:w-48 sm:flex-shrink-0"
-                    style={{ color: '#9A8F83' }}
+                    style={{ color: '#6B6256' }}
                   >
                     {k}
                   </p>
@@ -236,10 +236,10 @@ export default function TrustPage() {
                 </div>
               ))}
             </div>
-            <p className="text-xs mt-3" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+            <p className="text-xs mt-3" style={{ color: '#6B6256', lineHeight: 1.6 }}>
               Read the full{' '}
-              <Link href="/privacy" style={{ color: '#C4622D' }}>Privacy Policy</Link> and{' '}
-              <Link href="/terms" style={{ color: '#C4622D' }}>Terms of Service</Link>.
+              <Link href="/privacy" style={{ color: '#A04E1C' }}>Privacy Policy</Link> and{' '}
+              <Link href="/terms" style={{ color: '#A04E1C' }}>Terms of Service</Link>.
             </p>
           </div>
         </section>
@@ -261,7 +261,7 @@ export default function TrustPage() {
               <Link
                 href="/pricing"
                 className="inline-flex items-center text-sm font-semibold"
-                style={{ color: '#C4622D', textDecoration: 'none' }}
+                style={{ color: '#A04E1C', textDecoration: 'none' }}
               >
                 See full pricing →
               </Link>
@@ -282,9 +282,9 @@ export default function TrustPage() {
               heading="Something useful, before you trust us with anything"
               blurb="No account, no card, no bank connection. Tell us your qualifying income and we'll email you your Making Tax Digital dates, and remind you before each one."
             />
-            <p className="text-xs mt-4 text-center" style={{ color: '#9A8F83', lineHeight: 1.6 }}>
+            <p className="text-xs mt-4 text-center" style={{ color: '#6B6256', lineHeight: 1.6 }}>
               We also publish{' '}
-              <Link href="/editorial-standards" style={{ color: '#C4622D', textDecoration: 'none' }}>
+              <Link href="/editorial-standards" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
                 how our tax guides are written and checked
               </Link>
               , including which ones no one has reviewed yet.

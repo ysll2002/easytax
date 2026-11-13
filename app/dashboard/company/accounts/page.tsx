@@ -5,7 +5,7 @@ type Group = { type: string; range: string; color: string; bg: string; accounts:
 
 const COA: Group[] = [
   {
-    type: 'Assets', range: '1000–1999', color: '#6B8E6E', bg: '#E2EDE2',
+    type: 'Assets', range: '1000–1999', color: '#4B6A4E', bg: '#E2EDE2',
     accounts: [
       { code: '1000', name: 'Bank Account',          description: 'Primary business current account' },
       { code: '1100', name: 'Accounts Receivable',   description: 'Amounts owed by customers (debtors)' },
@@ -16,7 +16,7 @@ const COA: Group[] = [
     ],
   },
   {
-    type: 'Liabilities', range: '2000–2999', color: '#C4622D', bg: '#F5E4D8',
+    type: 'Liabilities', range: '2000–2999', color: '#A04E1C', bg: '#F5E4D8',
     accounts: [
       { code: '2000', name: 'Accounts Payable',      description: 'Amounts owed to suppliers (creditors)' },
       { code: '2100', name: 'VAT Liability',         description: 'Output VAT collected, payable to HMRC' },
@@ -35,7 +35,7 @@ const COA: Group[] = [
     ],
   },
   {
-    type: 'Revenue', range: '4000–4999', color: '#059669', bg: '#ECFDF5',
+    type: 'Revenue', range: '4000–4999', color: '#047857', bg: '#ECFDF5',
     accounts: [
       { code: '4000', name: 'Sales Revenue',         description: 'Income from primary business activity' },
       { code: '4100', name: 'Consulting Income',     description: 'Fees from consulting or professional services' },
@@ -43,7 +43,7 @@ const COA: Group[] = [
     ],
   },
   {
-    type: 'Expenses', range: '5000–5999', color: '#9A8F83', bg: '#F0EBE1',
+    type: 'Expenses', range: '5000–5999', color: '#6B6256', bg: '#F0EBE1',
     accounts: [
       { code: '5000', name: 'Cost of Sales',         description: 'Direct costs attributable to revenue' },
       { code: '5100', name: 'Salaries & Wages',      description: 'Employee and director payroll costs' },
@@ -63,13 +63,13 @@ const COA: Group[] = [
 export default function ChartOfAccountsPage() {
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/company" className="text-sm mb-4 inline-block" style={{ color: '#9A8F83', textDecoration: 'none' }}>← Company Tax</Link>
+      <Link href="/dashboard/company" className="text-sm mb-4 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>← Company Tax</Link>
 
       <div className="mb-8">
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
           Chart of Accounts
         </h1>
-        <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>Standard UK SME double-entry account structure. Used as the basis for your Balance Sheet and P&amp;L.</p>
+        <p style={{ color: '#6B6256', fontSize: '0.9rem' }}>Standard UK SME double-entry account structure. Used as the basis for your Balance Sheet and P&amp;L.</p>
       </div>
 
       <div className="space-y-6">
@@ -81,7 +81,7 @@ export default function ChartOfAccountsPage() {
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: group.color }} />
                 <span className="font-bold text-sm" style={{ color: group.color }}>{group.type}</span>
               </div>
-              <span className="text-xs font-mono" style={{ color: group.color, opacity: 0.7 }}>{group.range}</span>
+              <span className="text-xs font-mono" style={{ color: group.color }}>{group.range}</span>
             </div>
 
             {/* Accounts */}
@@ -95,10 +95,10 @@ export default function ChartOfAccountsPage() {
                     backgroundColor: '#FFFFFF',
                   }}
                 >
-                  <span className="font-mono text-xs flex-shrink-0 mt-0.5 w-10" style={{ color: '#9A8F83' }}>{acct.code}</span>
+                  <span className="font-mono text-xs flex-shrink-0 mt-0.5 w-10" style={{ color: '#6B6256' }}>{acct.code}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{acct.name}</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#9A8F83' }}>{acct.description}</p>
+                    <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>{acct.description}</p>
                   </div>
                 </div>
               ))}
@@ -107,7 +107,7 @@ export default function ChartOfAccountsPage() {
         ))}
       </div>
 
-      <p className="text-xs mt-8 text-center" style={{ color: '#BDB5AA' }}>
+      <p className="text-xs mt-8 text-center" style={{ color: '#6B6256' }}>
         Standard UK SME Chart of Accounts · Based on FRS 102 Small Companies Regime
       </p>
     </div>

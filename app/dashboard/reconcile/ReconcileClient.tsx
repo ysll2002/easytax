@@ -16,10 +16,10 @@ type Tx = {
 };
 
 const CATEGORIES: { value: Category; label: string; color: string; bg: string }[] = [
-  { value: 'unreviewed',       label: 'Unreviewed',        color: '#9A8F83', bg: '#F0EBE1' },
-  { value: 'business_income',  label: 'Business Income',   color: '#6B8E6E', bg: '#E2EDE2' },
-  { value: 'business_expense', label: 'Business Expense',  color: '#C9963D', bg: '#F5EDDC' },
-  { value: 'personal',         label: 'Personal',          color: '#9A8F83', bg: '#F0EBE1' },
+  { value: 'unreviewed',       label: 'Unreviewed',        color: '#6B6256', bg: '#F0EBE1' },
+  { value: 'business_income',  label: 'Business Income',   color: '#4B6A4E', bg: '#E2EDE2' },
+  { value: 'business_expense', label: 'Business Expense',  color: '#8A6418', bg: '#F5EDDC' },
+  { value: 'personal',         label: 'Personal',          color: '#6B6256', bg: '#F0EBE1' },
 ];
 
 type Filter = 'all' | Category;
@@ -107,7 +107,7 @@ export default function ReconcileClient({ accountName, accountId }: {
     cursor: 'pointer',
     border: 'none',
     backgroundColor: active ? '#1C1208' : 'transparent',
-    color: active ? '#FDFCF8' : '#9A8F83',
+    color: active ? '#FDFCF8' : '#6B6256',
     transition: 'all 0.15s',
     whiteSpace: 'nowrap' as const,
   });
@@ -117,12 +117,12 @@ export default function ReconcileClient({ accountName, accountId }: {
       {/* Summary */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {[
-          { label: 'Business Income',   value: totals.business_income,  color: '#6B8E6E' },
-          { label: 'Business Expenses', value: totals.business_expense, color: '#C9963D' },
-          { label: 'Unreviewed',        value: counts.unreviewed,       color: '#9A8F83', isCount: true },
+          { label: 'Business Income',   value: totals.business_income,  color: '#4B6A4E' },
+          { label: 'Business Expenses', value: totals.business_expense, color: '#8A6418' },
+          { label: 'Unreviewed',        value: counts.unreviewed,       color: '#6B6256', isCount: true },
         ].map(item => (
           <div key={item.label} style={{ padding: '1rem', borderRadius: '1rem', backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-            <p style={{ fontSize: '0.7rem', color: '#9A8F83', marginBottom: '0.4rem' }}>{item.label}</p>
+            <p style={{ fontSize: '0.7rem', color: '#6B6256', marginBottom: '0.4rem' }}>{item.label}</p>
             <p style={{ fontSize: '1.25rem', fontWeight: 700, color: item.color }}>
               {item.isCount ? item.value : `£${item.value.toFixed(2)}`}
             </p>
@@ -156,9 +156,9 @@ export default function ReconcileClient({ accountName, accountId }: {
           <div key={tx.transaction_id} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3" style={{ padding: '0.875rem 1rem', borderRadius: '0.875rem', backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8' }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontWeight: 500, color: '#1C1208', fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tx.description}</p>
-              <p style={{ fontSize: '0.75rem', color: '#9A8F83', marginTop: '0.1rem' }}>{new Date(tx.timestamp).toLocaleDateString('en-GB')}</p>
+              <p style={{ fontSize: '0.75rem', color: '#6B6256', marginTop: '0.1rem' }}>{new Date(tx.timestamp).toLocaleDateString('en-GB')}</p>
             </div>
-            <p style={{ fontWeight: 700, color: tx.amount >= 0 ? '#6B8E6E' : '#C4622D', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            <p style={{ fontWeight: 700, color: tx.amount >= 0 ? '#4B6A4E' : '#A04E1C', whiteSpace: 'nowrap', flexShrink: 0 }}>
               {tx.amount >= 0 ? '+' : '-'}£{Math.abs(tx.amount).toFixed(2)}
             </p>
             <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
@@ -170,7 +170,7 @@ export default function ReconcileClient({ accountName, accountId }: {
                     padding: '0.2rem 0.55rem', borderRadius: '1rem', fontSize: '0.7rem', fontWeight: 500,
                     border: 'none', cursor: 'pointer',
                     backgroundColor: tx.category === c.value ? c.bg : 'transparent',
-                    color: tx.category === c.value ? c.color : '#9A8F83',
+                    color: tx.category === c.value ? c.color : '#6B6256',
                     outline: tx.category === c.value ? `1.5px solid ${c.color}` : 'none',
                   }}
                 >
@@ -181,7 +181,7 @@ export default function ReconcileClient({ accountName, accountId }: {
           </div>
         ))}
         {filtered.length === 0 && (
-          <p style={{ color: '#9A8F83', textAlign: 'center', padding: '2rem' }}>No transactions match your filter.</p>
+          <p style={{ color: '#6B6256', textAlign: 'center', padding: '2rem' }}>No transactions match your filter.</p>
         )}
       </div>
     </>
@@ -197,14 +197,14 @@ export default function ReconcileClient({ accountName, accountId }: {
             <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
               Reconcile Transactions
             </h1>
-            <p style={{ color: '#9A8F83', fontSize: '0.9rem' }}>{accountName}</p>
+            <p style={{ color: '#6B6256', fontSize: '0.9rem' }}>{accountName}</p>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0 ml-4">
             {history.length > 0 && (
               <button
                 onClick={undo}
                 className="flex items-center gap-1 px-3 py-2 rounded-full text-sm font-medium"
-                style={{ backgroundColor: '#F0EBE1', color: '#9A8F83', border: '1px solid #DDD5C8' }}
+                style={{ backgroundColor: '#F0EBE1', color: '#6B6256', border: '1px solid #DDD5C8' }}
               >
                 ↩ Undo
               </button>
@@ -222,15 +222,15 @@ export default function ReconcileClient({ accountName, accountId }: {
 
         {/* Content */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#9A8F83' }}>Loading transactions…</div>
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#6B6256' }}>Loading transactions…</div>
         ) : error === 'token_expired' || error === 'token_refresh_failed' ? (
           <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ backgroundColor: '#F5EDDC' }}>🔄</div>
               <div>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Bank connection expired</p>
-                <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>Your bank connection has expired. Reconnect to continue importing transactions.</p>
-                <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+                <p className="text-sm mb-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>Your bank connection has expired. Reconnect to continue importing transactions.</p>
+                <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>
                   Reconnect Bank →
                 </Link>
               </div>
@@ -242,8 +242,8 @@ export default function ReconcileClient({ accountName, accountId }: {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ backgroundColor: '#F5EDDC' }}>🏦</div>
               <div>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Could not load transactions</p>
-                <p className="text-sm mb-4" style={{ color: '#9A8F83', lineHeight: 1.6 }}>There was a problem fetching your bank data. Try reconnecting your account.</p>
-                <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8', textDecoration: 'none' }}>
+                <p className="text-sm mb-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>There was a problem fetching your bank data. Try reconnecting your account.</p>
+                <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>
                   Reconnect Bank →
                 </Link>
               </div>
@@ -255,7 +255,7 @@ export default function ReconcileClient({ accountName, accountId }: {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ backgroundColor: '#F5EDDC' }}>📭</div>
               <div>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>No transactions found</p>
-                <p className="text-sm" style={{ color: '#9A8F83', lineHeight: 1.6 }}>No transactions in the last 90 days for this account. If you think this is wrong, try reconnecting your bank.</p>
+                <p className="text-sm" style={{ color: '#6B6256', lineHeight: 1.6 }}>No transactions in the last 90 days for this account. If you think this is wrong, try reconnecting your bank.</p>
               </div>
             </div>
           </div>
@@ -286,7 +286,7 @@ export default function ReconcileClient({ accountName, accountId }: {
             >
               {/* Close button on mobile */}
               <div className="flex justify-end px-3 pt-2 lg:hidden">
-                <button onClick={() => setChatOpen(false)} style={{ color: '#9A8F83', fontSize: '1.25rem' }}>✕</button>
+                <button onClick={() => setChatOpen(false)} style={{ color: '#6B6256', fontSize: '1.25rem' }}>✕</button>
               </div>
               <div className="flex-1 min-h-0">
                 <ReconcileChat

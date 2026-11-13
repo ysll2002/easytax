@@ -37,14 +37,14 @@ export const metadata: Metadata = {
 
 const INK = '#1C1208';
 const BODY = '#4A4035';
-const MUTED = '#9A8F83';
+const MUTED = '#6B6256';
 const LINE = '#E8E2DA';
 const CREAM = '#FDFCF8';
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#F7F3EC' }}>
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">{children}</main>
+      <main id="main-content" className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">{children}</main>
     </div>
   );
 }
@@ -96,9 +96,9 @@ function Grade({ draft }: { draft: DraftRow }) {
             key={c.label}
             className="text-xs px-2.5 py-1 rounded-full"
             style={{
-              backgroundColor: c.ok ? '#6B8E6E1A' : '#B3261E14',
+              backgroundColor: c.ok ? '#4B6A4E1A' : '#B3261E14',
               color: c.ok ? '#4A6B4D' : '#B3261E',
-              border: `1px solid ${c.ok ? '#6B8E6E40' : '#B3261E40'}`,
+              border: `1px solid ${c.ok ? '#4B6A4E40' : '#B3261E40'}`,
             }}
           >
             {c.label}
@@ -190,7 +190,7 @@ export default async function ReviewQueuePage({
               {error?.message ?? 'No article with that slug.'}
             </p>
             <p className="mt-3 mb-0 text-sm">
-              <Link href={`/admin/review?key=${encodeURIComponent(key)}`} style={{ color: '#C4622D' }}>
+              <Link href={`/admin/review?key=${encodeURIComponent(key)}`} style={{ color: '#A04E1C' }}>
                 Back to the queue
               </Link>
             </p>
@@ -205,7 +205,7 @@ export default async function ReviewQueuePage({
     return (
       <Shell>
         <p className="text-sm mb-5">
-          <Link href={`/admin/review?key=${encodeURIComponent(key)}`} style={{ color: '#C4622D' }}>
+          <Link href={`/admin/review?key=${encodeURIComponent(key)}`} style={{ color: '#A04E1C' }}>
             ← Back to the queue
           </Link>
         </p>
@@ -241,7 +241,7 @@ export default async function ReviewQueuePage({
                 {sources.map(s => (
                   <li key={s.label}>
                     {s.url ? (
-                      <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ color: '#C4622D' }}>
+                      <a href={s.url} target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C' }}>
                         {s.label}
                       </a>
                     ) : (
@@ -372,7 +372,7 @@ export default async function ReviewQueuePage({
             <Link
               href={`/admin/review?key=${encodeURIComponent(key)}&slug=${encodeURIComponent(d.slug)}&reviewer=${encodeURIComponent(reviewer)}`}
               className="inline-flex items-center gap-1.5 text-sm font-semibold"
-              style={{ color: '#C4622D', minHeight: 44, textDecoration: 'none' }}
+              style={{ color: '#A04E1C', minHeight: 44, textDecoration: 'none' }}
             >
               <FileText size={15} /> Read it first
             </Link>

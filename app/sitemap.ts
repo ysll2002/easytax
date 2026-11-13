@@ -100,6 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/xero-alternative`,          lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/taxscouts-alternative`,     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: `${base}/trust`,                     lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: `${base}/accessibility`,             lastModified: new Date(), changeFrequency: 'monthly', priority: 0.3 },
     // Named as the author URL in every article's JSON-LD, so it has to be
     // crawlable for the authorship claim to resolve to anything.
     { url: `${base}/editorial-standards`,       lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },

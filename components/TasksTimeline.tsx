@@ -36,8 +36,8 @@ const TYPE_ICON: Record<TaskType, React.ElementType> = {
 };
 
 const TYPE_COLOR: Record<TaskType, string> = {
-  quarterly_mtd:     '#6B8E6E',
-  sa_filing:         '#C4622D',
+  quarterly_mtd:     '#4B6A4E',
+  sa_filing:         '#A04E1C',
   payment_balancing: '#7C3AED',
   payment_poa1:      '#7C3AED',
   payment_poa2:      '#7C3AED',
@@ -45,10 +45,10 @@ const TYPE_COLOR: Record<TaskType, string> = {
 };
 
 const STATUS_STYLE: Record<TaskStatus, { bg: string; color: string }> = {
-  completed: { bg: '#E2EDE2', color: '#6B8E6E' },
+  completed: { bg: '#E2EDE2', color: '#4B6A4E' },
   overdue:   { bg: '#FEE2E2', color: '#991B1B' },
   due_soon:  { bg: '#FEF3C7', color: '#92400E' },
-  upcoming:  { bg: '#F0EBE1', color: '#9A8F83' },
+  upcoming:  { bg: '#F0EBE1', color: '#6B6256' },
 };
 
 const STATUS_KEY: Record<TaskStatus, string> = {
@@ -144,22 +144,22 @@ function TaskCard({ task }: { task: Task }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap mb-0.5">
-          <p className="text-sm font-semibold" style={{ color: task.status === 'completed' ? '#9A8F83' : '#1C1208' }}>
+          <p className="text-sm font-semibold" style={{ color: task.status === 'completed' ? '#6B6256' : '#1C1208' }}>
             {taskTitle(task, t, locale)}
           </p>
           <span className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0" style={{ backgroundColor: st.bg, color: st.color }}>
             {t(STATUS_KEY[task.status])}
           </span>
         </div>
-        <p className="text-xs" style={{ color: '#9A8F83', lineHeight: 1.5 }}>{timing}</p>
-        {subtitle && <p className="text-xs mt-0.5" style={{ color: '#BDB5AA' }}>{subtitle}</p>}
+        <p className="text-xs" style={{ color: '#6B6256', lineHeight: 1.5 }}>{timing}</p>
+        {subtitle && <p className="text-xs mt-0.5" style={{ color: '#6B6256' }}>{subtitle}</p>}
       </div>
 
       <div className="flex-shrink-0">
         {task.status === 'completed' ? (
           isPayment
-            ? <span className="text-xs" style={{ color: '#9A8F83' }}>{t('paid')}</span>
-            : <ChevronRight size={14} color="#9A8F83" />
+            ? <span className="text-xs" style={{ color: '#6B6256' }}>{t('paid')}</span>
+            : <ChevronRight size={14} color="#6B6256" />
         ) : isPayment ? (
           <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ backgroundColor: '#7C3AED15', color: '#7C3AED', border: '1px solid #7C3AED30' }}>{t('pay')}</span>
         ) : (
@@ -187,9 +187,9 @@ function Group({ title, icon, tasks, defaultOpen = true }: { title: string; icon
     <div className="mb-6">
       <button onClick={() => setOpen(o => !o)} className="flex items-center gap-2 mb-3 w-full text-left">
         {icon}
-        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#9A8F83' }}>{title}</span>
-        <span className="text-xs px-1.5 py-0.5 rounded-full ml-1" style={{ backgroundColor: '#F0EBE1', color: '#9A8F83' }}>{tasks.length}</span>
-        <span className="ml-auto text-xs" style={{ color: '#BDB5AA' }}>{open ? '▲' : '▼'}</span>
+        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#6B6256' }}>{title}</span>
+        <span className="text-xs px-1.5 py-0.5 rounded-full ml-1" style={{ backgroundColor: '#F0EBE1', color: '#6B6256' }}>{tasks.length}</span>
+        <span className="ml-auto text-xs" style={{ color: '#6B6256' }}>{open ? '▲' : '▼'}</span>
       </button>
       {open && <div className="space-y-2">{tasks.map(t => <TaskCard key={t.id} task={t} />)}</div>}
     </div>
@@ -231,7 +231,7 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
 
   if (loading) {
     return (
-      <div className="flex items-center gap-3 py-8" style={{ color: '#9A8F83' }}>
+      <div className="flex items-center gap-3 py-8" style={{ color: '#6B6256' }}>
         <div className="w-4 h-4 rounded-full border-2 border-current border-t-transparent animate-spin" />
         {t('loading')}
       </div>
@@ -249,7 +249,7 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
                 <p className="font-semibold mb-1" style={{ color: '#991B1B' }}>{t('errNotConnectedTitle')}</p>
                 <p style={{ color: '#7F1D1D' }}>
                   {t('errNotConnectedBody')}{' '}
-                  <Link href="/dashboard/individual" style={{ color: '#C4622D' }}>{t('errNotConnectedCta')}</Link>
+                  <Link href="/dashboard/individual" style={{ color: '#A04E1C' }}>{t('errNotConnectedCta')}</Link>
                 </p>
               </>
             ) : error === 'CLIENT_OR_AGENT_NOT_AUTHORISED' ? (
@@ -266,7 +266,7 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
                       href="https://www.gov.uk/guidance/sign-up-for-making-tax-digital-for-income-tax"
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ color: '#C4622D', fontWeight: 600, whiteSpace: 'nowrap' }}
+                      style={{ color: '#A04E1C', fontWeight: 600, whiteSpace: 'nowrap' }}
                     >
                       {t('errNotAuthorisedCause1Cta')}
                     </a>
@@ -275,12 +275,12 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
                   <li>{t('errNotAuthorisedCause3')}</li>
                   <li>
                     {t('errNotAuthorisedCause4')}{' '}
-                    <Link href="/dashboard/individual" style={{ color: '#C4622D', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                    <Link href="/dashboard/individual" style={{ color: '#A04E1C', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {t('errNotAuthorisedCause4Cta')}
                     </Link>
                   </li>
                 </ol>
-                <p className="text-xs" style={{ color: '#9A8F83' }}>
+                <p className="text-xs" style={{ color: '#6B6256' }}>
                   {t('errNotAuthorisedCode', { code: 'CLIENT_OR_AGENT_NOT_AUTHORISED' })}
                 </p>
               </>
@@ -302,9 +302,9 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
   if (tasks.length === 0) {
     return (
       <div className="p-6 rounded-2xl text-center" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-        <CalendarClock size={32} color="#9A8F83" className="mx-auto mb-3" />
+        <CalendarClock size={32} color="#6B6256" className="mx-auto mb-3" />
         <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{t('emptyTitle')}</p>
-        <p className="text-sm" style={{ color: '#9A8F83' }}>{t('emptyBody')}</p>
+        <p className="text-sm" style={{ color: '#6B6256' }}>{t('emptyBody')}</p>
       </div>
     );
   }
@@ -315,24 +315,24 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
         <div className="flex gap-4 mb-6">
           {overdue.length > 0 && (
             <div className="text-center">
-              <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#EF4444', lineHeight: 1 }}>{overdue.length}</p>
-              <p style={{ fontSize: '0.65rem', color: '#9A8F83' }}>{t('statOverdue')}</p>
+              <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#B3261E', lineHeight: 1 }}>{overdue.length}</p>
+              <p style={{ fontSize: '0.65rem', color: '#6B6256' }}>{t('statOverdue')}</p>
             </div>
           )}
           <div className="text-center">
-            <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#6B8E6E', lineHeight: 1 }}>{completed.length}</p>
-            <p style={{ fontSize: '0.65rem', color: '#9A8F83' }}>{t('statDone')}</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#4B6A4E', lineHeight: 1 }}>{completed.length}</p>
+            <p style={{ fontSize: '0.65rem', color: '#6B6256' }}>{t('statDone')}</p>
           </div>
           <div className="text-center">
             <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#1C1208', lineHeight: 1 }}>{upcoming.length + dueSoon.length}</p>
-            <p style={{ fontSize: '0.65rem', color: '#9A8F83' }}>{t('statUpcoming')}</p>
+            <p style={{ fontSize: '0.65rem', color: '#6B6256' }}>{t('statUpcoming')}</p>
           </div>
         </div>
       )}
       <Group title={t('groupOverdue')}  icon={<AlertCircle   size={14} color="#EF4444" />} tasks={overdue}   />
       <Group title={t('groupDueSoon')}  icon={<Clock         size={14} color="#F59E0B" />} tasks={dueSoon}   />
-      <Group title={t('groupUpcoming')} icon={<CalendarClock size={14} color="#9A8F83" />} tasks={upcoming}  />
-      <Group title={t('groupCompleted')} icon={<CheckCircle2 size={14} color="#6B8E6E" />} tasks={completed} defaultOpen={false} />
+      <Group title={t('groupUpcoming')} icon={<CalendarClock size={14} color="#6B6256" />} tasks={upcoming}  />
+      <Group title={t('groupCompleted')} icon={<CheckCircle2 size={14} color="#4B6A4E" />} tasks={completed} defaultOpen={false} />
     </div>
   );
 }

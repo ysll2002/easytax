@@ -9,7 +9,7 @@ export default function HomepageLink() {
       href="/"
       className="text-sm font-medium px-5 py-2.5 rounded-full"
       style={{
-        backgroundColor: '#C4622D',
+        backgroundColor: '#A04E1C',
         color: '#FDFCF8',
         textDecoration: 'none',
       }}

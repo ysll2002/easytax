@@ -115,9 +115,9 @@ export default function PaymentsOnAccountCalculator({ initial }: { initial?: Poa
       <label htmlFor={id} className="block text-sm font-semibold mb-1" style={{ color: '#1C1208' }}>
         {label}
       </label>
-      <p className="text-xs mb-3" style={{ color: '#9A8F83' }}>{hint}</p>
+      <p className="text-xs mb-3" style={{ color: '#6B6256' }}>{hint}</p>
       <div className="relative" style={{ maxWidth: 260 }}>
-        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#9A8F83' }}>£</span>
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
         <input
           id={id}
           type="text"
@@ -143,7 +143,7 @@ export default function PaymentsOnAccountCalculator({ initial }: { initial?: Poa
           <legend className="text-sm font-semibold mb-1 p-0" style={{ color: '#1C1208' }}>
             1. Which tax year is the bill for?
           </legend>
-          <p className="text-xs mb-4" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mb-4" style={{ color: '#6B6256' }}>
             The year your Self Assessment calculation covers.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -159,7 +159,7 @@ export default function PaymentsOnAccountCalculator({ initial }: { initial?: Poa
                   style={{
                     minHeight: 48,
                     backgroundColor: on ? '#F5E4D8' : '#F0EBE1',
-                    border: `1px solid ${on ? '#C4622D' : '#DDD5C8'}`,
+                    border: `1px solid ${on ? '#A04E1C' : '#DDD5C8'}`,
                     color: '#1C1208',
                   }}
                 >
@@ -207,8 +207,8 @@ export default function PaymentsOnAccountCalculator({ initial }: { initial?: Poa
           className="inline-flex items-center gap-2 px-7 rounded-full text-sm font-semibold transition-all"
           style={{
             minHeight: 48,
-            backgroundColor: canSubmit ? '#C4622D' : '#DDD5C8',
-            color: canSubmit ? '#FDFCF8' : '#9A8F83',
+            backgroundColor: canSubmit ? '#A04E1C' : '#DDD5C8',
+            color: canSubmit ? '#FDFCF8' : '#6B6256',
             cursor: canSubmit ? 'pointer' : 'not-allowed',
           }}
         >
@@ -248,12 +248,12 @@ function Result({ result }: { result: PoaResult }) {
   return (
     <div
       className="rounded-2xl p-5 sm:p-8 mt-6"
-      style={{ backgroundColor: '#FDFCF8', border: '1px solid #C4622D40' }}
+      style={{ backgroundColor: '#FDFCF8', border: '1px solid #A04E1C40' }}
       aria-live="polite"
     >
       <div className="flex items-start gap-3 mb-4">
         <span style={{ flexShrink: 0, marginTop: 2 }}>
-          <Wallet size={20} style={{ color: '#C4622D' }} />
+          <Wallet size={20} style={{ color: '#A04E1C' }} />
         </span>
         <h2
           className="m-0"
@@ -306,14 +306,14 @@ function Result({ result }: { result: PoaResult }) {
           >
             <span className="text-sm font-medium sm:w-48 sm:flex-shrink-0" style={{ color: '#1C1208' }}>
               {row.label}
-              <span className="block text-xs font-normal" style={{ color: '#9A8F83' }}>
+              <span className="block text-xs font-normal" style={{ color: '#6B6256' }}>
                 {row.dueLabel}
               </span>
             </span>
-            <span className="text-xs sm:text-sm sm:flex-1" style={{ color: '#9A8F83' }}>
+            <span className="text-xs sm:text-sm sm:flex-1" style={{ color: '#6B6256' }}>
               {row.note}
             </span>
-            <span className="text-sm font-semibold sm:text-right sm:flex-shrink-0" style={{ color: '#C4622D' }}>
+            <span className="text-sm font-semibold sm:text-right sm:flex-shrink-0" style={{ color: '#A04E1C' }}>
               {row.amount < 0 ? `−${gbp(row.amount)}` : gbp(row.amount)}
             </span>
           </li>
@@ -323,9 +323,9 @@ function Result({ result }: { result: PoaResult }) {
       {result.poaRequired && (
         <div
           className="flex items-start gap-3 rounded-xl px-4 py-3 mt-5"
-          style={{ backgroundColor: '#F5E4D8', border: '1px solid #C4622D40' }}
+          style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C40' }}
         >
-          <Info size={18} style={{ color: '#C4622D', flexShrink: 0, marginTop: 2 }} />
+          <Info size={18} style={{ color: '#A04E1C', flexShrink: 0, marginTop: 2 }} />
           <p className="text-sm m-0" style={{ color: '#1C1208' }}>
             Payments on account are an <strong>estimate</strong> based on this year. If you expect
             {' '}{nextYear} to be a worse year, you can apply to HMRC to reduce them — but if you

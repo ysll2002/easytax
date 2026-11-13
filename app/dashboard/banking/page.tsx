@@ -17,20 +17,20 @@ export default async function BankingPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
-      <Link href="/dashboard" className="text-sm mb-6 inline-block" style={{ color: '#9A8F83' }}>{t('back')}</Link>
+      <Link href="/dashboard" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>{t('back')}</Link>
 
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
         {t('title')}
       </h1>
-      <p style={{ color: '#9A8F83', marginBottom: '2rem', lineHeight: 1.6 }}>
+      <p style={{ color: '#6B6256', marginBottom: '2rem', lineHeight: 1.6 }}>
         {t('subtitle')}
       </p>
 
-      <div className="p-5 rounded-2xl mb-6 space-y-2" style={{ backgroundColor: '#E2EDE2', border: '1px solid #6B8E6E30' }}>
+      <div className="p-5 rounded-2xl mb-6 space-y-2" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
         <p className="text-sm font-semibold" style={{ color: '#1C1208' }}>{t('supportedBanks')}</p>
         {['Monzo Business', 'Starling Bank', 'Barclays', 'HSBC', 'NatWest', 'Lloyds', t('moreUkBanks')].map(b => (
           <div key={b} className="flex items-center gap-2 text-sm" style={{ color: '#4A4035' }}>
-            <span style={{ color: '#6B8E6E' }}>✓</span> {b}
+            <span style={{ color: '#4B6A4E' }}>✓</span> {b}
           </div>
         ))}
       </div>
@@ -43,7 +43,7 @@ export default async function BankingPage() {
         {bank ? t('connectAnother') : t('connect')}
       </PlaidLinkButton>
 
-      <p className="text-xs text-center mt-4" style={{ color: '#9A8F83' }}>
+      <p className="text-xs text-center mt-4" style={{ color: '#6B6256' }}>
         {t('poweredBy')}
       </p>
     </div>

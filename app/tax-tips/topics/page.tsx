@@ -44,9 +44,9 @@ export default async function TopicsIndexPage() {
 
       <SiteHeader />
 
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <nav className="text-xs mb-4" style={{ color: '#9A8F83' }}>
-          <Link href="/tax-tips" style={{ color: '#9A8F83', textDecoration: 'none' }}>Tax Tips</Link>
+      <main id="main-content" className="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <nav className="text-xs mb-4" style={{ color: '#6B6256' }}>
+          <Link href="/tax-tips" style={{ color: '#6B6256', textDecoration: 'none' }}>Tax Tips</Link>
           <span aria-hidden> › </span>
           <span>Topics</span>
         </nav>
@@ -92,7 +92,7 @@ export default async function TopicsIndexPage() {
                     >
                       {t.heading}
                     </span>
-                    <span className="text-xs flex-shrink-0" style={{ color: '#9A8F83' }}>
+                    <span className="text-xs flex-shrink-0" style={{ color: '#6B6256' }}>
                       {t.count}
                     </span>
                   </span>
@@ -106,10 +106,10 @@ export default async function TopicsIndexPage() {
         )}
 
         {total > 0 && (
-          <p className="text-xs mt-10" style={{ color: '#9A8F83' }}>
+          <p className="text-xs mt-10" style={{ color: '#6B6256' }}>
             Guides often sit in more than one topic, so these counts add up to more than the size of
             the archive.{' '}
-            <Link href="/tax-tips" style={{ color: '#9A8F83', textDecoration: 'underline' }}>
+            <Link href="/tax-tips" style={{ color: '#6B6256', textDecoration: 'underline' }}>
               Browse everything by date
             </Link>
             .
