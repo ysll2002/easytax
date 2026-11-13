@@ -5,7 +5,9 @@ import { Bell, Check } from 'lucide-react';
 import { getStoredAnonId } from './PageViewTracker';
 
 // Email capture for visitors who are interested but cannot be converted yet,
-// because HMRC production approval is still pending. Asking for an address and
+// who are not ready to file yet. Until 2026-11-11 the reason was that HMRC
+// production approval was pending; it has landed, so this is now for people who
+// are not yet signed up for MTD. Asking for an address and
 // a segment is a far lower commitment than creating an account, and the
 // segment is what makes the launch email worth opening.
 
@@ -19,7 +21,7 @@ const SEGMENTS: { value: string; label: string }[] = [
 export default function NotifyMeForm({
   source,
   heading = 'Be first to file',
-  blurb = 'MTD ITSA filing opens as soon as HMRC signs off our production access. Leave your email and we will tell you the day it goes live — no other mail, unsubscribe in one click.',
+  blurb = 'MTD ITSA filing is open. Leave your email and we will remind you before each quarterly deadline — no other mail, unsubscribe in one click.',
   variant = 'card',
 }: {
   /** Which page captured the address, e.g. 'home' or 'pricing'. */

@@ -1,3 +1,4 @@
+import { OFFER_JSONLD } from '@/lib/pricing';
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import { NextIntlClientProvider } from 'next-intl';
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   // 146 characters. The previous text ran to 253 and was inherited by every
   // page without its own, so the site's most-used description was cut off in
   // results mid-clause.
-  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 from £24.',
+  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free to use.',
   keywords: [
     'MTD ITSA software',
     'MTD for income tax UK',
@@ -73,7 +74,7 @@ export const metadata: Metadata = {
     url: 'https://easytax.vip',
     siteName: 'EasyTax',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — £24 per submission, no subscription.',
+    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — free, no subscription.',
     // No `images` here on purpose. This used to name `/og-image.png`, a file
     // that has never existed in `public/` — so every page on the site
     // advertised a preview image that returned 404, and every link the last
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — £24 per submission.',
+    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free, no subscription.',
     // Likewise: inherited from the generated Open Graph card.
   },
   alternates: { canonical: 'https://easytax.vip' },
@@ -145,23 +146,18 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
               url: 'https://easytax.vip',
-              description: 'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, CT600, Balance Sheet and P&L directly with HMRC for £24 per submission, no subscription.',
-              // Was price '0' / "Free", which contradicted the £24 Offer on the
-              // homepage and pricing page. Conflicting Offer nodes on the same
-              // URL are a rich-result liability and read as a bait-and-switch
-              // to anyone who checks.
-              offers: {
-                '@type': 'Offer',
-                price: '24',
-                priceCurrency: 'GBP',
-                description: '£20 + VAT (£24 inc. VAT) per HMRC submission — no subscription, no card to sign up',
-              },
+              description: 'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, Balance Sheet and P&L directly with HMRC, free.',
+              // Shares one Offer object with the homepage node, which carries
+              // the same @id. Two Offers for one entity that disagree are a
+              // rich-result liability and read as a bait-and-switch to anyone
+              // who checks; they have now disagreed in both directions, so
+              // neither restates the price.
+              offers: OFFER_JSONLD,
               featureList: [
                 'Self Assessment (SA100)',
                 'Making Tax Digital for Income Tax (MTD ITSA)',
                 'Quarterly HMRC updates',
                 'VAT returns (MTD VAT)',
-                'CT600 Corporation Tax',
                 'Balance Sheet',
                 'Profit & Loss',
                 'Open Banking integration',

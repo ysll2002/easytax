@@ -4,6 +4,7 @@ import SiteHeader from '@/components/SiteHeader';
 import NotifyMeForm from '@/components/NotifyMeForm';
 import TrackedCta from '@/components/TrackedCta';
 import { TOOLS } from '@/lib/tools';
+import { OFFER_JSONLD } from '@/lib/pricing';
 import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
@@ -101,13 +102,8 @@ export default async function Home() {
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
     url: 'https://easytax.vip',
-    description: 'MTD-compliant tax filing for UK sole traders and limited companies — MTD ITSA quarterly updates, Self Assessment, VAT returns, and CT600 Corporation Tax filed directly to HMRC.',
-    offers: {
-      '@type': 'Offer',
-      price: '24',
-      priceCurrency: 'GBP',
-      description: '£24 per HMRC submission (inc. VAT), no monthly subscription',
-    },
+    description: 'MTD-compliant tax filing for UK sole traders and limited companies — MTD ITSA quarterly updates, Self Assessment and VAT returns filed directly to HMRC.',
+    offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
   };
 

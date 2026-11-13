@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Xero Alternative — MTD ITSA Software for UK Sole Traders'),
-  description: 'Looking for a Xero alternative in the UK? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC. £24 per filing — no monthly subscription.',
+  description: 'Looking for a Xero alternative in the UK? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC. Free — no monthly subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/xero-alternative' },
   openGraph: {
     title: 'Xero Alternative UK — MTD ITSA + Self Assessment + VAT',
-    description: 'Xero charges £16–£47/month. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC for £24 per submission — no subscription.',
+    description: 'Xero charges £16–£47/month. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no subscription, no filing fee.',
     url: 'https://easytax.vip/xero-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Xero Alternative UK — MTD ITSA Software',
-    description: 'Switch from Xero to EasyTax — file to HMRC for £24/submission, no monthly fee.',
+    description: 'Switch from Xero to EasyTax — file to HMRC free, no monthly fee.',
   },
 };
 
@@ -30,7 +31,7 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; xero: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Price',                                 easytax: '£24/submission',   xero: 'From £16/mo+VAT',      note: 'Xero Starter billed monthly; Standard £33/mo, Premium £47/mo' },
+  { feature: 'Price',                                 easytax: PRICE_TABLE_CELL,   xero: 'From £16/mo+VAT',      note: 'Xero Starter is billed monthly (Standard £33/mo, Premium £47/mo); EasyTax charges nothing' },
   { feature: 'No monthly subscription',               easytax: true,               xero: false,                  note: 'EasyTax is pay-per-submission, not a recurring fee' },
   { feature: 'No card required to sign up',           easytax: true,               xero: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               xero: true },
@@ -78,16 +79,16 @@ export default async function XeroAlternative() {
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#C4622D', border: '1px solid #C4622D30' }}>
-              <Sparkles size={12} /> The pay-per-filing Xero alternative
+              <Sparkles size={12} /> The free Xero alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£16–£47/month</em> for Xero? Switch to £24 per HMRC filing.
+              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£16–£47/month</em> for Xero? Switch to free.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero is a strong product — but for a UK sole trader who needs <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you&apos;re paying £192–£564/year for functionality you may never use. EasyTax charges <strong style={{ color: '#C4622D' }}>£24 per HMRC submission</strong> — nothing more.
+              Xero is a strong product — but for a UK sole trader who needs <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you&apos;re paying £192–£564/year for functionality you may never use. EasyTax is <strong style={{ color: '#C4622D' }}>free</strong> — no monthly fee and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>No monthly subscription</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
@@ -110,7 +111,7 @@ export default async function XeroAlternative() {
               What does Xero actually cost a sole trader?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero Starter costs £16/month + VAT but limits you to 20 bank transactions per month — most sole traders quickly move to Standard at £33/month + VAT. That&apos;s <strong>£475/year inc. VAT</strong>. EasyTax charges £24 per HMRC submission. Four MTD quarterly updates plus one Self Assessment = <strong>5 submissions × £24 = £120/year total</strong>.
+              Xero Starter costs £16/month + VAT but limits you to 20 bank transactions per month — most sole traders quickly move to Standard at £33/month + VAT. That&apos;s <strong>£475/year inc. VAT</strong>. EasyTax charges nothing. Four MTD quarterly updates plus one Self Assessment come to <strong>£0</strong>.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -120,8 +121,8 @@ export default async function XeroAlternative() {
               </div>
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#6B8E6E' }}>EasyTax</p>
-                <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>£24 per submission</p>
-                <p className="text-sm" style={{ color: '#4A4035' }}>You only pay when you file with HMRC. Free to connect your bank and HMRC accounts, free to use the dashboard.</p>
+                <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Free</p>
+                <p className="text-sm" style={{ color: '#4A4035' }}>Nothing per month and nothing per filing. Free to connect your bank and HMRC accounts, free to use the dashboard.</p>
               </div>
             </div>
           </div>
@@ -138,7 +139,7 @@ export default async function XeroAlternative() {
                 <div className="px-4 sm:px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#9A8F83', backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>Feature</div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Xero</p>
@@ -205,7 +206,7 @@ export default async function XeroAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission. No monthly subscription — you only pay when you file. Users who sign up during our early-access period lock in this founder price for life.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting your bank and HMRC accounts is free too.',
                 },
                 {
                   q: 'My accountant uses Xero. Can I still use EasyTax?',
@@ -217,7 +218,7 @@ export default async function XeroAlternative() {
                 },
                 {
                   q: "Xero Starter is £16/month — isn't that almost as cheap?",
-                  a: "Xero Starter limits you to 20 bank transactions per month. Most sole traders have more than that and quickly move to Standard (£33/month + VAT = £475/year). EasyTax has no transaction limits and charges per submission, not per month.",
+                  a: "Xero Starter limits you to 20 bank transactions per month. Most sole traders have more than that and quickly move to Standard (£33/month + VAT = £475/year). EasyTax has no transaction limits and no charge of any kind.",
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',
@@ -241,9 +242,9 @@ export default async function XeroAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop the monthly subscription.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Pay £24 when you file. Not before.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>Pay nothing when you file. Not before, not after.</em>
             </h2>
-            <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>No card required to start. Early signups lock in the founder price.</p>
+            <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>No card required to start — there is nothing to pay.</p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#C4622D', color: '#FDFCF8' }}>
                 Get started — no subscription →

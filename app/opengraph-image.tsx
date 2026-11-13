@@ -20,12 +20,12 @@ export default async function Image() {
 
   const subtitle =
     status.isLive && status.dueQuarter && status.daysUntilDue !== null
-      ? `${status.dueQuarter.taxYear} ${status.dueQuarter.key} quarterly update due ${status.dueQuarter.deadlineLabel}. £24 per submission, no subscription.`
-      : 'Quarterly updates, Self Assessment, VAT and CT600 — £24 per submission, no subscription.';
+      ? `${status.dueQuarter.taxYear} ${status.dueQuarter.key} quarterly update due ${status.dueQuarter.deadlineLabel}. Free — no subscription, no filing fee.`
+      : 'Quarterly updates, Self Assessment, VAT and CT600 — free, no subscription, no filing fee.';
 
   return renderOgCard({
     eyebrow: status.isLive ? 'Making Tax Digital is live' : 'Making Tax Digital for Income Tax',
-    title: 'File with HMRC without a monthly subscription',
+    title: 'File with HMRC for free',
     subtitle,
     figure:
       status.isLive && status.daysUntilDue !== null

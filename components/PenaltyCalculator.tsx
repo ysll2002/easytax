@@ -21,7 +21,8 @@ import { encodePenalty, penaltyCard, type PenaltyShare } from '@/lib/share-resul
 // type when they are already anxious and already late. The honest answer is a
 // number and a breakdown, given immediately and without an email gate — which
 // is also why the page is worth linking to. The CTA at the end is the launch
-// list, because we cannot take live filings until HMRC signs off.
+// list. HMRC granted production access on 2026-11-11, so the CTA now goes to
+// registration rather than a waiting list.
 
 const TOOL = 'sa_penalty';
 
@@ -418,18 +419,17 @@ function Panel({
       <div className="mt-7 pt-6" style={{ borderTop: '1px solid #F0EBE1' }}>
         <p className="text-sm mb-4" style={{ color: '#4A4035' }}>
           Filing on time is the only way to avoid all of this. EasyTax files Self Assessment and MTD
-          quarterly updates for £20 + VAT each, with no subscription. Our HMRC production access is
-          still being approved, so we cannot take live submissions yet — join the list and we will
-          tell you the day it opens.
+          quarterly updates free, with no subscription and no per-filing fee. HMRC approved our production
+          access on 11 November 2026, so live submissions are open.
         </p>
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
-            href="/#notify"
-            onClick={() => trackClient('tool_cta_click', { tool: TOOL, cta: 'notify' })}
+            href="/register"
+            onClick={() => trackClient('tool_cta_click', { tool: TOOL, cta: 'register' })}
             className="inline-flex items-center justify-center gap-2 px-6 rounded-full text-sm font-semibold"
             style={{ minHeight: 48, backgroundColor: '#1C1208', color: '#FDFCF8' }}
           >
-            Tell me when filing opens
+            Start filing
           </Link>
           <Link
             href="/payments-on-account-calculator"

@@ -25,16 +25,16 @@
     "announcement": {
       "live": "Making Tax Digital has started.",
       "nextUpdate": "Next quarterly update: {date}.",
-      "status": "Free deadline tools now — filing opens when HMRC approves us."
+      "status": "HMRC production access approved — MTD ITSA, Self Assessment and VAT filing are open."
     },
     "hero": {
       "pill": "Next MTD ITSA quarterly update: {date} — {days} days to go",
       "title1": "MTD ITSA is here.",
       "title2": "File quarterly to HMRC",
-      "title3": "for £24 a filing.",
+      "title3": "for free.",
       "subtitle": "From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts.",
-      "subtitleEmph": "No subscription — you only pay when you file.",
-      "badgeFree": "No subscription",
+      "subtitleEmph": "No subscription, no filing fee — EasyTax is free to use.",
+      "badgeFree": "Free to use",
       "badgeNoCard": "No card to sign up",
       "badgeHmrc": "Built on HMRC APIs",
       "ctaPrimary": "Get MTD-ready →",
@@ -88,8 +88,8 @@
       "title1": "File in five minutes,",
       "title2": "not five hours.",
       "body": "Connect your bank and HMRC account once. EasyTax pulls your data, categorises everything with AI, and files — whether it's a Self Assessment, VAT return, or full company accounts.",
-      "priceLabel": "£24 / filing",
-      "priceCaption": "No monthly subscription. £24 per HMRC submission (inc. VAT). Early-access signups lock in this founder price for life.",
+      "priceLabel": "Free",
+      "priceCaption": "No subscription and no per-filing fee. Connecting your bank and HMRC, AI categorisation and filing to HMRC are all free.",
       "cta": "Start Filing →",
       "step1Title": "Connect your accounts",
       "step1Desc": "Link your Government Gateway ID and business bank account. We pull your records automatically — no manual data entry.",
@@ -102,7 +102,7 @@
       "title1": "Questions,",
       "title2": "answered.",
       "q1Q": "Does EasyTax support limited companies?",
-      "q1A": "Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Pricing: £24 per HMRC submission (inc. VAT), no monthly subscription. Early-access signups lock in the £20+VAT founder price.",
+      "q1A": "Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Pricing: free — no monthly subscription and no per-filing fee.",
       "q2Q": "What VAT schemes do you support?",
       "q2A": "We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.",
       "q3Q": "How is the Balance Sheet generated?",
@@ -132,7 +132,7 @@
     "finalCta": {
       "title1": "Stop dreading",
       "title2": "the paperwork.",
-      "subtitle": "For UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes — £24 per submission, no subscription.",
+      "subtitle": "For UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes — free, no subscription.",
       "button": "Start filing →"
     },
     "footer": {
@@ -143,7 +143,7 @@
     },
     "meta": {
       "title": "MTD ITSA Software for UK Sole Traders & Landlords",
-      "description": "MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 from £24 per filing."
+      "description": "MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free, no subscription."
     },
     "toolsStrip": {
       "kicker": "Free · no account needed",
@@ -404,7 +404,7 @@
     "terms": "Terms",
     "vs": "EasyTax vs {name}",
     "tagline": "Finance Panda Limited. Built in London.",
-    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. Our HMRC production access is still going through approval.",
+    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA, Self Assessment and VAT.",
     "notifyHeading": "Be first to file",
     "notifyBlurb": "We will email you the day MTD filing opens — nothing else, unsubscribe in one click."
   }

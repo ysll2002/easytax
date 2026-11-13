@@ -5,14 +5,15 @@ import SiteHeader from '@/components/SiteHeader';
 import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
+import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Sage Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a Sage Accounting alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC for £20 + VAT (£24 inc. VAT) per submission — no monthly subscription, no card to sign up.',
+  description: 'Looking for a Sage Accounting alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/sage-alternative' },
   openGraph: {
     title: 'Sage Accounting Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Sage Accounting charges up to £336+/year on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC for £24 per submission — no subscription.',
+    description: 'Sage Accounting charges up to £336+/year on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no subscription, no filing fee.',
     url: 'https://easytax.vip/sage-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -20,8 +21,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sage Accounting Alternative — MTD ITSA Software, £24 per Filing',
-    description: 'Sage Accounting charges £336+/year. EasyTax charges £24 per submission, no subscription.',
+    title: 'Sage Accounting Alternative — MTD ITSA Software, Free',
+    description: 'Sage Accounting charges £336+/year. EasyTax charges nothing, with no subscription.',
   },
 };
 
@@ -30,8 +31,8 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; sage: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: '£24 per filing', sage: 'From £144+VAT/yr',   note: 'Sage Accounting charges monthly; EasyTax charges £20+VAT per HMRC submission' },
-  { feature: 'Typical annual cost',                   easytax: '~£120',          sage: '£144–£336+',         note: 'Based on 4 quarterly MTD updates + 1 final declaration vs Sage Start/Standard plans' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL, sage: 'From £144+VAT/yr',   note: 'Sage Accounting charges monthly; EasyTax charges nothing' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,          sage: '£144–£336+',         note: 'EasyTax is free however many times you file; Sage Start/Standard plans are billed monthly' },
   { feature: 'No card to sign up',                    easytax: true,             sage: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,             sage: true },
   { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,             sage: true },
@@ -62,7 +63,7 @@ export default async function SageAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Sage Accounting Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Sage Accounting for UK sole traders and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 for £24 per submission with no subscription.',
+    description: 'Side-by-side comparison of EasyTax and Sage Accounting for UK sole traders and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free, with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/sage-alternative',
@@ -83,13 +84,13 @@ export default async function SageAlternative() {
               <Sparkles size={12} /> The no-subscription Sage Accounting alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£336/year</em> for Sage? EasyTax files the same HMRC returns for £24 each.
+              Paying <em style={{ color: '#C4622D', fontStyle: 'italic' }}>£336/year</em> for Sage? EasyTax files the same HMRC returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Sage Accounting is a powerful platform — but if you are a UK sole trader, landlord, or small limited company mainly needing <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying for a full accounting suite you will never fully use. EasyTax covers all the same HMRC filings for <strong style={{ color: '#6B8E6E' }}>£20 + VAT (£24 inc. VAT) per submission</strong> — no monthly fee, so you only pay when you actually file.
+              Sage Accounting is a powerful platform — but if you are a UK sole trader, landlord, or small limited company mainly needing <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying for a full accounting suite you will never fully use. EasyTax covers all the same HMRC filings <strong style={{ color: '#6B8E6E' }}>free</strong> — no monthly fee, and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>£24 per filing</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#6B8E6E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Sole traders + limited companies</span>
@@ -143,7 +144,7 @@ export default async function SageAlternative() {
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>EasyTax</p>
-                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>£24 / filing</p>
+                  <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#9A8F83' }}>Sage</p>
@@ -182,7 +183,7 @@ export default async function SageAlternative() {
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #6B8E6E30' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#6B8E6E' }}>Where EasyTax wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>No subscription — pay only when you file. Typical saving vs Sage: £100–£200+/year for a sole trader.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>No subscription and no filing fee. Typical saving vs Sage: £144–£336/year for a sole trader.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>AI bank reconciliation chat powered by Claude — categorise transactions in plain English instead of navigating a complex interface.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Built from scratch for MTD ITSA — not a legacy desktop product moved to the cloud.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#6B8E6E" className="flex-shrink-0 mt-0.5" /><span>Simple, focused interface for freelancers who just want to stay HMRC-compliant.</span></li>
@@ -258,7 +259,7 @@ export default async function SageAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost compared to Sage?',
-                  a: 'EasyTax charges £20 + VAT (£24 inc. VAT) per HMRC submission — no monthly subscription. A typical sole trader filing 4 quarterly MTD updates and 1 Self Assessment pays around £120/year. Sage Accounting Start costs £12/mo (£144/year) for basic features; the standard plan is £28/mo (£336/year). EasyTax saves most sole traders £24–£216/year.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file, so a sole trader filing 4 quarterly MTD updates and 1 Self Assessment pays £0 for the year. Sage Accounting Start costs £12/mo (£144/year) for basic features; the standard plan is £28/mo (£336/year).',
                 },
                 {
                   q: 'I use Sage for invoicing. What do I do?',
@@ -302,7 +303,7 @@ export default async function SageAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop paying £336/year just to stay HMRC-compliant.<br />
-              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for £24 a filing.</em>
+              <em style={{ color: '#C4622D', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
             </h2>
             <p style={{ color: '#9A8F83', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.

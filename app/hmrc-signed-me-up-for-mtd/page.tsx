@@ -332,7 +332,7 @@ export default function HmrcSignedMeUpPage() {
             <ul className="flex flex-col gap-3 mb-6">
               {[
                 { ok: true,  text: 'Working today, free, no account: the deadline checker, the penalty calculator and the subscribable deadline calendar above.' },
-                { ok: false, text: 'Not yet: sending your quarterly updates to HMRC. Our production access is still with HMRC for approval, and we will not pretend otherwise.' },
+                { ok: true, text: 'Working today: sending your quarterly updates to HMRC. Our production access was approved on 11 November 2026 — you do need to be signed up for Making Tax Digital for Income Tax with HMRC first.' },
               ].map(({ ok, text }) => (
                 <li key={text} className="flex items-start gap-2.5 text-sm" style={{ color: '#4A4035', lineHeight: 1.6 }}>
                   {ok

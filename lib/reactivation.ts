@@ -199,7 +199,8 @@ export function subjectFor(segment: Segment): string {
  * The email body.
  *
  * Two rules it is written to. First, it says what is true today: HMRC
- * production approval is still pending, so it cannot promise that a filing can
+ * production approval landed on 2026-11-11, so it can say filing is open, but it
+ * must not promise a filing can
  * be made through us this week, and it does not. Claiming otherwise to fifteen
  * people who authorised HMRC access is how you lose the only warm audience
  * there is. Second, everything it offers — the deadline, the calendar feed, the
@@ -228,16 +229,16 @@ export function renderEmail(recipient: Recipient, base = 'https://easytax.vip'):
       ? `<p style="margin:0 0 16px">${greeting}</p>
          <p style="margin:0 0 16px">You connected your HMRC account to EasyTax and then we went quiet. That was our mistake, and this is the one thing worth telling you.</p>
          <p style="margin:0 0 16px">${deadline}</p>
-         <p style="margin:0 0 16px">Being straight with you about where we are: our HMRC production approval is still pending, so you cannot yet submit through EasyTax. We are not going to pretend otherwise. What does work today, without an account and without us:</p>
+         <p style="margin:0 0 16px">The thing you were waiting for has happened: HMRC approved our production access on 11 November 2026, so you can now file through EasyTax. You do need to be signed up for Making Tax Digital for Income Tax with HMRC yourself — that is a separate step on GOV.UK, and without it HMRC will not release your obligations to any software. These also still work, free and without an account:</p>
          <ul style="margin:0 0 16px;padding-left:20px">
            <li style="margin:0 0 8px">Your own deadline dates, as a calendar you can subscribe to: <a href="${base}/timetable">${base}/timetable</a></li>
            <li style="margin:0 0 8px">A check of which quarters apply to you: <a href="${base}/mtd-deadline-checker">${base}/mtd-deadline-checker</a></li>
          </ul>
-         <p style="margin:0 0 16px">We will email you once — once — when approval lands and you can file. Nothing else.</p>`
+         <p style="margin:0 0 16px">That is the one email we said we would send. Nothing else.</p>`
       : `<p style="margin:0 0 16px">${greeting}</p>
          <p style="margin:0 0 16px">You created an EasyTax account and never came back. Fair enough. Here is the part that may have changed since.</p>
          <p style="margin:0 0 16px">Making Tax Digital for Income Tax started on 6 April 2026. If your 2024/25 return showed qualifying income over £50,000, you are in it — and since September 2026 HMRC has been signing people up automatically whether or not they asked. ${deadline}</p>
-         <p style="margin:0 0 16px">Our HMRC production approval is still pending, so we are not asking you to file with us today. These work now:</p>
+         <p style="margin:0 0 16px">HMRC approved our production access on 11 November 2026, so filing through EasyTax is open. You will need to be signed up for Making Tax Digital with HMRC yourself first. These work either way, free and without an account:</p>
          <ul style="margin:0 0 16px;padding-left:20px">
            <li style="margin:0 0 8px">Are you actually in scope, and when: <a href="${base}/mtd-deadline-checker">${base}/mtd-deadline-checker</a></li>
            <li style="margin:0 0 8px">Every MTD and Self Assessment date, as a calendar feed: <a href="${base}/timetable">${base}/timetable</a></li>

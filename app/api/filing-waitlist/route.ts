@@ -7,7 +7,7 @@ import { trackAsync, EVENTS } from '@/lib/analytics';
 //
 // The problem this closes. On 2026-09-16 this product had 48 registered
 // accounts, 17 of them with HMRC connected, and 0 filings — because filing is
-// not possible until HMRC grants production access, which is still pending.
+// not possible until HMRC granted production access, which it did on 2026-11-11.
 // Every one of those people signed up, found they could not do the thing they
 // came for, and left. Nothing in the product told them why, nothing told them
 // when, and `launch_subscribers` — the list to mail on approval day — had zero
