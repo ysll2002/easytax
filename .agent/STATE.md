@@ -70,6 +70,8 @@
 
 ## 在飞的分支
 
+- `agent/2026-11-13-accessibility` → [PR #32](https://github.com/ysll2002/easytax/pull/32)（**对 main**，WCAG 修复 + /accessibility 声明，待 owner 看 preview 后合并；上线后更新 Software Choices D28、WCAG 表和 Paul 回信）
+
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)（待合 staging，之后还需进 main）
 - `agent/2026-09-22-hero-friendly-flat-preview` → [PR #25](https://github.com/ysll2002/easytax/pull/25)（待 owner 看 Vercel preview）
 

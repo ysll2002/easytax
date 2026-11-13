@@ -15,6 +15,24 @@
 
 ---
 
+## 2026-11-13 晚（owner 实时对话：无障碍修复）
+
+**今日执行**：owner 让我修掉 WCAG 表里记下的问题，并写一份无障碍声明。已开 [PR #32](https://github.com/ysll2002/easytax/pull/32)（分支 `agent/2026-11-13-accessibility`，从 main 切，**base=main**，按 repo CLAUDE.md 的流程；没有合并）。130 个文件。
+改动：
+- 全站配色换成达标色：灰 `#9A8F83→#6B6256`、橙 `#C4622D→#A04E1C`、绿 `#6B8E6E→#4B6A4E`；深色区域用浅色版。**品牌橙明显变深，要 owner 看预览。**
+- 加了全局 :focus-visible 焦点框和 7 种语言的「跳到主要内容」链接；每个页面都有 `<main id="main-content">`。
+- 登录、注册、找回密码和每个 dashboard 页面都有了自己的标题。
+- 加了 autocomplete；正文链接加下划线；320px 宽度下不再横向滚动。
+- 键盘和 ARIA：P&L 展开改成 button，两个菜单加了 aria-expanded，费用提示可以点开，只读字段加了 label。
+- **季度申报加了提交前核对步骤**：第一次点显示汇总，第二次点才发给 HMRC。
+- 支持 reduced-motion；新页面 `/accessibility`（按 GOV.UK 模板，写的是 partially compliant），已加进页脚和 sitemap。
+
+验证：tsc 和 build 通过；本地 34 个公开页面 axe 0 违规。**dashboard 没有在本地渲染过**（缺 auth env），季度申报的核对步骤要在 preview 上点一遍。
+**合并上线后要做**：① Software Choices 表 D28 改成 https://easytax.vip/accessibility ② WCAG 表里已修好的项从 Partially 改成 Supports ③ Paul 回信里「还没有无障碍声明」那段改掉。
+**发现（不在本 PR）**：`app/onboarding/page.tsx` 有一个让用户输入 HMRC Gateway 密码的表单，看起来是遗留页面，值得 owner 确认是否还在用。HMRC 不允许第三方软件收集 Gateway 凭证。
+
+---
+
 ## 2026-11-13 下午（owner 实时对话）
 
 **HMRC**：owner 给了 Paul Anderson（11-11）邮件的三个附件让我填。已填好，放在 `hmrc/2026-11-software-choices/`：
