@@ -2,13 +2,13 @@
 
 > 每日 agent 每次运行后**覆盖写**这个文件。要看历史请查 `JOURNAL.md`。
 
-**最后更新：2026-11-13（owner 实时对话：HMRC production 已批准。指标仍是 10-10 的快照，没有重拉）**
+**最后更新：2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
 ## HMRC
 
 - 🎉 **2026-11-11 Production 已批准**（CMQAA-923 / 2026-NQM717，John Morris）：`EasyTax VIP`（ID 50b9bae2-5fa2-4145-a932-cb087495a255）获批 11 个 ITSA API + VAT (MTD) API；ITSA FPH 评估通过；重复应用 `EasyTax.VIP` 已拒。没批的只有 Check a UK VAT Number 2.0（代码没用到，11-13 草稿里撤回，**草稿待 owner 发**）。
   - 按 RUNBOOK 第 3 节，**compliance 护栏已解除**（production 审批已通过）。
-  - 待办：① 发 CMQAA-712 回复草稿 ② 回复 Paul Anderson 的 ITSA Software Choices + 无障碍 checklist 邮件（11-11）③ 第一次 live VAT 提交后 14 天内报 VRN ④ **网站文案从「测试/待审批」改成「可以真实报税」**（owner 11-11 提出，还没做；同时要修 stg-010 的夸大声明）⑤ 每月 FPH 状态邮件，Developer Hub 团队成员要保持最新。
+  - 待办：① CMQAA-712 回复草稿**发之前先改价格**：草稿写的「非免费 £20+VAT」已过时，main 从 10-14 起完全免费（PR #31）② Paul Anderson 邮件：两张表已填好，在 `hmrc/2026-11-software-choices/`（填表人姓名留空待 owner 填）；附件里的「Complete Initial Set-up Process」是要 owner 在 Developer Hub 点「I have finished」，没有要填的内容；回信还没起草。**列表上线前先修 stg-010**（/mtd-software 仍声称支持 CT600、final declaration、landlord），并发布无障碍声明页 ⑥ WCAG 表里承诺修复的项（对比度、autocomplete、skip link、页面标题、焦点样式、提交前确认步骤）③ 第一次 live VAT 提交后 14 天内报 VRN ④ **网站文案从「测试/待审批」改成「可以真实报税」**（owner 11-11 提出，还没做；同时要修 stg-010 的夸大声明）⑤ 每月 FPH 状态邮件，Developer Hub 团队成员要保持最新。
 - 以下是批准前的历史记录：
 - Production 审批（历史）：PENDING。App 已完整对接 HMRC sandbox（ITSA + VAT 两条路径都有调用）。
 - FPH 审查进行中，对接人：Aleesah Sher / Ciaran McLaughlin（HMRC）。
@@ -27,7 +27,7 @@
   内容：正式通知按次收费（£20+VAT/每次申报）但不发许可证密钥所以省略 License-IDs、请求像 MFA 一样记录；承诺用不同设备和用户重测；
   并问截止令的影响。**owner 已在 2026-09-25 16:01 UTC 发出；HMRC 9-29 回复已转给 FPH 团队，等结果。**
 - **2026-10-10 sandbox 覆盖测试**：第一次 56/65（8 个 429，是两轮同时在跑）→ owner 单标签页重跑 **64/65**，只剩预期的 VAT DUPLICATE_SUBMISSION（stg-012）。还没做：HMRC 要求的不同设备、不同用户重测。
-- 影响：**pre-revenue**。/pricing 标价 £20+VAT 每次申报，但 `app/payment/page.tsx` 仍是模拟支付、没接 Stripe；没有真实申报。
+- 影响：**pre-revenue**。2026-10-14 起网站**完全免费**（PR #31，`lib/pricing.ts`）。production main = `d17a0c2`。
 
 ## 指标（2026-10-10 08:23 UTC，对比 2026-09-23 18:34 UTC）
 

@@ -15,6 +15,18 @@
 
 ---
 
+## 2026-11-13 下午（owner 实时对话）
+
+**HMRC**：owner 给了 Paul Anderson（11-11）邮件的三个附件让我填。已填好，放在 `hmrc/2026-11-software-choices/`：
+① Software Choices 表：EasyTax / Finance Panda Limited / Individual / 不支持 agent / Quarterly submissions / Standard 期间（日历季度没测过，写进备注）/ Sole trader / 不支持多个 SE 业务（代码只取第一个 self-employment）/ Record keeping / 浏览器 / VAT=Yes / 语言只写 English（申报页面没完整翻译）/ 无障碍声明 Not yet available / Free version available。主页 URL 用首页，因为 /mtd-software 仍有 stg-010 的不实声明。
+② WCAG 2.1 AA 表：用 axe-core 测了 7 个公开页面，并做了代码检查：28 项 Supports、11 项 Partially、8 项 N/A、1 项 Does Not Support（1.3.5 autocomplete）。dashboard 需要登录，没跑自动测试，也没用屏幕阅读器测。
+③「Complete Initial Set-up Process」只是 Developer Hub 操作说明，没有要填的内容。
+用 XML 直接写单元格，保留了下拉框（openpyxl 会删掉 x14 数据验证）。填表人姓名留空。
+**发现**：main 从 10-14 起**完全免费**（PR #31），但 11-13 上午的 CMQAA-712 草稿写的是「非免费 £20+VAT」，发之前必须改。memory 里两处过时的定价已更正。
+**失败**：内置浏览器登录的 Gmail 不是 HMRC 那个账号，没法直接读邮件。
+
+---
+
 ## 2026-11-13（owner 实时对话）
 
 **HMRC**：🎉 **production 已批准（2026-11-11）**。John Morris 在 CMQAA-923 / 2026-NQM717 线程确认：ITSA 的 FPH 评估通过，`EasyTax VIP` production 应用（ID 50b9bae2-…）已批准 11 个 ITSA API，外加 VAT (MTD) API。另一个重复的应用 `EasyTax.VIP` 被拒（我们本来就要求关掉它）。
