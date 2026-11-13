@@ -8,7 +8,7 @@
 
 - 🎉 **2026-11-11 Production 已批准**（CMQAA-923 / 2026-NQM717，John Morris）：`EasyTax VIP`（ID 50b9bae2-5fa2-4145-a932-cb087495a255）获批 11 个 ITSA API + VAT (MTD) API；ITSA FPH 评估通过；重复应用 `EasyTax.VIP` 已拒。没批的只有 Check a UK VAT Number 2.0（代码没用到，11-13 草稿里撤回，**草稿待 owner 发**）。
   - 按 RUNBOOK 第 3 节，**compliance 护栏已解除**（production 审批已通过）。
-  - 待办：① CMQAA-712 回复草稿**发之前先改价格**：草稿写的「非免费 £20+VAT」已过时，main 从 10-14 起完全免费（PR #31）② Paul Anderson 邮件：两张表已填好，在 `hmrc/2026-11-software-choices/`（填表人姓名留空待 owner 填）；附件里的「Complete Initial Set-up Process」是要 owner 在 Developer Hub 点「I have finished」，没有要填的内容；回信还没起草。**列表上线前先修 stg-010**（/mtd-software 仍声称支持 CT600、final declaration、landlord），并发布无障碍声明页 ⑥ WCAG 表里承诺修复的项（对比度、autocomplete、skip link、页面标题、焦点样式、提交前确认步骤）③ 第一次 live VAT 提交后 14 天内报 VRN ④ **网站文案从「测试/待审批」改成「可以真实报税」**（owner 11-11 提出，还没做；同时要修 stg-010 的夸大声明）⑤ 每月 FPH 状态邮件，Developer Hub 团队成员要保持最新。
+  - 待办：① CMQAA-712 回复草稿**发之前先改价格**：草稿写的「非免费 £20+VAT」已过时，main 从 10-14 起完全免费（PR #31）② Paul Anderson 邮件：两张表已填好，在 `hmrc/2026-11-software-choices/`（填表人姓名留空待 owner 填）；附件里的「Complete Initial Set-up Process」是要 owner 在 Developer Hub 点「I have finished」，没有要填的内容；回信草稿在 `hmrc/2026-11-software-choices/reply-to-paul-anderson.md`，待 owner 发。owner 想申请 final declaration、property 和 CT600，已在回信里问 HMRC 流程。**列表上线前先修 stg-010**（/mtd-software 仍声称支持 CT600、final declaration、landlord），并发布无障碍声明页 ⑥ WCAG 表里承诺修复的项（对比度、autocomplete、skip link、页面标题、焦点样式、提交前确认步骤）③ 第一次 live VAT 提交后 14 天内报 VRN ④ **网站文案从「测试/待审批」改成「可以真实报税」**（owner 11-11 提出，还没做；同时要修 stg-010 的夸大声明）⑤ 每月 FPH 状态邮件，Developer Hub 团队成员要保持最新。
 - 以下是批准前的历史记录：
 - Production 审批（历史）：PENDING。App 已完整对接 HMRC sandbox（ITSA + VAT 两条路径都有调用）。
 - FPH 审查进行中，对接人：Aleesah Sher / Ciaran McLaughlin（HMRC）。

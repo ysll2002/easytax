@@ -24,6 +24,7 @@
 用 XML 直接写单元格，保留了下拉框（openpyxl 会删掉 x14 数据验证）。填表人姓名留空。
 **发现**：main 从 10-14 起**完全免费**（PR #31），但 11-13 上午的 CMQAA-712 草稿写的是「非免费 £20+VAT」，发之前必须改。memory 里两处过时的定价已更正。
 **失败**：内置浏览器登录的 Gmail 不是 HMRC 那个账号，没法直接读邮件。
+**补充**：owner 想申请 final declaration、房东收入（SA105）和 CT600。整理了对应的 API：Property Business、BSAS、Individual Losses、各类 Individuals 收入 API。CT600 不在 MTD API 里，要走 GovTalk/Transaction Engine 加 iXBRL，并经过 SDST 认可。给 Paul Anderson 的回信草稿写在 `hmrc/2026-11-software-choices/reply-to-paul-anderson.md`（这次会话没有 Gmail connector，所以没存进 Gmail）。草稿附上两张表，说明网站改好之后再上列表，并问年终功能和 property 现在能不能申请、CT600 该找谁。
 
 ---
 
