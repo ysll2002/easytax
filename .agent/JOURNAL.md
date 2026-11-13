@@ -15,6 +15,17 @@
 
 ---
 
+## 2026-11-13（owner 实时对话）
+
+**HMRC**：🎉 **production 已批准（2026-11-11）**。John Morris 在 CMQAA-923 / 2026-NQM717 线程确认：ITSA 的 FPH 评估通过，`EasyTax VIP` production 应用（ID 50b9bae2-…）已批准 11 个 ITSA API，外加 VAT (MTD) API。另一个重复的应用 `EasyTax.VIP` 被拒（我们本来就要求关掉它）。
+没批的只有 Check a UK VAT Number 2.0。同一天 Ciaran 在 CMQAA-712 / 2026-DTG878 线程说：这个 API 要交 checklist + 测试提交；另外想上 VAT 兼容软件列表，需要先做一次 live VAT 提交，14 天内报 VRN。
+同日还有：Developer Hub 的验证邮件（之后 owner 在 production 应用加了 client secret，说明已验证）；Paul Anderson（HMRC）发来 ITSA Software Choices 和无障碍 checklist 的邮件，**还没处理**。
+**今日执行**：在 CMQAA-712 线程里用 `create_draft` 存了回复草稿（未发送）：① 撤回 Check a UK VAT Number 2.0（grep 过代码，没有调用它）；② VAT 列表信息：名称 EasyTax、URL、使用者=Businesses、非 bridging、5 个 VAT 端点都用、非免费（£20+VAT 每次）；live VRN 等有 VAT 客户提交后再报；③ ITSA 列表另找 makingtaxdigital-softwarevendors。
+**学到 / 决定**：Gmail connector 有时连的是 lilin.gabriel.uk@（hello@easytax.vip 转到这里），HMRC 邮件在 lilin.gabriel@，查不到时先看连的是哪个账号。另外 11-12 owner 还让我做了一份求职简历（与 EasyTax 无关），以及 11-11 提出要把网站文案从 test 改成可以真实报税（被打断，**还没做**，见 STATE）。
+**失败**：无。
+
+---
+
 ## 2026-10-10（第二次定时触发，08:28 UTC）
 
 **HMRC**：Gmail 连接器**仍然**报「requires additional permissions」，还是查不了 HMRC 邮件。状态同上一条：等 FPH 团队对 9-25 回信的答复。

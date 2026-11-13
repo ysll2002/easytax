@@ -2,11 +2,15 @@
 
 > 每日 agent 每次运行后**覆盖写**这个文件。要看历史请查 `JOURNAL.md`。
 
-**最后更新：2026-10-10 第二次定时运行 08:28 UTC（指标和 08:23 一样；Gmail 连接器权限仍然失效，今天没查 HMRC 邮件）**
+**最后更新：2026-11-13（owner 实时对话：HMRC production 已批准。指标仍是 10-10 的快照，没有重拉）**
 
 ## HMRC
 
-- Production 审批：**PENDING**。App 已完整对接 HMRC sandbox（ITSA + VAT 两条路径都有调用）。
+- 🎉 **2026-11-11 Production 已批准**（CMQAA-923 / 2026-NQM717，John Morris）：`EasyTax VIP`（ID 50b9bae2-5fa2-4145-a932-cb087495a255）获批 11 个 ITSA API + VAT (MTD) API；ITSA FPH 评估通过；重复应用 `EasyTax.VIP` 已拒。没批的只有 Check a UK VAT Number 2.0（代码没用到，11-13 草稿里撤回，**草稿待 owner 发**）。
+  - 按 RUNBOOK 第 3 节，**compliance 护栏已解除**（production 审批已通过）。
+  - 待办：① 发 CMQAA-712 回复草稿 ② 回复 Paul Anderson 的 ITSA Software Choices + 无障碍 checklist 邮件（11-11）③ 第一次 live VAT 提交后 14 天内报 VRN ④ **网站文案从「测试/待审批」改成「可以真实报税」**（owner 11-11 提出，还没做；同时要修 stg-010 的夸大声明）⑤ 每月 FPH 状态邮件，Developer Hub 团队成员要保持最新。
+- 以下是批准前的历史记录：
+- Production 审批（历史）：PENDING。App 已完整对接 HMRC sandbox（ITSA + VAT 两条路径都有调用）。
 - FPH 审查进行中，对接人：Aleesah Sher / Ciaran McLaughlin（HMRC）。
 - ✅ **申请窗口问题已解决（2026-10-04，HMRC Louise Tarpy 的正式说明）**：8-10 之前提交的申请继续审。我们 7-08 提交，**在范围内**。
   但不达标会被拒。被拒后要等 2027 年初公布的 2027–28 流程是**推断**，HMRC 没有明确说，也没说能否在原申请内补材料重提。readiness 标准包含 ToU「accurate representation」和 AI 内容审核条款。
