@@ -15,6 +15,10 @@
 
 ---
 
+## 2026-11-13（追加 · staging 同步）
+**今日执行**：owner 明确授权，把 `staging` 快进到 `main`（`04ba5ae`→`a2d8b4c`，staging 上没有 main 缺的 commit，直接 fast-forward，没有 force）。Vercel preview 构建成功，staging.easytax.vip 已指向新部署 `dpl_GW9PGz8y…`。staging 有 Vercel 登录保护，curl 看不到页面内容。本地 clone 在 staging，干净，和 origin 一致。
+**学到 / 决定**：这是一次性授权，不改护栏，以后 push staging 仍需 owner 点头。
+
 ## 2026-11-13 晚（owner 实时对话：无障碍修复）
 
 **今日执行**：owner 让我修掉 WCAG 表里记下的问题，并写一份无障碍声明。已开 [PR #32](https://github.com/ysll2002/easytax/pull/32)（分支 `agent/2026-11-13-accessibility`，从 main 切，**base=main**，按 repo CLAUDE.md 的流程；没有合并）。130 个文件。

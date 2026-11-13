@@ -60,7 +60,7 @@
 
 ## Deployment 状态
 
-- Production = `main` HEAD `c8e7104`（PR #27），构建于 2026-10-04。staging = `04ba5ae`（内容同 main，少一个 merge commit）。
+- Production = `main` HEAD `a2d8b4c`（PR #32），2026-11-13 上线。staging 已快进到同一个 commit `a2d8b4c`（2026-11-13，owner 授权），两者一致。
 - **production 只从 main 构建**。本 agent 的 PR 都对 `staging`，要上线还需 staging→main（stg-008）。
 - 另一系统在 main 上挂起的 PR：#21、#22、#23（已 3 周多）。
 
@@ -70,7 +70,7 @@
 
 ## 在飞的分支
 
-- [PR #32](https://github.com/ysll2002/easytax/pull/32) **已合进 main 并上线**（`a2d8b4c`，2026-11-13，owner 授权）：WCAG 修复 + https://easytax.vip/accessibility。两张 HMRC 表和 Paul 回信已同步更新。待办：线上点一遍季度申报的核对步骤；VAT 核对步骤、屏幕阅读器测试、dashboard 非文本对比度要在 2027-03-31 前完成（声明里写了这个日期）。staging 仍落后 main。
+- [PR #32](https://github.com/ysll2002/easytax/pull/32) **已合进 main 并上线**（`a2d8b4c`，2026-11-13，owner 授权）：WCAG 修复 + https://easytax.vip/accessibility。两张 HMRC 表和 Paul 回信已同步更新。待办：线上点一遍季度申报的核对步骤；VAT 核对步骤、屏幕阅读器测试、dashboard 非文本对比度要在 2027-03-31 前完成（声明里写了这个日期）。staging 已于同日快进到 `a2d8b4c`，和 main 一致（owner 授权）。
 
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)（待合 staging，之后还需进 main）
 - `agent/2026-09-22-hero-friendly-flat-preview` → [PR #25](https://github.com/ysll2002/easytax/pull/25)（待 owner 看 Vercel preview）
