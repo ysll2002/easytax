@@ -72,6 +72,8 @@
 
 ## 在飞的分支
 
+- [PR #42](https://github.com/ysll2002/easytax/pull/42)（2026-11-14，**已合进 staging** `a873fd0`，owner 授权）：dashboard 桌面端语言切换和 Homepage 按钮不再浮在页面右上角遮住按钮，改为单独一行。
+
 - [PR #40](https://github.com/ysll2002/easytax/pull/40)（2026-11-14，**已合进 staging** `c486474`，owner 授权）：dashboard 去掉「Finish setting up」清单；「Filing to HMRC is not open yet」横幅订阅后不再显示，production 完全不显示（production 11-11 已开放申报，旧横幅在 production 说反了，**进 main 前 production 仍显示错误横幅**）。
 
 - [PR #38](https://github.com/ysll2002/easytax/pull/38)（2026-11-14，**已合进 staging** `98a3ae8`，owner 授权）：修 CSV 导入几百行就 500（去重查询 URL 过长）、错误提示看不见、Revolut 导出误选 Orig amount。

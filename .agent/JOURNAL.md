@@ -15,6 +15,11 @@
 
 ---
 
+## 2026-11-14（追加 · 顶部控件遮挡，PR #42）
+**今日执行**：owner 反馈 Records 页语言切换和 Homepage 按钮遮住页面按钮。原因是桌面端这两个控件 absolute 浮在每页右上角。改为单独一行；本地 8 个页面在 1280/820px 检查无重叠。owner 授权合进 staging（`a873fd0`）。
+
+---
+
 ## 2026-11-14（追加 · dashboard 清理，PR #40）
 **今日执行**：owner 要求 dashboard 去掉设置清单，订阅邮件后不再显示「Filing to HMRC is not open yet」。顺带发现该横幅在 production 也显示（与 11-11 已获批矛盾），一并在 production 隐藏。本地测过，owner 授权合进 staging（`c486474`）。
 
