@@ -161,7 +161,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 'VAT returns (MTD VAT)',
                 'Balance Sheet',
                 'Profit & Loss',
-                'Open Banking integration',
+                'CSV bank statement import',
                 'AI expense categorisation',
               ],
               publisher: { '@type': 'Organization', name: 'Finance Panda Limited', url: 'https://easytax.vip' },

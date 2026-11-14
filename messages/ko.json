@@ -43,7 +43,7 @@
     },
     "trust": {
       "hmrc": "HMRC MTD API",
-      "security": "읽기 전용 은행 연결",
+      "security": "은행 로그인 불필요",
       "fast": "ICO 등록번호 ZA540758",
       "ai": "Finance Panda Limited",
       "company": "법인 지원"
@@ -64,8 +64,8 @@
         "f1Desc": "연간 신고서를 몇 분 안에 HMRC에 직접 제출.",
         "f2Label": "Making Tax Digital (MTD ITSA)",
         "f2Desc": "HMRC에 분기별 업데이트 —— 2026년 의무화 대비.",
-        "f3Label": "Open Banking",
-        "f3Desc": "은행을 연결하면 거래를 자동 가져옵니다.",
+        "f3Label": "CSV 가져오기",
+        "f3Desc": "은행 CSV 명세서를 가져오거나 직접 기록을 입력하세요.",
         "f4Label": "지출 분류",
         "f4Desc": "AI가 모든 거래에 태그를 답니다. 당신은 몇 초 만에 승인합니다.",
         "cta": "Self Assessment 시작 →"
@@ -78,7 +78,7 @@
         "f2Label": "CT600 법인세",
         "f2Desc": "법인세 신고를 HMRC에 직접 제출 —— 회계사 불필요.",
         "f3Label": "대차대조표",
-        "f3Desc": "거래와 대조된 계정에서 자동 생성.",
+        "f3Desc": "분류된 사업 기록에서 자동 생성됩니다.",
         "f4Label": "손익계산서",
         "f4Desc": "수입과 지출 유형별로 분류된 실시간 P&L.",
         "cta": "법인 계정 설정 →"
@@ -87,12 +87,12 @@
     "how": {
       "title1": "5분 만에 신고,",
       "title2": "5시간이 아니라.",
-      "body": "은행과 HMRC 계정을 한 번만 연결하세요. EasyTax가 데이터를 가져오고 AI로 분류한 후 신고합니다 —— Self Assessment, VAT, 법인 회계 모두.",
+      "body": "HMRC 계정을 연결하고 수입과 지출을 추가하세요. 은행 CSV 명세서를 가져오거나 직접 입력할 수 있습니다. EasyTax가 AI로 분류하고 Self Assessment, VAT 신고, 회사 결산까지 제출합니다.",
       "priceLabel": "무료",
-      "priceCaption": "월 구독료도, 건당 수수료도 없습니다. 은행·HMRC 연결, AI 분류, HMRC 제출까지 모두 무료입니다.",
+      "priceCaption": "구독료도 신고 건당 수수료도 없습니다. HMRC 연결, 기록 가져오기, AI 분류, HMRC 신고가 모두 무료입니다.",
       "cta": "신고 시작 →",
       "step1Title": "계정 연결",
-      "step1Desc": "Government Gateway ID와 비즈니스 은행 계좌를 연결. 기록을 자동으로 가져옵니다 —— 수동 입력 불필요.",
+      "step1Desc": "Government Gateway ID를 연결한 뒤 은행 CSV 명세서를 가져오거나 수입과 지출을 직접 입력하세요.",
       "step2Title": "AI가 어려운 작업 처리",
       "step2Desc": "AI가 모든 거래를 분류하고, 공제 가능한 지출을 계산하며, 신고 또는 법인 회계를 준비합니다.",
       "step3Title": "검토 후 제출",
@@ -106,7 +106,7 @@
       "q2Q": "지원하는 VAT 제도는?",
       "q2A": "Standard, Flat Rate, Annual VAT Accounting을 지원하며 MTD 호환 API로 HMRC에 직접 제출합니다.",
       "q3Q": "대차대조표는 어떻게 생성되나요?",
-      "q3A": "EasyTax는 대조된 은행 거래, 분류된 수입과 지출, 설정 시 입력한 기초 잔액에서 대차대조표를 자동 생성합니다.",
+      "q3A": "EasyTax는 분류된 수입·지출 기록과 설정 시 입력한 기초 잔액으로 대차대조표를 만듭니다.",
       "q4Q": "CT600은 무엇이며 필요한가요?",
       "q4A": "CT600은 영국의 모든 법인이 매년 HMRC에 제출해야 하는 법인세 신고서입니다. EasyTax가 P&L과 법인 회계를 기반으로 준비하고 제출합니다.",
       "q5Q": "HMRC 데이터는 안전한가요?",
@@ -216,7 +216,7 @@
       "company": "법인",
       "account": "계정",
       "selfAssessment": "Self Assessment",
-      "reconcile": "대조",
+      "reconcile": "기록",
       "companyTax": "법인세",
       "profile": "프로필",
       "settings": "설정",
@@ -224,19 +224,19 @@
       "companyShort": "법인",
       "logout": "로그아웃",
       "homepage": "홈",
-      "bank": "은행"
+      "bank": "장부"
     },
     "home": {
       "welcome": "환영합니다, {name}님",
       "question": "오늘 무엇을 신고하시겠어요?",
       "soleKicker": "프리랜서 및 자영업자용",
       "soleTitle": "Self Assessment 및 MTD",
-      "soleDesc": "Self Assessment · 분기 업데이트 · Open Banking · 비용",
+      "soleDesc": "Self Assessment · 분기 업데이트 · 기록 · 경비",
       "companyKicker": "법인용",
       "companyTitle": "법인세 및 회계",
       "companyDesc": "VAT 신고 · CT600 · 대차대조표 · P&L",
       "quickAccess": "빠른 접근",
-      "reconcileTransactions": "거래 대조"
+      "reconcileTransactions": "사업 기록"
     },
     "tax": {
       "title": "Self Assessment",
@@ -252,9 +252,9 @@
       "connectHmrc": "HMRC 연결",
       "step3Locked": "단계 1과 2를 완료하여 Self Assessment 신고를 잠금 해제하세요.",
       "tasksHeader": "세무 작업 · 지난 1년 및 향후 12개월",
-      "connectBank": "은행 계좌 연결",
-      "bankConnected": "연결됨 · {name}",
-      "bankImport": "Open Banking으로 거래 가져오기",
+      "connectBank": "사업 기록 추가",
+      "bankConnected": "현재 기록 {count}건",
+      "bankImport": "수입과 지출을 입력하거나 은행 CSV 명세서를 가져오세요",
       "vatReturn": "VAT 신고",
       "vatDesc": "VRN: {vrn} · Making Tax Digital로 분기 VAT 신고",
       "filingHistory": "신고 내역 보기",
@@ -273,39 +273,20 @@
       "plLabel": "손익계산서",
       "plDesc": "수입 유형과 비용 분류로 정리된 실시간 P&L.",
       "balanceLabel": "대차대조표",
-      "balanceDesc": "은행 잔액과 P&L에서 자동 생성 —— 자산, 부채, 자본.",
+      "balanceDesc": "사업 기록과 손익계산서로 생성 — 자산, 부채, 자본.",
       "ct600Label": "CT600 법인세 신고",
       "ct600Desc": "법인세 신고서를 HMRC에 제출 —— 법인 이익과 세액 포함.",
       "comingSoon": "출시 예정",
       "coaLabel": "계정과목표",
       "coaDesc": "모든 보고서에 사용되는 표준 영국 중소기업 복식 회계 구조 (FRS 102).",
-      "reconcileLabel": "거래 대조",
-      "reconcileDesc": "은행 거래를 사업 수입, 비용 또는 개인으로 분류.",
+      "reconcileLabel": "사업 기록",
+      "reconcileDesc": "수입과 지출을 추가하거나 가져와 사업용·개인용으로 표시하세요.",
       "connectedHmrc": "HMRC 연결됨",
       "vrnRegistered": "VRN 등록됨"
     },
     "reconcile": {
-      "title": "거래 대조",
-      "intro": "대조는 은행 거래를 가져와 각각을 사업 수입, 사업 비용 또는 개인으로 분류할 수 있습니다 —— 회계가 항상 정확하도록.",
-      "noBankTitle": "연결된 은행 계좌가 없습니다",
-      "noBankBody": "Open Banking으로 사업용 은행 계좌를 연결하여 대조를 시작하세요. Plaid 사용 —— 읽기 전용 접근, 자금 이동 불가.",
-      "connectBank": "은행 계좌 연결 →"
-    },
-    "banking": {
-      "back": "← 뒤로",
-      "title": "은행 계좌 연결",
-      "subtitle": "Open Banking으로 사업용 은행 계좌를 연결하여 거래를 자동 가져오고 공제 가능한 비용을 식별하세요.",
-      "supportedBanks": "지원 은행",
-      "moreUkBanks": "+ 50개 이상의 영국 은행",
-      "connect": "Open Banking으로 연결 →",
-      "connecting": "연결 중…",
-      "poweredBy": "읽기 전용 접근. 자금을 이동할 수 없습니다. Plaid 제공.",
-      "errorRetry": "Plaid Link를 시작할 수 없습니다 —— 다시 시도해 주세요.",
-      "errorNetwork": "네트워크 오류.",
-      "errorGeneric": "연결 실패 ({error}).",
-      "connectedTitle": "연결된 계정",
-      "reconcileCta": "거래 대조 →",
-      "connectAnother": "다른 계정 연결 →"
+      "title": "사업 기록",
+      "intro": "Making Tax Digital용 디지털 기록입니다. 수입과 지출을 직접 입력하거나 은행에서 내려받은 CSV 명세서를 가져온 뒤, 각 항목을 사업 수입·사업 경비·개인으로 분류하세요."
     },
     "profile": {
       "title": "프로필",
@@ -326,8 +307,8 @@
       "progress": "{total}개 중 {done}개 완료",
       "hmrcTitle": "HMRC 연결",
       "hmrcDesc": "Government Gateway를 연결하면 납세 의무를 자동으로 가져옵니다.",
-      "bankTitle": "은행 계좌 연결",
-      "bankDesc": "오픈뱅킹으로 거래 내역을 가져옵니다. 읽기 전용이며 자금을 이체할 수 없습니다."
+      "bankTitle": "수입과 지출 추가",
+      "bankDesc": "직접 입력하거나 은행 CSV 명세서를 가져오세요."
     },
     "tasks": {
       "pageTitle": "세무 할 일",

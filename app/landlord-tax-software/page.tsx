@@ -35,9 +35,8 @@ const rows: Row[] = [
   { feature: 'MTD ITSA quarterly updates',                 easytax: true,               accountant: true,               suite: true },
   { feature: 'Self Assessment — SA100',                    easytax: true,               accountant: true,               suite: true },
   { feature: 'Property income supplement — SA105',         easytax: true,               accountant: true,               suite: true,             note: 'EasyTax files the SA105 property pages alongside the SA100 main return' },
-  { feature: 'Open Banking auto-import of rental income',  easytax: true,               accountant: false,              suite: true,             note: 'Connect your UK bank via Open Banking — rental credits are imported automatically' },
   { feature: 'AI categorisation of rental expenses',       easytax: true,               accountant: false,              suite: false,            note: 'EasyTax uses Claude AI to categorise repairs, insurance, mortgage interest and agent fees against HMRC allowable expenses' },
-  { feature: 'AI bank reconciliation chat',                easytax: true,               accountant: false,              suite: false },
+  { feature: 'AI categorisation chat',                     easytax: true,               accountant: false,              suite: false },
   { feature: 'MTD VAT submission',                         easytax: true,               accountant: true,               suite: true },
   { feature: 'CT600 Corporation Tax (Ltd BTL)',            easytax: true,               accountant: true,               suite: true,             note: 'For landlords who hold property in a limited company (Buy-to-Let Ltd)' },
   { feature: 'No card to sign up',                         easytax: true,               accountant: false,              suite: false },
@@ -79,8 +78,8 @@ export default async function LandlordTaxSoftware() {
       a: 'Yes — EasyTax supports CT600 Corporation Tax filing and company accounts (P&L and Balance Sheet) for limited company landlords (buy-to-let Ltd). The MTD ITSA quarterly update requirement applies to the individual director\'s personal income, not the company itself.',
     },
     {
-      q: 'How does Open Banking work for rental income?',
-      a: 'Connect your UK bank account via Open Banking from the EasyTax dashboard. Rental payments credited to your account are automatically imported and tagged as property income. Expenses debited — insurance direct debits, maintenance payments, agent fees — are imported and AI-categorised. You review and confirm before any HMRC submission.',
+      q: 'How do I get my rental income into EasyTax?',
+      a: 'Download a CSV statement from your bank and import it on the Records page, or add payments by hand. Rent received and expenses paid — insurance direct debits, maintenance, agent fees — are AI-categorised. You review and confirm before any HMRC submission.',
     },
     {
       q: 'What happens between quarterly updates and the final Self Assessment?',
@@ -233,8 +232,8 @@ export default async function LandlordTaxSoftware() {
             <ol className="space-y-5">
               {[
                 {
-                  title: 'Connect your bank via Open Banking',
-                  body: 'Link your UK bank account in under 2 minutes. Rental payments are automatically imported as property income. Maintenance payments, insurance direct debits, and agent fees are imported and AI-categorised.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Review and confirm your income and expenses',
@@ -279,7 +278,7 @@ export default async function LandlordTaxSoftware() {
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You have one to a handful of buy-to-let or residential rental properties.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Your main goal is HMRC compliance at the lowest cost — not full bookkeeping software.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You want Open Banking to automate income/expense tracking so you are not manually entering data.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You want AI to categorise your income and expenses from your bank statements so you are not coding every line by hand.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You are paying £400–£1,200/year for an accountant to do a straightforward landlord Self Assessment — and want to do it yourself for nothing.</span></li>
                 </ul>
               </div>
@@ -324,7 +323,7 @@ export default async function LandlordTaxSoftware() {
               <em style={{ color: '#E8895A', fontStyle: 'italic' }}>File for nothing — not £1,000/year.</em>
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card required. Connect your bank and file your first quarterly update in under 10 minutes.
+              No card required. Import your bank statement and file your first quarterly update in minutes.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>

@@ -27,7 +27,7 @@ async function isOnLaunchList(email: string | null | undefined): Promise<boolean
  *  connected": a failed lookup should show an extra nudge, never blank the
  *  dashboard. */
 async function getActivationState(userId: string | undefined) {
-  const disconnected = { hmrcConnected: false, bankConnected: false };
+  const disconnected = { hmrcConnected: false, hasRecords: false };
   if (!userId) return disconnected;
 
   // The try/catch is the part that makes the comment above true. Supabase
@@ -36,14 +36,14 @@ async function getActivationState(userId: string | undefined) {
   // and an unhandled throw here takes the whole dashboard down with a
   // server-side exception rather than showing the setup nudge.
   try {
-    const [hmrc, bank] = await Promise.all([
+    const [hmrc, records] = await Promise.all([
       supabase.from('hmrc_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
-      supabase.from('bank_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
+      supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
     ]);
 
     return {
       hmrcConnected: (hmrc.count ?? 0) > 0,
-      bankConnected: (bank.count ?? 0) > 0,
+      hasRecords: (records.count ?? 0) > 0,
     };
   } catch (err) {
     console.error('[dashboard] activation lookup failed', err);
@@ -78,7 +78,7 @@ export default async function DashboardHome() {
 
       <ActivationChecklist
         hmrcConnected={activation.hmrcConnected}
-        bankConnected={activation.bankConnected}
+        hasRecords={activation.hasRecords}
       />
 
       <div className="space-y-4 mb-8">

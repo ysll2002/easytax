@@ -29,7 +29,7 @@ export default function Privacy() {
           Privacy Policy
         </h1>
         <p style={{ color: '#6B6256', fontSize: '0.875rem', marginBottom: '3rem' }}>
-          Last updated: 12 May 2026 &nbsp;·&nbsp; Effective: 12 May 2026
+          Last updated: 14 November 2026 &nbsp;·&nbsp; Effective: 14 November 2026
         </p>
 
         <div style={{ color: '#4A4035', lineHeight: 1.8 }} className="space-y-10">
@@ -64,9 +64,9 @@ export default function Privacy() {
             <P>National Insurance number (NINO), Unique Taxpayer Reference (UTR), income figures, expense records, and data retrieved from HMRC on your behalf (obligations, calculations, previously submitted returns).</P>
             <Legal basis="Contract" detail="Necessary to calculate and submit your Self Assessment tax return." />
 
-            <H3>2.3 Bank Transaction Data</H3>
-            <P>Bank account details and transaction history retrieved via Plaid's Open Banking connection, used to identify and categorise expenses.</P>
-            <Legal basis="Consent" detail="You explicitly authorise this connection. You can disconnect at any time from your dashboard." />
+            <H3>2.3 Business Records</H3>
+            <P>Income and expense records you enter by hand or import from CSV bank statements you download yourself: date, description, amount and how you categorise each line. We read only the rows you choose to import. EasyTax does not connect to your bank account.</P>
+            <Legal basis="Contract" detail="Necessary to prepare and submit your Making Tax Digital updates and tax returns." />
 
             <H3>2.4 HMRC OAuth Connection</H3>
             <P>HMRC access token and refresh token stored securely to allow us to act on your behalf with HMRC.</P>
@@ -130,7 +130,7 @@ export default function Privacy() {
                 ['Right to restriction', 'Ask us to pause processing your data while a dispute is resolved.'],
                 ['Right to data portability', 'Receive your data in a structured, machine-readable format (e.g. JSON/CSV).'],
                 ['Right to object', 'Object to processing based on legitimate interests. We will stop unless we can demonstrate compelling legitimate grounds.'],
-                ['Right to withdraw consent', 'Where processing is based on consent (e.g. bank connection, HMRC OAuth), you can withdraw at any time via your dashboard without affecting the lawfulness of prior processing.'],
+                ['Right to withdraw consent', 'Where processing is based on consent (e.g. HMRC OAuth), you can withdraw at any time via your dashboard without affecting the lawfulness of prior processing.'],
                 ['Rights re: automated decisions', 'We do not make solely automated decisions that produce legal or similarly significant effects on you. AI categorisation is always presented for your review and approval.'],
               ].map(([right, desc]) => (
                 <div key={right} style={{ padding: '0.875rem 1rem', backgroundColor: '#F5EDDC', borderRadius: '0.75rem', borderLeft: '3px solid #C9963D' }}>

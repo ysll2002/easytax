@@ -45,6 +45,7 @@ function QuarterForm() {
   const [hinted,     setHinted]     = useState<string | null>(null);
   const [pulling,    setPulling]    = useState(false);
   const [pulledAt,   setPulledAt]   = useState<string | null>(null);
+  const [unreviewed, setUnreviewed] = useState(0);
   // Review step before anything is sent to HMRC (WCAG 3.3.4 Error Prevention:
   // a submission has legal effect, so the figures are shown back for
   // confirmation first).
@@ -52,10 +53,11 @@ function QuarterForm() {
   const canSubmit = pulledAt != null;
 
   // HMRC MTD-ITSA production requirement (In-Year #6): quarterly submission
-  // data must be populated from the customer's digital record (reconciled bank
-  // transactions), not manually keyed on the submission screen. This handler
-  // pulls the pre-classified totals for the period; the input fields below are
-  // rendered read-only so corrections must be made in /dashboard/reconcile.
+  // data must be populated from the customer's digital record (their business
+  // records, entered or imported on the Records page), not manually keyed on
+  // the submission screen. This handler pulls the totals for the period; the
+  // input fields below are rendered read-only so corrections must be made in
+  // /dashboard/reconcile (the Records page).
   async function handlePull() {
     if (!start || !end) { setError('Missing period dates in URL.'); return; }
     setPulling(true); setError(''); setConfirming(false);
@@ -63,13 +65,14 @@ function QuarterForm() {
       const res  = await fetch(`/api/individual/quarter-totals?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
       const data = await res.json();
       if (!res.ok || data.error) {
-        setError(data.detail ?? data.error ?? 'Failed to pull totals from reconciliation.');
+        setError(data.detail ?? data.error ?? 'Failed to pull totals from your records.');
         return;
       }
       setTurnover(String(data.turnover));
       const next: Record<string, string> = {};
       for (const f of EXPENSE_FIELDS) next[f.key] = String(data.expenses[f.key] ?? 0);
       setExpenses(next);
+      setUnreviewed(Number(data.unreviewed) || 0);
       setPulledAt(new Date().toISOString());
     } finally {
       setPulling(false);
@@ -158,8 +161,8 @@ function QuarterForm() {
         <div className="flex-1 text-xs" style={{ color: '#4A4035', lineHeight: 1.55 }}>
           <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Figures come from your digital record.</p>
           <p className="mb-2">
-            HMRC rules for Making Tax Digital require the numbers you submit here to be derived from your reconciled bank transactions, not typed in on the submission screen. To correct any category, edit the transaction in{' '}
-            <Link href="/dashboard/reconcile" style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'underline' }}>Reconcile</Link>, then re-pull below.
+            HMRC rules for Making Tax Digital require the numbers you submit here to come from your business records, not be typed in on the submission screen. To add, correct or re-categorise a record, go to{' '}
+            <Link href="/dashboard/reconcile" style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'underline' }}>Records</Link>, then re-pull below.
           </p>
           <div className="flex items-center gap-3 flex-wrap">
             <button type="button" onClick={handlePull} disabled={pulling || !start || !end}
@@ -167,7 +170,7 @@ function QuarterForm() {
               style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: pulling ? 0.6 : 1, cursor: pulling ? 'wait' : 'pointer', border: 'none' }}>
               {pulling
                 ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />Pulling…</>
-                : <><RefreshCw size={12} />{pulledAt ? 'Re-pull from Reconciliation' : 'Pull from Reconciliation'}</>}
+                : <><RefreshCw size={12} />{pulledAt ? 'Re-pull from Records' : 'Pull from Records'}</>}
             </button>
             {pulledAt && (
               <span className="text-[11px]" style={{ color: '#4B6A4E' }}>
@@ -175,6 +178,12 @@ function QuarterForm() {
               </span>
             )}
           </div>
+          {pulledAt && unreviewed > 0 && (
+            <p role="status" className="mt-2 font-semibold" style={{ color: '#8A3A12' }}>
+              {unreviewed} record{unreviewed === 1 ? '' : 's'} in this period {unreviewed === 1 ? 'is' : 'are'} not yet marked as business or personal and {unreviewed === 1 ? 'is' : 'are'} not included.{' '}
+              <Link href="/dashboard/reconcile" style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>.
+            </p>
+          )}
         </div>
       </div>
 
@@ -199,7 +208,7 @@ function QuarterForm() {
                     style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#F5F0E6', outline: 'none', color: '#1C1208' }}
                   />
                 </div>
-                <p className="text-xs mt-1.5" style={{ color: '#6B6256' }}>Populated from Reconcile — edit transactions there to change.</p>
+                <p className="text-xs mt-1.5" style={{ color: '#6B6256' }}>Populated from your Records — edit them there to change.</p>
               </label>
             </div>
 
@@ -248,7 +257,7 @@ function QuarterForm() {
                   <div className="flex justify-between gap-4"><dt>Total expenses</dt><dd style={{ fontWeight: 600 }}>£{totalExpenses.toFixed(2)}</dd></div>
                 </dl>
                 <p className="text-xs mb-4" style={{ color: '#4A4035', lineHeight: 1.55 }}>
-                  These figures will be sent to HMRC as your quarterly update. If something is wrong, go back and correct the transactions in Reconcile. You can also correct a quarterly update later by submitting it again.
+                  These figures will be sent to HMRC as your quarterly update. If something is wrong, go back and correct the records on the Records page. You can also correct a quarterly update later by submitting it again.
                 </p>
                 <button type="button" onClick={() => setConfirming(false)} className="text-sm font-semibold" style={{ background: 'none', border: 'none', padding: 0, color: '#A04E1C', textDecoration: 'underline', cursor: 'pointer' }}>
                   Go back and edit
@@ -259,7 +268,7 @@ function QuarterForm() {
             <button type="submit" disabled={submitting || !canSubmit}
               className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold"
               style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', opacity: (submitting || !canSubmit) ? 0.5 : 1, cursor: (submitting || !canSubmit) ? 'not-allowed' : 'pointer', border: 'none', fontSize: '0.95rem' }}
-              title={!canSubmit ? 'Pull figures from Reconciliation first — the submission cannot be typed manually.' : undefined}>
+              title={!canSubmit ? 'Pull figures from your Records first — the submission cannot be typed manually.' : undefined}>
               {submitting
                 ? <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />Submitting to HMRC…</>
                 : canSubmit && confirming

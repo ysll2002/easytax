@@ -60,13 +60,13 @@ export default function BalanceSheetClient() {
     </div>
   );
 
-  if (error === 'no_bank' || error === 'token_expired') return (
+  if (error === 'no_records') return (
     <div className="p-4 sm:p-8 max-w-2xl">
       <Link href="/dashboard/company" className="text-sm mb-4 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>← Company Tax</Link>
       <div className="p-6 rounded-2xl mt-6" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-        <p className="font-semibold mb-2" style={{ color: '#1C1208' }}>Bank account required</p>
-        <p className="text-sm mb-4" style={{ color: '#6B6256' }}>Connect your business bank account to generate a Balance Sheet.</p>
-        <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>Connect Bank →</Link>
+        <p className="font-semibold mb-2" style={{ color: '#1C1208' }}>No business records for this period</p>
+        <p className="text-sm mb-4" style={{ color: '#6B6256' }}>Add or import your income and expenses on the Records page to generate a Balance Sheet.</p>
+        <Link href="/dashboard/reconcile" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>Go to Records →</Link>
       </div>
     </div>
   );
@@ -125,7 +125,7 @@ export default function BalanceSheetClient() {
         <SectionHeader label="Assets" color="#4B6A4E" bg="#E2EDE2" />
         <div className="px-6" style={{ backgroundColor: '#FFFFFF' }}>
           <Row label="Current Assets" bold />
-          <Row label="Bank Account" value={fmt(bankBalance)} indent color="#4B6A4E" />
+          <Row label="Bank Account (not tracked)" value={fmt(bankBalance)} indent color="#4B6A4E" />
           <Row label="Accounts Receivable" value={fmt(accountsReceivable)} indent />
           <Row label="Total Current Assets" value={fmt(currentAssets)} bold top />
           <Row label="Total Assets" value={fmt(totalAssets)} bold color="#4B6A4E" />
@@ -160,7 +160,7 @@ export default function BalanceSheetClient() {
       </div>
 
       <p className="text-xs mt-4 text-center" style={{ color: '#6B6256' }}>
-        Bank balance from Open Banking · Corp Tax estimated at 25% · For management use only
+        Built from your business records · Bank balance not tracked · Corp Tax estimated at 25% · For management use only
       </p>
     </div>
   );

@@ -37,9 +37,8 @@ const included: CompRow[] = [
   { feature: 'MTD VAT returns', included: true },
   { feature: 'CT600 Corporation Tax filing', included: false, note: 'Filed through HMRC\'s Corporation Tax Online service, not the MTD APIs' },
   { feature: 'Limited company P&L and Balance Sheet', included: true },
-  { feature: 'Open Banking auto-import (Plaid)', included: true },
   { feature: 'AI expense categorisation (Claude)', included: true },
-  { feature: 'AI bank reconciliation chat', included: true },
+  { feature: 'AI categorisation chat',      included: true },
   { feature: 'No monthly subscription', included: true },
   { feature: 'No per-filing fee', included: true },
   { feature: 'No credit card to sign up', included: true },
@@ -100,7 +99,7 @@ export default async function PricingPage() {
         name: 'What is included?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Every HMRC submission type we support — quarterly MTD ITSA updates, Self Assessment (SA100, SA103, SA105) and VAT returns — plus Open Banking import, AI expense categorisation and the reconciliation chat. There is no paid tier. Corporation Tax (CT600) is not supported.',
+          text: 'Every HMRC submission type we support — quarterly MTD ITSA updates, Self Assessment (SA100, SA103, SA105) and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier. Corporation Tax (CT600) is not supported.',
         },
       },
       {
@@ -150,7 +149,7 @@ export default async function PricingPage() {
               <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Nothing per filing.</em>
             </h1>
             <p className="text-base sm:text-lg leading-relaxed mb-8 mx-auto" style={{ color: '#4A4035', maxWidth: '560px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>free to use</strong>. No subscription, no charge when you file, no card needed to sign up. Open Banking import and AI categorisation are included.
+              EasyTax is <strong style={{ color: '#1C1208' }}>free to use</strong>. No subscription, no charge when you file, no card needed to sign up. CSV statement import and AI categorisation are included.
             </p>
           </div>
         </section>
@@ -267,7 +266,7 @@ export default async function PricingPage() {
                 },
                 {
                   q: 'What is included?',
-                  a: 'Every HMRC submission type we support — quarterly MTD ITSA updates, Self Assessment (SA100/SA103/SA105) and VAT returns — plus Open Banking import, AI expense categorisation and the reconciliation chat. There is no paid tier, so nothing is held back. Corporation Tax (CT600) is not supported: it is filed through HMRC\'s older Corporation Tax Online service, not the MTD APIs.',
+                  a: 'Every HMRC submission type we support — quarterly MTD ITSA updates, Self Assessment (SA100/SA103/SA105) and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier, so nothing is held back. Corporation Tax (CT600) is not supported: it is filed through HMRC\'s older Corporation Tax Online service, not the MTD APIs.',
                 },
                 {
                   q: 'Do I need a credit card to sign up?',

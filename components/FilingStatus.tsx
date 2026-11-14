@@ -61,8 +61,8 @@ export default function FilingStatus({ initiallySubscribed = false }: { initiall
           <p className="text-xs mb-3" style={{ color: '#7A4A1E', lineHeight: 1.6 }}>
             Everything here works against HMRC&apos;s test systems today. Submitting a real
             return needs HMRC to grant production access, and that review is still in
-            progress — we have not been given a date. You can connect HMRC, link a bank
-            and reconcile in the meantime, and none of that has to be redone afterwards.
+            progress — we have not been given a date. You can connect HMRC and add or
+            import your records in the meantime, and none of that has to be redone afterwards.
           </p>
 
           {state === 'done' ? (

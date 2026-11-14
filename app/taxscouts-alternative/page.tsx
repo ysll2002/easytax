@@ -39,9 +39,8 @@ const rows: Row[] = [
   { feature: 'MTD VAT submission',                    easytax: true,               taxscouts: false },
   { feature: 'CT600 Corporation Tax filing',          easytax: true,               taxscouts: false },
   { feature: 'Limited company P&L and Balance Sheet', easytax: true,               taxscouts: false },
-  { feature: 'Open Banking auto-import',              easytax: true,               taxscouts: false,                 note: 'EasyTax connects directly to your UK bank account and auto-imports transactions' },
   { feature: 'AI expense categorisation',             easytax: true,               taxscouts: false,                 note: 'EasyTax uses Claude AI to categorise and reconcile transactions against HMRC allowable expenses' },
-  { feature: 'AI bank reconciliation chat',           easytax: true,               taxscouts: false },
+  { feature: 'AI categorisation chat',                easytax: true,               taxscouts: false },
   { feature: 'File in your own time, instantly',      easytax: true,               taxscouts: false,                 note: 'TaxScouts assigns you an accountant — filing depends on their availability' },
   { feature: 'Human accountant reviews your return',  easytax: false,              taxscouts: true,                  note: 'EasyTax is self-serve software; TaxScouts provides a qualified accountant' },
   { feature: 'Tax advice and planning',               easytax: false,              taxscouts: true,                  note: 'TaxScouts accountants can advise on allowances; EasyTax does not give tax advice' },
@@ -184,7 +183,7 @@ export default async function TaxScoutsAlternative() {
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Built for MTD ITSA quarterly updates — the mandatory new filing cycle from April 2026.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>File on your own schedule, any time — no waiting for an accountant to become available.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Open Banking auto-import: connect your UK bank and transactions flow in automatically, categorised by AI.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>CSV statement import: download a statement from your bank, import it, and AI categorises each line.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Covers VAT returns and CT600 Corporation Tax — not just Self Assessment.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No card required to sign up. Try before you pay.</span></li>
                 </ul>
@@ -222,8 +221,8 @@ export default async function TaxScoutsAlternative() {
                   body: 'Sign up with Google or email in under 60 seconds — no card required.',
                 },
                 {
-                  title: 'Connect your bank (Open Banking)',
-                  body: 'From the dashboard, go to Bank → Connect a bank. Pick your UK bank, authorise via Open Banking, and your transactions auto-import. EasyTax uses Claude AI to categorise them against HMRC allowable expenses — no manual spreadsheets.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Connect to HMRC',
@@ -281,8 +280,8 @@ export default async function TaxScoutsAlternative() {
                   a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.',
                 },
                 {
-                  q: 'Which UK banks does Open Banking auto-import support?',
-                  a: 'Every major UK retail and business bank: Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide, Mettle and most others. Read-only access only — EasyTax can never move money.',
+                  q: 'Can I import my bank statements?',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>

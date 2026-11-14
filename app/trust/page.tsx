@@ -20,7 +20,7 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: 'Security & Trust',
   description:
-    'How EasyTax handles your tax data: what we store, what we can and cannot do with your bank connection, who runs the company, and exactly what our HMRC production access covers.',
+    'How EasyTax handles your tax data: what we store, why we never connect to your bank, who runs the company, and exactly what our HMRC production access covers.',
   alternates: { canonical: 'https://easytax.vip/trust' },
 };
 
@@ -151,10 +151,10 @@ export default function TrustPage() {
                 Connecting HMRC sends you to HMRC&apos;s own sign-in page. You authorise EasyTax
                 there and we receive an access token — never your password.
               </Card>
-              <Card icon={Eye} title="Bank access is read-only">
-                Open Banking connections are made through Plaid and are read-only by design. We can
-                see transactions to categorise expenses. We cannot move money, and neither can
-                anyone who compromises our account.
+              <Card icon={Eye} title="We never connect to your bank">
+                EasyTax does not link to your bank account. You import statements you download
+                yourself, or add records by hand, so we never see your bank login and cannot move
+                money.
               </Card>
               <Card icon={ShieldCheck} title="Encrypted in transit and at rest">
                 Traffic runs over TLS, data is encrypted at rest, and HMRC access tokens are stored

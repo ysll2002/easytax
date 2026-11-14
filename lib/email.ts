@@ -90,7 +90,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
             <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:28px">
               ${[
                 ['📋', 'Connect your HMRC account', 'Link your Government Gateway to fetch your tax obligations automatically.'],
-                ['🏦', 'Connect your bank', 'Import transactions via Open Banking — read-only, we can never move money.'],
+                ['🧾', 'Add your income and expenses', 'Import a CSV statement from your bank or type them in — we never need your bank login.'],
                 ['📊', 'File your Self Assessment', 'Submit quarterly updates and your final declaration directly to HMRC.'],
               ].map(([icon, title, desc]) => `
               <tr>

@@ -39,9 +39,8 @@ const rows: Row[] = [
   { feature: 'MTD VAT submission',                    easytax: true,               xero: true },
   { feature: 'CT600 Corporation Tax filing',          easytax: true,               xero: true },
   { feature: 'Limited company P&L and Balance Sheet', easytax: true,               xero: true },
-  { feature: 'Open Banking auto-import',              easytax: true,               xero: true },
   { feature: 'AI expense categorisation',             easytax: true,               xero: false,                  note: 'EasyTax uses Claude to categorise and reconcile' },
-  { feature: 'AI bank reconciliation chat',           easytax: true,               xero: false },
+  { feature: 'AI categorisation chat',                easytax: true,               xero: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,              xero: true,                   note: 'EasyTax focuses on tax filing, not a full ledger' },
   { feature: 'Built-in invoicing',                    easytax: false,              xero: true,                   note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
   { feature: 'Payroll (Xero Payroll)',                easytax: false,              xero: true,                   note: 'Add-on in Xero; not in EasyTax' },
@@ -122,7 +121,7 @@ export default async function XeroAlternative() {
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#4B6A4E' }}>EasyTax</p>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Free</p>
-                <p className="text-sm" style={{ color: '#4A4035' }}>Nothing per month and nothing per filing. Free to connect your bank and HMRC accounts, free to use the dashboard.</p>
+                <p className="text-sm" style={{ color: '#4A4035' }}>Nothing per month and nothing per filing. Free to connect HMRC and import your records, free to use the dashboard.</p>
               </div>
             </div>
           </div>
@@ -206,7 +205,7 @@ export default async function XeroAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting your bank and HMRC accounts is free too.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.',
                 },
                 {
                   q: 'My accountant uses Xero. Can I still use EasyTax?',
@@ -214,7 +213,7 @@ export default async function XeroAlternative() {
                 },
                 {
                   q: 'How do I migrate from Xero?',
-                  a: "Export your transaction history from Xero (Accounting → Reports → Account Transactions, export to CSV). Email them to hello@easytax.vip and we'll load them into your account. Connect your bank via Open Banking and EasyTax starts auto-importing from today.",
+                  a: "Export your transaction history from Xero (Accounting → Reports → Account Transactions, export to CSV). Email them to hello@easytax.vip and we'll load them into your account. After that, import CSV statements from your bank or add records by hand.",
                 },
                 {
                   q: "Xero Starter is £16/month — isn't that almost as cheap?",

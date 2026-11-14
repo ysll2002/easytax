@@ -106,11 +106,11 @@ export default function PLClient() {
 
       {loading ? (
         <div style={{ textAlign: 'center', padding: '4rem', color: '#6B6256' }}>Computing P&amp;L…</div>
-      ) : error === 'no_bank' || error === 'token_expired' ? (
+      ) : error === 'no_records' ? (
         <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
-          <p className="font-semibold mb-2" style={{ color: '#1C1208' }}>Bank account required</p>
-          <p className="text-sm mb-4" style={{ color: '#6B6256' }}>Connect your business bank account to generate a P&amp;L from real transaction data.</p>
-          <Link href="/dashboard/banking" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>Connect Bank →</Link>
+          <p className="font-semibold mb-2" style={{ color: '#1C1208' }}>No business records for this period</p>
+          <p className="text-sm mb-4" style={{ color: '#6B6256' }}>Add your income and expenses, or import a CSV statement from your bank, and mark them as business income or expense to generate a P&amp;L.</p>
+          <Link href="/dashboard/reconcile" className="inline-block px-5 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>Go to Records →</Link>
         </div>
       ) : error ? (
         <div className="p-4 rounded-xl" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C', fontSize: '0.875rem' }}>{error}</div>

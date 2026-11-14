@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { Landmark, Building2, Check, ChevronRight } from 'lucide-react';
+import { Landmark, NotebookPen, Check, ChevronRight } from 'lucide-react';
 import { trackClient } from './PageViewTracker';
 
 // Post-signup activation.
@@ -12,14 +12,16 @@ import { trackClient } from './PageViewTracker';
 // tells a new user what the product *is* but not what they should do next — so
 // two thirds of them do nothing and never return.
 //
-// The steps shown here are the two that gate every downstream action.
+// The steps shown here are the two that gate every downstream action:
+// connecting HMRC, and having business records to file from (entered by hand
+// or imported from a CSV statement — EasyTax has no bank connection).
 
 type Props = {
   hmrcConnected: boolean;
-  bankConnected: boolean;
+  hasRecords: boolean;
 };
 
-export default function ActivationChecklist({ hmrcConnected, bankConnected }: Props) {
+export default function ActivationChecklist({ hmrcConnected, hasRecords }: Props) {
   const t = useTranslations('dashboard.activation');
 
   const steps = [
@@ -32,10 +34,10 @@ export default function ActivationChecklist({ hmrcConnected, bankConnected }: Pr
       desc: t('hmrcDesc'),
     },
     {
-      key: 'bank',
-      done: bankConnected,
-      href: '/dashboard/banking',
-      icon: Building2,
+      key: 'records',
+      done: hasRecords,
+      href: '/dashboard/reconcile',
+      icon: NotebookPen,
       title: t('bankTitle'),
       desc: t('bankDesc'),
     },

@@ -54,7 +54,7 @@ export default function Expenses() {
 
       <main id="main-content" className="max-w-4xl mx-auto px-6 pt-10">
 
-        <DemoBanner>The transactions below are examples, not a real bank feed.</DemoBanner>
+        <DemoBanner>The transactions below are examples, not your real records.</DemoBanner>
 
         <div className="mb-8">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.25rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>

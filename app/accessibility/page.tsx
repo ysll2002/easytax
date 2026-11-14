@@ -99,8 +99,7 @@ export default function AccessibilityStatement() {
             <H2>Services from other organisations</H2>
             <P>
               Some steps take you to services that we do not control, so we cannot fix accessibility problems on them:
-              the HMRC sign-in pages used to give EasyTax permission to send updates for you, Google sign-in, and the
-              screens your bank or our open banking provider show when you connect a bank account.
+              the HMRC sign-in pages used to give EasyTax permission to send updates for you, and Google sign-in.
             </P>
           </section>
 
