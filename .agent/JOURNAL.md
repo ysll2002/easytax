@@ -15,6 +15,13 @@
 
 ---
 
+## 2026-11-14（追加 · 代理模式，PR #37）
+**今日执行**：owner 已在 sandbox 订阅 Agent Authorisation API，要求搭建代理报税逻辑。owner 选：代理替客户录数据、ITSA + VAT、同一账号开代理模式。做了 PR #37（对 staging，未合）：agent_connections / agent_clients 表、ARN + 代理 OAuth（共用已登记 callback，用 state + cookie 区分）、邀请/查状态/取消/解除授权、客户页（授权状态、待办 obligations、客户记录、提交历史）、季度更新和 VAT 页面支持 ?clientId=、sandbox 测试用户生成。本地连 staging 库测了验证、权限、记录隔离、客户模式汇总。
+**失败 / 卡住**：sandbox app 只允许 easytax.vip 的 redirect URI，staging 的 HMRC_REDIRECT_URI 也指向 production 域名 → staging 和本地都无法完成 sandbox HMRC 登录（也影响 owner 之前要做的年终测试）。需要 owner 在 Developer Hub 加 staging 的 redirect URI。
+**学到 / 决定**：staging 的 HMRC 登录一直会落到 production，这个之前没人发现。
+
+---
+
 ## 2026-11-14（追加 · 移除银行连接，PR #36）
 **今日执行**：owner 说没有 AISP 牌照，要求移除 connect bank。发现季度申报的数字只能从 Plaid 银行流水来，单纯删按钮会让用户无法申报，于是问 owner：选了「手动录入 + CSV 导入」，并且测完后上 production。做了：`business_records` 表 + `/api/records` + 记录页（手动录入、CSV 导入带列映射和去重、分类保存、撤销、AI 聊天也会保存）；季度汇总和公司报表改读记录；删 Plaid 代码和依赖；/dashboard/banking 重定向；7 种语言 + 营销页 + 条款/隐私/trust/无障碍声明去掉 Open Banking 说法；数据导出加记录。本地连 staging 库登录测试全部通过，测试账号已删。owner 授权后合进 staging（`f8dcd08`，一次性授权），staging 部署成功，冒烟测试通过（/api/records 未登录 401、/dashboard/banking 跳登录、营销页和条款无 Open Banking）。还没进 main。
 **学到 / 决定**：没有 AISP 牌照 → 不连银行（已写进 BACKLOG 禁区和 memory）。production 合并前要先在 production 库跑 migration。

@@ -72,6 +72,9 @@
 
 ## 在飞的分支
 
+- [PR #37](https://github.com/ysll2002/easytax/pull/37)（2026-11-14，**待 owner 审/合进 staging**）：代理（agent）模式，只在 sandbox。ARN + 代理 Government Gateway 登录（agent_connections）→ 加客户发 HMRC 授权请求（Agent Authorisation API 2.0）→ 客户批准 → 用客户的记录和代理的 token 提交季度更新 / VAT。新 migration `20261115_agent_mode.sql`（staging 库已建，production 还没）。本地测了除 HMRC 代理登录以外的全部；**代理登录、邀请、提交没有在 sandbox 跑过**，卡在 redirect URI。
+- **staging 的 HMRC sandbox 登录是坏的**：sandbox app 只登记了 `https://easytax.vip/api/auth/callback/hmrc`，staging 的 HMRC_REDIRECT_URI 也指向它，所以在 staging 连 HMRC 会跳到 production 然后失败。需要 owner 在 Developer Hub 的 sandbox app 加 `https://staging.easytax.vip/api/auth/callback/hmrc`（可选再加 localhost），然后改 staging 的 HMRC_REDIRECT_URI。
+
 - [PR #36](https://github.com/ysll2002/easytax/pull/36)（2026-11-14，**已合进 staging** `f8dcd08`，owner 授权；staging 部署成功；**还没进 main**）：移除 Plaid 银行连接（没有 AISP 牌照），改为手动录入 + CSV 对账单导入，新表 `business_records`（staging 库已建，**production 库合并上线前要先跑 migration**）。季度申报、公司 P&L/资产负债表改从记录汇总。7 种语言的营销页、邮件、条款、隐私、trust、无障碍声明里的 Open Banking 说法都已删。本地连 staging 库端到端测过；axe 自动扫描没跑（加载 CDN 脚本被拦）。
 
 - [PR #34](https://github.com/ysll2002/easytax/pull/34)（2026-11-14，**已合进 staging 并上线**，main = staging = `bce76a3`，owner 授权；main 里还有另一个会话合的 PR #33 和 #35）：年终 final declaration 流程，**只在 sandbox**，生产环境 403。修了 submitFinalDeclaration 只 trigger、不 submit 的 bug。待办：owner 给 sandbox app 订阅 BSAS 7.0 / Losses 6.0 / BISS 3.0，然后在 preview 上端到端测。存款利息的修复最终用的是 PR #33 的实现（已在 main）。PR #34 只额外加了：年度调整页接收 year-end 页传来的税年。
