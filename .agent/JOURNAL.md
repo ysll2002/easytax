@@ -15,6 +15,12 @@
 
 ---
 
+## 2026-11-14（追加 · redirect URI 修好、PR #37/#38 合进 staging）
+**今日执行**：owner 在 Developer Hub 给 sandbox app 加了 staging redirect URI（HMRC 约 15 分钟后生效），并删了 production URI；我把 staging 的 HMRC_REDIRECT_URI 改成 staging 域名并重新部署。owner 授权把 PR #37（代理模式）合进 staging（`720bf8d`）。owner 在 staging 导入 514 行 CSV 失败 → 查日志是 POST /api/records 500：去重查询把所有 hash 塞进 URL 太长；另外错误提示在屏幕外、Revolut 导出误选 Orig amount（无符号）。修复为 PR #38，本地 600 行导入/重复导入通过，owner 授权合进 staging（`98a3ae8`）。
+**学到 / 决定**：本地测试数据量太小漏掉了 URL 长度问题；以后导入类功能要用几百行测。
+
+---
+
 ## 2026-11-14（追加 · 代理模式，PR #37）
 **今日执行**：owner 已在 sandbox 订阅 Agent Authorisation API，要求搭建代理报税逻辑。owner 选：代理替客户录数据、ITSA + VAT、同一账号开代理模式。做了 PR #37（对 staging，未合）：agent_connections / agent_clients 表、ARN + 代理 OAuth（共用已登记 callback，用 state + cookie 区分）、邀请/查状态/取消/解除授权、客户页（授权状态、待办 obligations、客户记录、提交历史）、季度更新和 VAT 页面支持 ?clientId=、sandbox 测试用户生成。本地连 staging 库测了验证、权限、记录隔离、客户模式汇总。
 **失败 / 卡住**：sandbox app 只允许 easytax.vip 的 redirect URI，staging 的 HMRC_REDIRECT_URI 也指向 production 域名 → staging 和本地都无法完成 sandbox HMRC 登录（也影响 owner 之前要做的年终测试）。需要 owner 在 Developer Hub 加 staging 的 redirect URI。

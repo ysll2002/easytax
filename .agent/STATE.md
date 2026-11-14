@@ -72,8 +72,9 @@
 
 ## 在飞的分支
 
-- [PR #37](https://github.com/ysll2002/easytax/pull/37)（2026-11-14，**待 owner 审/合进 staging**）：代理（agent）模式，只在 sandbox。ARN + 代理 Government Gateway 登录（agent_connections）→ 加客户发 HMRC 授权请求（Agent Authorisation API 2.0）→ 客户批准 → 用客户的记录和代理的 token 提交季度更新 / VAT。新 migration `20261115_agent_mode.sql`（staging 库已建，production 还没）。本地测了除 HMRC 代理登录以外的全部；**代理登录、邀请、提交没有在 sandbox 跑过**，卡在 redirect URI。
-- **staging 的 HMRC sandbox 登录是坏的**：sandbox app 只登记了 `https://easytax.vip/api/auth/callback/hmrc`，staging 的 HMRC_REDIRECT_URI 也指向它，所以在 staging 连 HMRC 会跳到 production 然后失败。需要 owner 在 Developer Hub 的 sandbox app 加 `https://staging.easytax.vip/api/auth/callback/hmrc`（可选再加 localhost），然后改 staging 的 HMRC_REDIRECT_URI。
+- [PR #38](https://github.com/ysll2002/easytax/pull/38)（2026-11-14，**已合进 staging** `98a3ae8`，owner 授权）：修 CSV 导入几百行就 500（去重查询 URL 过长）、错误提示看不见、Revolut 导出误选 Orig amount。
+- [PR #37](https://github.com/ysll2002/easytax/pull/37)（2026-11-14，**已合进 staging** `720bf8d`，owner 授权；sandbox 端到端还没跑，等 owner 在浏览器窗格登录 Vercel）：代理（agent）模式，只在 sandbox。ARN + 代理 Government Gateway 登录（agent_connections）→ 加客户发 HMRC 授权请求（Agent Authorisation API 2.0）→ 客户批准 → 用客户的记录和代理的 token 提交季度更新 / VAT。新 migration `20261115_agent_mode.sql`（staging 库已建，production 还没）。本地测了除 HMRC 代理登录以外的全部；**代理登录、邀请、提交没有在 sandbox 跑过**，卡在 redirect URI。
+- （已修，2026-11-14 16:59 UTC 起 HMRC 接受 staging redirect URI，staging 的 HMRC_REDIRECT_URI 已改为 staging 域名；sandbox app 里 production URL 已被 owner 删除）原问题：**staging 的 HMRC sandbox 登录是坏的**：sandbox app 只登记了 `https://easytax.vip/api/auth/callback/hmrc`，staging 的 HMRC_REDIRECT_URI 也指向它，所以在 staging 连 HMRC 会跳到 production 然后失败。需要 owner 在 Developer Hub 的 sandbox app 加 `https://staging.easytax.vip/api/auth/callback/hmrc`（可选再加 localhost），然后改 staging 的 HMRC_REDIRECT_URI。
 
 - [PR #36](https://github.com/ysll2002/easytax/pull/36)（2026-11-14，**已合进 staging** `f8dcd08`，owner 授权；staging 部署成功；**还没进 main**）：移除 Plaid 银行连接（没有 AISP 牌照），改为手动录入 + CSV 对账单导入，新表 `business_records`（staging 库已建，**production 库合并上线前要先跑 migration**）。季度申报、公司 P&L/资产负债表改从记录汇总。7 种语言的营销页、邮件、条款、隐私、trust、无障碍声明里的 Open Banking 说法都已删。本地连 staging 库端到端测过；axe 自动扫描没跑（加载 CDN 脚本被拦）。
 
