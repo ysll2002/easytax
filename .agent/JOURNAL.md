@@ -36,7 +36,11 @@ API 路由 `/api/hmrc/year-end` 在 HMRC_ENV=production 时一律 403；生产�
 - 在 preview 上用 sandbox 测试用户走一遍。
 
 **学到 / 决定**：
-- 发现另一个已有 bug：`submitSavingsIncome` 用的路径 `/individuals/income-received/savings/...` 不在 Savings Income API 2.0 里，存款利息提交大概率失败。只记录在 PR 里，没修。
+- 发现另一个已有 bug：`submitSavingsIncome` 用的路径 `/individuals/income-received/savings/...` 不在 Savings Income API 2.0 里。**owner 同日让修，已修**（PR #34 第二个 commit `900d421`）：
+  - 改成 UK 账户流程：按名字找 EasyTax 自己的账户，没有就新建，然后按税年 PUT `untaxedUkInterest`。
+  - 年度调整页现在从 year-end 页接收 `?taxYear=`（原来固定用当前税年，会写错年份）。
+  - 这个修复对 production 也生效：调整页是线上页面，Savings API 也已获批。
+  - 同样还没在 sandbox 端到端测过。
 - HMRC API 现状：Calculations 9.0、Losses 7.0、BSAS 7.0 都是 beta，我们继续用 8.0 / 6.0 / 7.0。
 - 年终的 production 审批要等 Paul 的回复，问的是算 extension 还是新申请。
 
