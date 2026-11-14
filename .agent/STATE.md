@@ -60,11 +60,10 @@
 
 ## Deployment 状态
 
-- Production = staging = `bce76a3`（PR #34，2026-11-14 上线）。
-- **staging 现在用独立数据库**（2026-11-14）：Supabase 项目 `EasyTax-Staging`（ref `ufeptuqrlzdoamlzvagw`，eu-west-1）。Vercel「Preview (staging)」的 NEXT_PUBLIC_SUPABASE_URL / ANON_KEY / SUPABASE_SERVICE_ROLE_KEY 都指向它；production 的变量没动。表结构已对齐 production（只增不删，保留了 5 月的 2 个测试账号）。owner 为腾出免费名额暂停了另一个组织里的项目。注意：production 加新表/列时 staging 要手动同步，否则 staging 会出错。
-- 之前 PR #35 的护栏会让 staging **构建失败**（不只是运行时 500），11-14 的两次 staging 部署都因此失败；换完变量后重新部署成功。
+- **Production = main = staging = `1a2afdd`**（2026-11-14 22:23 UTC 上线，owner 授权「把 staging 的改动都发布到 production」）。包含：PR #36（去掉银行连接，改手动录入 + CSV）、#37（代理模式，production 里被 HMRC_ENV 挡住）、#38（CSV 修复）、#40（dashboard 清理）、#43（导航去掉 Records），以及另一会话直接合进 main 的 #39（去掉 dashboard footer 的范围说明）和 #41（语言/Homepage 移到侧边栏；#42 的做法在合并冲突时被它取代）。
+- **production 库已建** `business_records`、`agent_connections`、`agent_clients`，`sa_filings.client_id`（两个 migration 20261114 / 20261115，2026-11-14 owner 授权）。
 - **production 只从 main 构建**。本 agent 的 PR 都对 `staging`，要上线还需 staging→main（stg-008）。
-- 另一系统在 main 上挂起的 PR：#21、#22、#23（已 3 周多）。
+- 另一系统 / 其他会话会直接往 main 合 PR：合并前先 `git log origin/staging..origin/main`。
 
 ## 另一套独立的自动化增长系统
 
