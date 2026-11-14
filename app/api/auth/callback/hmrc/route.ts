@@ -3,11 +3,17 @@ import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 
 import { HMRC_API_BASE as BASE } from '@/lib/hmrc-env';
+import { handleAgentCallback } from '@/lib/agent-callback';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const code  = searchParams.get('code');
   const error = searchParams.get('error');
+
+  // Agent-mode sign-in (agent Government Gateway) shares this registered
+  // callback; it is told apart by `state`, set in /api/agent/hmrc/connect.
+  const state = searchParams.get('state');
+  if (state?.startsWith('agent.')) return handleAgentCallback(req, code, error, state);
 
   if (error || !code) {
     return NextResponse.redirect(new URL('/dashboard/individual/hmrc?error=access_denied', req.url));

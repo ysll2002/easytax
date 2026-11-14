@@ -2,9 +2,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { FileText, RefreshCw, Building2, User, Settings } from 'lucide-react';
+import { FileText, RefreshCw, Building2, User, Settings, Users } from 'lucide-react';
 
-export default function SidebarNav() {
+// showAgent: agent mode (acting for clients) is only offered where HMRC has
+// granted it — the layout decides on the server.
+export default function SidebarNav({ showAgent = false }: { showAgent?: boolean }) {
   const pathname = usePathname();
   const t = useTranslations('dashboard.nav');
 
@@ -27,6 +29,12 @@ export default function SidebarNav() {
         { href: '/dashboard/reconcile', label: t('reconcile'), icon: RefreshCw },
       ],
     },
+    ...(showAgent ? [{
+      label: t('agent'),
+      items: [
+        { href: '/dashboard/agent', label: t('clients'), icon: Users },
+      ],
+    }] : []),
     {
       label: t('account'),
       items: [

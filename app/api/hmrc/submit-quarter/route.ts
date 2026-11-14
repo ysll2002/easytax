@@ -3,6 +3,8 @@ import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { getValidToken, submitQuarterlyUpdate, type QuarterlyData } from '@/lib/hmrc';
 import { resolveBusinessId } from '@/lib/hmrc-business';
+import { clientFilingContext, AgentError } from '@/lib/agent';
+import { submitAsAgent } from '@/lib/agent-filing';
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -10,6 +12,19 @@ export async function POST(req: NextRequest) {
 
   const profileId = session.user.profileId;
   const body: QuarterlyData & { taxYear: string } = await req.json();
+
+  // ?clientId= : an agent submitting for an authorised client, with the
+  // agent's own HMRC token and the client's NINO.
+  const clientId = req.nextUrl.searchParams.get('clientId');
+  if (clientId) {
+    try {
+      const ctx = await clientFilingContext(profileId, clientId, 'itsa');
+      return NextResponse.json(await submitAsAgent(profileId, ctx, body));
+    } catch (err) {
+      if (err instanceof AgentError) return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
+      return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 502 });
+    }
+  }
 
   const { data: hmrc } = await supabase
     .from('hmrc_connections')

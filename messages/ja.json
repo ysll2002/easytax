@@ -224,7 +224,9 @@
       "companyShort": "会社",
       "logout": "ログアウト",
       "homepage": "ホーム",
-      "bank": "帳簿"
+      "bank": "帳簿",
+      "agent": "代理人",
+      "clients": "クライアント"
     },
     "home": {
       "welcome": "ようこそ、{name} さん",

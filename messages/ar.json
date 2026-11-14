@@ -224,7 +224,9 @@
       "companyShort": "شركة",
       "logout": "تسجيل الخروج",
       "homepage": "الرئيسية",
-      "bank": "مسك الدفاتر"
+      "bank": "مسك الدفاتر",
+      "agent": "الوكيل",
+      "clients": "العملاء"
     },
     "home": {
       "welcome": "مرحباً، {name}",

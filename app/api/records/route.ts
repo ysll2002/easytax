@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'crypto';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { AgentError } from '@/lib/agent';
+import { recordsOwner, ownerFilter } from '@/lib/records-owner';
 import {
   RECORD_CATEGORIES, EXPENSE_BUCKET_KEYS, ISO_DATE,
   type RecordCategory, type ExpenseBucket,
@@ -12,6 +14,8 @@ import {
 //   POST   { records: [...], source }         add records (manual or CSV import)
 //   PATCH  { ids, category?, expenseBucket? } re-categorise
 //   DELETE { ids }                            delete
+// Every method takes ?clientId= to work on an agent client's records instead
+// of the user's own.
 
 const MAX_BATCH = 2000;
 // ids go into the PostgREST query string, so keep each call well under URL limits.
@@ -23,6 +27,19 @@ async function userId() {
   return session?.user?.profileId ?? null;
 }
 
+// The signed-in user and whose records they are working on, or an error
+// response.
+async function owner(req: NextRequest): Promise<{ uid: string; clientId: string | null } | NextResponse> {
+  const uid = await userId();
+  if (!uid) return bad('unauthorised', 401);
+  try {
+    return { uid, clientId: await recordsOwner(uid, req.nextUrl.searchParams.get('clientId')) };
+  } catch (err) {
+    if (err instanceof AgentError) return bad(err.code, err.status);
+    throw err;
+  }
+}
+
 const bad = (error: string, status = 400) => NextResponse.json({ error }, { status });
 
 function validIds(ids: unknown): ids is string[] {
@@ -31,14 +48,15 @@ function validIds(ids: unknown): ids is string[] {
 }
 
 export async function GET(req: NextRequest) {
-  const uid = await userId();
-  if (!uid) return bad('unauthorised', 401);
+  const o = await owner(req);
+  if (o instanceof NextResponse) return o;
+  const { uid, clientId } = o;
   const sp = req.nextUrl.searchParams;
   const start = sp.get('start');
   const end = sp.get('end');
   if ((start && !ISO_DATE.test(start)) || (end && !ISO_DATE.test(end))) return bad('invalid_period');
 
-  let q = supabase.from('business_records').select(COLUMNS).eq('user_id', uid);
+  let q = ownerFilter(supabase.from('business_records').select(COLUMNS).eq('user_id', uid), clientId);
   if (start) q = q.gte('txn_date', start);
   if (end) q = q.lte('txn_date', end);
   const { data, error } = await q.order('txn_date', { ascending: false }).order('created_at', { ascending: false }).limit(5000);
@@ -49,8 +67,9 @@ export async function GET(req: NextRequest) {
 type Incoming = { date?: unknown; description?: unknown; amount?: unknown; category?: unknown; expenseBucket?: unknown };
 
 export async function POST(req: NextRequest) {
-  const uid = await userId();
-  if (!uid) return bad('unauthorised', 401);
+  const o = await owner(req);
+  if (o instanceof NextResponse) return o;
+  const { uid, clientId } = o;
   const body = await req.json().catch(() => null) as { records?: Incoming[]; source?: unknown } | null;
   const source = body?.source === 'csv' ? 'csv' : 'manual';
   const input = body?.records;
@@ -77,7 +96,7 @@ export async function POST(req: NextRequest) {
       seen.set(key, n);
       import_hash = createHash('sha256').update(`${key}|${n}`).digest('hex');
     }
-    rows.push({ user_id: uid, txn_date: date, description, amount, category, expense_bucket, source, import_hash });
+    rows.push({ user_id: uid, client_id: clientId, txn_date: date, description, amount, category, expense_bucket, source, import_hash });
   }
 
   let toInsert = rows;
@@ -85,8 +104,8 @@ export async function POST(req: NextRequest) {
     const hashes = rows.map(r => r.import_hash as string);
     const existing = new Set<string>();
     for (let i = 0; i < hashes.length; i += 500) {
-      const { data, error } = await supabase.from('business_records')
-        .select('import_hash').eq('user_id', uid).in('import_hash', hashes.slice(i, i + 500));
+      const { data, error } = await ownerFilter(supabase.from('business_records')
+        .select('import_hash').eq('user_id', uid), clientId).in('import_hash', hashes.slice(i, i + 500));
       if (error) return bad('db_error', 500);
       for (const d of data ?? []) existing.add(d.import_hash as string);
     }
@@ -104,8 +123,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const uid = await userId();
-  if (!uid) return bad('unauthorised', 401);
+  const o = await owner(req);
+  if (o instanceof NextResponse) return o;
+  const { uid, clientId } = o;
   const body = await req.json().catch(() => null) as { ids?: unknown; category?: unknown; expenseBucket?: unknown } | null;
   if (!validIds(body?.ids)) return bad('invalid_ids');
 
@@ -120,17 +140,18 @@ export async function PATCH(req: NextRequest) {
   }
   if (Object.keys(update).length === 1) return bad('nothing_to_update');
 
-  const { error } = await supabase.from('business_records').update(update).eq('user_id', uid).in('id', body.ids);
+  const { error } = await ownerFilter(supabase.from('business_records').update(update).eq('user_id', uid), clientId).in('id', body.ids);
   if (error) return bad('db_error', 500);
   return NextResponse.json({ ok: true });
 }
 
 export async function DELETE(req: NextRequest) {
-  const uid = await userId();
-  if (!uid) return bad('unauthorised', 401);
+  const o = await owner(req);
+  if (o instanceof NextResponse) return o;
+  const { uid, clientId } = o;
   const body = await req.json().catch(() => null) as { ids?: unknown } | null;
   if (!validIds(body?.ids)) return bad('invalid_ids');
-  const { error } = await supabase.from('business_records').delete().eq('user_id', uid).in('id', body.ids);
+  const { error } = await ownerFilter(supabase.from('business_records').delete().eq('user_id', uid), clientId).in('id', body.ids);
   if (error) return bad('db_error', 500);
   return NextResponse.json({ ok: true });
 }

@@ -1,0 +1,37 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { AGENT_MODE_AVAILABLE, ARN_PATTERN, getAgentConnection } from '@/lib/agent';
+import { agentUserId } from '../_shared';
+
+// GET  agent mode status for the signed-in user
+// POST { arn }  save (or change) the Agent Reference Number
+export async function GET() {
+  const uid = await agentUserId();
+  if (!uid) return NextResponse.json({ error: 'unauthorised' }, { status: 401 });
+  const conn = await getAgentConnection(uid);
+  return NextResponse.json({
+    available: AGENT_MODE_AVAILABLE,
+    arn: conn?.arn ?? null,
+    connected: !!conn?.access_token,
+    connectedAt: conn?.connected_at ?? null,
+  });
+}
+
+export async function POST(req: NextRequest) {
+  const uid = await agentUserId();
+  if (!uid) return NextResponse.json({ error: 'unauthorised' }, { status: 401 });
+  if (!AGENT_MODE_AVAILABLE) return NextResponse.json({ error: 'AGENT_MODE_NOT_AVAILABLE' }, { status: 403 });
+  const body = await req.json().catch(() => ({}));
+  const arn = typeof body.arn === 'string' ? body.arn.replace(/[\s-]/g, '').toUpperCase() : '';
+  if (!ARN_PATTERN.test(arn)) {
+    return NextResponse.json({ error: 'INVALID_ARN', message: 'An Agent Reference Number looks like XARN1234567.' }, { status: 400 });
+  }
+  const existing = await getAgentConnection(uid);
+  // A different ARN is a different agency: drop the old sign-in.
+  const reset = existing && existing.arn !== arn
+    ? { access_token: null, refresh_token: null, token_expires_at: null, connected_at: null }
+    : {};
+  const { error } = await supabase.from('agent_connections').upsert({ user_id: uid, arn, ...reset }, { onConflict: 'user_id' });
+  if (error) return NextResponse.json({ error: 'db_error' }, { status: 500 });
+  return NextResponse.json({ ok: true, arn });
+}

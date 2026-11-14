@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { summarise, ISO_DATE } from '@/lib/records';
+import { AgentError } from '@/lib/agent';
+import { recordsOwner, ownerFilter } from '@/lib/records-owner';
 
 // Compliant with HMRC MTD-ITSA production checklist In-Year #6:
 //   "Quarterly submission data is populated from the customer's digital record
@@ -21,10 +23,18 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'missing_period' }, { status: 400 });
   }
 
-  const { data, error } = await supabase
+  // ?clientId= : an agent adding up one of their clients' records.
+  let clientId: string | null;
+  try { clientId = await recordsOwner(session.user.profileId, searchParams.get('clientId')); }
+  catch (err) {
+    if (err instanceof AgentError) return NextResponse.json({ error: err.code }, { status: err.status });
+    throw err;
+  }
+
+  const { data, error } = await ownerFilter(supabase
     .from('business_records')
     .select('description, amount, category, expense_bucket')
-    .eq('user_id', session.user.profileId)
+    .eq('user_id', session.user.profileId), clientId)
     .gte('txn_date', start)
     .lte('txn_date', end);
   if (error) return NextResponse.json({ error: 'db_error' }, { status: 500 });

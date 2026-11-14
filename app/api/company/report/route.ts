@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
     .from('business_records')
     .select('description, amount, category')
     .eq('user_id', session.user.profileId)
+    .is('client_id', null)
     .in('category', ['business_income', 'business_expense'])
     .gte('txn_date', startDate)
     .lte('txn_date', endDate);

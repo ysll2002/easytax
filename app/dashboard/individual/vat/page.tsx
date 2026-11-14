@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { type VatObligation } from '@/lib/hmrc';
 import { hmrcFetch } from '@/lib/hmrc-client';
@@ -22,6 +23,14 @@ const EMPTY: VatBoxes = {
 };
 
 export default function VatPage() {
+  return <Suspense><VatReturn /></Suspense>;
+}
+
+function VatReturn() {
+  // ?clientId= : an agent filing a VAT return for an authorised client.
+  const clientId = useSearchParams().get('clientId');
+  const clientQs = clientId ? `?clientId=${encodeURIComponent(clientId)}` : '';
+  const backHref = clientId ? `/dashboard/agent/clients/${clientId}` : '/dashboard/individual';
   const [obligations, setObligations] = useState<VatObligation[]>([]);
   const [selected, setSelected] = useState<VatObligation | null>(null);
   const [boxes, setBoxes] = useState<VatBoxes>(EMPTY);
@@ -32,7 +41,7 @@ export default function VatPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    hmrcFetch('/api/hmrc/vat/obligations')
+    hmrcFetch(`/api/hmrc/vat/obligations${clientQs}`)
       .then(r => r.json())
       .then(d => {
         if (d.error) { setError(d.error); return; }
@@ -55,7 +64,7 @@ export default function VatPage() {
     setSubmitting(true);
     setError('');
     try {
-      const res = await hmrcFetch('/api/hmrc/vat/submit', {
+      const res = await hmrcFetch(`/api/hmrc/vat/submit${clientQs}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -118,7 +127,7 @@ export default function VatPage() {
           ? `HMRC has on record that your return for ${selected?.start} – ${selected?.end} was already submitted. No further action needed.`
           : `Your return for period ${selected?.start} – ${selected?.end} has been sent to HMRC via MTD.`}
       </p>
-      <Link href="/dashboard/individual" className="px-6 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
+      <Link href={backHref} className="px-6 py-2.5 rounded-full text-sm font-medium" style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
         Back to Tax Filing
       </Link>
     </div>
@@ -126,7 +135,10 @@ export default function VatPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
+      <Link href={backHref} className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
+      {clientId && (
+        <p className="text-sm mb-4 font-semibold" style={{ color: '#7A4A1E' }}>You are submitting this VAT return for a client, as their agent.</p>
+      )}
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         VAT Return
       </h1>
