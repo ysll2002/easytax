@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { FileText, Building2, RefreshCw, User, LogOut } from 'lucide-react';
+import { FileText, Building2, User, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
 export default function MobileNav() {
@@ -12,7 +12,6 @@ export default function MobileNav() {
   const nav = [
     { href: '/dashboard/individual',       label: t('selfAssessShort'), icon: FileText },
     { href: '/dashboard/company',   label: t('companyShort'),    icon: Building2 },
-    { href: '/dashboard/reconcile', label: t('reconcile'),       icon: RefreshCw },
     { href: '/dashboard/profile',   label: t('profile'),         icon: User },
   ];
 

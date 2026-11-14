@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { FileText, RefreshCw, Building2, User, Settings, Users } from 'lucide-react';
+import { FileText, Building2, User, Settings, Users } from 'lucide-react';
 
 // showAgent: agent mode (acting for clients) is only offered where HMRC has
 // granted it — the layout decides on the server.
@@ -21,12 +21,6 @@ export default function SidebarNav({ showAgent = false }: { showAgent?: boolean 
       label: t('company'),
       items: [
         { href: '/dashboard/company', label: t('companyTax'), icon: Building2 },
-      ],
-    },
-    {
-      label: t('bank'),
-      items: [
-        { href: '/dashboard/reconcile', label: t('reconcile'), icon: RefreshCw },
       ],
     },
     ...(showAgent ? [{
