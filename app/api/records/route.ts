@@ -101,13 +101,26 @@ export async function POST(req: NextRequest) {
 
   let toInsert = rows;
   if (source === 'csv') {
-    const hashes = rows.map(r => r.import_hash as string);
+    // Fetch the fingerprints already stored for this owner over the
+    // statement's date range in one query. (Sending every fingerprint in the
+    // filter made the request URL too long for statements of a few hundred
+    // lines, and the import failed with a 500.)
+    const dates = rows.map(r => r.txn_date).sort();
     const existing = new Set<string>();
-    for (let i = 0; i < hashes.length; i += 500) {
+    const PAGE = 1000;
+    for (let from = 0; ; from += PAGE) {
       const { data, error } = await ownerFilter(supabase.from('business_records')
-        .select('import_hash').eq('user_id', uid), clientId).in('import_hash', hashes.slice(i, i + 500));
-      if (error) return bad('db_error', 500);
+        .select('import_hash').eq('user_id', uid), clientId)
+        .not('import_hash', 'is', null)
+        .gte('txn_date', dates[0]).lte('txn_date', dates[dates.length - 1])
+        .order('id')
+        .range(from, from + PAGE - 1);
+      if (error) {
+        console.error('[records] duplicate check failed', { code: error.code, message: error.message });
+        return bad('db_error', 500);
+      }
       for (const d of data ?? []) existing.add(d.import_hash as string);
+      if (!data || data.length < PAGE) break;
     }
     toInsert = rows.filter(r => !existing.has(r.import_hash as string));
   }

@@ -449,7 +449,6 @@ function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: strin
       <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.6 }}>
         Download a statement as CSV from your bank&apos;s website or app, then choose it here. The file is read in your browser; only the rows you import are saved. Importing the same statement twice does not create duplicates.
       </p>
-      {error && <p role="alert" className="mb-3 text-sm" style={{ color: '#991B1B' }}>{error}</p>}
       <label className="block mb-3">
         <span style={labelStyle}>CSV file</span>
         <input type="file" accept=".csv,text/csv" onChange={onFile} className="text-sm" style={{ color: '#1C1208' }} />
@@ -495,6 +494,7 @@ function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: strin
         </>
       )}
 
+      {error && <p role="alert" className="mb-3 text-sm font-semibold" style={{ color: '#991B1B' }}>{error}</p>}
       <div className="flex gap-2">
         {map && (
           <button type="button" disabled={importing || parsed.ok.length === 0} onClick={doImport} style={{ ...primaryBtn, opacity: importing || parsed.ok.length === 0 ? 0.6 : 1 }}>
