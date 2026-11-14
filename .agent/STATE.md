@@ -70,7 +70,7 @@
 
 ## 在飞的分支
 
-- [PR #34](https://github.com/ysll2002/easytax/pull/34)（2026-11-14，对 staging，**未合**）：年终 final declaration 流程，**只在 sandbox**，生产环境 403。修了 submitFinalDeclaration 只 trigger、不 submit 的 bug。待办：owner 给 sandbox app 订阅 BSAS 7.0 / Losses 6.0 / BISS 3.0，然后在 preview 上端到端测。同一个 PR 里也修了存款利息提交：原来调用的路径在 Savings Income API 2.0 里不存在，现在改成 UK 账户流程；年度调整页也改成用 year-end 页传来的税年。这个修复对 production 也生效。
+- [PR #34](https://github.com/ysll2002/easytax/pull/34)（2026-11-14，**已合进 staging 并上线**，main = staging = `bce76a3`，owner 授权；main 里还有另一个会话合的 PR #33 和 #35）：年终 final declaration 流程，**只在 sandbox**，生产环境 403。修了 submitFinalDeclaration 只 trigger、不 submit 的 bug。待办：owner 给 sandbox app 订阅 BSAS 7.0 / Losses 6.0 / BISS 3.0，然后在 preview 上端到端测。存款利息的修复最终用的是 PR #33 的实现（已在 main）。PR #34 只额外加了：年度调整页接收 year-end 页传来的税年。
 - [PR #32](https://github.com/ysll2002/easytax/pull/32) **已合进 main 并上线**（`a2d8b4c`，2026-11-13，owner 授权）：WCAG 修复 + https://easytax.vip/accessibility。两张 HMRC 表和 Paul 回信已同步更新。待办：线上点一遍季度申报的核对步骤；VAT 核对步骤、屏幕阅读器测试、dashboard 非文本对比度要在 2027-03-31 前完成（声明里写了这个日期）。staging 已于同日快进到 `a2d8b4c`，和 main 一致（owner 授权）。
 
 - `agent/2026-09-22-fix-schedule-event-tracking` → [PR #24](https://github.com/ysll2002/easytax/pull/24)（待合 staging，之后还需进 main）

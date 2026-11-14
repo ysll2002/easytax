@@ -15,6 +15,23 @@
 
 ---
 
+## 2026-11-14（追加 · PR #34 上线，owner 授权）
+**今日执行**：owner 明确要求「合 PR #34 进 staging，再把 staging 合进 main」。这是一次性授权，不改护栏。
+- **合并前发现冲突**：另一个会话今天直接往 main 合了 PR #33（存款利息改走 Savings Income 2.0 的 UK 账户流程、Gift Aid 改用 Reliefs 3.0、hmrcFetch 接受空响应体）和 PR #35（staging/production 数据库隔离、注册页不再卡住）。PR #33 和我 PR #34 第二个 commit 做的是同一件事。
+- **处理**：先把 main 合进 PR 分支，冲突统一用 main 的实现，丢掉我自己那版存款利息重写（commit `4120cbb`）。只保留 PR #34 独有的部分：年终流程、调整页从 year-end 页接收 `?taxYear=`、调整路由校验税年。合并后的分支和 main 相比只多这些。tsc 和 build 通过，Vercel 检查通过。
+- PR #34 → staging（`bce76a3`），然后 main 快进到 `bce76a3`。Vercel production 部署成功。
+- **线上检查**：
+  - /、/login、/accessibility、/pricing 都返回 200。
+  - `/api/hmrc/year-end` 返回 403 YEAR_END_NOT_AVAILABLE。
+  - 年终页未登录时跳到 /login。
+  - 旧的 `/api/hmrc/final-declaration` 返回 404。
+
+staging 和 main 现在一致（都是 `bce76a3`）。
+**还没做**：年终流程和存款利息都还没有在 sandbox 端到端测过（owner 要先订阅 BSAS/Losses/BISS）。
+**学到 / 决定**：
+- 另一个会话会直接往 main 合东西。以后合并或部署前，**先对比 origin/main 和 staging**，不要假设 main 还停在上次的位置。
+- 存款利息用的账户名是 PR #33 的「Savings」，不是我那版的「EasyTax savings interest」。
+
 ## 2026-11-14（owner 实时对话 · 年终 final declaration sandbox）
 **今日执行**：owner 要求「build in sandbox now」。分支 `agent/2026-11-14-year-end-sandbox` → [PR #34](https://github.com/ysll2002/easytax/pull/34)（对 staging，未合）。新页面 `/dashboard/individual/year-end`，按 HMRC 年终流程分 5 步：
 1. 读取 HMRC 现有数据：Obligations 3.0、BISS 3.0、Losses 6.0。
