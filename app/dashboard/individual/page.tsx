@@ -13,9 +13,9 @@ export default async function TaxPage() {
   const t       = await getTranslations('dashboard.tax');
   const locale  = await getLocale();
 
-  const [{ data: hmrc }, { data: bank }] = await Promise.all([
+  const [{ data: hmrc }, { count: recordCount }] = await Promise.all([
     supabase.from('hmrc_connections').select('nino, vrn, access_token, connected_at').eq('user_id', profileId).single(),
-    supabase.from('bank_connections').select('account_name, connected_at').eq('user_id', profileId).single(),
+    supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', profileId),
   ]);
 
   const hasNino  = !!hmrc?.nino;
@@ -84,10 +84,10 @@ export default async function TaxPage() {
               <TasksTimeline />
               <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid #F0EBE1' }}>
                 <ActionLink
-                  href="/dashboard/banking"
+                  href="/dashboard/reconcile"
                   label={t('connectBank')}
-                  desc={bank ? t('bankConnected', { name: bank.account_name }) : t('bankImport')}
-                  done={!!bank}
+                  desc={recordCount ? t('bankConnected', { count: recordCount }) : t('bankImport')}
+                  done={!!recordCount}
                 />
                 <ActionLink
                   href="/dashboard/individual/calculate"

@@ -43,7 +43,7 @@
     },
     "trust": {
       "hmrc": "HMRC MTD API",
-      "security": "Read-only bank access",
+      "security": "No bank login needed",
       "fast": "ICO reg. ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Limited Companies"
@@ -64,8 +64,8 @@
         "f1Desc": "File your annual return directly to HMRC in minutes.",
         "f2Label": "Making Tax Digital (MTD ITSA)",
         "f2Desc": "Quarterly updates to HMRC — stay ahead of the 2026 mandate.",
-        "f3Label": "Open Banking",
-        "f3Desc": "Connect your bank and auto-import transactions.",
+        "f3Label": "CSV import",
+        "f3Desc": "Import your bank's CSV statement or add records by hand.",
         "f4Label": "Expense Categorisation",
         "f4Desc": "AI tags every transaction. You approve in seconds.",
         "cta": "Start Self Assessment →"
@@ -78,7 +78,7 @@
         "f2Label": "CT600 Company Tax",
         "f2Desc": "Corporation Tax return filed to HMRC — no accountant needed.",
         "f3Label": "Balance Sheet",
-        "f3Desc": "Automatically generated from your transactions and reconciled accounts.",
+        "f3Desc": "Automatically generated from your categorised business records.",
         "f4Label": "Profit & Loss",
         "f4Desc": "Real-time P&L statement, categorised by income and expense type.",
         "cta": "Set Up Company Account →"
@@ -87,12 +87,12 @@
     "how": {
       "title1": "File in five minutes,",
       "title2": "not five hours.",
-      "body": "Connect your bank and HMRC account once. EasyTax pulls your data, categorises everything with AI, and files — whether it's a Self Assessment, VAT return, or full company accounts.",
+      "body": "Connect your HMRC account and add your income and expenses — import a CSV statement from your bank or type them in. EasyTax categorises everything with AI and files — whether it's a Self Assessment, VAT return, or full company accounts.",
       "priceLabel": "Free",
-      "priceCaption": "No subscription and no per-filing fee. Connecting your bank and HMRC, AI categorisation and filing to HMRC are all free.",
+      "priceCaption": "No subscription and no per-filing fee. Connecting HMRC, importing your records, AI categorisation and filing to HMRC are all free.",
       "cta": "Start Filing →",
       "step1Title": "Connect your accounts",
-      "step1Desc": "Link your Government Gateway ID and business bank account. We pull your records automatically — no manual data entry.",
+      "step1Desc": "Link your Government Gateway ID, then import a CSV statement from your bank or add your income and expenses by hand.",
       "step2Title": "AI does the heavy lifting",
       "step2Desc": "Our AI categorises every transaction, calculates allowable expenses, and prepares your return or company accounts.",
       "step3Title": "Review & file",
@@ -106,7 +106,7 @@
       "q2Q": "What VAT schemes do you support?",
       "q2A": "We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.",
       "q3Q": "How is the Balance Sheet generated?",
-      "q3A": "EasyTax automatically derives your Balance Sheet from your reconciled bank transactions, categorised income and expenses, and opening balances you provide during setup.",
+      "q3A": "EasyTax derives your Balance Sheet from your categorised income and expense records and the opening balances you provide during setup.",
       "q4Q": "What is the CT600 and do I need it?",
       "q4A": "CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax prepares and submits it based on your P&L and company accounts.",
       "q5Q": "Is my HMRC data safe?",
@@ -216,7 +216,7 @@
       "company": "Company",
       "account": "Account",
       "selfAssessment": "Self Assessment",
-      "reconcile": "Reconcile",
+      "reconcile": "Records",
       "companyTax": "Company Tax",
       "profile": "Profile",
       "settings": "Settings",
@@ -224,19 +224,19 @@
       "companyShort": "Company",
       "logout": "Log out",
       "homepage": "Homepage",
-      "bank": "Bank"
+      "bank": "Bookkeeping"
     },
     "home": {
       "welcome": "Welcome, {name}",
       "question": "What would you like to file today?",
       "soleKicker": "For Freelancers & Sole Traders",
       "soleTitle": "Self Assessment & MTD",
-      "soleDesc": "Self Assessment · Quarterly Updates · Open Banking · Expenses",
+      "soleDesc": "Self Assessment · Quarterly Updates · Records · Expenses",
       "companyKicker": "For Limited Companies",
       "companyTitle": "Company Tax & Accounts",
       "companyDesc": "VAT Return · CT600 · Balance Sheet · P&L",
       "quickAccess": "Quick Access",
-      "reconcileTransactions": "Reconcile Transactions"
+      "reconcileTransactions": "Business records"
     },
     "tax": {
       "title": "Self Assessment",
@@ -252,9 +252,9 @@
       "connectHmrc": "Connect HMRC",
       "step3Locked": "Complete Steps 1 and 2 to unlock Self Assessment filing.",
       "tasksHeader": "Tax Tasks · past year & next 12 months",
-      "connectBank": "Connect Bank Account",
-      "bankConnected": "Connected · {name}",
-      "bankImport": "Import transactions via Open Banking",
+      "connectBank": "Add your business records",
+      "bankConnected": "{count} records so far",
+      "bankImport": "Enter income and expenses or import a CSV bank statement",
       "vatReturn": "VAT Return",
       "vatDesc": "VRN: {vrn} · File quarterly VAT returns via Making Tax Digital",
       "filingHistory": "View filing history",
@@ -273,39 +273,20 @@
       "plLabel": "Profit & Loss",
       "plDesc": "Real-time P&L statement categorised by income type and expense class.",
       "balanceLabel": "Balance Sheet",
-      "balanceDesc": "Auto-generated from your bank balance and P&L — assets, liabilities, and equity.",
+      "balanceDesc": "Generated from your business records and P&L — assets, liabilities, and equity.",
       "ct600Label": "CT600 Company Tax Return",
       "ct600Desc": "Corporation Tax return filed to HMRC — covers your company profit and tax owed.",
       "comingSoon": "Coming Soon",
       "coaLabel": "Chart of Accounts",
       "coaDesc": "Standard UK SME double-entry account structure (FRS 102) used for all reports.",
-      "reconcileLabel": "Reconcile Transactions",
-      "reconcileDesc": "Categorise bank transactions as business income, expense, or personal.",
+      "reconcileLabel": "Business records",
+      "reconcileDesc": "Add or import income and expenses and mark each as business or personal.",
       "connectedHmrc": "Connected to HMRC",
       "vrnRegistered": "VRN registered"
     },
     "reconcile": {
-      "title": "Reconcile Transactions",
-      "intro": "Reconciliation pulls your bank transactions and lets you categorise each one as business income, business expense, or personal — so your accounts are always accurate.",
-      "noBankTitle": "No bank account connected",
-      "noBankBody": "Connect your business bank account via Open Banking to start reconciling transactions. We use Plaid — read-only access, we can never move money.",
-      "connectBank": "Connect Bank Account →"
-    },
-    "banking": {
-      "back": "← Back",
-      "title": "Connect Bank Account",
-      "subtitle": "Link your business bank account via Open Banking to automatically import transactions and identify allowable expenses.",
-      "supportedBanks": "Supported banks",
-      "moreUkBanks": "+ 50 more UK banks",
-      "connect": "Connect via Open Banking →",
-      "connecting": "Connecting…",
-      "poweredBy": "Read-only access. We can never move money. Powered by Plaid.",
-      "errorRetry": "Could not start Plaid Link — please retry.",
-      "errorNetwork": "Network error.",
-      "errorGeneric": "Connection failed ({error}).",
-      "connectedTitle": "Connected account",
-      "reconcileCta": "Reconcile transactions →",
-      "connectAnother": "Connect another account →"
+      "title": "Business records",
+      "intro": "Your digital record for Making Tax Digital. Add income and expenses by hand or import a CSV statement downloaded from your bank, then mark each one as business income, business expense or personal."
     },
     "profile": {
       "title": "Profile",
@@ -326,8 +307,8 @@
       "progress": "{done} of {total} done",
       "hmrcTitle": "Connect HMRC",
       "hmrcDesc": "Link your Government Gateway so we can fetch your tax obligations automatically.",
-      "bankTitle": "Connect your bank",
-      "bankDesc": "Import transactions via Open Banking — read-only, we can never move money."
+      "bankTitle": "Add your income and expenses",
+      "bankDesc": "Type them in or import a CSV statement from your bank."
     },
     "tasks": {
       "pageTitle": "Tax Tasks",

@@ -70,7 +70,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'How much does EasyTax self assessment software cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Nothing. EasyTax is free to use — no monthly subscription and no per-filing fee. A sole trader filing one annual SA100 pays £0, and so does one running the full MTD ITSA cycle of 4 quarterly updates plus a final declaration. Connecting your bank and HMRC accounts is free too.',
+          text: 'Nothing. EasyTax is free to use — no monthly subscription and no per-filing fee. A sole trader filing one annual SA100 pays £0, and so does one running the full MTD ITSA cycle of 4 quarterly updates plus a final declaration. Connecting HMRC and importing your records is free too.',
         },
       },
       {
@@ -102,7 +102,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'Can I use EasyTax alongside my existing bookkeeping software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. EasyTax focuses on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere (Xero, FreeAgent, spreadsheets) and use EasyTax purely for the HMRC filing step — SA100, quarterly MTD updates, or VAT returns. Alternatively, you can import transactions via Open Banking and let EasyTax handle everything.',
+          text: 'Yes. EasyTax focuses on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere (Xero, FreeAgent, spreadsheets) and use EasyTax purely for the HMRC filing step — SA100, quarterly MTD updates, or VAT returns. Alternatively, you can import your bank statements as CSV and let EasyTax handle everything.',
         },
       },
       {
@@ -124,7 +124,6 @@ export default async function SelfAssessmentSoftware() {
     { feature: 'MTD ITSA final declaration', easytax: true, taxcalc: true, taxfiler: false, hmrcPortal: false },
     { feature: 'MTD VAT return', easytax: true, taxcalc: true, taxfiler: false, hmrcPortal: false },
     { feature: 'CT600 Corporation Tax', easytax: true, taxcalc: true, taxfiler: true, hmrcPortal: false },
-    { feature: 'Open Banking import', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: false },
     { feature: 'AI expense categorisation', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: false },
     { feature: 'No monthly subscription', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: true },
     { feature: 'No card required to start', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: true },
@@ -176,7 +175,7 @@ export default async function SelfAssessmentSoftware() {
               What does self assessment software do?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Self assessment software connects to HMRC on your behalf and submits your tax return digitally — more reliably and with better guidance than HMRC&rsquo;s own web portal. EasyTax goes further: it imports your bank transactions automatically via Open Banking, AI-categorises them against HMRC allowable expenses, and builds your return in real time. You review, approve, and submit in minutes.
+              Self assessment software connects to HMRC on your behalf and submits your tax return digitally — more reliably and with better guidance than HMRC&rsquo;s own web portal. EasyTax goes further: import a CSV statement from your bank or add records by hand, and it AI-categorises them against HMRC allowable expenses and builds your return in real time. You review, approve, and submit in minutes.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
@@ -219,7 +218,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'MTD ITSA quarterly updates',
-                  body: 'Four quarterly income and expense submissions per year as required by Making Tax Digital for Income Tax. EasyTax auto-imports bank transactions and AI-categorises them, so each quarter takes minutes not hours.',
+                  body: 'Four quarterly income and expense submissions per year as required by Making Tax Digital for Income Tax. Import a CSV statement from your bank and EasyTax AI-categorises it, so each quarter takes minutes not hours.',
                 },
                 {
                   title: 'MTD ITSA final declaration (crystallisation)',
@@ -234,8 +233,8 @@ export default async function SelfAssessmentSoftware() {
                   body: 'For limited company directors, EasyTax prepares and files the CT600 Corporation Tax return alongside P&L and Balance Sheet statements.',
                 },
                 {
-                  title: 'Open Banking transaction import',
-                  body: 'Connect any major UK bank — Barclays, Lloyds, HSBC, NatWest, Monzo, Starling, Revolut and more — for automatic read-only transaction import and AI categorisation.',
+                  title: 'Bank statement import',
+                  body: 'Import the CSV statement you download from your bank — Barclays, Lloyds, HSBC, NatWest, Monzo, Starling, Revolut and most others offer one — and AI categorises every line. No bank login needed.',
                 },
               ].map(item => (
                 <div key={item.title} className="p-6 rounded-2xl flex gap-4" style={{ backgroundColor: '#F8F5F0', border: '1px solid #E8E2DA' }}>
@@ -257,7 +256,7 @@ export default async function SelfAssessmentSoftware() {
               EasyTax vs other UK self assessment software
             </h2>
             <p className="text-base leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Most self assessment software charges a flat annual fee — even in years where you barely use it. EasyTax charges nothing at all, and is the only option with both MTD ITSA quarterly updates and AI Open Banking categorisation built in.
+              Most self assessment software charges a flat annual fee — even in years where you barely use it. EasyTax charges nothing at all, and has both MTD ITSA quarterly updates and AI categorisation built in.
             </p>
             <div className="overflow-x-auto rounded-2xl" style={{ border: '1px solid #DDD5C8' }}>
               <table className="w-full text-sm" style={{ backgroundColor: '#FFFFFF', borderCollapse: 'collapse' }}>
@@ -323,7 +322,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'AI bank categorisation — no bookkeeping needed',
-                  body: 'Connect your UK bank via Open Banking. EasyTax imports your transactions automatically and AI-categorises them against HMRC allowable expenses. Describe an unusual transaction in plain English and the AI resolves it. No spreadsheets, no manual coding.',
+                  body: 'Import a CSV statement from your bank or add records by hand. EasyTax AI-categorises them against HMRC allowable expenses. Describe an unusual transaction in plain English and the AI resolves it. No spreadsheets, no manual coding.',
                 },
                 {
                   title: 'SA103 and SA105 supplementary pages included',
@@ -335,7 +334,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'Designed for self-filers, not accountants',
-                  body: 'EasyTax is built for people who want to file their own taxes confidently. The guided workflow takes you from bank connection to HMRC submission — no accounting knowledge required.',
+                  body: 'EasyTax is built for people who want to file their own taxes confidently. The guided workflow takes you from your first record to HMRC submission — no accounting knowledge required.',
                 },
               ].map(item => (
                 <div key={item.title} className="flex gap-4">
@@ -389,8 +388,8 @@ export default async function SelfAssessmentSoftware() {
                   body: 'Sign up with Google or email — no payment details required. Ready in under 60 seconds.',
                 },
                 {
-                  title: 'Connect your bank via Open Banking',
-                  body: 'Pick your UK bank and authorise read-only access. Transactions import automatically. EasyTax AI categorises each one against HMRC allowable expenses.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Review your income and expenses',

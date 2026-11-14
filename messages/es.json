@@ -43,7 +43,7 @@
     },
     "trust": {
       "hmrc": "API MTD de HMRC",
-      "security": "Acceso bancario de solo lectura",
+      "security": "Sin acceso a tu banco",
       "fast": "Registro ICO ZA540758",
       "ai": "Finance Panda Limited",
       "company": "Sociedades limitadas"
@@ -64,8 +64,8 @@
         "f1Desc": "Presenta tu declaración anual directamente a HMRC en minutos.",
         "f2Label": "Making Tax Digital (MTD ITSA)",
         "f2Desc": "Actualizaciones trimestrales a HMRC — adelántate al mandato de 2026.",
-        "f3Label": "Open Banking",
-        "f3Desc": "Conecta tu banco e importa transacciones automáticamente.",
+        "f3Label": "Importación CSV",
+        "f3Desc": "Importa el extracto CSV de tu banco o añade registros a mano.",
         "f4Label": "Categorización de gastos",
         "f4Desc": "La IA etiqueta cada transacción. Tú confirmas en segundos.",
         "cta": "Empezar Self Assessment →"
@@ -78,7 +78,7 @@
         "f2Label": "CT600 impuesto de sociedades",
         "f2Desc": "Declaración del impuesto de sociedades presentada a HMRC — sin contable.",
         "f3Label": "Balance",
-        "f3Desc": "Generado automáticamente desde tus transacciones y cuentas conciliadas.",
+        "f3Desc": "Generados automáticamente a partir de tus registros categorizados.",
         "f4Label": "Pérdidas y ganancias",
         "f4Desc": "Estado de P&L en tiempo real, categorizado por tipo de ingreso y gasto.",
         "cta": "Configurar cuenta de empresa →"
@@ -87,12 +87,12 @@
     "how": {
       "title1": "Presenta en cinco minutos,",
       "title2": "no en cinco horas.",
-      "body": "Conecta tu banco y cuenta HMRC una sola vez. EasyTax extrae tus datos, los categoriza con IA y los presenta — ya sea Self Assessment, IVA o cuentas anuales completas.",
+      "body": "Conecta tu cuenta de HMRC y añade tus ingresos y gastos: importa un extracto CSV de tu banco o escríbelos. EasyTax lo categoriza todo con IA y presenta tus declaraciones, ya sea Self Assessment, IVA o las cuentas de tu empresa.",
       "priceLabel": "Gratis",
-      "priceCaption": "Sin suscripción mensual y sin coste por declaración. Conectar tu banco y HMRC, la categorización con IA y el envío a HMRC son gratis.",
+      "priceCaption": "Sin suscripción ni tarifa por declaración. Conectar HMRC, importar tus registros, la categorización con IA y la presentación ante HMRC son gratis.",
       "cta": "Empezar a presentar →",
       "step1Title": "Conecta tus cuentas",
-      "step1Desc": "Vincula tu Government Gateway ID y tu banco empresarial. Extraemos los registros automáticamente — sin introducir datos a mano.",
+      "step1Desc": "Vincula tu ID de Government Gateway y luego importa un extracto CSV de tu banco o añade tus ingresos y gastos a mano.",
       "step2Title": "La IA hace el trabajo pesado",
       "step2Desc": "Nuestra IA categoriza cada transacción, calcula gastos deducibles y prepara tu declaración o cuentas.",
       "step3Title": "Revisa y presenta",
@@ -106,7 +106,7 @@
       "q2Q": "¿Qué regímenes de IVA soportáis?",
       "q2A": "Soportamos los regímenes Standard, Flat Rate y Annual VAT Accounting, presentados directamente a HMRC vía APIs compatibles con MTD.",
       "q3Q": "¿Cómo se genera el balance?",
-      "q3A": "EasyTax genera tu balance automáticamente a partir de tus transacciones bancarias conciliadas, ingresos y gastos categorizados, y saldos iniciales que proporciones en la configuración.",
+      "q3A": "EasyTax elabora tu balance a partir de tus registros de ingresos y gastos categorizados y de los saldos iniciales que indicas al configurar.",
       "q4Q": "¿Qué es el CT600 y lo necesito?",
       "q4A": "CT600 es la declaración del impuesto de sociedades que toda sociedad limitada del Reino Unido debe presentar a HMRC cada año. EasyTax la prepara y envía basándose en tu P&L y cuentas.",
       "q5Q": "¿Mis datos HMRC están seguros?",
@@ -216,7 +216,7 @@
       "company": "Empresa",
       "account": "Cuenta",
       "selfAssessment": "Self Assessment",
-      "reconcile": "Conciliar",
+      "reconcile": "Registros",
       "companyTax": "Impuestos empresa",
       "profile": "Perfil",
       "settings": "Ajustes",
@@ -224,19 +224,19 @@
       "companyShort": "Empresa",
       "logout": "Cerrar sesión",
       "homepage": "Inicio",
-      "bank": "Banco"
+      "bank": "Contabilidad"
     },
     "home": {
       "welcome": "Bienvenido, {name}",
       "question": "¿Qué quieres presentar hoy?",
       "soleKicker": "Para freelancers y autónomos",
       "soleTitle": "Self Assessment y MTD",
-      "soleDesc": "Self Assessment · Actualizaciones trimestrales · Open Banking · Gastos",
+      "soleDesc": "Self Assessment · Actualizaciones trimestrales · Registros · Gastos",
       "companyKicker": "Para sociedades limitadas",
       "companyTitle": "Impuestos y cuentas de empresa",
       "companyDesc": "Declaración IVA · CT600 · Balance · P&L",
       "quickAccess": "Acceso rápido",
-      "reconcileTransactions": "Conciliar transacciones"
+      "reconcileTransactions": "Registros del negocio"
     },
     "tax": {
       "title": "Self Assessment",
@@ -252,9 +252,9 @@
       "connectHmrc": "Conectar HMRC",
       "step3Locked": "Completa los pasos 1 y 2 para desbloquear Self Assessment.",
       "tasksHeader": "Tareas fiscales · año pasado y próximos 12 meses",
-      "connectBank": "Conectar cuenta bancaria",
-      "bankConnected": "Conectado · {name}",
-      "bankImport": "Importar transacciones vía Open Banking",
+      "connectBank": "Añade tus registros",
+      "bankConnected": "{count} registros hasta ahora",
+      "bankImport": "Introduce ingresos y gastos o importa un extracto bancario CSV",
       "vatReturn": "Declaración IVA",
       "vatDesc": "VRN: {vrn} · Presenta IVA trimestral vía Making Tax Digital",
       "filingHistory": "Ver historial de presentaciones",
@@ -273,39 +273,20 @@
       "plLabel": "Pérdidas y ganancias",
       "plDesc": "Estado P&L en tiempo real, clasificado por tipo de ingreso y categoría de gasto.",
       "balanceLabel": "Balance",
-      "balanceDesc": "Generado automáticamente desde tu saldo bancario y P&L — activos, pasivos y patrimonio.",
+      "balanceDesc": "Generado a partir de tus registros y tu cuenta de resultados: activos, pasivos y patrimonio.",
       "ct600Label": "CT600 Declaración del Impuesto de Sociedades",
       "ct600Desc": "Declaración del impuesto de sociedades presentada a HMRC — cubre beneficios y tributación.",
       "comingSoon": "Próximamente",
       "coaLabel": "Plan contable",
       "coaDesc": "Estructura estándar de cuentas de doble partida para PYMES (FRS 102) utilizada en todos los informes.",
-      "reconcileLabel": "Conciliar transacciones",
-      "reconcileDesc": "Clasifica las transacciones como ingreso de empresa, gasto o personal.",
+      "reconcileLabel": "Registros del negocio",
+      "reconcileDesc": "Añade o importa ingresos y gastos y marca cada uno como del negocio o personal.",
       "connectedHmrc": "Conectado a HMRC",
       "vrnRegistered": "VRN registrado"
     },
     "reconcile": {
-      "title": "Conciliar transacciones",
-      "intro": "La conciliación extrae tus transacciones bancarias y te permite clasificar cada una como ingreso, gasto o personal — para que tus cuentas siempre sean precisas.",
-      "noBankTitle": "Sin cuenta bancaria conectada",
-      "noBankBody": "Conecta tu cuenta bancaria empresarial vía Open Banking para empezar a conciliar. Usamos Plaid — acceso de solo lectura, nunca moveremos dinero.",
-      "connectBank": "Conectar cuenta bancaria →"
-    },
-    "banking": {
-      "back": "← Atrás",
-      "title": "Conectar cuenta bancaria",
-      "subtitle": "Vincula tu cuenta bancaria empresarial vía Open Banking para importar transacciones e identificar gastos deducibles automáticamente.",
-      "supportedBanks": "Bancos compatibles",
-      "moreUkBanks": "+ 50 bancos UK más",
-      "connect": "Conectar vía Open Banking →",
-      "connecting": "Conectando…",
-      "poweredBy": "Acceso de solo lectura. Nunca moveremos tu dinero. Con tecnología de Plaid.",
-      "errorRetry": "No se pudo iniciar Plaid Link — vuelve a intentarlo.",
-      "errorNetwork": "Error de red.",
-      "errorGeneric": "Conexión fallida ({error}).",
-      "connectedTitle": "Cuenta conectada",
-      "reconcileCta": "Conciliar transacciones →",
-      "connectAnother": "Conectar otra cuenta →"
+      "title": "Registros del negocio",
+      "intro": "Tu registro digital para Making Tax Digital. Añade ingresos y gastos a mano o importa un extracto CSV descargado de tu banco y marca cada uno como ingreso del negocio, gasto del negocio o personal."
     },
     "profile": {
       "title": "Perfil",
@@ -326,8 +307,8 @@
       "progress": "{done} de {total} completado",
       "hmrcTitle": "Conecta HMRC",
       "hmrcDesc": "Vincula tu Government Gateway para obtener automáticamente tus obligaciones fiscales.",
-      "bankTitle": "Conecta tu banco",
-      "bankDesc": "Importa transacciones vía Open Banking: solo lectura, nunca podemos mover dinero."
+      "bankTitle": "Añade tus ingresos y gastos",
+      "bankDesc": "Escríbelos o importa un extracto CSV de tu banco."
     },
     "tasks": {
       "pageTitle": "Tareas fiscales",

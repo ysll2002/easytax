@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import { plaidClient } from '@/lib/plaid';
 
 // ── Expense sub-account keyword rules ────────────────────────────────────────
 const EXPENSE_RULES: { account: string; keywords: string[] }[] = [
@@ -35,50 +34,20 @@ export async function GET(req: NextRequest) {
   const startDate = toDate(fromIso);
   const endDate   = toDate(toIso);
 
-  const { data: bank } = await supabase
-    .from('bank_connections')
-    .select('access_token, account_id, provider')
+  // Source: the customer's business records (Records page). Only records
+  // marked as business income or expense are counted.
+  const { data: records, error } = await supabase
+    .from('business_records')
+    .select('description, amount, category')
     .eq('user_id', session.user.profileId)
-    .single();
+    .in('category', ['business_income', 'business_expense'])
+    .gte('txn_date', startDate)
+    .lte('txn_date', endDate);
+  if (error) return NextResponse.json({ error: 'db_error' }, { status: 500 });
+  if (!records || records.length === 0) return NextResponse.json({ error: 'no_records' }, { status: 404 });
 
-  if (!bank) return NextResponse.json({ error: 'no_bank' }, { status: 404 });
-  if (!bank.access_token) return NextResponse.json({ error: 'token_missing' }, { status: 401 });
-
-  let rawTx: { description: string; amount: number }[] = [];
-  let bankBalance: number | null = null;
-
-  try {
-    // Fetch across all accounts on the Plaid item. Previously we filtered by a
-    // stored account_id, but that id can go stale (INVALID_FIELD) after
-    // reconnects. Simpler + more robust to let Plaid return the whole item.
-    const txRes = await plaidClient.transactionsGet({
-      access_token: bank.access_token,
-      start_date:   startDate,
-      end_date:     endDate,
-      options:      { count: 500 },
-    });
-    rawTx = (txRes.data.transactions ?? []).map(tx => ({
-      description: tx.merchant_name ?? tx.name ?? 'Unknown',
-      // Plaid: +amount = outflow / debit. Flip so we use the intuitive "+ = income, – = expense" convention.
-      amount:      -tx.amount,
-    }));
-
-    try {
-      const balRes = await plaidClient.accountsBalanceGet({ access_token: bank.access_token });
-      // Sum across all current balances on the item.
-      bankBalance = (balRes.data.accounts ?? []).reduce((s, a) => s + (a.balances?.current ?? 0), 0) || null;
-    } catch { /* non-blocking */ }
-  } catch (err: unknown) {
-    // Plaid errors come through axios; the useful body is in err.response.data,
-    // not err.message (which is a generic "Request failed with status code N").
-    const axiosErr = err as { response?: { data?: { error_code?: string; error_message?: string; display_message?: string } }; message?: string };
-    const plaidBody = axiosErr.response?.data;
-    const detail = plaidBody?.error_code
-      ? `${plaidBody.error_code}: ${plaidBody.error_message ?? plaidBody.display_message ?? ''}`
-      : (err instanceof Error ? err.message : String(err));
-    console.error('[plaid] report fetch failed:', detail, plaidBody);
-    return NextResponse.json({ error: 'fetch_failed', detail }, { status: 502 });
-  }
+  // Cash at bank is not known without a bank feed.
+  const bankBalance: number | null = null;
 
   // Compute P&L
   type ExpenseEntry = { account: string; amount: number; count: number };
@@ -87,17 +56,21 @@ export async function GET(req: NextRequest) {
   let totalIncome = 0;
   let totalExpenses = 0;
 
-  for (const tx of rawTx) {
-    if (tx.amount > 0) {
-      incomeLines.push({ description: tx.description, amount: tx.amount });
-      totalIncome += tx.amount;
-    } else if (tx.amount < 0) {
-      const account = classifyExpense(tx.description);
-      const abs = Math.abs(tx.amount);
+  // Category decides income vs expense, not the sign: a refund marked as an
+  // expense (positive amount) reduces expenses.
+  for (const r of records) {
+    const description = r.description as string;
+    const amount = Number(r.amount);
+    if (r.category === 'business_income') {
+      incomeLines.push({ description, amount });
+      totalIncome += amount;
+    } else {
+      const account = classifyExpense(description);
+      const cost = -amount;
       const existing = expenseMap.get(account);
-      if (existing) { existing.amount += abs; existing.count += 1; }
-      else expenseMap.set(account, { account, amount: abs, count: 1 });
-      totalExpenses += abs;
+      if (existing) { existing.amount += cost; existing.count += 1; }
+      else expenseMap.set(account, { account, amount: cost, count: 1 });
+      totalExpenses += cost;
     }
   }
 

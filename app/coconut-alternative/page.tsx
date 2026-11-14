@@ -41,9 +41,8 @@ const rows: Row[] = [
   { feature: 'VAT returns (MTD VAT)',              easytax: true,           coconut: false,             note: 'Coconut focuses on Income Tax, not VAT' },
   { feature: 'CT600 Corporation Tax',              easytax: true,           coconut: false,             note: 'Coconut does not file company tax' },
   { feature: 'Limited company accounts (P&L, Balance Sheet)', easytax: true, coconut: false },
-  { feature: 'Open Banking auto-import',           easytax: true,           coconut: true },
   { feature: 'AI expense categorisation',          easytax: true,           coconut: false,             note: 'EasyTax uses Claude to categorise and reconcile' },
-  { feature: 'AI bank reconciliation chat',        easytax: true,           coconut: false },
+  { feature: 'AI categorisation chat',             easytax: true,           coconut: false },
   { feature: 'CIS subcontractor support',          easytax: false,          coconut: true,              note: 'On EasyTax roadmap' },
   { feature: 'Mobile app',                         easytax: 'Web (mobile-optimised)', coconut: 'Native iOS/Android' },
 ];
@@ -207,9 +206,9 @@ export default async function CoconutAlternative() {
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
-                { q: 'How much does EasyTax cost?',                       a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting your bank and HMRC accounts is free too.' },
+                { q: 'How much does EasyTax cost?',                       a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.' },
                 { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax sends quarterly updates and final declarations to HMRC via the official MTD ITSA API. We are completing HMRC production approval before live submissions are enabled.' },
-                { q: 'Can I migrate from Coconut?',                       a: 'Yes. Sign up free, connect your bank via Open Banking, and your transactions import automatically. There’s nothing to export from Coconut — you simply start fresh and we backfill from your bank.' },
+                { q: 'Can I migrate from Coconut?',                       a: 'Yes. Sign up free, then import CSV statements downloaded from your bank (or export your transactions from Coconut as CSV) on the Records page.' },
                 { q: 'Does EasyTax support Self Assessment (SA100)?',     a: 'Yes — including SA100, employment income, self-employment (SA103), property income (SA105), and dividends. We file directly to HMRC.' },
                 { q: 'Does EasyTax support limited companies?',           a: 'Yes — that’s the biggest gap vs Coconut. EasyTax does VAT returns (MTD VAT), CT600 Corporation Tax, Balance Sheet, and P&L for UK limited companies.' },
                 { q: 'Will it stay free?',                                 a: 'That is the intention, and there is no paid tier today. If charges are ever introduced, account holders will be told by email at least 30 days beforehand, and nothing you have already filed would be charged for.' },

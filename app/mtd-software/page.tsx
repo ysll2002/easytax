@@ -70,7 +70,7 @@ export default async function MtdSoftware() {
         name: 'How much does EasyTax MTD software cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. Connecting your bank and HMRC accounts is free too.',
+          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. Connecting HMRC and importing your records is free too.',
         },
       },
     ],
@@ -152,7 +152,7 @@ export default async function MtdSoftware() {
               {[
                 {
                   title: 'MTD ITSA quarterly updates',
-                  body: 'Submit income and expenses each quarter directly to HMRC. EasyTax auto-imports bank transactions via Open Banking and AI-categorises them against HMRC allowable expenses — so each quarter takes minutes, not hours.',
+                  body: 'Submit income and expenses each quarter directly to HMRC. Import a CSV statement from your bank and EasyTax AI-categorises it against HMRC allowable expenses — so each quarter takes minutes, not hours.',
                 },
                 {
                   title: 'MTD ITSA final declaration (crystallisation)',
@@ -171,8 +171,8 @@ export default async function MtdSoftware() {
                   body: 'For limited companies, EasyTax files the CT600 Corporation Tax return directly to HMRC, alongside P&L and Balance Sheet preparation.',
                 },
                 {
-                  title: 'Open Banking transaction import',
-                  body: 'Connect any major UK bank — Barclays, Lloyds, HSBC, NatWest, Monzo, Starling, Revolut and more. Transactions import automatically and are AI-categorised. Read-only access — EasyTax can never move money.',
+                  title: 'Bank statement import',
+                  body: 'Import the CSV statement you download from your bank — Barclays, Lloyds, HSBC, NatWest, Monzo, Starling, Revolut and most others offer one. Every line is AI-categorised. EasyTax never needs your bank login.',
                 },
               ].map(item => (
                 <div key={item.title} className="p-6 rounded-2xl flex gap-4" style={{ backgroundColor: '#F8F5F0', border: '1px solid #E8E2DA' }}>
@@ -235,11 +235,11 @@ export default async function MtdSoftware() {
                 },
                 {
                   title: 'AI bank reconciliation powered by Claude',
-                  body: 'Connect your bank via Open Banking. EasyTax automatically categorises transactions against HMRC allowable expense categories. Describe an unusual transaction in plain English and the AI resolves it — no manual coding needed.',
+                  body: 'Import a CSV statement from your bank. EasyTax automatically categorises each line against HMRC allowable expense categories. Describe an unusual transaction in plain English and the AI resolves it — no manual coding needed.',
                 },
                 {
                   title: 'No card required to start',
-                  body: 'Sign up with Google or email in under 60 seconds. Connect your bank and HMRC accounts for free. Clicking Submit sends the filing to HMRC and costs nothing.',
+                  body: 'Sign up with Google or email in under 60 seconds. Connect HMRC and import your records for free. Clicking Submit sends the filing to HMRC and costs nothing.',
                 },
                 {
                   title: 'Direct HMRC API connection',
@@ -275,8 +275,8 @@ export default async function MtdSoftware() {
                   body: 'Sign up with Google or email — no payment details required. Your account is ready in under 60 seconds.',
                 },
                 {
-                  title: 'Connect your bank via Open Banking',
-                  body: 'From the dashboard, go to Bank → Connect a bank. Pick your UK bank and authorise read-only access. Transactions import automatically from the day you connect.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Review your categorised transactions',
@@ -319,7 +319,7 @@ export default async function MtdSoftware() {
                 },
                 {
                   q: 'What does MTD ITSA software actually do?',
-                  a: 'It connects to HMRC on your behalf and sends your income and expense data as required by Making Tax Digital. With EasyTax, you connect your bank once, review AI-categorised transactions each quarter, and press Submit. The software handles the HMRC API call, submission formatting, and receipt.',
+                  a: 'It connects to HMRC on your behalf and sends your income and expense data as required by Making Tax Digital. With EasyTax, you import your bank statement or add records, review the AI categorisation each quarter, and press Submit. The software handles the HMRC API call, submission formatting, and receipt.',
                 },
                 {
                   q: 'When does Making Tax Digital for Income Tax start?',
@@ -327,7 +327,7 @@ export default async function MtdSoftware() {
                 },
                 {
                   q: 'How much does MTD software cost with EasyTax?',
-                  a: 'Nothing. There is no monthly subscription and no per-filing fee. Most sole traders file 4 quarterly updates plus 1 final declaration a year; with EasyTax that costs £0. Connecting your bank and HMRC accounts is free too.',
+                  a: 'Nothing. There is no monthly subscription and no per-filing fee. Most sole traders file 4 quarterly updates plus 1 final declaration a year; with EasyTax that costs £0. Connecting HMRC and importing your records is free too.',
                 },
                 {
                   q: 'Can I use EasyTax for Self Assessment as well as quarterly updates?',
@@ -338,12 +338,12 @@ export default async function MtdSoftware() {
                   a: 'Yes — EasyTax files CT600 Corporation Tax, prepares P&L and Balance Sheet, and handles MTD VAT for limited companies. Directors who also have self-employment income can manage both through EasyTax.',
                 },
                 {
-                  q: 'Which UK banks are supported for Open Banking?',
-                  a: 'All major UK retail and business banks: Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide, Mettle, and most others. Read-only access only — EasyTax can never move money from your account.',
+                  q: 'Can I import my bank statements?',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
                 },
                 {
                   q: 'What if I already use accounting software?',
-                  a: 'EasyTax can work alongside your existing bookkeeping tool — it focuses exclusively on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere and use EasyTax purely for the MTD quarterly filing step. Or you can switch entirely and let EasyTax handle everything through Open Banking import.',
+                  a: 'EasyTax can work alongside your existing bookkeeping tool — it focuses exclusively on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere and use EasyTax purely for the MTD quarterly filing step. Or you can switch entirely: import your bank statements as CSV and let EasyTax handle everything.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>

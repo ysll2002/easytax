@@ -29,7 +29,7 @@ export default function Terms() {
           Terms of Service
         </h1>
         <p style={{ color: '#6B6256', fontSize: '0.875rem', marginBottom: '3rem' }}>
-          Last updated: 14 October 2026 &nbsp;·&nbsp; Effective: 14 October 2026
+          Last updated: 14 November 2026 &nbsp;·&nbsp; Effective: 14 November 2026
         </p>
 
         <div style={{ color: '#4A4035', lineHeight: 1.8 }} className="space-y-10">
@@ -52,7 +52,7 @@ export default function Terms() {
               EasyTax is a software platform that helps UK-based sole traders, freelancers, and contractors to:
             </P>
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }} className="space-y-1">
-              <li>Connect their bank account via Open Banking (Plaid) to import transactions</li>
+              <li>Keep income and expense records, entered by hand or imported from CSV statements downloaded from their bank</li>
               <li>Categorise expenses using AI-assisted tools</li>
               <li>Connect to HMRC via Government Gateway OAuth</li>
               <li>Prepare and submit Self Assessment tax returns directly to HMRC</li>
@@ -115,12 +115,12 @@ export default function Terms() {
 
           {/* 7 */}
           <section>
-            <H2>7. Open Banking Connection</H2>
+            <H2>7. Business Records and Bank Statements</H2>
             <P>
-              By connecting a bank account via Plaid, you grant read-only access to your transaction data. We cannot and will never initiate payments or move money from your account. You can disconnect your bank at any time from your dashboard.
+              You can enter income and expense records by hand or import CSV statements that you download from your bank yourself. EasyTax does not connect to your bank account, never asks for your bank login, and cannot initiate payments or move money.
             </P>
             <P>
-              Open Banking connections are subject to Plaid's own terms of service and FCA regulations.
+              You are responsible for checking that your records are complete and correctly categorised before you submit anything to HMRC.
             </P>
           </section>
 

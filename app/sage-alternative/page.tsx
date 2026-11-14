@@ -39,9 +39,8 @@ const rows: Row[] = [
   { feature: 'MTD VAT submission',                    easytax: true,             sage: true },
   { feature: 'CT600 Corporation Tax filing',          easytax: true,             sage: true },
   { feature: 'Limited company P&L and Balance Sheet', easytax: true,             sage: true },
-  { feature: 'Open Banking auto-import',              easytax: true,             sage: true },
-  { feature: 'AI expense categorisation',             easytax: true,             sage: false,                note: 'EasyTax uses Claude AI to categorise and reconcile bank transactions' },
-  { feature: 'AI bank reconciliation chat',           easytax: true,             sage: false },
+  { feature: 'AI expense categorisation',             easytax: true,             sage: false,                note: 'EasyTax uses Claude AI to categorise your income and expense records' },
+  { feature: 'AI categorisation chat',                easytax: true,             sage: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,            sage: true,                 note: 'EasyTax focuses on tax filing; Sage is a full accounting ledger' },
   { feature: 'Built-in invoicing',                    easytax: false,            sage: true,                 note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
   { feature: 'Payroll',                               easytax: false,            sage: true,                 note: 'Sage Payroll available as an add-on or bundle' },
@@ -223,8 +222,8 @@ export default async function SageAlternative() {
                   body: 'Sign up with Google or email in under 60 seconds — no card required.',
                 },
                 {
-                  title: 'Connect your bank (Open Banking)',
-                  body: 'From the dashboard, go to Bank → Connect a bank. Pick your UK bank, authorise via Open Banking, and your transactions auto-import and get AI-categorised against HMRC allowable expenses.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Connect to HMRC',
@@ -278,8 +277,8 @@ export default async function SageAlternative() {
                   a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.',
                 },
                 {
-                  q: 'Which UK banks does Open Banking auto-import support?',
-                  a: 'Every major UK retail and business bank: Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide, Mettle and most others. Read-only access only — EasyTax can never move money.',
+                  q: 'Can I import my bank statements?',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
                 },
                 {
                   q: 'Do I lose my Sage history when I cancel?',

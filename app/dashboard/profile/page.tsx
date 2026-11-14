@@ -109,7 +109,7 @@ export default function ProfilePage() {
           Your data
         </h2>
         <p className="text-sm mb-4" style={{ color: '#6B6256' }}>
-          Download a JSON archive of everything EasyTax holds on you — profile, tax IDs, HMRC filings, bank connections. Your business data is yours to keep and move.
+          Download a JSON archive of everything EasyTax holds on you — profile, tax IDs, business records, HMRC filings. Your business data is yours to keep and move.
         </p>
         <button
           type="button"

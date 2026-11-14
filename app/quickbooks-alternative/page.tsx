@@ -39,9 +39,8 @@ const rows: Row[] = [
   { feature: 'MTD VAT submission',                    easytax: true,               qb: true },
   { feature: 'CT600 Corporation Tax filing',          easytax: true,               qb: true },
   { feature: 'Limited company P&L and Balance Sheet', easytax: true,               qb: true },
-  { feature: 'Open Banking auto-import',              easytax: true,               qb: true },
   { feature: 'AI expense categorisation',             easytax: true,               qb: false,                    note: 'EasyTax uses Claude to categorise and reconcile' },
-  { feature: 'AI bank reconciliation chat',           easytax: true,               qb: false },
+  { feature: 'AI categorisation chat',                easytax: true,               qb: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,              qb: true,                     note: 'EasyTax focuses on tax filing, not a full ledger' },
   { feature: 'Built-in invoicing',                    easytax: false,              qb: true,                     note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
   { feature: 'Payroll',                               easytax: false,              qb: true,                     note: 'Add-on in QuickBooks; not in EasyTax' },
@@ -208,7 +207,7 @@ export default async function QuickBooksAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting your bank and HMRC accounts is free too.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.',
                 },
                 {
                   q: 'Can EasyTax replace QuickBooks for a sole trader?',
@@ -216,7 +215,7 @@ export default async function QuickBooksAlternative() {
                 },
                 {
                   q: 'How do I migrate my QuickBooks data?',
-                  a: "Export your transaction history and reports from QuickBooks Online (Reports → all transactions CSV). Email them to hello@easytax.vip and we'll load them into your account. Connect your bank via Open Banking and EasyTax starts auto-importing from today.",
+                  a: "Export your transaction history and reports from QuickBooks Online (Reports → all transactions CSV). Email them to hello@easytax.vip and we'll load them into your account. After that, import CSV statements from your bank or add records by hand.",
                 },
                 {
                   q: 'Does EasyTax support MTD VAT and CT600?',

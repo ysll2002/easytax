@@ -39,9 +39,8 @@ const rows: Row[] = [
   { feature: 'MTD VAT submission',                    easytax: true,        freeagent: true },
   { feature: 'CT600 Corporation Tax filing',          easytax: true,        freeagent: true },
   { feature: 'Limited company P&L and Balance Sheet', easytax: true,        freeagent: true },
-  { feature: 'Open Banking auto-import',              easytax: true,        freeagent: true },
   { feature: 'AI expense categorisation',             easytax: true,        freeagent: false,                 note: 'EasyTax uses Claude to categorise and reconcile' },
-  { feature: 'AI bank reconciliation chat',           easytax: true,        freeagent: false },
+  { feature: 'AI categorisation chat',                easytax: true,        freeagent: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,       freeagent: true,                  note: 'EasyTax focuses on tax filing, not a full ledger' },
   { feature: 'Built-in invoicing',                    easytax: false,       freeagent: true,                  note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
   { feature: 'Payroll',                               easytax: false,       freeagent: true,                  note: 'Included in FreeAgent standard plan' },
@@ -222,8 +221,8 @@ export default async function FreeAgentAlternative() {
                   body: 'Sign up with Google or email in under 60 seconds — no card required.',
                 },
                 {
-                  title: 'Connect your bank (Open Banking)',
-                  body: 'From the dashboard, go to Bank → Connect a bank. Pick your UK bank, authorise via Open Banking, and your transactions auto-import and get AI-categorised against HMRC allowable expenses.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Connect to HMRC',
@@ -258,7 +257,7 @@ export default async function FreeAgentAlternative() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'Nothing. There is no monthly subscription and no charge when you file, however many returns you send. There is no charge to connect your bank or HMRC accounts either.',
+                  a: 'Nothing. There is no monthly subscription and no charge when you file, however many returns you send. There is no charge to connect HMRC or import your records either.',
                 },
                 {
                   q: 'I use FreeAgent for invoicing. What do I do?',
@@ -281,8 +280,8 @@ export default async function FreeAgentAlternative() {
                   a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration (crystallisation).',
                 },
                 {
-                  q: 'Which UK banks does Open Banking auto-import support?',
-                  a: 'Every major UK retail and business bank: Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide, Mettle and most others. Read-only access only — EasyTax can never move money.',
+                  q: 'Can I import my bank statements?',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>

@@ -53,10 +53,10 @@ const MOCK_ACTIONS: ActionItem[] = [
   {
     id: '4',
     type: 'info',
-    title: 'Connect Business Bank Account',
-    description: 'Link your Monzo or Starling account to automate expense tracking for the 2026/27 tax year.',
-    cta: 'Connect Bank',
-    ctaLink: '#',
+    title: 'Import Your Bank Statement',
+    description: 'Download a CSV statement from your bank and import it to keep your 2026/27 records up to date.',
+    cta: 'Go to Records',
+    ctaLink: '/dashboard/reconcile',
     completed: false,
   },
 ];

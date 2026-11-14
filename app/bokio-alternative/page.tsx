@@ -52,9 +52,8 @@ const rows: Row[] = [
   { feature: 'MTD VAT submission',                   easytax: true,                    bokio: true },
   { feature: 'CT600 Corporation Tax filing',         easytax: true,                    bokio: false,                  note: 'Bokio supports CT prep but not filing' },
   { feature: 'Limited company P&L and Balance Sheet',easytax: true,                    bokio: true },
-  { feature: 'Open Banking auto-import',             easytax: true,                    bokio: true },
   { feature: 'AI expense categorisation',            easytax: true,                    bokio: false,                  note: 'EasyTax uses Claude to categorise and reconcile' },
-  { feature: 'AI bank reconciliation chat',          easytax: true,                    bokio: false },
+  { feature: 'AI categorisation chat',               easytax: true,                    bokio: false },
   { feature: 'Full double-entry bookkeeping',        easytax: false,                   bokio: true,                   note: 'EasyTax focuses on tax filing, not full ledger' },
   { feature: 'Invoicing built in',                   easytax: false,                   bokio: true,                   note: 'EasyTax pairs with GrumpyWhales (also free) for invoicing' },
 ];
@@ -215,8 +214,8 @@ export default async function BokioAlternative() {
                   body: 'Send your Bokio CSVs to hello@easytax.vip with the subject "Bokio CSV migration". We load them into your account by hand within one working day. Your invoice number sequence is preserved.',
                 },
                 {
-                  title: 'Connect your bank',
-                  body: 'From the dashboard, go to Bank → Connect a bank. Pick your UK bank, authorise via Open Banking, and every incoming transaction is auto-categorised against UK allowable expenses.',
+                  title: 'Add your income and expenses',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'File your first MTD ITSA quarterly update',
@@ -290,8 +289,8 @@ export default async function BokioAlternative() {
                   a: 'Yes. After we import your invoice history, your next invoice continues the existing sequence rather than restarting. Tell us your preference in the migration email.' },
                 { q: 'What about MTD ITSA — when do I need it?',
                   a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.' },
-                { q: 'Which UK banks does the auto-import work with?',
-                  a: 'Every major UK retail and business bank supported by Open Banking: Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide, Mettle and most others. Read-only access only — EasyTax can never move money.' },
+                { q: 'Can I import my bank statements?',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.' },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm" style={{ color: '#1C1208' }}>
