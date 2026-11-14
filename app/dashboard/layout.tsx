@@ -27,9 +27,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Sidebar — desktop only */}
       <aside className="hidden md:flex" style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
-        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '2.5rem', display: 'block' }}>
+        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '1rem', display: 'block' }}>
           EasyTax
         </Link>
+
+        {/* Language and Homepage live in the sidebar on desktop. They used to
+            float absolutely over the top-right of <main>, where they sat on top
+            of any page whose header has its own right-hand buttons (Records:
+            "Add a record", "Import CSV statement"). Here they cannot overlap
+            page content, and the language menu has room to open downwards. */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', padding: '0 1.5rem', marginBottom: '2rem' }}>
+          <LanguageSwitcher align="left" />
+          <HomepageLink compact />
+        </div>
 
         <SidebarNav showAgent={AGENT_MODE_AVAILABLE} />
 
@@ -65,39 +75,16 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Main content */}
       <main id="main-content" style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
-        {/* Desktop top-right controls. In their own row, not floating over
-            the page: floating, they covered page-level buttons in the top
-            right (the Records page's "Import CSV statement", for one). */}
-        <div className="hidden md:flex" style={{ justifyContent: 'flex-end', alignItems: 'center', gap: '0.5rem', padding: '1rem 1.5rem 0' }}>
-          <LanguageSwitcher />
-          <HomepageLink />
-        </div>
         {/* Mobile top spacer */}
         <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />
         {children}
-        {/* HMRC MTD-ITSA production requirement: signpost users with unsupported
-            income types and unsupported end-of-year (Final Declaration) functionality
-            to the official HMRC compatible-software directory. */}
+        {/* The site-wide scope notices that used to sit here (unsupported income
+            types; end-of-year not supported) were removed on request. The
+            end-of-year signposting HMRC requires of in-year-only software still
+            appears where it applies: Step 4 of the Tasks wizard. */}
         <footer style={{ padding: '2rem 1.5rem 3rem', borderTop: '1px solid #EEE4D3', marginTop: '3rem', color: '#6B6256', fontSize: '0.75rem', lineHeight: 1.5 }}>
           <div style={{ maxWidth: '52rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <p>
-              EasyTax supports Self Assessment for UK sole-trader freelancers (Self-Employment income). If you have income from UK property, foreign property, or other sources EasyTax doesn&apos;t currently cover, find compatible software at{' '}
-              <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
-                target="_blank" rel="noopener noreferrer"
-                style={{ color: '#A04E1C', textDecoration: 'underline' }}>
-                gov.uk — Find software compatible with Making Tax Digital for Income Tax
-              </a>.
-            </p>
-            <p>
-              <strong style={{ color: '#4A4035' }}>End-of-year submission not supported.</strong>{' '}
-              EasyTax currently supports in-year quarterly updates for Making Tax Digital for Income Tax only. It does <strong>not</strong> support end-of-year functionality, including the Final Declaration (crystallisation). To complete your end-of-year submission you will need to use additional software — find compatible software at{' '}
-              <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
-                target="_blank" rel="noopener noreferrer"
-                style={{ color: '#A04E1C', textDecoration: 'underline' }}>
-                gov.uk — Find software compatible with Making Tax Digital for Income Tax
-              </a>.
-            </p>
             <p>
               <Link href="/accessibility" style={{ color: '#A04E1C', textDecoration: 'underline' }}>Accessibility statement</Link>
             </p>
