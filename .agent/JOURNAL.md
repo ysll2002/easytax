@@ -15,6 +15,11 @@
 
 ---
 
+## 2026-11-14（追加 · dashboard 清理，PR #40）
+**今日执行**：owner 要求 dashboard 去掉设置清单，订阅邮件后不再显示「Filing to HMRC is not open yet」。顺带发现该横幅在 production 也显示（与 11-11 已获批矛盾），一并在 production 隐藏。本地测过，owner 授权合进 staging（`c486474`）。
+
+---
+
 ## 2026-11-14（追加 · redirect URI 修好、PR #37/#38 合进 staging）
 **今日执行**：owner 在 Developer Hub 给 sandbox app 加了 staging redirect URI（HMRC 约 15 分钟后生效），并删了 production URI；我把 staging 的 HMRC_REDIRECT_URI 改成 staging 域名并重新部署。owner 授权把 PR #37（代理模式）合进 staging（`720bf8d`）。owner 在 staging 导入 514 行 CSV 失败 → 查日志是 POST /api/records 500：去重查询把所有 hash 塞进 URL 太长；另外错误提示在屏幕外、Revolut 导出误选 Orig amount（无符号）。修复为 PR #38，本地 600 行导入/重复导入通过，owner 授权合进 staging（`98a3ae8`）。
 **学到 / 决定**：本地测试数据量太小漏掉了 URL 长度问题；以后导入类功能要用几百行测。
