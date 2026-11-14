@@ -26,9 +26,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Sidebar — desktop only */}
       <aside className="hidden md:flex" style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
-        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '2.5rem', display: 'block' }}>
+        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '1rem', display: 'block' }}>
           EasyTax
         </Link>
+
+        {/* Language and Homepage live in the sidebar on desktop. They used to
+            float absolutely over the top-right of <main>, where they sat on top
+            of any page whose header has its own right-hand buttons (Records:
+            "Add a record", "Import CSV statement"). Here they cannot overlap
+            page content, and the language menu has room to open downwards. */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', padding: '0 1.5rem', marginBottom: '2rem' }}>
+          <LanguageSwitcher align="left" />
+          <HomepageLink compact />
+        </div>
 
         <SidebarNav />
 
@@ -64,11 +74,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Main content */}
       <main id="main-content" style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
-        {/* Desktop floating top-right controls */}
-        <div className="hidden md:flex" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30, gap: '0.5rem' }}>
-          <LanguageSwitcher />
-          <HomepageLink />
-        </div>
         {/* Mobile top spacer */}
         <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />
