@@ -43,8 +43,15 @@ export async function POST(req: NextRequest) {
         results.businessAdjustments = await submitAnnualAdjustments(nino, businessId, taxYear, businessAdjustments, token);
       }
     }
-    if (savingsAccounts?.length) {
-      results.savings = await submitSavingsIncome(nino, taxYear, savingsAccounts, token);
+    // Only forward accounts that actually carry an interest figure; an empty
+    // or NaN field would otherwise register an account with HMRC and then
+    // submit nothing against it.
+    const savings = (Array.isArray(savingsAccounts) ? savingsAccounts : [])
+      .filter((a: { accountName?: unknown; untaxedInterest?: unknown; taxedInterest?: unknown }) =>
+        typeof a?.accountName === 'string' && a.accountName.trim() !== '' &&
+        (Number.isFinite(a.untaxedInterest) || Number.isFinite(a.taxedInterest)));
+    if (savings.length) {
+      results.savings = await submitSavingsIncome(nino, taxYear, savings, token);
     }
     if (dividends?.foreignDividend?.length || dividends?.stockDividend) {
       results.dividends = await submitDividendsIncome(nino, taxYear, dividends, token);
