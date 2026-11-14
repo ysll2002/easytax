@@ -11,58 +11,12 @@ export const maxDuration = 120;
 // down: this harness makes 11 POSTs, 12 PUTs and 8 DELETEs including
 // `POST /organisations/vat/{vrn}/returns`. Against production that is filing
 // real tax data. The constant makes the intent explicit.
-import { HMRC_SANDBOX_BASE as BASE } from '@/lib/hmrc-env';
-
-type ApiResult = {
-  name: string;
-  endpoint: string;
-  method: string;
-  status: number | null;
-  ok: boolean;
-  data?: unknown;
-  error?: string;
-};
-
-async function call(
-  results: ApiResult[],
-  name: string,
-  endpoint: string,
-  method: string,
-  token: string,
-  fph: Record<string, string>,
-  opts: { accept?: string; body?: unknown; scenario?: string } = {},
-): Promise<unknown> {
-  const entry: ApiResult = { name, endpoint, method, status: null, ok: false };
-  results.push(entry);
-  // HMRC sandbox throttles around 60 req/min per token. Space requests out
-  // by ~900ms so 40+ calls fit inside maxDuration without triggering 429.
-  if (results.length > 1) await new Promise(r => setTimeout(r, 900));
-  try {
-    const res = await fetch(`${BASE}${endpoint}`, {
-      method,
-      signal: AbortSignal.timeout(8000),
-      headers: {
-        Authorization:  `Bearer ${token}`,
-        Accept:         opts.accept ?? 'application/vnd.hmrc.2.0+json',
-        'Content-Type': 'application/json',
-        ...fph,
-        ...(opts.scenario ? { 'Gov-Test-Scenario': opts.scenario } : {}),
-      },
-      ...(opts.body != null ? { body: JSON.stringify(opts.body) } : {}),
-    });
-    entry.status = res.status;
-    entry.ok     = res.ok || res.status === 204;
-    const text = await res.text().catch(() => '');
-    try { entry.data = JSON.parse(text); } catch { entry.data = text.slice(0, 200) || null; }
-    return entry.data;
-  } catch (err) {
-    entry.status = null;
-    entry.error  = err instanceof Error ? err.message : String(err);
-    return null;
-  }
-}
+import { HARNESS_BASE as BASE, call, productionGuard, type ApiResult } from '@/lib/hmrc-sandbox-harness';
 
 export async function GET() {
+  const guard = productionGuard();
+  if (guard) return guard;
+
   // Top-level catch so we always return valid JSON even if something crashes
   try {
     // One auth mode: a signed-in user, running the harness against their own

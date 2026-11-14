@@ -22,8 +22,10 @@ type TestReport = {
   debug: { hmrcEnv: string; baseUrl: string; tokenStart: string; tokenLen: number };
   context: {
     nino: string; ninoSource?: string;
-    vrn: string;  vrnSource?: string;
-    businessId: string; taxYear: string;
+    // The year-end & property suite has no VAT calls and so no VRN.
+    vrn?: string;  vrnSource?: string;
+    businessId: string; businessIdSource?: string;
+    taxYear: string;
   };
   results: ApiResult[];
 };
@@ -52,18 +54,28 @@ function hmrcErrorCode(r: ApiResult): string | null {
   return d.code ?? nested ?? null;
 }
 
+// Two suites because together they exceed the route's maxDuration. "core" is
+// everything the production application is approved for; "yearEndProperty"
+// is the evidence SDST needs before adding Property Business, BSAS and
+// Individual Losses to it.
+const SUITES = {
+  core:            { endpoint: '/api/hmrc/sandbox-test',                   label: 'Run All API Tests' },
+  yearEndProperty: { endpoint: '/api/hmrc/sandbox-test/year-end-property', label: 'Run Year-End & Property Tests' },
+} as const;
+type Suite = keyof typeof SUITES;
+
 export default function SandboxTestPage() {
-  const [running,  setRunning]  = useState(false);
+  const [running,  setRunning]  = useState<Suite | null>(null);
   const [report,   setReport]   = useState<TestReport | null>(null);
   const [error,    setError]    = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
 
-  async function runTests() {
-    setRunning(true);
+  async function runTests(suite: Suite) {
+    setRunning(suite);
     setError('');
     setReport(null);
     try {
-      const res  = await hmrcFetch('/api/hmrc/sandbox-test');
+      const res  = await hmrcFetch(SUITES[suite].endpoint);
       const text = await res.text();
       let data: TestReport & { error?: string };
       try {
@@ -77,7 +89,7 @@ export default function SandboxTestPage() {
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Request failed');
     } finally {
-      setRunning(false);
+      setRunning(null);
     }
   }
 
@@ -99,16 +111,30 @@ export default function SandboxTestPage() {
         </p>
       </div>
 
-      <button
-        onClick={runTests}
-        disabled={running}
-        className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-sm mb-8"
-        style={{ backgroundColor: running ? '#6B6256' : '#A04E1C', color: '#FDFCF8', border: 'none', cursor: running ? 'not-allowed' : 'pointer' }}
-      >
-        {running
-          ? <><Loader2 size={16} className="animate-spin" /> Running tests…</>
-          : <><Play size={14} /> Run All API Tests</>}
-      </button>
+      <div className="flex flex-col sm:flex-row gap-3 mb-3">
+        {(Object.keys(SUITES) as Suite[]).map(suite => (
+          <button
+            key={suite}
+            onClick={() => runTests(suite)}
+            disabled={running !== null}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-sm"
+            style={{
+              minHeight: 44,
+              backgroundColor: running ? '#6B6256' : suite === 'core' ? '#A04E1C' : '#1C1208',
+              color: '#FDFCF8', border: 'none', cursor: running ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {running === suite
+              ? <><Loader2 size={16} className="animate-spin" /> Running tests…</>
+              : <><Play size={14} /> {SUITES[suite].label}</>}
+          </button>
+        ))}
+      </div>
+      <p className="text-xs mb-8" style={{ color: '#6B6256' }}>
+        Year-end &amp; property covers Property Business 6.0, Business Source Adjustable Summary 7.0 and
+        Individual Losses 7.0. The sandbox application must be subscribed to all three first, or every
+        row returns 403.
+      </p>
 
       {error && (
         <div className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
@@ -138,9 +164,9 @@ export default function SandboxTestPage() {
               {([
                 ['nino', 'ninoSource'],
                 ['vrn', 'vrnSource'],
-                ['businessId', null],
+                ['businessId', 'businessIdSource'],
                 ['taxYear', null],
-              ] as const).map(([k, sourceKey]) => {
+              ] as const).filter(([k]) => report.context[k] !== undefined).map(([k, sourceKey]) => {
                 // Where the value came from, under the value itself. Without
                 // this, a stored VRN and a hardcoded default looked identical
                 // on this page — which is exactly how 2026-09-14 lost an hour
