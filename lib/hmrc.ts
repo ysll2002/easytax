@@ -2,7 +2,7 @@ import { cookies, headers } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { auth } from '@/auth';
 
-import { HMRC_API_BASE as BASE } from '@/lib/hmrc-env';
+import { HMRC_API_BASE as BASE, IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
 
 // Cache server outbound IP for 10 minutes to avoid fetching on every request
 let cachedVendorIp = { ip: '', expiresAt: 0 };
@@ -173,7 +173,21 @@ async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
     }
     throw new Error(`HMRC ${res.status}: ${body}`);
   }
-  return res.json();
+  // Some HMRC endpoints answer with an empty body — Submit a Final Declaration
+  // returns 204 No Content. res.json() throws on an empty body, which would
+  // turn a successful filing into an error, so read the text first.
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+/**
+ * Gov-Test-Scenario lets the sandbox simulate HMRC's error responses. It is
+ * sandbox-only by HMRC's rules, so it is dropped entirely in production
+ * whatever the caller passes.
+ */
+function testScenarioHeader(scenario?: string): Record<string, string> {
+  if (IS_HMRC_PRODUCTION || !scenario) return {};
+  return { 'Gov-Test-Scenario': scenario };
 }
 
 // ─── Business Details ─────────────────────────────────────────────────────────
@@ -281,11 +295,12 @@ export async function triggerCalculation(
   taxYear: string,
   token: string,
   calculationType: CalculationType = 'in-year',
+  scenario?: string,
 ) {
   return hmrcFetch(
     `/individuals/calculations/${nino}/self-assessment/${taxYear}/trigger/${calculationType}`,
     token,
-    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
+    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.8.0+json', ...testScenarioHeader(scenario) } },
   );
 }
 
@@ -294,21 +309,222 @@ export async function getCalculation(
   taxYear: string,
   calculationId: string,
   token: string,
+  scenario?: string,
 ) {
   return hmrcFetch(
     `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}`,
     token,
-    { headers: { Accept: 'application/vnd.hmrc.8.0+json' } },
+    { headers: { Accept: 'application/vnd.hmrc.8.0+json', ...testScenarioHeader(scenario) } },
   );
 }
 
 // ─── Final Declaration ────────────────────────────────────────────────────────
 
-// In Individual Calculations API v8.0, the final declaration *is* a calculation
-// triggered with calculationType=intent-to-finalise. There is no separate
-// confirm endpoint — the trigger itself locks in the figures for the year.
-export async function submitFinalDeclaration(nino: string, taxYear: string, token: string) {
-  return triggerCalculation(nino, taxYear, token, 'intent-to-finalise');
+// Individual Calculations (MTD) v8.0 makes the final declaration two calls:
+//   1. Trigger a calculation with calculationType=intent-to-finalise, and show
+//      the customer the result (getCalculation).
+//   2. Once they have read it and agreed to the declaration, submit it against
+//      that calculationId with calculationType=final-declaration.
+// The trigger alone files nothing. An earlier version of this function stopped
+// at step 1 and recorded the trigger as a filed final declaration.
+//
+// HMRC answers 204 No Content on success.
+export async function submitFinalDeclaration(
+  nino: string,
+  taxYear: string,
+  calculationId: string,
+  token: string,
+  scenario?: string,
+) {
+  return hmrcFetch(
+    `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}/final-declaration`,
+    token,
+    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.8.0+json', ...testScenarioHeader(scenario) } },
+  );
+}
+
+/** Obligations (MTD) v3.0 — the final declaration obligation for a tax year. */
+export type FinalDeclarationObligation = {
+  periodStartDate: string;
+  periodEndDate:   string;
+  dueDate:         string;
+  status:          'open' | 'fulfilled';
+  receivedDate?:   string;
+};
+
+export async function getFinalDeclarationObligations(
+  nino: string,
+  taxYear: string,
+  token: string,
+  scenario?: string,
+): Promise<FinalDeclarationObligation[]> {
+  const data = await hmrcFetch(
+    `/obligations/details/${nino}/crystallisation?taxYear=${taxYear}`,
+    token,
+    { headers: { Accept: 'application/vnd.hmrc.3.0+json', ...testScenarioHeader(scenario) } },
+  );
+  return data?.obligations ?? [];
+}
+
+// ─── End-of-year business figures ─────────────────────────────────────────────
+
+/** "2025-26" → the tax year's statutory dates, 6 April to 5 April. */
+export function taxYearDates(taxYear: string) {
+  const start = Number(taxYear.slice(0, 4));
+  return { startDate: `${start}-04-06`, endDate: `${start + 1}-04-05` };
+}
+
+/** Business Income Source Summary (BISS) v3.0 — the year's totals for one business. */
+export async function getSelfEmploymentBiss(
+  nino: string,
+  taxYear: string,
+  businessId: string,
+  token: string,
+  scenario?: string,
+) {
+  return hmrcFetch(
+    `/individuals/self-assessment/income-summary/${nino}/self-employment/${taxYear}/${businessId}`,
+    token,
+    { headers: { Accept: 'application/vnd.hmrc.3.0+json', ...testScenarioHeader(scenario) } },
+  );
+}
+
+/**
+ * Business Source Adjustable Summary (BSAS) v7.0. A summary has to be
+ * triggered for the business's accounting period before any accounting
+ * adjustment can be made against it. Returns { calculationId }.
+ */
+export async function triggerSelfEmploymentBsas(
+  nino: string,
+  taxYear: string,
+  businessId: string,
+  token: string,
+  scenario?: string,
+) {
+  return hmrcFetch(
+    `/individuals/self-assessment/adjustable-summary/${nino}/trigger`,
+    token,
+    {
+      method:  'POST',
+      headers: { Accept: 'application/vnd.hmrc.7.0+json', ...testScenarioHeader(scenario) },
+      body:    JSON.stringify({
+        accountingPeriod: taxYearDates(taxYear),
+        typeOfBusiness:   'self-employment',
+        businessId,
+      }),
+    },
+  );
+}
+
+export async function getSelfEmploymentBsas(
+  nino: string,
+  taxYear: string,
+  calculationId: string,
+  token: string,
+  scenario?: string,
+) {
+  return hmrcFetch(
+    `/individuals/self-assessment/adjustable-summary/${nino}/self-employment/${calculationId}/${taxYear}`,
+    token,
+    { headers: { Accept: 'application/vnd.hmrc.7.0+json', ...testScenarioHeader(scenario) } },
+  );
+}
+
+/**
+ * Adjustments are deltas against the summary, not replacement values: +200
+ * on turnover means "HMRC's figure plus £200". A summary can be adjusted only
+ * once. `{ zeroAdjustments: true }` records that the customer reviewed the
+ * figures and has nothing to change.
+ */
+export type BsasAdjustments =
+  | { zeroAdjustments: true }
+  | {
+      income?:    Partial<Record<'turnover' | 'other', number>>;
+      expenses?:  Partial<Record<
+        'costOfGoods' | 'wagesAndStaffCosts' | 'carVanTravelExpenses' | 'premisesRunningCosts'
+        | 'adminCosts' | 'advertisingCosts' | 'professionalFees' | 'otherExpenses', number>>;
+    };
+
+export async function submitSelfEmploymentBsasAdjustments(
+  nino: string,
+  taxYear: string,
+  calculationId: string,
+  adjustments: BsasAdjustments,
+  token: string,
+  scenario?: string,
+) {
+  return hmrcFetch(
+    `/individuals/self-assessment/adjustable-summary/${nino}/self-employment/${calculationId}/adjust/${taxYear}`,
+    token,
+    {
+      method:  'POST',
+      headers: { Accept: 'application/vnd.hmrc.7.0+json', ...testScenarioHeader(scenario) },
+      body:    JSON.stringify(adjustments),
+    },
+  );
+}
+
+// ─── Losses ───────────────────────────────────────────────────────────────────
+
+// Individual Losses (MTD) v6.0. Both list endpoints answer 404
+// MATCHING_RESOURCE_NOT_FOUND rather than an empty list when there is nothing
+// to show, so a 404 is reported as "none" here.
+function isNotFound(err: unknown) {
+  return err instanceof Error && err.message.startsWith('HMRC 404');
+}
+
+export type BroughtForwardLoss = {
+  lossId:                    string;
+  businessId:                string;
+  typeOfLoss:                string;
+  lossAmount:                number;
+  taxYearBroughtForwardFrom: string;
+};
+
+export async function listBroughtForwardLosses(
+  nino: string,
+  taxYear: string,
+  token: string,
+  scenario?: string,
+): Promise<BroughtForwardLoss[]> {
+  try {
+    const data = await hmrcFetch(
+      `/individuals/losses/${nino}/brought-forward-losses/tax-year/${taxYear}`,
+      token,
+      { headers: { Accept: 'application/vnd.hmrc.6.0+json', ...testScenarioHeader(scenario) } },
+    );
+    return data?.losses ?? [];
+  } catch (err) {
+    if (isNotFound(err)) return [];
+    throw err;
+  }
+}
+
+export type LossClaim = {
+  claimId:           string;
+  businessId:        string;
+  typeOfLoss:        string;
+  typeOfClaim:       string;
+  taxYearClaimedFor: string;
+};
+
+export async function listLossClaims(
+  nino: string,
+  taxYear: string,
+  token: string,
+  scenario?: string,
+): Promise<LossClaim[]> {
+  try {
+    const data = await hmrcFetch(
+      `/individuals/losses/${nino}/loss-claims/tax-year/${taxYear}`,
+      token,
+      { headers: { Accept: 'application/vnd.hmrc.6.0+json', ...testScenarioHeader(scenario) } },
+    );
+    return data?.claims ?? [];
+  } catch (err) {
+    if (isNotFound(err)) return [];
+    throw err;
+  }
 }
 
 // ─── Annual Adjustments ───────────────────────────────────────────────────────
@@ -341,14 +557,69 @@ export async function submitAnnualAdjustments(
   );
 }
 
-export type SavingsIncome = { accountId?: string; accountName: string; grossInterest: number };
+// ─── UK Savings Interest — Individuals Savings Income (MTD) v2.0 ─────────────
+//
+// This used to PUT a list of accounts to /individuals/income-received/savings/,
+// the path of the old consolidated "Individuals Income Received" API that HMRC
+// has since split up. It is not part of any API we are subscribed to. The
+// current API is account-based: a UK savings account is registered once and
+// gets an HMRC savingsAccountId, and interest is then submitted per account per
+// tax year. The sandbox harness (app/api/hmrc/sandbox-test) exercised exactly
+// these three endpoints, which is the testing HMRC approved us on.
+
+const SAVINGS_ACCEPT = { Accept: 'application/vnd.hmrc.2.0+json' };
+
+export type SavingsIncome = {
+  accountName: string;
+  // Interest paid gross, which is how UK banks have paid it since April 2016.
+  untaxedInterest?: number;
+  // Interest paid with tax already deducted (rare now; some older bonds).
+  taxedInterest?: number;
+};
+
+async function listUkSavingsAccounts(nino: string, token: string) {
+  try {
+    const data = await hmrcFetch(`/individuals/savings-income/uk-accounts/${nino}`, token, { headers: SAVINGS_ACCEPT });
+    return (data?.savingsAccounts ?? []) as { savingsAccountId: string; accountName: string }[];
+  } catch (err) {
+    // HMRC answers 404 when the customer has no UK savings accounts yet.
+    if (err instanceof Error && err.message.startsWith('HMRC 404')) return [];
+    throw err;
+  }
+}
+
+// Reuse the account if one with this name is already registered: adding a
+// second one with the same name is rejected, and registering a fresh account
+// on every submission would litter the customer's HMRC record.
+async function ensureUkSavingsAccount(nino: string, accountName: string, token: string) {
+  const existing = (await listUkSavingsAccounts(nino, token))
+    .find(a => a.accountName.trim().toLowerCase() === accountName.trim().toLowerCase());
+  if (existing) return existing.savingsAccountId;
+
+  const created = await hmrcFetch(`/individuals/savings-income/uk-accounts/${nino}`, token, {
+    method:  'POST',
+    headers: SAVINGS_ACCEPT,
+    body:    JSON.stringify({ accountName }),
+  });
+  if (!created?.savingsAccountId) throw new Error('HMRC did not return a savingsAccountId');
+  return created.savingsAccountId as string;
+}
 
 export async function submitSavingsIncome(nino: string, taxYear: string, accounts: SavingsIncome[], token: string) {
-  return hmrcFetch(
-    `/individuals/income-received/savings/${nino}/${taxYear}`,
-    token,
-    { method: 'PUT', body: JSON.stringify({ savingsAccounts: accounts }) },
-  );
+  const results = [];
+  for (const acc of accounts) {
+    const savingsAccountId = await ensureUkSavingsAccount(nino, acc.accountName, token);
+    const body: Record<string, number> = {};
+    if (acc.untaxedInterest !== undefined) body.untaxedUkInterest = acc.untaxedInterest;
+    if (acc.taxedInterest   !== undefined) body.taxedUkInterest   = acc.taxedInterest;
+    await hmrcFetch(`/individuals/savings-income/uk-accounts/${nino}/${taxYear}/${savingsAccountId}`, token, {
+      method:  'PUT',
+      headers: SAVINGS_ACCEPT,
+      body:    JSON.stringify(body),
+    });
+    results.push({ accountName: acc.accountName, savingsAccountId });
+  }
+  return results;
 }
 
 export type ForeignDividendEntry = {
@@ -384,13 +655,22 @@ export async function submitDividendsIncome(
 export async function submitCharitableGiving(
   nino: string,
   taxYear: string,
-  data: { giftAidPayments?: { totalAmount?: number }; gifts?: { totalAmount?: number } },
+  data: { giftAidPayments?: { totalAmount?: number; oneOffAmount?: number } },
   token: string,
 ) {
+  // Individuals Reliefs (MTD) v3.0. This call used to send no Accept header and
+  // so inherited hmrcFetch's v2.0 default — and Reliefs v2 retired on
+  // 16 October 2026. (The `gifts.totalAmount` field the type used to allow is
+  // not in HMRC's schema; `gifts` takes landAndBuildings / sharesOrSecurities /
+  // nonUkCharities, none of which the UI collects.)
   return hmrcFetch(
     `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`,
     token,
-    { method: 'PUT', body: JSON.stringify(data) },
+    {
+      method:  'PUT',
+      headers: { Accept: 'application/vnd.hmrc.3.0+json' },
+      body:    JSON.stringify(data),
+    },
   );
 }
 

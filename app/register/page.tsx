@@ -59,19 +59,32 @@ export default function Register() {
     setLoading(true);
     track('register_attempted', { method: 'email' });
     trackClient('register_started', { method: 'email' });
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        // Lets the server-side register_completed event join back to this
-        // browser's earlier anonymous page views.
-        anonId: getStoredAnonId(),
-      }),
-    });
-    const data = await res.json();
+    // An unhandled server error comes back as a 500 with an empty body, and a
+    // network failure rejects the fetch outright. Either one used to throw
+    // here, leaving the button disabled with no message — the user could
+    // neither see what happened nor try again.
+    let res: Response;
+    let data: { error?: string; code?: string } = {};
+    try {
+      res = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          // Lets the server-side register_completed event join back to this
+          // browser's earlier anonymous page views.
+          anonId: getStoredAnonId(),
+        }),
+      });
+      data = await res.json().catch(() => ({}));
+    } catch {
+      setError(t('registrationFailed'));
+      track('register_failed', { method: 'email', reason: 'network_error' });
+      setLoading(false);
+      return;
+    }
 
     if (!res.ok) {
       setError(data.error || t('registrationFailed'));

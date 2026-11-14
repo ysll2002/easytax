@@ -1,9 +1,11 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { assertSupabaseAllowed } from '@/lib/supabase-env';
 
 let _client: SupabaseClient | undefined;
 
 function getClient(): SupabaseClient {
   if (!_client) {
+    assertSupabaseAllowed(process.env.NEXT_PUBLIC_SUPABASE_URL!);
     _client = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
