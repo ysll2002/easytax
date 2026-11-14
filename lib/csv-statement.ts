@@ -75,6 +75,20 @@ export type ColumnMap = {
 
 const has = (h: string, ...words: string[]) => words.some(w => h.includes(w));
 
+// The signed amount column. Some banks export several: Revolut has
+// "Orig amount" (in the original currency, unsigned on some exports),
+// "Amount" and "Total amount" (signed, in the account currency). Prefer the
+// plain one.
+function amountColumn(h: string[]): number {
+  const exact = ['amount', 'amount (gbp)', 'amount(gbp)', 'total amount', 'value', 'transaction amount'];
+  for (const name of exact) {
+    const i = h.findIndex(x => x.trim() === name);
+    if (i >= 0) return i;
+  }
+  const i = h.findIndex(x => x.includes('amount') && !x.includes('orig') && !x.includes('fee'));
+  return i >= 0 ? i : h.findIndex(x => x.includes('amount') || x.includes('value'));
+}
+
 // Best guess from the header row; the customer can change every column.
 export function guessColumns(header: string[]): ColumnMap {
   const h = header.map(x => x.toLowerCase());
@@ -84,7 +98,7 @@ export function guessColumns(header: string[]): ColumnMap {
   return {
     date:        find(x => has(x, 'date')),
     description: find(x => has(x, 'description', 'details', 'narrative', 'merchant', 'name', 'reference', 'payee', 'memo')),
-    amount:      moneyIn >= 0 && moneyOut >= 0 ? -1 : find(x => has(x, 'amount', 'value')),
+    amount:      moneyIn >= 0 && moneyOut >= 0 ? -1 : amountColumn(h),
     moneyIn,
     moneyOut,
   };
