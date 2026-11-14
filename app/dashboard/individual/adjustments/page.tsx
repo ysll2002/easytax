@@ -91,7 +91,9 @@ export default function AdjustmentsPage() {
         balancingCharge:      parseFloat(balancingCharge || '0') || undefined,
         goodsAndServicesOwnUse: parseFloat(goodsOwnUse  || '0') || undefined,
       },
-      savingsAccounts: savingsInterest ? [{ accountName: 'Savings', grossInterest: parseFloat(savingsInterest) }] : [],
+      // One figure, entered gross, is how UK banks pay interest — so it goes to
+      // HMRC as untaxed interest on a single account registered as "Savings".
+      savingsAccounts: savingsInterest ? [{ accountName: 'Savings', untaxedInterest: parseFloat(savingsInterest) }] : [],
       dividends: (() => {
         const fAmt   = parseFloat(foreignAmount || '0') || 0;
         const fTax   = parseFloat(foreignTax    || '0') || 0;
