@@ -15,6 +15,31 @@
 
 ---
 
+## 2026-11-14（owner 实时对话 · 年终 final declaration sandbox）
+**今日执行**：owner 要求「build in sandbox now」。分支 `agent/2026-11-14-year-end-sandbox` → [PR #34](https://github.com/ysll2002/easytax/pull/34)（对 staging，未合）。新页面 `/dashboard/individual/year-end`，按 HMRC 年终流程分 5 步：
+1. 读取 HMRC 现有数据：Obligations 3.0、BISS 3.0、Losses 6.0。
+2. BSAS 7.0 会计调整。
+3. 链到现有的年度调整页。
+4. Calculations 8.0 跑 intent-to-finalise，显示 errors/warnings/info。
+5. 声明勾选后提交 final declaration。
+
+API 路由 `/api/hmrc/year-end` 在 HMRC_ENV=production 时一律 403；生产环境页面显示「请用其他软件」；dashboard 入口只在非生产环境出现。
+**修了一个真 bug**：原来的 `submitFinalDeclaration` 只触发 intent-to-finalise，旧路由还把它当已提交写进 sa_filings。现在改成调用 `…/{calculationId}/final-declaration`（返回 204）；`hmrcFetch` 现在接受空的 2xx 响应体。旧路由已删除（没有调用方）。
+**验证**：
+- tsc 和 next build 通过。
+- 10 个新调用用脚本对过 HMRC 的 OAS 文件。
+- 用临时路由渲染页面：axe 0 违规，375px 不横向滚动。
+- **没有在 sandbox 端到端跑过**：本地 clone 没有 AUTH_SECRET，所以登录后的页面在本地都跑不了。要在 PR 的 Vercel preview（sandbox）上测。
+
+**owner 要做**：
+- 在 Developer Hub 给 sandbox app 订阅 BSAS 7.0、Individual Losses 6.0、BISS 3.0。
+- 在 preview 上用 sandbox 测试用户走一遍。
+
+**学到 / 决定**：
+- 发现另一个已有 bug：`submitSavingsIncome` 用的路径 `/individuals/income-received/savings/...` 不在 Savings Income API 2.0 里，存款利息提交大概率失败。只记录在 PR 里，没修。
+- HMRC API 现状：Calculations 9.0、Losses 7.0、BSAS 7.0 都是 beta，我们继续用 8.0 / 6.0 / 7.0。
+- 年终的 production 审批要等 Paul 的回复，问的是算 extension 还是新申请。
+
 ## 2026-11-13（追加 · staging 同步）
 **今日执行**：owner 明确授权，把 `staging` 快进到 `main`（`04ba5ae`→`a2d8b4c`，staging 上没有 main 缺的 commit，直接 fast-forward，没有 force）。Vercel preview 构建成功，staging.easytax.vip 已指向新部署 `dpl_GW9PGz8y…`。staging 有 Vercel 登录保护，curl 看不到页面内容。本地 clone 在 staging，干净，和 origin 一致。
 **学到 / 决定**：这是一次性授权，不改护栏，以后 push staging 仍需 owner 点头。
