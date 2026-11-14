@@ -60,7 +60,9 @@
 
 ## Deployment 状态
 
-- Production = `main` HEAD `a2d8b4c`（PR #32），2026-11-13 上线。staging 已快进到同一个 commit `a2d8b4c`（2026-11-13，owner 授权），两者一致。
+- Production = staging = `bce76a3`（PR #34，2026-11-14 上线）。
+- **staging 现在用独立数据库**（2026-11-14）：Supabase 项目 `EasyTax-Staging`（ref `ufeptuqrlzdoamlzvagw`，eu-west-1）。Vercel「Preview (staging)」的 NEXT_PUBLIC_SUPABASE_URL / ANON_KEY / SUPABASE_SERVICE_ROLE_KEY 都指向它；production 的变量没动。表结构已对齐 production（只增不删，保留了 5 月的 2 个测试账号）。owner 为腾出免费名额暂停了另一个组织里的项目。注意：production 加新表/列时 staging 要手动同步，否则 staging 会出错。
+- 之前 PR #35 的护栏会让 staging **构建失败**（不只是运行时 500），11-14 的两次 staging 部署都因此失败；换完变量后重新部署成功。
 - **production 只从 main 构建**。本 agent 的 PR 都对 `staging`，要上线还需 staging→main（stg-008）。
 - 另一系统在 main 上挂起的 PR：#21、#22、#23（已 3 周多）。
 

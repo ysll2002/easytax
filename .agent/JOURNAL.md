@@ -15,6 +15,13 @@
 
 ---
 
+## 2026-11-14（追加 · staging 独立数据库）
+**今日执行**：owner 在 staging 注册报 500。原因：staging 的 Vercel 变量还指向 production 的 Supabase，PR #35 的护栏拒绝连接（staging 构建也因此失败，staging.easytax.vip 一直停在早上的版本）。owner 授权后：恢复 `EasyTax-Staging` 项目（owner 先暂停了另一个免费项目）→ 用只增不删的 migration 把表结构对齐 production → 用 Vercel CLI 把 staging 分支的 3 个 Supabase 变量换成 staging 项目的（service_role key 由 supabase CLI 直接管道进 Vercel，没出现在输出里）→ 重新部署 → 用 example.com 测试账号注册成功，确认只写进 staging 库、production 库无此账号；production 页面正常。
+**下一步**：owner 在 staging 上测年终申报流程（BSAS/Losses/BISS 已订阅）。
+**学到 / 决定**：production 新增表/列后要同步到 staging 库。
+
+---
+
 ## 2026-11-14（追加 · PR #34 上线，owner 授权）
 **今日执行**：owner 明确要求「合 PR #34 进 staging，再把 staging 合进 main」。这是一次性授权，不改护栏。
 - **合并前发现冲突**：另一个会话今天直接往 main 合了 PR #33（存款利息改走 Savings Income 2.0 的 UK 账户流程、Gift Aid 改用 Reliefs 3.0、hmrcFetch 接受空响应体）和 PR #35（staging/production 数据库隔离、注册页不再卡住）。PR #33 和我 PR #34 第二个 commit 做的是同一件事。
