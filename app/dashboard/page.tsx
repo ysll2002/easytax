@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { ChevronRight, User, Building2, RefreshCw } from 'lucide-react';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
-import ActivationChecklist from '@/components/ActivationChecklist';
 import FilingStatus from '@/components/FilingStatus';
+import { IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
 
 /** Whether this address is already on the launch list, so the banner does not
  *  offer a subscription somebody has already taken. Any failure reads as "not
@@ -23,43 +23,16 @@ async function isOnLaunchList(email: string | null | undefined): Promise<boolean
   }
 }
 
-/** Which setup steps this user has completed. Errors are treated as "not
- *  connected": a failed lookup should show an extra nudge, never blank the
- *  dashboard. */
-async function getActivationState(userId: string | undefined) {
-  const disconnected = { hmrcConnected: false, hasRecords: false };
-  if (!userId) return disconnected;
-
-  // The try/catch is the part that makes the comment above true. Supabase
-  // reports a failed *query* in the returned `error`, but supabaseAdmin also
-  // *throws* when the credentials are absent entirely (see lib/supabase-admin),
-  // and an unhandled throw here takes the whole dashboard down with a
-  // server-side exception rather than showing the setup nudge.
-  try {
-    const [hmrc, records] = await Promise.all([
-      supabase.from('hmrc_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
-      supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', userId).is('client_id', null),
-    ]);
-
-    return {
-      hmrcConnected: (hmrc.count ?? 0) > 0,
-      hasRecords: (records.count ?? 0) > 0,
-    };
-  } catch (err) {
-    console.error('[dashboard] activation lookup failed', err);
-    return disconnected;
-  }
-}
-
 export default async function DashboardHome() {
   const session = await auth();
   const t = await getTranslations('dashboard.home');
   const name = session?.user.name ?? session?.user.email ?? 'there';
   const firstName = name.split(' ')[0];
-  const [activation, onLaunchList] = await Promise.all([
-    getActivationState(session?.user?.profileId),
-    isOnLaunchList(session?.user?.email),
-  ]);
+  // The "filing is not open yet" banner only applies where filing really
+  // is not open (the sandbox / staging); production filing opened on
+  // 2026-11-11. And once someone has asked to be emailed, it has done its
+  // job and is not shown again.
+  const showFilingStatus = !IS_HMRC_PRODUCTION && !(await isOnLaunchList(session?.user?.email));
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
@@ -70,16 +43,7 @@ export default async function DashboardHome() {
         <p style={{ color: '#6B6256', fontSize: '0.9rem' }}>{t('question')}</p>
       </div>
 
-      {/* Above the checklist deliberately. The checklist asks the user to do
-          things; this says what those things will and will not get them today.
-          Putting the ask first and the caveat underneath is how people end up
-          feeling misled by a product that was only ever early. */}
-      <FilingStatus initiallySubscribed={onLaunchList} />
-
-      <ActivationChecklist
-        hmrcConnected={activation.hmrcConnected}
-        hasRecords={activation.hasRecords}
-      />
+      {showFilingStatus && <FilingStatus />}
 
       <div className="space-y-4 mb-8">
         {/* Self Assessment track */}
