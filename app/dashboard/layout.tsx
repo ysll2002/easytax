@@ -65,8 +65,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Main content */}
       <main id="main-content" style={{ flex: 1, overflow: 'auto', paddingTop: 0, position: 'relative' }}>
-        {/* Desktop floating top-right controls */}
-        <div className="hidden md:flex" style={{ position: 'absolute', top: '1.25rem', right: '1.5rem', zIndex: 30, gap: '0.5rem' }}>
+        {/* Desktop top-right controls. In their own row, not floating over
+            the page: floating, they covered page-level buttons in the top
+            right (the Records page's "Import CSV statement", for one). */}
+        <div className="hidden md:flex" style={{ justifyContent: 'flex-end', alignItems: 'center', gap: '0.5rem', padding: '1rem 1.5rem 0' }}>
           <LanguageSwitcher />
           <HomepageLink />
         </div>
