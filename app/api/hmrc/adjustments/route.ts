@@ -4,7 +4,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import {
   getValidToken,
   submitAnnualAdjustments,
-  submitUkSavingsInterest,
+  submitSavingsIncome,
   submitDividendsIncome,
   submitCharitableGiving,
 } from '@/lib/hmrc';
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
   const profileId = session.user.profileId;
   const body = await req.json();
-  const { taxYear, businessAdjustments, savingsInterest, dividends, giftAid } = body;
+  const { taxYear, businessAdjustments, savingsAccounts, dividends, giftAid } = body;
 
   if (typeof taxYear !== 'string' || !/^\d{4}-\d{2}$/.test(taxYear)) {
     return NextResponse.json({ error: 'Tax year must look like 2025-26.' }, { status: 400 });
@@ -47,8 +47,15 @@ export async function POST(req: NextRequest) {
         results.businessAdjustments = await submitAnnualAdjustments(nino, businessId, taxYear, businessAdjustments, token);
       }
     }
-    if (typeof savingsInterest === 'number' && Number.isFinite(savingsInterest) && savingsInterest > 0) {
-      results.savings = await submitUkSavingsInterest(nino, taxYear, savingsInterest, token);
+    // Only forward accounts that actually carry an interest figure; an empty
+    // or NaN field would otherwise register an account with HMRC and then
+    // submit nothing against it.
+    const savings = (Array.isArray(savingsAccounts) ? savingsAccounts : [])
+      .filter((a: { accountName?: unknown; untaxedInterest?: unknown; taxedInterest?: unknown }) =>
+        typeof a?.accountName === 'string' && a.accountName.trim() !== '' &&
+        (Number.isFinite(a.untaxedInterest) || Number.isFinite(a.taxedInterest)));
+    if (savings.length) {
+      results.savings = await submitSavingsIncome(nino, taxYear, savings, token);
     }
     if (dividends?.foreignDividend?.length || dividends?.stockDividend) {
       results.dividends = await submitDividendsIncome(nino, taxYear, dividends, token);

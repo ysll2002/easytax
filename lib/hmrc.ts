@@ -557,75 +557,69 @@ export async function submitAnnualAdjustments(
   );
 }
 
-// ─── UK savings interest ──────────────────────────────────────────────────────
-
-// Individuals Savings Income (MTD) v2.0. UK interest is recorded per savings
-// account in two steps: add an account once (it gets a savingsAccountId that
-// lasts across tax years), then PUT that account's annual summary for each
-// tax year.
+// ─── UK Savings Interest — Individuals Savings Income (MTD) v2.0 ─────────────
 //
-// This replaces a single PUT to /individuals/income-received/savings/..., a
-// path the API does not have, so savings interest entered in EasyTax never
-// reached HMRC.
-//
-// EasyTax asks for one total, so it keeps that total in one account of its
-// own, found again by name on later submissions instead of adding a new
-// account every time.
-const EASYTAX_SAVINGS_ACCOUNT_NAME = 'EasyTax savings interest';
+// This used to PUT a list of accounts to /individuals/income-received/savings/,
+// the path of the old consolidated "Individuals Income Received" API that HMRC
+// has since split up. It is not part of any API we are subscribed to. The
+// current API is account-based: a UK savings account is registered once and
+// gets an HMRC savingsAccountId, and interest is then submitted per account per
+// tax year. The sandbox harness (app/api/hmrc/sandbox-test) exercised exactly
+// these three endpoints, which is the testing HMRC approved us on.
 
-async function findOrAddEasyTaxSavingsAccount(nino: string, token: string): Promise<string> {
-  let accounts: { savingsAccountId: string; accountName?: string }[] = [];
+const SAVINGS_ACCEPT = { Accept: 'application/vnd.hmrc.2.0+json' };
+
+export type SavingsIncome = {
+  accountName: string;
+  // Interest paid gross, which is how UK banks have paid it since April 2016.
+  untaxedInterest?: number;
+  // Interest paid with tax already deducted (rare now; some older bonds).
+  taxedInterest?: number;
+};
+
+async function listUkSavingsAccounts(nino: string, token: string) {
   try {
-    const data = await hmrcFetch(
-      `/individuals/savings-income/uk-accounts/${nino}`,
-      token,
-      { headers: { Accept: 'application/vnd.hmrc.2.0+json' } },
-    );
-    accounts = data?.savingsAccounts ?? [];
+    const data = await hmrcFetch(`/individuals/savings-income/uk-accounts/${nino}`, token, { headers: SAVINGS_ACCEPT });
+    return (data?.savingsAccounts ?? []) as { savingsAccountId: string; accountName: string }[];
   } catch (err) {
-    // No accounts yet: the list endpoint answers 404 rather than [].
-    if (!(err instanceof Error && err.message.startsWith('HMRC 404'))) throw err;
+    // HMRC answers 404 when the customer has no UK savings accounts yet.
+    if (err instanceof Error && err.message.startsWith('HMRC 404')) return [];
+    throw err;
   }
-
-  const existing = accounts.find(a => a.accountName === EASYTAX_SAVINGS_ACCOUNT_NAME);
-  if (existing) return existing.savingsAccountId;
-
-  const added = await hmrcFetch(
-    `/individuals/savings-income/uk-accounts/${nino}`,
-    token,
-    {
-      method:  'POST',
-      headers: { Accept: 'application/vnd.hmrc.2.0+json' },
-      body:    JSON.stringify({ accountName: EASYTAX_SAVINGS_ACCOUNT_NAME }),
-    },
-  );
-  if (!added?.savingsAccountId) throw new Error('HMRC did not return a savings account ID.');
-  return added.savingsAccountId as string;
 }
 
-/**
- * Records the year's UK bank and building society interest. Most UK interest
- * has been paid without tax taken off since April 2016, so it goes in as
- * untaxed interest. Sending the account's annual summary replaces it, so
- * re-submitting a corrected total is safe.
- */
-export async function submitUkSavingsInterest(
-  nino: string,
-  taxYear: string,
-  untaxedUkInterest: number,
-  token: string,
-) {
-  const savingsAccountId = await findOrAddEasyTaxSavingsAccount(nino, token);
-  await hmrcFetch(
-    `/individuals/savings-income/uk-accounts/${nino}/${taxYear}/${savingsAccountId}`,
-    token,
-    {
+// Reuse the account if one with this name is already registered: adding a
+// second one with the same name is rejected, and registering a fresh account
+// on every submission would litter the customer's HMRC record.
+async function ensureUkSavingsAccount(nino: string, accountName: string, token: string) {
+  const existing = (await listUkSavingsAccounts(nino, token))
+    .find(a => a.accountName.trim().toLowerCase() === accountName.trim().toLowerCase());
+  if (existing) return existing.savingsAccountId;
+
+  const created = await hmrcFetch(`/individuals/savings-income/uk-accounts/${nino}`, token, {
+    method:  'POST',
+    headers: SAVINGS_ACCEPT,
+    body:    JSON.stringify({ accountName }),
+  });
+  if (!created?.savingsAccountId) throw new Error('HMRC did not return a savingsAccountId');
+  return created.savingsAccountId as string;
+}
+
+export async function submitSavingsIncome(nino: string, taxYear: string, accounts: SavingsIncome[], token: string) {
+  const results = [];
+  for (const acc of accounts) {
+    const savingsAccountId = await ensureUkSavingsAccount(nino, acc.accountName, token);
+    const body: Record<string, number> = {};
+    if (acc.untaxedInterest !== undefined) body.untaxedUkInterest = acc.untaxedInterest;
+    if (acc.taxedInterest   !== undefined) body.taxedUkInterest   = acc.taxedInterest;
+    await hmrcFetch(`/individuals/savings-income/uk-accounts/${nino}/${taxYear}/${savingsAccountId}`, token, {
       method:  'PUT',
-      headers: { Accept: 'application/vnd.hmrc.2.0+json' },
-      body:    JSON.stringify({ untaxedUkInterest: Math.round(untaxedUkInterest * 100) / 100 }),
-    },
-  );
-  return { savingsAccountId };
+      headers: SAVINGS_ACCEPT,
+      body:    JSON.stringify(body),
+    });
+    results.push({ accountName: acc.accountName, savingsAccountId });
+  }
+  return results;
 }
 
 export type ForeignDividendEntry = {
@@ -661,13 +655,22 @@ export async function submitDividendsIncome(
 export async function submitCharitableGiving(
   nino: string,
   taxYear: string,
-  data: { giftAidPayments?: { totalAmount?: number }; gifts?: { totalAmount?: number } },
+  data: { giftAidPayments?: { totalAmount?: number; oneOffAmount?: number } },
   token: string,
 ) {
+  // Individuals Reliefs (MTD) v3.0. This call used to send no Accept header and
+  // so inherited hmrcFetch's v2.0 default — and Reliefs v2 retired on
+  // 16 October 2026. (The `gifts.totalAmount` field the type used to allow is
+  // not in HMRC's schema; `gifts` takes landAndBuildings / sharesOrSecurities /
+  // nonUkCharities, none of which the UI collects.)
   return hmrcFetch(
     `/individuals/reliefs/charitable-giving/${nino}/${taxYear}`,
     token,
-    { method: 'PUT', body: JSON.stringify(data) },
+    {
+      method:  'PUT',
+      headers: { Accept: 'application/vnd.hmrc.3.0+json' },
+      body:    JSON.stringify(data),
+    },
   );
 }
 
