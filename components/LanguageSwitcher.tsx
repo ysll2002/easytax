@@ -5,7 +5,10 @@ import { setLocaleAction } from '@/lib/locale-actions';
 import { locales, localeNames, localeFlags, type Locale } from '@/i18n/routing';
 import { Check } from 'lucide-react';
 
-export default function LanguageSwitcher() {
+// `align` is the edge the menu lines up with. 'right' suits a switcher at the
+// right of a header; at the left of the dashboard sidebar a right-aligned
+// 160px menu would open off the left edge of the screen.
+export default function LanguageSwitcher({ align = 'right' }: { align?: 'left' | 'right' } = {}) {
   const current = useLocale() as Locale;
   const t = useTranslations('nav');
   const [open, setOpen] = useState(false);
@@ -47,7 +50,7 @@ export default function LanguageSwitcher() {
           role="menu"
           className="absolute mt-2 rounded-xl shadow-lg overflow-hidden"
           style={{
-            right: 0,
+            ...(align === 'left' ? { left: 0 } : { right: 0 }),
             backgroundColor: '#FDFCF8',
             border: '1px solid #DDD5C8',
             minWidth: 160,
