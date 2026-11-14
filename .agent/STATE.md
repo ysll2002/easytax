@@ -72,6 +72,8 @@
 
 ## 在飞的分支
 
+- [PR #36](https://github.com/ysll2002/easytax/pull/36)（2026-11-14，**待 owner 合进 staging**）：移除 Plaid 银行连接（没有 AISP 牌照），改为手动录入 + CSV 对账单导入，新表 `business_records`（staging 库已建，**production 库合并上线前要先跑 migration**）。季度申报、公司 P&L/资产负债表改从记录汇总。7 种语言的营销页、邮件、条款、隐私、trust、无障碍声明里的 Open Banking 说法都已删。本地连 staging 库端到端测过；axe 自动扫描没跑（加载 CDN 脚本被拦）。
+
 - [PR #34](https://github.com/ysll2002/easytax/pull/34)（2026-11-14，**已合进 staging 并上线**，main = staging = `bce76a3`，owner 授权；main 里还有另一个会话合的 PR #33 和 #35）：年终 final declaration 流程，**只在 sandbox**，生产环境 403。修了 submitFinalDeclaration 只 trigger、不 submit 的 bug。待办：owner 给 sandbox app 订阅 BSAS 7.0 / Losses 6.0 / BISS 3.0，然后在 preview 上端到端测。存款利息的修复最终用的是 PR #33 的实现（已在 main）。PR #34 只额外加了：年度调整页接收 year-end 页传来的税年。
 - [PR #32](https://github.com/ysll2002/easytax/pull/32) **已合进 main 并上线**（`a2d8b4c`，2026-11-13，owner 授权）：WCAG 修复 + https://easytax.vip/accessibility。两张 HMRC 表和 Paul 回信已同步更新。待办：线上点一遍季度申报的核对步骤；VAT 核对步骤、屏幕阅读器测试、dashboard 非文本对比度要在 2027-03-31 前完成（声明里写了这个日期）。staging 已于同日快进到 `a2d8b4c`，和 main 一致（owner 授权）。
 

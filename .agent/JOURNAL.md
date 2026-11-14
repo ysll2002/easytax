@@ -15,6 +15,12 @@
 
 ---
 
+## 2026-11-14（追加 · 移除银行连接，PR #36）
+**今日执行**：owner 说没有 AISP 牌照，要求移除 connect bank。发现季度申报的数字只能从 Plaid 银行流水来，单纯删按钮会让用户无法申报，于是问 owner：选了「手动录入 + CSV 导入」，并且测完后上 production。做了：`business_records` 表 + `/api/records` + 记录页（手动录入、CSV 导入带列映射和去重、分类保存、撤销、AI 聊天也会保存）；季度汇总和公司报表改读记录；删 Plaid 代码和依赖；/dashboard/banking 重定向；7 种语言 + 营销页 + 条款/隐私/trust/无障碍声明去掉 Open Banking 说法；数据导出加记录。本地连 staging 库登录测试全部通过，测试账号已删。PR #36 对 staging，未合。
+**学到 / 决定**：没有 AISP 牌照 → 不连银行（已写进 BACKLOG 禁区和 memory）。production 合并前要先在 production 库跑 migration。
+
+---
+
 ## 2026-11-14（追加 · staging 独立数据库）
 **今日执行**：owner 在 staging 注册报 500。原因：staging 的 Vercel 变量还指向 production 的 Supabase，PR #35 的护栏拒绝连接（staging 构建也因此失败，staging.easytax.vip 一直停在早上的版本）。owner 授权后：恢复 `EasyTax-Staging` 项目（owner 先暂停了另一个免费项目）→ 用只增不删的 migration 把表结构对齐 production → 用 Vercel CLI 把 staging 分支的 3 个 Supabase 变量换成 staging 项目的（service_role key 由 supabase CLI 直接管道进 Vercel，没出现在输出里）→ 重新部署 → 用 example.com 测试账号注册成功，确认只写进 staging 库、production 库无此账号；production 页面正常。
 **下一步**：owner 在 staging 上测年终申报流程（BSAS/Losses/BISS 已订阅）。
