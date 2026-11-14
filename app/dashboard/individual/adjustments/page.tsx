@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { hmrcFetch } from '@/lib/hmrc-client';
 
 function currentTaxYear() {
@@ -58,7 +58,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export default function AdjustmentsPage() {
   const router    = useRouter();
-  const taxYear   = currentTaxYear();
+  // The year-end page links here with ?taxYear=2025-26&from=year-end, because
+  // year-end figures belong to the year being finalised, not the current one.
+  const params    = useSearchParams();
+  const yearParam = params.get('taxYear');
+  const taxYear   = yearParam && /^\d{4}-\d{2}$/.test(yearParam) ? yearParam : currentTaxYear();
+  const fromYearEnd = params.get('from') === 'year-end';
+  const backHref  = fromYearEnd ? '/dashboard/individual/year-end' : '/dashboard/individual/tasks';
   const [submitting, setSubmitting] = useState(false);
   const [error, setError]           = useState('');
 
@@ -91,7 +97,7 @@ export default function AdjustmentsPage() {
         balancingCharge:      parseFloat(balancingCharge || '0') || undefined,
         goodsAndServicesOwnUse: parseFloat(goodsOwnUse  || '0') || undefined,
       },
-      savingsAccounts: savingsInterest ? [{ accountName: 'Savings', grossInterest: parseFloat(savingsInterest) }] : [],
+      savingsInterest: parseFloat(savingsInterest || '0') || undefined,
       dividends: (() => {
         const fAmt   = parseFloat(foreignAmount || '0') || 0;
         const fTax   = parseFloat(foreignTax    || '0') || 0;
@@ -125,7 +131,7 @@ export default function AdjustmentsPage() {
       });
       const d = await res.json();
       if (d.error) { setError(d.error); return; }
-      router.push('/dashboard/individual/tasks?adjustments=done');
+      router.push(fromYearEnd ? backHref : '/dashboard/individual/tasks?adjustments=done');
     } finally {
       setSubmitting(false);
     }
@@ -133,7 +139,7 @@ export default function AdjustmentsPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
+      <Link href={backHref} className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>← Back</Link>
 
       <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.25rem' }}>
         Annual Adjustments

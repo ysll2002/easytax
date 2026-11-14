@@ -4,7 +4,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import {
   getValidToken,
   submitAnnualAdjustments,
-  submitSavingsIncome,
+  submitUkSavingsInterest,
   submitDividendsIncome,
   submitCharitableGiving,
 } from '@/lib/hmrc';
@@ -16,7 +16,11 @@ export async function POST(req: NextRequest) {
 
   const profileId = session.user.profileId;
   const body = await req.json();
-  const { taxYear, businessAdjustments, savingsAccounts, dividends, giftAid } = body;
+  const { taxYear, businessAdjustments, savingsInterest, dividends, giftAid } = body;
+
+  if (typeof taxYear !== 'string' || !/^\d{4}-\d{2}$/.test(taxYear)) {
+    return NextResponse.json({ error: 'Tax year must look like 2025-26.' }, { status: 400 });
+  }
 
   const { data: hmrc } = await supabase
     .from('hmrc_connections')
@@ -43,8 +47,8 @@ export async function POST(req: NextRequest) {
         results.businessAdjustments = await submitAnnualAdjustments(nino, businessId, taxYear, businessAdjustments, token);
       }
     }
-    if (savingsAccounts?.length) {
-      results.savings = await submitSavingsIncome(nino, taxYear, savingsAccounts, token);
+    if (typeof savingsInterest === 'number' && Number.isFinite(savingsInterest) && savingsInterest > 0) {
+      results.savings = await submitUkSavingsInterest(nino, taxYear, savingsInterest, token);
     }
     if (dividends?.foreignDividend?.length || dividends?.stockDividend) {
       results.dividends = await submitDividendsIncome(nino, taxYear, dividends, token);

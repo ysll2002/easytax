@@ -557,14 +557,75 @@ export async function submitAnnualAdjustments(
   );
 }
 
-export type SavingsIncome = { accountId?: string; accountName: string; grossInterest: number };
+// ─── UK savings interest ──────────────────────────────────────────────────────
 
-export async function submitSavingsIncome(nino: string, taxYear: string, accounts: SavingsIncome[], token: string) {
-  return hmrcFetch(
-    `/individuals/income-received/savings/${nino}/${taxYear}`,
+// Individuals Savings Income (MTD) v2.0. UK interest is recorded per savings
+// account in two steps: add an account once (it gets a savingsAccountId that
+// lasts across tax years), then PUT that account's annual summary for each
+// tax year.
+//
+// This replaces a single PUT to /individuals/income-received/savings/..., a
+// path the API does not have, so savings interest entered in EasyTax never
+// reached HMRC.
+//
+// EasyTax asks for one total, so it keeps that total in one account of its
+// own, found again by name on later submissions instead of adding a new
+// account every time.
+const EASYTAX_SAVINGS_ACCOUNT_NAME = 'EasyTax savings interest';
+
+async function findOrAddEasyTaxSavingsAccount(nino: string, token: string): Promise<string> {
+  let accounts: { savingsAccountId: string; accountName?: string }[] = [];
+  try {
+    const data = await hmrcFetch(
+      `/individuals/savings-income/uk-accounts/${nino}`,
+      token,
+      { headers: { Accept: 'application/vnd.hmrc.2.0+json' } },
+    );
+    accounts = data?.savingsAccounts ?? [];
+  } catch (err) {
+    // No accounts yet: the list endpoint answers 404 rather than [].
+    if (!(err instanceof Error && err.message.startsWith('HMRC 404'))) throw err;
+  }
+
+  const existing = accounts.find(a => a.accountName === EASYTAX_SAVINGS_ACCOUNT_NAME);
+  if (existing) return existing.savingsAccountId;
+
+  const added = await hmrcFetch(
+    `/individuals/savings-income/uk-accounts/${nino}`,
     token,
-    { method: 'PUT', body: JSON.stringify({ savingsAccounts: accounts }) },
+    {
+      method:  'POST',
+      headers: { Accept: 'application/vnd.hmrc.2.0+json' },
+      body:    JSON.stringify({ accountName: EASYTAX_SAVINGS_ACCOUNT_NAME }),
+    },
   );
+  if (!added?.savingsAccountId) throw new Error('HMRC did not return a savings account ID.');
+  return added.savingsAccountId as string;
+}
+
+/**
+ * Records the year's UK bank and building society interest. Most UK interest
+ * has been paid without tax taken off since April 2016, so it goes in as
+ * untaxed interest. Sending the account's annual summary replaces it, so
+ * re-submitting a corrected total is safe.
+ */
+export async function submitUkSavingsInterest(
+  nino: string,
+  taxYear: string,
+  untaxedUkInterest: number,
+  token: string,
+) {
+  const savingsAccountId = await findOrAddEasyTaxSavingsAccount(nino, token);
+  await hmrcFetch(
+    `/individuals/savings-income/uk-accounts/${nino}/${taxYear}/${savingsAccountId}`,
+    token,
+    {
+      method:  'PUT',
+      headers: { Accept: 'application/vnd.hmrc.2.0+json' },
+      body:    JSON.stringify({ untaxedUkInterest: Math.round(untaxedUkInterest * 100) / 100 }),
+    },
+  );
+  return { savingsAccountId };
 }
 
 export type ForeignDividendEntry = {

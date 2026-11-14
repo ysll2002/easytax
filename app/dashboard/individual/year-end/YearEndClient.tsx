@@ -329,7 +329,7 @@ export default function YearEndClient() {
         <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.6 }}>
           Capital allowances, private use, savings interest, dividends and Gift Aid are entered on the annual adjustments page. Do this before the final calculation.
         </p>
-        <Link href="/dashboard/individual/adjustments" className="text-sm font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
+        <Link href={`/dashboard/individual/adjustments?taxYear=${encodeURIComponent(taxYear)}&from=year-end`} className="text-sm font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
           Go to annual adjustments
         </Link>
         <p className="text-xs mt-3" style={{ color: '#6B6256', lineHeight: 1.55 }}>
