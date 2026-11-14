@@ -38,7 +38,7 @@ async function getActivationState(userId: string | undefined) {
   try {
     const [hmrc, records] = await Promise.all([
       supabase.from('hmrc_connections').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
-      supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', userId),
+      supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', userId).is('client_id', null),
     ]);
 
     return {

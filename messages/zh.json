@@ -224,7 +224,9 @@
       "companyShort": "公司",
       "logout": "退出",
       "homepage": "首页",
-      "bank": "账目"
+      "bank": "账目",
+      "agent": "代理",
+      "clients": "客户"
     },
     "home": {
       "welcome": "欢迎，{name}",

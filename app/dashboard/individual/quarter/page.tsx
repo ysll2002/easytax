@@ -36,6 +36,13 @@ function QuarterForm() {
   // because the sandbox test data is typically populated for the previous
   // tax year, not the current one.
   const taxYear = params.get('taxYear') ?? currentTaxYear();
+  // ?clientId= : an agent filing for one of their clients. Same review and
+  // submit flow; the figures come from that client's records and the update
+  // is sent with the agent's HMRC sign-in.
+  const clientId = params.get('clientId');
+  const clientQs = clientId ? `clientId=${encodeURIComponent(clientId)}` : '';
+  const backHref = clientId ? `/dashboard/agent/clients/${clientId}` : '/dashboard/individual/tasks';
+  const recordsHref = clientId ? `/dashboard/agent/clients/${clientId}#records` : '/dashboard/reconcile';
 
   const [turnover,   setTurnover]   = useState('');
   const [expenses,   setExpenses]   = useState<Record<string, string>>({});
@@ -62,7 +69,7 @@ function QuarterForm() {
     if (!start || !end) { setError('Missing period dates in URL.'); return; }
     setPulling(true); setError(''); setConfirming(false);
     try {
-      const res  = await fetch(`/api/individual/quarter-totals?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`);
+      const res  = await fetch(`/api/individual/quarter-totals?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}${clientQs ? `&${clientQs}` : ''}`);
       const data = await res.json();
       if (!res.ok || data.error) {
         setError(data.detail ?? data.error ?? 'Failed to pull totals from your records.');
@@ -94,7 +101,7 @@ function QuarterForm() {
     for (const f of EXPENSE_FIELDS) expObj[f.key] = parseFloat(expenses[f.key] || '0');
 
     try {
-      const res = await hmrcFetch('/api/hmrc/submit-quarter', {
+      const res = await hmrcFetch(`/api/hmrc/submit-quarter${clientQs ? `?${clientQs}` : ''}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ taxYear, periodStartDate: start, periodEndDate: end, turnover: income, expenses: expObj }),
@@ -125,7 +132,7 @@ function QuarterForm() {
           <p className="text-sm mb-8" style={{ color: '#4A4035' }}>
             Your quarterly update has been sent to HMRC successfully.
           </p>
-          <Link href="/dashboard/individual/tasks"
+          <Link href={backHref}
             className="inline-flex items-center gap-1.5 px-6 py-3 rounded-full font-semibold text-sm"
             style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}>
             Back to Filing Overview <ChevronRight size={14} />
@@ -137,7 +144,7 @@ function QuarterForm() {
 
   return (
     <div className="p-4 sm:p-8">
-      <Link href="/dashboard/individual/tasks" className="text-sm mb-6 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
+      <Link href={backHref} className="text-sm mb-6 inline-block" style={{ color: '#6B6256', textDecoration: 'none' }}>
         ← Back to Filing Overview
       </Link>
 
@@ -149,6 +156,11 @@ function QuarterForm() {
           {start ? fmtDate(start) : 'Quarterly Update'}
         </h1>
         {start && end && <p className="text-sm mt-1" style={{ color: '#6B6256' }}>to {fmtDate(end)}</p>}
+        {clientId && (
+          <p className="text-sm mt-2 font-semibold" style={{ color: '#7A4A1E' }}>
+            You are submitting this update for a client, as their agent. <Link href={backHref} style={{ color: '#A04E1C' }}>Back to client</Link>
+          </p>
+        )}
       </div>
 
       {error && (
@@ -162,7 +174,7 @@ function QuarterForm() {
           <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Figures come from your digital record.</p>
           <p className="mb-2">
             HMRC rules for Making Tax Digital require the numbers you submit here to come from your business records, not be typed in on the submission screen. To add, correct or re-categorise a record, go to{' '}
-            <Link href="/dashboard/reconcile" style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'underline' }}>Records</Link>, then re-pull below.
+            <Link href={recordsHref} style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'underline' }}>Records</Link>, then re-pull below.
           </p>
           <div className="flex items-center gap-3 flex-wrap">
             <button type="button" onClick={handlePull} disabled={pulling || !start || !end}
@@ -181,7 +193,7 @@ function QuarterForm() {
           {pulledAt && unreviewed > 0 && (
             <p role="status" className="mt-2 font-semibold" style={{ color: '#8A3A12' }}>
               {unreviewed} record{unreviewed === 1 ? '' : 's'} in this period {unreviewed === 1 ? 'is' : 'are'} not yet marked as business or personal and {unreviewed === 1 ? 'is' : 'are'} not included.{' '}
-              <Link href="/dashboard/reconcile" style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>.
+              <Link href={recordsHref} style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>.
             </p>
           )}
         </div>

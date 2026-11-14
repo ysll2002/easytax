@@ -8,6 +8,7 @@ import LogoutButton from '@/components/LogoutButton';
 import MobileNav from '@/components/MobileNav';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import HomepageLink from '@/components/HomepageLink';
+import { AGENT_MODE_AVAILABLE } from '@/lib/agent';
 
 // Default <title> for dashboard pages (WCAG 2.4.2); each route's own layout
 // overrides it.
@@ -30,7 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           EasyTax
         </Link>
 
-        <SidebarNav />
+        <SidebarNav showAgent={AGENT_MODE_AVAILABLE} />
 
         <div style={{ padding: '0 1.5rem', borderTop: '1px solid #2E2418', paddingTop: '1.25rem', marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>

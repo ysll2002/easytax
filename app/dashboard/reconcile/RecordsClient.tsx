@@ -33,21 +33,25 @@ const secondaryBtn = { padding: '0.5rem 1rem', borderRadius: '2rem', border: '1p
 const gbp = (n: number) => `£${Math.abs(n).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const today = () => new Date().toISOString().slice(0, 10);
 
-async function send(method: 'PATCH' | 'DELETE', body: object) {
-  const res = await fetch('/api/records', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+// clientId: an agent working on one of their clients' records.
+const recordsUrl = (clientId?: string) => clientId ? `/api/records?clientId=${encodeURIComponent(clientId)}` : '/api/records';
+
+async function send(url: string, method: 'PATCH' | 'DELETE', body: object) {
+  const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? `HTTP ${res.status}`);
 }
 
 // PATCH in chunks, grouped by the value being set.
-async function patchGroups(groups: Map<string, string[]>, field: 'category' | 'expenseBucket') {
+async function patchGroups(url: string, groups: Map<string, string[]>, field: 'category' | 'expenseBucket') {
   for (const [value, ids] of groups) {
     for (let i = 0; i < ids.length; i += ID_CHUNK) {
-      await send('PATCH', { ids: ids.slice(i, i + ID_CHUNK), [field]: value === '' ? null : value });
+      await send(url, 'PATCH', { ids: ids.slice(i, i + ID_CHUNK), [field]: value === '' ? null : value });
     }
   }
 }
 
-export default function RecordsClient({ title, intro }: { title: string; intro: string }) {
+export default function RecordsClient({ title, intro, clientId, headingLevel = 1 }: { title: string; intro: string; clientId?: string; headingLevel?: 1 | 2 }) {
+  const url = recordsUrl(clientId);
   const [records, setRecords] = useState<BusinessRecord[]>([]);
   const [history, setHistory] = useState<BusinessRecord[][]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +64,7 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch('/api/records');
+      const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
       setRecords(data.records ?? []);
@@ -70,7 +74,7 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [url]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -86,12 +90,12 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
   const setCategory = (ids: string[], category: RecordCategory) => {
     const idSet = new Set(ids);
     const next = records.map(r => idSet.has(r.id) ? { ...r, category } : r);
-    commit(next, () => patchGroups(new Map([[category, ids]]), 'category'));
+    commit(next, () => patchGroups(url, new Map([[category, ids]]), 'category'));
   };
 
   const setBucket = (id: string, bucket: ExpenseBucket) => {
     const next = records.map(r => r.id === id ? { ...r, expense_bucket: bucket } : r);
-    commit(next, () => patchGroups(new Map([[bucket, [id]]]), 'expenseBucket'));
+    commit(next, () => patchGroups(url, new Map([[bucket, [id]]]), 'expenseBucket'));
   };
 
   const remove = (id: string) => {
@@ -99,7 +103,7 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
     if (!r || !window.confirm(`Delete "${r.description}" (${gbp(r.amount)}) on ${r.txn_date}? This cannot be undone.`)) return;
     setRecords(prev => prev.filter(x => x.id !== id));
     setHistory([]); // undo cannot bring back a deleted record
-    send('DELETE', { ids: [id] }).then(() => setStatus('Record deleted.')).catch(() => { setError('The record could not be deleted.'); load(); });
+    send(url, 'DELETE', { ids: [id] }).then(() => setStatus('Record deleted.')).catch(() => { setError('The record could not be deleted.'); load(); });
   };
 
   const applyActions = (actions: ReconcileAction[]) => {
@@ -110,7 +114,7 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
       next = next.map(r => idSet.has(r.id) ? { ...r, category: action.category } : r);
       groups.set(action.category, [...(groups.get(action.category) ?? []), ...action.ids]);
     }
-    commit(next, () => patchGroups(groups, 'category'));
+    commit(next, () => patchGroups(url, groups, 'category'));
   };
 
   const undo = () => {
@@ -130,7 +134,7 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
     }
     setHistory(h => h.slice(0, -1));
     setRecords(prev);
-    patchGroups(cats, 'category').then(() => patchGroups(buckets, 'expenseBucket'))
+    patchGroups(url, cats, 'category').then(() => patchGroups(url, buckets, 'expenseBucket'))
       .catch(() => { setError('Undo could not be saved. Your records have been reloaded.'); load(); });
   };
 
@@ -156,7 +160,9 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
       <div className="flex-1 overflow-y-auto p-4 sm:p-8" style={{ minWidth: 0 }}>
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
           <div style={{ maxWidth: '40rem' }}>
-            <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.4rem' }}>{title}</h1>
+            {headingLevel === 1
+              ? <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.4rem' }}>{title}</h1>
+              : <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.4rem' }}>{title}</h2>}
             <p style={{ color: '#4A4035', fontSize: '0.9rem', lineHeight: 1.6 }}>{intro}</p>
           </div>
           <div className="flex items-center gap-2 flex-wrap flex-shrink-0">
@@ -173,8 +179,8 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
         </div>
         {error && <div role="alert" className="p-4 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>}
 
-        {panel === 'add' && <AddRecordForm onDone={onAdded} onCancel={() => setPanel('none')} />}
-        {panel === 'import' && <CsvImport onDone={onAdded} onCancel={() => setPanel('none')} />}
+        {panel === 'add' && <AddRecordForm url={url} onDone={onAdded} onCancel={() => setPanel('none')} />}
+        {panel === 'import' && <CsvImport url={url} onDone={onAdded} onCancel={() => setPanel('none')} />}
 
         {loading ? (
           <p style={{ textAlign: 'center', padding: '3rem', color: '#6B6256' }}>Loading your records…</p>
@@ -291,7 +297,7 @@ export default function RecordsClient({ title, intro }: { title: string; intro: 
   );
 }
 
-function AddRecordForm({ onDone, onCancel }: { onDone: (msg: string) => void; onCancel: () => void }) {
+function AddRecordForm({ url, onDone, onCancel }: { url: string; onDone: (msg: string) => void; onCancel: () => void }) {
   const [date, setDate] = useState(today());
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
@@ -311,7 +317,7 @@ function AddRecordForm({ onDone, onCancel }: { onDone: (msg: string) => void; on
     const moneyIn = kind === 'business_income' || (kind === 'personal' && direction === 'in');
     setSaving(true); setError('');
     try {
-      const res = await fetch('/api/records', {
+      const res = await fetch(url, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source: 'manual', records: [{
           date, description: description.trim(), amount: moneyIn ? value : -value, category: kind,
@@ -370,7 +376,7 @@ function AddRecordForm({ onDone, onCancel }: { onDone: (msg: string) => void; on
 
 const NONE = -1;
 
-function CsvImport({ onDone, onCancel }: { onDone: (msg: string) => void; onCancel: () => void }) {
+function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: string) => void; onCancel: () => void }) {
   const [fileName, setFileName] = useState('');
   const [header, setHeader] = useState<string[]>([]);
   const [rows, setRows] = useState<string[][]>([]);
@@ -409,7 +415,7 @@ function CsvImport({ onDone, onCancel }: { onDone: (msg: string) => void; onCanc
     let added = 0, dupes = 0;
     try {
       for (let i = 0; i < parsed.ok.length; i += 2000) {
-        const res = await fetch('/api/records', {
+        const res = await fetch(url, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ source: 'csv', records: parsed.ok.slice(i, i + 2000) }),
         });

@@ -15,7 +15,7 @@ export default async function TaxPage() {
 
   const [{ data: hmrc }, { count: recordCount }] = await Promise.all([
     supabase.from('hmrc_connections').select('nino, vrn, access_token, connected_at').eq('user_id', profileId).single(),
-    supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', profileId),
+    supabase.from('business_records').select('id', { head: true, count: 'exact' }).eq('user_id', profileId).is('client_id', null),
   ]);
 
   const hasNino  = !!hmrc?.nino;

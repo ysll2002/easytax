@@ -224,7 +224,9 @@
       "companyShort": "법인",
       "logout": "로그아웃",
       "homepage": "홈",
-      "bank": "장부"
+      "bank": "장부",
+      "agent": "대리인",
+      "clients": "고객"
     },
     "home": {
       "welcome": "환영합니다, {name}님",

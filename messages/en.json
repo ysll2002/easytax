@@ -224,7 +224,9 @@
       "companyShort": "Company",
       "logout": "Log out",
       "homepage": "Homepage",
-      "bank": "Bookkeeping"
+      "bank": "Bookkeeping",
+      "agent": "Agent",
+      "clients": "Clients"
     },
     "home": {
       "welcome": "Welcome, {name}",
