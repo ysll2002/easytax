@@ -60,7 +60,7 @@
 
 ## Deployment 状态
 
-- **staging = `15adce9`**（比 production 多 PR #50–#55，还没进 main）。
+- **staging = `db03e3c`**（比 production 多 PR #50–#56，还没进 main）。
 - **owner 对话里的改动直接合进 staging，不用问**（2026-11-15 owner 授权；main/production 仍要明说；定时 agent 不适用）。
 - **Production = main = `ea28c1f`**（2026-11-15 14:09 UTC 上线，owner 授权；含 PR #45–#49；production 库已先加 ai_categorised 列；冒烟检查通过）。f25b383 于 2026-11-15 09:31 UTC 上线，owner 授权；比 1a2afdd 多了 PR #44：藏起 Company Tax。
 - 原 production 记录：**Production = main = staging = `1a2afdd`**（2026-11-14 22:23 UTC 上线，owner 授权「把 staging 的改动都发布到 production」）。包含：PR #36（去掉银行连接，改手动录入 + CSV）、#37（代理模式，production 里被 HMRC_ENV 挡住）、#38（CSV 修复）、#40（dashboard 清理）、#43（导航去掉 Records），以及另一会话直接合进 main 的 #39（去掉 dashboard footer 的范围说明）和 #41（语言/Homepage 移到侧边栏；#42 的做法在合并冲突时被它取代）。
@@ -74,6 +74,7 @@
 
 ## 在飞的分支
 
+- [PR #56](https://github.com/ysll2002/easytax/pull/56)（2026-11-15，**已合进 staging** `db03e3c`）：代理客户页去掉整个 records 区块（列表、添加、导入、AI 助手），客户记录改为只在季度申报页上传；客户表已授权的 Next step 改为 File updates。个人用户自己的 Records 页（/dashboard/reconcile）不变。
 - [PR #55](https://github.com/ysll2002/easytax/pull/55)（2026-11-15，**已合进 staging** `15adce9`）：View submission 改绿色，大小同 Prepare update（取代 #53 的蓝色）。
 - [PR #54](https://github.com/ysll2002/easytax/pull/54)（2026-11-15，**已合进 staging** `5d615d6`）：全站数字输入框滚轮不再改数字（根 layout 挂 NoWheelNumberInputs）。
 - [PR #53](https://github.com/ysll2002/easytax/pull/53)（2026-11-15，**已合进 staging** `9b87ecd`）：Done 里 View submission 改成蓝色按钮，展开后显示 Hide submission。
