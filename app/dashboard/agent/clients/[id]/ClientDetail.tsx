@@ -5,8 +5,8 @@ import type { AgentClientView, AuthStatus } from '@/lib/agent-types';
 import RecordsClient from '@/app/dashboard/reconcile/RecordsClient';
 import { card, primaryBtn, secondaryBtn, h1Style, h2Style, StatusBadge, api } from '../../ui';
 
-type ItsaOb = { periodKey: string; periodStartDate: string; periodEndDate: string; dueDate: string; status: 'Open' | 'Fulfilled' };
-type VatOb = { periodKey: string; start: string; end: string; due: string; status: 'O' | 'F' };
+type ItsaOb = { periodKey: string; periodStartDate: string; periodEndDate: string; dueDate: string; receivedDate?: string; status: 'Open' | 'Fulfilled' };
+type VatOb = { periodKey: string; start: string; end: string; due: string; received?: string; status: 'O' | 'F' };
 type Obligations = { itsa?: { obligations?: ItsaOb[]; error?: string }; vat?: { obligations?: VatOb[]; error?: string } };
 type Filing = { id: string; tax_year: string; filing_type: string; period_start: string | null; period_end: string | null; turnover: number | null; net_profit: number | null; submitted_at: string };
 
@@ -76,8 +76,24 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
     );
   };
 
-  const itsaOpen = (obs?.itsa?.obligations ?? []).filter(o => o.status === 'Open').sort((a, b) => a.dueDate.localeCompare(b.dueDate));
-  const vatOpen = (obs?.vat?.obligations ?? []).filter(o => o.status === 'O').sort((a, b) => a.due.localeCompare(b.due));
+  // A quarter is done once HMRC says it is fulfilled, or once it has been
+  // submitted from EasyTax (HMRC's sandbox does not always update the
+  // obligation afterwards, and this stops it being filed twice).
+  const filedQuarter = (start: string, end: string) =>
+    filings.find(f => f.filing_type === 'quarterly' && f.period_start === start && f.period_end === end);
+  const itsaAll = obs?.itsa?.obligations ?? [];
+  const itsaTodo = itsaAll.filter(o => o.status === 'Open' && !filedQuarter(o.periodStartDate, o.periodEndDate))
+    .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+  const itsaDone = itsaAll.filter(o => o.status === 'Fulfilled' || filedQuarter(o.periodStartDate, o.periodEndDate))
+    .sort((a, b) => b.periodStartDate.localeCompare(a.periodStartDate));
+  const vatAll = obs?.vat?.obligations ?? [];
+  const vatTodo = vatAll.filter(o => o.status === 'O').sort((a, b) => a.due.localeCompare(b.due));
+  const vatDone = vatAll.filter(o => o.status === 'F').sort((a, b) => b.start.localeCompare(a.start));
+  // Filings made from EasyTax that HMRC did not return as an obligation.
+  const otherFilings = filings.filter(f => !(f.filing_type === 'quarterly' && itsaAll.some(o => o.periodStartDate === f.period_start && o.periodEndDate === f.period_end)));
+  const anyAuthorised = client.itsa_status === 'authorised' || client.vat_status === 'authorised';
+  const todoCount = itsaTodo.length + vatTodo.length;
+  const doneCount = itsaDone.length + vatDone.length + otherFilings.length;
 
   return (
     <div>
@@ -99,50 +115,76 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
         </section>
 
         <section style={card} className="mb-6" aria-labelledby="due-h">
-          <h2 id="due-h" style={h2Style}>What&apos;s due</h2>
-          {client.itsa_status !== 'authorised' && client.vat_status !== 'authorised' && (
+          <h2 id="due-h" style={h2Style}>To do{obs && anyAuthorised ? ` (${todoCount})` : ''}</h2>
+          {!anyAuthorised ? (
             <p className="text-sm" style={{ color: '#4A4035' }}>Once your client approves you, their Income Tax and VAT deadlines appear here.</p>
-          )}
-          {client.itsa_status === 'authorised' && (
-            <div className="mb-4">
-              <h3 className="text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Income Tax quarterly updates</h3>
-              {!obs ? <p className="text-sm" style={{ color: '#6B6256' }}>Loading…</p>
-                : obs.itsa?.error ? <p className="text-sm" style={{ color: '#991B1B' }}>HMRC: {obs.itsa.error}</p>
-                : itsaOpen.length === 0 ? <p className="text-sm" style={{ color: '#4A4035' }}>Nothing open.</p>
-                : <ul className="space-y-2" style={{ listStyle: 'none', padding: 0 }}>
-                    {itsaOpen.map(o => (
+          ) : !obs ? (
+            <p className="text-sm" style={{ color: '#6B6256' }}>Loading…</p>
+          ) : (
+            <>
+              {obs.itsa?.error && <p className="text-sm mb-2" style={{ color: '#991B1B' }}>Income Tax — HMRC: {obs.itsa.error}</p>}
+              {obs.vat?.error && <p className="text-sm mb-2" style={{ color: '#991B1B' }}>VAT — HMRC: {obs.vat.error}</p>}
+              {todoCount === 0 && !obs.itsa?.error && !obs.vat?.error && <p className="text-sm" style={{ color: '#4A4035' }}>Nothing to file right now.</p>}
+              {itsaTodo.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>Income Tax quarterly updates</h3>
+                  <ul className="space-y-2" style={{ listStyle: 'none', padding: 0 }}>
+                    {itsaTodo.map(o => (
                       <li key={o.periodKey + o.periodStartDate} className="flex flex-wrap items-center justify-between gap-2 text-sm">
                         <span style={{ color: '#1C1208' }}>{fmt(o.periodStartDate)} – {fmt(o.periodEndDate)} · due {fmt(o.dueDate)}</span>
                         <Link style={primaryBtn} href={`/dashboard/individual/quarter?clientId=${client.id}&taxYear=${taxYearOf(o.periodStartDate)}&start=${o.periodStartDate}&end=${o.periodEndDate}&key=${o.periodKey}`}>Prepare update</Link>
                       </li>
                     ))}
-                  </ul>}
-            </div>
-          )}
-          {client.vat_status === 'authorised' && (
-            <div>
-              <h3 className="text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>VAT returns</h3>
-              {!obs ? <p className="text-sm" style={{ color: '#6B6256' }}>Loading…</p>
-                : obs.vat?.error ? <p className="text-sm" style={{ color: '#991B1B' }}>HMRC: {obs.vat.error}</p>
-                : vatOpen.length === 0 ? <p className="text-sm" style={{ color: '#4A4035' }}>Nothing open.</p>
-                : <ul className="space-y-2" style={{ listStyle: 'none', padding: 0 }}>
-                    {vatOpen.map(o => (
+                  </ul>
+                </div>
+              )}
+              {vatTodo.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>VAT returns</h3>
+                  <ul className="space-y-2" style={{ listStyle: 'none', padding: 0 }}>
+                    {vatTodo.map(o => (
                       <li key={o.periodKey} className="flex flex-wrap items-center justify-between gap-2 text-sm">
                         <span style={{ color: '#1C1208' }}>{fmt(o.start)} – {fmt(o.end)} · due {fmt(o.due)}</span>
                         <Link style={primaryBtn} href={`/dashboard/individual/vat?clientId=${client.id}`}>Prepare VAT return</Link>
                       </li>
                     ))}
-                  </ul>}
-            </div>
+                  </ul>
+                </div>
+              )}
+            </>
           )}
         </section>
 
-        {filings.length > 0 && (
-          <section style={card} className="mb-6" aria-labelledby="hist-h">
-            <h2 id="hist-h" style={h2Style}>Submitted for this client</h2>
-            <ul className="space-y-1 text-sm" style={{ listStyle: 'none', padding: 0, color: '#1C1208' }}>
-              {filings.map(f => (
-                <li key={f.id}>{f.filing_type === 'quarterly' ? 'Quarterly update' : f.filing_type} · {f.period_start && f.period_end ? `${fmt(f.period_start)} – ${fmt(f.period_end)}` : f.tax_year} · submitted {fmt(f.submitted_at)}</li>
+        {anyAuthorised && obs && doneCount > 0 && (
+          <section style={card} className="mb-6" aria-labelledby="done-h">
+            <h2 id="done-h" style={h2Style}>Done ({doneCount})</h2>
+            <ul className="space-y-2 text-sm" style={{ listStyle: 'none', padding: 0, color: '#1C1208' }}>
+              {itsaDone.map(o => {
+                const f = filedQuarter(o.periodStartDate, o.periodEndDate);
+                const when = f?.submitted_at ?? o.receivedDate;
+                return (
+                  <li key={'i' + o.periodKey + o.periodStartDate} className="flex flex-wrap items-center gap-2">
+                    <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
+                    <span>Income Tax quarterly update · {fmt(o.periodStartDate)} – {fmt(o.periodEndDate)}</span>
+                    <span style={{ color: '#4A4035' }}>
+                      {when ? `· submitted ${fmt(when)}` : '· submitted'}{f ? ' from EasyTax' : ''}
+                    </span>
+                  </li>
+                );
+              })}
+              {vatDone.map(o => (
+                <li key={'v' + o.periodKey} className="flex flex-wrap items-center gap-2">
+                  <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
+                  <span>VAT return · {fmt(o.start)} – {fmt(o.end)}</span>
+                  <span style={{ color: '#4A4035' }}>{o.received ? `· submitted ${fmt(o.received)}` : '· submitted'}</span>
+                </li>
+              ))}
+              {otherFilings.map(f => (
+                <li key={'f' + f.id} className="flex flex-wrap items-center gap-2">
+                  <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
+                  <span>{f.filing_type === 'quarterly' ? 'Income Tax quarterly update' : f.filing_type} · {f.period_start && f.period_end ? `${fmt(f.period_start)} – ${fmt(f.period_end)}` : f.tax_year}</span>
+                  <span style={{ color: '#4A4035' }}>· submitted {fmt(f.submitted_at)} from EasyTax</span>
+                </li>
               ))}
             </ul>
           </section>
