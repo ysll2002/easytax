@@ -58,6 +58,7 @@ export type BusinessRecord = {
   category: RecordCategory;
   expense_bucket: ExpenseBucket | null;
   source: 'manual' | 'csv';
+  ai_categorised?: boolean;  // sorted by AI and not yet changed by the customer
 };
 
 export function bucketOf(r: Pick<BusinessRecord, 'description' | 'expense_bucket'>): ExpenseBucket {
