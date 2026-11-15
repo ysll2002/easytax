@@ -25,7 +25,9 @@ const gbp = (v: number | string | null | undefined) =>
 // The button on a Done item that opens and closes its submitted figures.
 function SubmissionToggle() {
   return (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#1D4ED8] text-white group-hover:bg-[#1E40AF]">
+    // Same size as the Prepare update button (primaryBtn), in green.
+    <span className="inline-flex items-center bg-[#2F5232] text-[#FDFCF8] group-hover:bg-[#24401F]"
+      style={{ padding: primaryBtn.padding, borderRadius: primaryBtn.borderRadius, fontWeight: primaryBtn.fontWeight, fontSize: primaryBtn.fontSize }}>
       <span className="group-open:hidden">View submission</span>
       <span className="hidden group-open:inline">Hide submission</span>
     </span>
