@@ -60,7 +60,7 @@
 
 ## Deployment 状态
 
-- **staging = `cb22084`**（比 production 多 PR #50、#51，还没进 main）。
+- **staging = `8cf4cc7`**（比 production 多 PR #50、#51、#52，还没进 main）。
 - **owner 对话里的改动直接合进 staging，不用问**（2026-11-15 owner 授权；main/production 仍要明说；定时 agent 不适用）。
 - **Production = main = `ea28c1f`**（2026-11-15 14:09 UTC 上线，owner 授权；含 PR #45–#49；production 库已先加 ai_categorised 列；冒烟检查通过）。f25b383 于 2026-11-15 09:31 UTC 上线，owner 授权；比 1a2afdd 多了 PR #44：藏起 Company Tax。
 - 原 production 记录：**Production = main = staging = `1a2afdd`**（2026-11-14 22:23 UTC 上线，owner 授权「把 staging 的改动都发布到 production」）。包含：PR #36（去掉银行连接，改手动录入 + CSV）、#37（代理模式，production 里被 HMRC_ENV 挡住）、#38（CSV 修复）、#40（dashboard 清理）、#43（导航去掉 Records），以及另一会话直接合进 main 的 #39（去掉 dashboard footer 的范围说明）和 #41（语言/Homepage 移到侧边栏；#42 的做法在合并冲突时被它取代）。
@@ -74,6 +74,7 @@
 
 ## 在飞的分支
 
+- [PR #52](https://github.com/ysll2002/easytax/pull/52)（2026-11-15，**已合进 staging** `8cf4cc7`；还没进 main）：季度申报页可直接上传 CSV（存进 records、本季度新行 AI 分类、自动预填），打开页面自动填数；**每个数字可改，改动在 Review 时存成调整记录（日期=季度末）再重新汇总**（owner 选的方案，保 MTD In-Year #6）。submit-quarter 新增服务端校验：提交数字 ≠ 该期 records 汇总 → 409（个人和代理都适用，动了 app/api/hmrc）。
 - [PR #51](https://github.com/ysll2002/easytax/pull/51)（2026-11-15，**已合进 staging** `cb22084`；还没进 main）：客户页 Done 里每条 EasyTax 提交可展开 View submission（turnover、8 类费用、合计、净利润、提交时间、HMRC periodId）；代理提交的总额先四舍五入到分。
 - 代理 sandbox 已调用：POST/GET invitations、POST relationships、ITSA business details/obligations/提交季度（Alex 2018-19 Q2 成功）。**未调用**：DELETE invitations（取消）、PUT deauthorise-client、所有 VAT 服务路径、VAT obligations/提交（没有 VAT 客户）。HMRC 审批前要补。
 - [PR #50](https://github.com/ysll2002/easytax/pull/50)（2026-11-15，**已合进 staging** `83140cb`，owner 授权；还没进 main）：代理客户页 What's due 拆成 To do / Done；EasyTax 提交过的季度即使 sandbox 仍报 open 也算 Done（防重复提交）；取代原 Submitted for this client 区块。
