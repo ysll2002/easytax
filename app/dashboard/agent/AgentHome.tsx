@@ -132,6 +132,7 @@ export default function AgentHome() {
                     <th scope="col" style={{ padding: '0.5rem' }}>Client</th>
                     <th scope="col" style={{ padding: '0.5rem' }}>Income Tax</th>
                     <th scope="col" style={{ padding: '0.5rem' }}>VAT</th>
+                    <th scope="col" style={{ padding: '0.5rem' }}>Next step</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -143,6 +144,7 @@ export default function AgentHome() {
                       </td>
                       <td style={{ padding: '0.6rem 0.5rem' }}>{c.nino ? <StatusBadge status={c.itsa_status} /> : '—'}</td>
                       <td style={{ padding: '0.6rem 0.5rem' }}>{c.vrn ? <StatusBadge status={c.vat_status} /> : '—'}</td>
+                      <td style={{ padding: '0.6rem 0.5rem' }}><NextStep client={c} /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -256,5 +258,35 @@ function AddClient({ prefill, onDone, onCancel }: { prefill: Partial<TestUser> |
         <button type="button" onClick={onCancel} style={secondaryBtn}>Cancel</button>
       </div>
     </form>
+  );
+}
+
+// What the agent should do next for a client, as a link straight to the
+// part of the client page where they do it.
+const NEEDS_REQUEST = ['none', 'rejected', 'expired', 'cancelled', 'deauthorised'];
+function nextStep(c: AgentClientView): { label: string; hint: string; anchor: string; primary: boolean } {
+  const statuses = [c.nino ? c.itsa_status : null, c.vrn ? c.vat_status : null].filter(Boolean) as string[];
+  if (statuses.includes('pending'))
+    return { label: 'Send link to client', hint: 'Your client approves you on HMRC', anchor: 'auth-h', primary: true };
+  if (statuses.some(s => NEEDS_REQUEST.includes(s)))
+    return { label: 'Request authorisation', hint: 'Ask HMRC to send a request', anchor: 'auth-h', primary: true };
+  if (statuses.includes('authorised'))
+    return { label: 'Records and updates', hint: 'Keep records, file what is due', anchor: 'due-h', primary: false };
+  return { label: 'Open', hint: '', anchor: '', primary: false };
+}
+
+function NextStep({ client }: { client: AgentClientView }) {
+  const n = nextStep(client);
+  return (
+    <div>
+      <Link
+        href={`/dashboard/agent/clients/${client.id}${n.anchor ? `#${n.anchor}` : ''}`}
+        style={{ ...(n.primary ? primaryBtn : secondaryBtn), padding: '0.4rem 0.9rem', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+        aria-label={`${n.label} for ${client.display_name}`}
+      >
+        {n.label}
+      </Link>
+      {n.hint && <div className="text-xs mt-1" style={{ color: '#4A4035' }}>{n.hint}</div>}
+    </div>
   );
 }
