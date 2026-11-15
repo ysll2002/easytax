@@ -20,7 +20,7 @@ import {
 const MAX_BATCH = 2000;
 // ids go into the PostgREST query string, so keep each call well under URL limits.
 const MAX_IDS = 200;
-const COLUMNS = 'id, txn_date, description, amount, category, expense_bucket, source';
+const COLUMNS = 'id, txn_date, description, amount, category, expense_bucket, source, ai_categorised';
 
 async function userId() {
   const session = await auth();
@@ -152,6 +152,8 @@ export async function PATCH(req: NextRequest) {
     update.expense_bucket = body.expenseBucket;
   }
   if (Object.keys(update).length === 1) return bad('nothing_to_update');
+  // The customer has now decided this record themselves.
+  update.ai_categorised = false;
 
   const { error } = await ownerFilter(supabase.from('business_records').update(update).eq('user_id', uid), clientId).in('id', body.ids);
   if (error) return bad('db_error', 500);

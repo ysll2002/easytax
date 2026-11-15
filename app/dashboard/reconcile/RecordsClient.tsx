@@ -35,6 +35,9 @@ const today = () => new Date().toISOString().slice(0, 10);
 
 // clientId: an agent working on one of their clients' records.
 const recordsUrl = (clientId?: string) => clientId ? `/api/records?clientId=${encodeURIComponent(clientId)}` : '/api/records';
+const aiUrl = (clientId?: string) => clientId ? `/api/records/ai-classify?clientId=${encodeURIComponent(clientId)}` : '/api/records/ai-classify';
+const AI_BATCH = 100;   // records per AI call (the route's limit)
+const AI_PARALLEL = 3;  // AI calls in flight at once
 
 async function send(url: string, method: 'PATCH' | 'DELETE', body: object) {
   const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -61,20 +64,55 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
   const [search, setSearch] = useState('');
   const [chatOpen, setChatOpen] = useState(false);
   const [panel, setPanel] = useState<'none' | 'add' | 'import'>('none');
+  const [sorting, setSorting] = useState<{ done: number; total: number } | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (): Promise<BusinessRecord[] | null> => {
     try {
       const res = await fetch(url);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
-      setRecords(data.records ?? []);
+      const list: BusinessRecord[] = data.records ?? [];
+      setRecords(list);
       setError('');
+      return list;
     } catch {
       setError('Could not load your records. Please refresh the page.');
+      return null;
     } finally {
       setLoading(false);
     }
   }, [url]);
+
+  // Sort every unreviewed record with AI, AI_BATCH at a time. Records the AI
+  // is not sure about stay unreviewed for the customer to sort.
+  const sortWithAi = useCallback(async (list: BusinessRecord[]) => {
+    const ids = list.filter(r => r.category === 'unreviewed').map(r => r.id);
+    if (!ids.length) return;
+    const batches: string[][] = [];
+    for (let i = 0; i < ids.length; i += AI_BATCH) batches.push(ids.slice(i, i + AI_BATCH));
+    let done = 0, sorted = 0, failed = 0;
+    setSorting({ done: 0, total: ids.length });
+    setHistory([]); // undo history predates the AI changes
+    const run = async () => {
+      for (let b = batches.shift(); b; b = batches.shift()) {
+        try {
+          const res = await fetch(aiUrl(clientId), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: b }) });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error);
+          sorted += data.sorted ?? 0;
+        } catch { failed += b.length; }
+        done += b.length;
+        setSorting({ done, total: ids.length });
+      }
+    };
+    await Promise.all(Array.from({ length: AI_PARALLEL }, run));
+    setSorting(null);
+    await load();
+    const left = ids.length - sorted;
+    setStatus(`AI sorted ${sorted} of ${ids.length} record${ids.length === 1 ? '' : 's'}.`
+      + (left ? ` ${left} ${left === 1 ? 'is' : 'are'} left for you to sort${failed ? ' (the AI could not be reached for some — try “Sort with AI” again)' : ''}.` : '')
+      + ' Records marked “AI” are worth a quick check before you file.');
+  }, [clientId, load]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -89,12 +127,12 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
 
   const setCategory = (ids: string[], category: RecordCategory) => {
     const idSet = new Set(ids);
-    const next = records.map(r => idSet.has(r.id) ? { ...r, category } : r);
+    const next = records.map(r => idSet.has(r.id) ? { ...r, category, ai_categorised: false } : r);
     commit(next, () => patchGroups(url, new Map([[category, ids]]), 'category'));
   };
 
   const setBucket = (id: string, bucket: ExpenseBucket) => {
-    const next = records.map(r => r.id === id ? { ...r, expense_bucket: bucket } : r);
+    const next = records.map(r => r.id === id ? { ...r, expense_bucket: bucket, ai_categorised: false } : r);
     commit(next, () => patchGroups(url, new Map([[bucket, [id]]]), 'expenseBucket'));
   };
 
@@ -111,7 +149,7 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
     const groups = new Map<string, string[]>();
     for (const action of actions) {
       const idSet = new Set(action.ids);
-      next = next.map(r => idSet.has(r.id) ? { ...r, category: action.category } : r);
+      next = next.map(r => idSet.has(r.id) ? { ...r, category: action.category, ai_categorised: false } : r);
       groups.set(action.category, [...(groups.get(action.category) ?? []), ...action.ids]);
     }
     commit(next, () => patchGroups(url, groups, 'category'));
@@ -154,6 +192,12 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
   })), [records]);
 
   const onAdded = (msg: string) => { setStatus(msg); setPanel('none'); load(); };
+  const onImported = async (msg: string) => {
+    setStatus(msg); setPanel('none');
+    const list = await load();
+    if (list) await sortWithAi(list);
+  };
+  const aiCount = records.filter(r => r.ai_categorised).length;
 
   return (
     <div className="flex flex-col lg:flex-row h-full" style={{ minHeight: 0 }}>
@@ -180,7 +224,24 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
         {error && <div role="alert" className="p-4 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>}
 
         {panel === 'add' && <AddRecordForm url={url} onDone={onAdded} onCancel={() => setPanel('none')} />}
-        {panel === 'import' && <CsvImport url={url} onDone={onAdded} onCancel={() => setPanel('none')} />}
+        {panel === 'import' && <CsvImport url={url} onDone={onImported} onCancel={() => setPanel('none')} />}
+
+        {sorting && (
+          <div role="status" className="p-4 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#F5EDDC', color: '#1C1208' }}>
+            <p className="font-semibold mb-2">✦ AI is sorting your records… {sorting.done} of {sorting.total}</p>
+            <div aria-hidden="true" style={{ height: 6, borderRadius: 3, backgroundColor: '#E8DCC4' }}>
+              <div style={{ height: 6, borderRadius: 3, backgroundColor: '#A04E1C', width: `${Math.round((sorting.done / Math.max(sorting.total, 1)) * 100)}%`, transition: 'width 0.3s' }} />
+            </div>
+          </div>
+        )}
+        {!sorting && (counts.unreviewed > 0 || aiCount > 0) && records.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#F0EBE1', color: '#1C1208' }}>
+            {aiCount > 0 && <span><strong>{aiCount}</strong> record{aiCount === 1 ? ' was' : 's were'} sorted by AI — check the ones marked <AiTag /> and change any that are wrong.</span>}
+            {counts.unreviewed > 0 && (
+              <button type="button" style={primaryBtn} onClick={() => sortWithAi(records)}>✦ Sort {counts.unreviewed} unreviewed with AI</button>
+            )}
+          </div>
+        )}
 
         {loading ? (
           <p style={{ textAlign: 'center', padding: '3rem', color: '#6B6256' }}>Loading your records…</p>
@@ -244,6 +305,7 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
                       <p style={{ fontSize: '0.75rem', color: '#4A4035', marginTop: '0.1rem' }}>
                         {new Date(r.txn_date + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         {r.source === 'csv' ? ' · imported' : ' · added by hand'}
+                        {r.ai_categorised && <> · <AiTag /></>}
                       </p>
                     </div>
                     <p style={{ fontWeight: 700, color: r.amount >= 0 ? '#4B6A4E' : '#A04E1C', whiteSpace: 'nowrap' }}>
@@ -294,6 +356,14 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
         </>
       )}
     </div>
+  );
+}
+
+function AiTag() {
+  return (
+    <span title="Sorted by AI — change it if it is wrong" style={{ display: 'inline-block', padding: '0 0.4rem', borderRadius: '0.5rem', fontSize: '0.7rem', fontWeight: 700, color: '#7A4A1E', backgroundColor: '#F5EDDC', border: '1px solid #E8D3B0' }}>
+      ✦ AI<span className="sr-only"> sorted</span>
+    </span>
   );
 }
 
@@ -425,7 +495,7 @@ function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: strin
       }
       onDone(added === 0
         ? `Nothing new to import: all ${dupes} row${dupes === 1 ? ' was' : 's were'} already imported.`
-        : `Imported ${added} record${added === 1 ? '' : 's'}${dupes ? ` (${dupes} already imported, skipped)` : ''}. Mark each one as business or personal below.`);
+        : `Imported ${added} record${added === 1 ? '' : 's'}${dupes ? ` (${dupes} already imported, skipped)` : ''}. AI is now sorting them.`);
     } catch {
       setError(`The import stopped after ${added} records. Please try again — records already imported will not be duplicated.`);
     } finally {
