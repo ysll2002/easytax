@@ -18,7 +18,7 @@
 ## 2026-11-15（owner 会话，下午）
 **今日执行**：代理模式 sandbox 测试——发邀请报 RESOURCE_FORBIDDEN，原因是 sandbox app 只订阅了 Agent Authorisation 3.0、代码调 2.0；owner 加订 2.0、重新登录后给 Alex Lawrence 发 ITSA 邀请成功。owner 要求客户表加操作列 → [PR #45](https://github.com/ysll2002/easytax/pull/45)，授权合进 staging `c8d922d`，staging 已部署。
 之后：客户授权链接在 sandbox 404 → 查到 Test Support API，替 Alex 接受邀请成功（204）。PR #46（dashboard 去 Quick access）合进 staging `2ac2071`；PR #47（CSV Choose file 按钮样式）也合进 staging `d6a3a53`，确认样式已进 staging 的 CSS。
-owner 要求 CSV 导入后 AI 自动分类 → PR #48，owner 授权合进 staging `bf14009` 并已部署，staging 库已加 ai_categorised 列；AI 调用待 owner 实测。
+owner 要求 CSV 导入后 AI 自动分类 → PR #48，owner 授权合进 staging `bf14009` 并已部署，staging 库已加 ai_categorised 列；owner 实测 AI 分类可用（514 条分了 283 条）。Alex 授权生效后 What's due 为空 → 查出 obligations 大小写 bug → PR #49 合进 staging `ea28c1f`。
 **学到 / 决定**：隐私政策承诺 AI 分类要呈现给用户审核，所以自动分类保留「AI」标记，不能静默生效；隐私政策没列 Anthropic 为处理方（AI 助手早就在发交易描述），待 owner 决定是否补。HMRC sandbox 的代理登录也会出 IV stub；sandbox 没有客户接受授权的网页，要用 Test Support API。Agent Authorisation 有 3.0，上线前要评估是否迁移。
 
 ## 2026-11-15（owner 会话）

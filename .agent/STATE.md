@@ -60,7 +60,7 @@
 
 ## Deployment 状态
 
-- **Production = main = `f25b383`；staging = `bf14009`**（staging 多了 PR #45、#46、#47、#48，还没进 main；**上线前 production 库要先加 ai_categorised 列**）。f25b383 于 2026-11-15 09:31 UTC 上线，owner 授权；比 1a2afdd 多了 PR #44：藏起 Company Tax。
+- **Production = main = `f25b383`；staging = `ea28c1f`**（staging 多了 PR #45–#49，还没进 main；**上线前 production 库要先加 ai_categorised 列**）。f25b383 于 2026-11-15 09:31 UTC 上线，owner 授权；比 1a2afdd 多了 PR #44：藏起 Company Tax。
 - 原 production 记录：**Production = main = staging = `1a2afdd`**（2026-11-14 22:23 UTC 上线，owner 授权「把 staging 的改动都发布到 production」）。包含：PR #36（去掉银行连接，改手动录入 + CSV）、#37（代理模式，production 里被 HMRC_ENV 挡住）、#38（CSV 修复）、#40（dashboard 清理）、#43（导航去掉 Records），以及另一会话直接合进 main 的 #39（去掉 dashboard footer 的范围说明）和 #41（语言/Homepage 移到侧边栏；#42 的做法在合并冲突时被它取代）。
 - **production 库已建** `business_records`、`agent_connections`、`agent_clients`，`sa_filings.client_id`（两个 migration 20261114 / 20261115，2026-11-14 owner 授权）。
 - **production 只从 main 构建**。本 agent 的 PR 都对 `staging`，要上线还需 staging→main（stg-008）。
@@ -72,6 +72,8 @@
 
 ## 在飞的分支
 
+- [PR #49](https://github.com/ysll2002/easytax/pull/49)（2026-11-15，**已合进 staging** `ea28c1f`，owner 授权；还没进 main）：Obligations API 3.0 返回小写 status（open/fulfilled），代码比较 'Open'/'Fulfilled' → 代理客户页 What's due 永远「Nothing open」，个人 tasks 已提交季度也不显示完成（**production 可能也受影响**）。在 lib/hmrc.ts getObligations 统一转大写开头。
+- 代理模式进度：Alex Lawrence ITSA 已 Authorised（2026-11-15，用 Test Support API 接受）；CSV 514 条导入，AI 分了 283 条、229 条留 Unreviewed（比例偏高，可调）。下一步：What's due → Prepare update → 提交。
 - [PR #48](https://github.com/ysll2002/easytax/pull/48)（2026-11-15，**已合进 staging** `bf14009`，owner 授权；还没进 main）：CSV 导入后 AI 自动分类（owner 要求「不需要人工手动分类」）。不确定的留 Unreviewed，AI 分的带「✦ AI」标记、用户一改就清除（隐私政策写了 AI 分类会呈现给用户审核）。新列 `business_records.ai_categorised`：**staging 库已加，production 库上线前必须先加**（records API 会 select 这一列）。staging 已部署，路由未登录返回 401 正常；AI 调用本身等 owner 在 staging 导 CSV 实测。
 - [PR #47](https://github.com/ysll2002/easytax/pull/47)（2026-11-15，**已合进 staging** `d6a3a53`，owner 授权；还没进 main）：记录页 CSV 导入的 Choose file 改成按钮样式。
 - [PR #46](https://github.com/ysll2002/easytax/pull/46)（2026-11-15，**已合进 staging** `2ac2071`，owner 授权；还没进 main）：dashboard 首页去掉 Quick access / Business records。
