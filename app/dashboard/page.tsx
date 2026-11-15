@@ -5,6 +5,7 @@ import { ChevronRight, User, Building2, RefreshCw } from 'lucide-react';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import FilingStatus from '@/components/FilingStatus';
 import { IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
+import { SHOW_COMPANY_TAX } from '@/lib/features';
 
 /** Whether this address is already on the launch list, so the banner does not
  *  offer a subscription somebody has already taken. Any failure reads as "not
@@ -62,7 +63,7 @@ export default async function DashboardHome() {
         </Link>
 
         {/* Company Tax track */}
-        <Link href="/dashboard/company" style={{ textDecoration: 'none', display: 'block' }}>
+        {SHOW_COMPANY_TAX && <Link href="/dashboard/company" style={{ textDecoration: 'none', display: 'block' }}>
           <div className="p-5 sm:p-6 rounded-2xl flex items-center gap-5 transition-all hover:shadow-md" style={{ backgroundColor: '#FFFFFF', border: '1.5px solid #E8E2DA' }}>
             <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#F0EBE1' }}>
               <Building2 size={22} color="#1C1208" strokeWidth={1.8} />
@@ -74,7 +75,7 @@ export default async function DashboardHome() {
             </div>
             <ChevronRight size={18} color="#A04E1C" className="flex-shrink-0" />
           </div>
-        </Link>
+        </Link>}
       </div>
 
       {/* Quick access */}

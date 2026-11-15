@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { FileText, Building2, User, Settings, Users } from 'lucide-react';
+import { SHOW_COMPANY_TAX } from '@/lib/features';
 
 // showAgent: agent mode (acting for clients) is only offered where HMRC has
 // granted it — the layout decides on the server.
@@ -17,12 +18,12 @@ export default function SidebarNav({ showAgent = false }: { showAgent?: boolean 
         { href: '/dashboard/individual', label: t('selfAssessment'), icon: FileText },
       ],
     },
-    {
+    ...(SHOW_COMPANY_TAX ? [{
       label: t('company'),
       items: [
         { href: '/dashboard/company', label: t('companyTax'), icon: Building2 },
       ],
-    },
+    }] : []),
     ...(showAgent ? [{
       label: t('agent'),
       items: [
