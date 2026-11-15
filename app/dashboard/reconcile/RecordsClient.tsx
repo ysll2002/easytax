@@ -451,7 +451,13 @@ function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: strin
       </p>
       <label className="block mb-3">
         <span style={labelStyle}>CSV file</span>
-        <input type="file" accept=".csv,text/csv" onChange={onFile} className="text-sm" style={{ color: '#1C1208' }} />
+        <input
+          type="file"
+          accept=".csv,text/csv"
+          onChange={onFile}
+          className="block text-sm cursor-pointer rounded-full file:mr-3 file:px-4 file:py-2 file:rounded-full file:border file:border-solid file:border-[#A04E1C] file:bg-[#A04E1C] file:text-[#FDFCF8] file:font-semibold file:text-sm file:cursor-pointer hover:file:bg-[#8A4218] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A04E1C]"
+          style={{ color: '#4A4035' }}
+        />
       </label>
 
       {map && (
