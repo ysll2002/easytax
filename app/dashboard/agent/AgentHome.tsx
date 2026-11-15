@@ -271,7 +271,7 @@ function nextStep(c: AgentClientView): { label: string; hint: string; anchor: st
   if (statuses.some(s => NEEDS_REQUEST.includes(s)))
     return { label: 'Request authorisation', hint: 'Ask HMRC to send a request', anchor: 'auth-h', primary: true };
   if (statuses.includes('authorised'))
-    return { label: 'Records and updates', hint: 'Keep records, file what is due', anchor: 'due-h', primary: false };
+    return { label: 'File updates', hint: 'See what is due and what is done', anchor: 'due-h', primary: false };
   return { label: 'Open', hint: '', anchor: '', primary: false };
 }
 

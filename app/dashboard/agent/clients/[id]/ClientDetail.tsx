@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import type { AgentClientView, AuthStatus } from '@/lib/agent-types';
-import RecordsClient from '@/app/dashboard/reconcile/RecordsClient';
 import { card, primaryBtn, secondaryBtn, h1Style, h2Style, StatusBadge, api } from '../../ui';
 import { EXPENSE_BUCKETS } from '@/lib/records';
 
@@ -146,7 +145,7 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
 
   return (
     <div>
-      <div className="p-4 sm:p-8 pb-0 sm:pb-0 max-w-4xl">
+      <div className="p-4 sm:p-8 max-w-4xl">
         <Link href="/dashboard/agent" className="text-sm mb-4 inline-block" style={{ color: '#4A4035' }}>← All clients</Link>
         <h1 style={h1Style}>{client.display_name}</h1>
         <p className="text-sm mb-4" style={{ color: '#4A4035' }}>{client.client_type === 'business' ? 'Company or partnership' : 'Individual or sole trader'}{client.last_checked_at ? ` · checked with HMRC ${fmt(client.last_checked_at)}` : ''}</p>
@@ -256,14 +255,6 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
         )}
       </div>
 
-      <section id="records" aria-label={`${client.display_name} records`} style={{ borderTop: '1px solid #DDD5C8' }}>
-        <RecordsClient
-          clientId={client.id}
-          headingLevel={2}
-          title={`${client.display_name}'s records`}
-          intro="The income and expenses you keep for this client. Quarterly updates are added up from the records you mark as business income or expense."
-        />
-      </section>
     </div>
   );
 }
