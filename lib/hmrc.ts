@@ -223,9 +223,14 @@ export async function getObligations(nino: string, token: string): Promise<Oblig
     token,
     { headers: { Accept: 'application/vnd.hmrc.3.0+json' } },
   );
-  const allObs = data.obligations?.flatMap(
-    (o: { obligationDetails: Obligation[] }) => o.obligationDetails,
-  ) ?? [];
+  // Obligations API 3.0 sends status in lower case ("open" / "fulfilled").
+  // Normalise it so every caller can compare against 'Open' / 'Fulfilled'.
+  const allObs: Obligation[] = data.obligations?.flatMap(
+    (o: { obligationDetails: (Omit<Obligation, 'status'> & { status: string })[] }) => o.obligationDetails,
+  ).map((ob: Omit<Obligation, 'status'> & { status: string }) => ({
+    ...ob,
+    status: String(ob.status).toLowerCase() === 'fulfilled' ? 'Fulfilled' : 'Open',
+  })) ?? [];
   return allObs;
 }
 
