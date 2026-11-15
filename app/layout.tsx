@@ -11,6 +11,7 @@ import PageViewTracker from "@/components/PageViewTracker";
 import EngagementTracker from "@/components/EngagementTracker";
 import { isRtl } from '@/i18n/routing';
 import SkipLink from "@/components/SkipLink";
+import NoWheelNumberInputs from "@/components/NoWheelNumberInputs";
 
 const playfair = Playfair_Display({
   variable: "--font-display",
@@ -175,6 +176,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         />
       </head>
       <body className={`${playfair.variable} ${dmSans.variable} antialiased`}>
+        <NoWheelNumberInputs />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SkipLink />
           <Providers>{children}</Providers>
