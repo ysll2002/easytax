@@ -5,6 +5,12 @@ import { getValidToken, submitQuarterlyUpdate, type QuarterlyData } from '@/lib/
 import { resolveBusinessId } from '@/lib/hmrc-business';
 import { clientFilingContext, AgentError } from '@/lib/agent';
 import { submitAsAgent } from '@/lib/agent-filing';
+import { figuresMatchRecords } from '@/lib/records-check';
+
+const mismatch = (reason: string) => NextResponse.json({
+  error: `${reason} Refill the figures from your records and try again.`,
+  code: 'figures_do_not_match_records',
+}, { status: 409 });
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -19,6 +25,8 @@ export async function POST(req: NextRequest) {
   if (clientId) {
     try {
       const ctx = await clientFilingContext(profileId, clientId, 'itsa');
+      const check = await figuresMatchRecords(profileId, ctx.client.id, body);
+      if (!check.ok) return mismatch(check.reason);
       return NextResponse.json(await submitAsAgent(profileId, ctx, body));
     } catch (err) {
       if (err instanceof AgentError) return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
@@ -36,6 +44,9 @@ export async function POST(req: NextRequest) {
 
   const nino = hmrc.nino ?? (process.env.HMRC_ENV !== 'production' ? 'GW460330D' : null);
   if (!nino) return NextResponse.json({ error: 'NINO missing' }, { status: 400 });
+
+  const check = await figuresMatchRecords(profileId, null, body);
+  if (!check.ok) return mismatch(check.reason);
 
   try {
     const token = await getValidToken(profileId);

@@ -7,6 +7,7 @@ import {
   type BusinessRecord, type RecordCategory, type ExpenseBucket,
 } from '@/lib/records';
 import { parseCsv, guessColumns, extractRows, type ColumnMap, type StatementRow } from '@/lib/csv-statement';
+import { recordsUrl, aiSortIds } from '@/lib/records-client';
 
 // The Records page: the customer's digital record for MTD. Records are added
 // by hand or imported from a CSV statement the customer downloads from their
@@ -33,11 +34,7 @@ const secondaryBtn = { padding: '0.5rem 1rem', borderRadius: '2rem', border: '1p
 const gbp = (n: number) => `£${Math.abs(n).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const today = () => new Date().toISOString().slice(0, 10);
 
-// clientId: an agent working on one of their clients' records.
-const recordsUrl = (clientId?: string) => clientId ? `/api/records?clientId=${encodeURIComponent(clientId)}` : '/api/records';
-const aiUrl = (clientId?: string) => clientId ? `/api/records/ai-classify?clientId=${encodeURIComponent(clientId)}` : '/api/records/ai-classify';
-const AI_BATCH = 100;   // records per AI call (the route's limit)
-const AI_PARALLEL = 3;  // AI calls in flight at once
+
 
 async function send(url: string, method: 'PATCH' | 'DELETE', body: object) {
   const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
@@ -88,24 +85,8 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
   const sortWithAi = useCallback(async (list: BusinessRecord[]) => {
     const ids = list.filter(r => r.category === 'unreviewed').map(r => r.id);
     if (!ids.length) return;
-    const batches: string[][] = [];
-    for (let i = 0; i < ids.length; i += AI_BATCH) batches.push(ids.slice(i, i + AI_BATCH));
-    let done = 0, sorted = 0, failed = 0;
-    setSorting({ done: 0, total: ids.length });
     setHistory([]); // undo history predates the AI changes
-    const run = async () => {
-      for (let b = batches.shift(); b; b = batches.shift()) {
-        try {
-          const res = await fetch(aiUrl(clientId), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: b }) });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok) throw new Error(data.error);
-          sorted += data.sorted ?? 0;
-        } catch { failed += b.length; }
-        done += b.length;
-        setSorting({ done, total: ids.length });
-      }
-    };
-    await Promise.all(Array.from({ length: AI_PARALLEL }, run));
+    const { sorted, failed } = await aiSortIds(clientId, ids, (done, total) => setSorting({ done, total }));
     setSorting(null);
     await load();
     const left = ids.length - sorted;
@@ -446,7 +427,7 @@ function AddRecordForm({ url, onDone, onCancel }: { url: string; onDone: (msg: s
 
 const NONE = -1;
 
-function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: string) => void; onCancel: () => void }) {
+export function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg: string) => void; onCancel: () => void }) {
   const [fileName, setFileName] = useState('');
   const [header, setHeader] = useState<string[]>([]);
   const [rows, setRows] = useState<string[][]>([]);

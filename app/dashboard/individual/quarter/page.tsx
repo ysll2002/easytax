@@ -1,9 +1,11 @@
 'use client';
-import { useState, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { TrendingUp, TrendingDown, CheckCircle2, ChevronRight, Info, RefreshCw, Lock } from 'lucide-react';
+import { TrendingUp, TrendingDown, CheckCircle2, ChevronRight, Info, RefreshCw, FileText } from 'lucide-react';
 import { hmrcFetch } from '@/lib/hmrc-client';
+import { CsvImport } from '@/app/dashboard/reconcile/RecordsClient';
+import { recordsUrl, aiSortIds } from '@/lib/records-client';
 
 const EXPENSE_FIELDS = [
   { key: 'costOfGoods',          label: 'Cost of goods / materials',    hint: 'Stock, raw materials, direct costs' },
@@ -25,6 +27,12 @@ function currentTaxYear() {
 function fmtDate(d: string) {
   return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
+
+const num = (v: string | undefined) => { const n = parseFloat(v || '0'); return Number.isFinite(n) ? n : 0; };
+const round2 = (n: number) => Math.round(n * 100) / 100;
+const sameMoney = (a: number, b: number) => Math.abs(a - b) < 0.005;
+const gbp = (n: number) => `£${n.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+type Figures = { turnover: number; expenses: Record<string, number> };
 
 function QuarterForm() {
   const params  = useSearchParams();
@@ -53,36 +61,128 @@ function QuarterForm() {
   const [pulling,    setPulling]    = useState(false);
   const [pulledAt,   setPulledAt]   = useState<string | null>(null);
   const [unreviewed, setUnreviewed] = useState(0);
+  // What the records currently add up to. Any figure the customer changes is
+  // compared against this and saved to their records as an adjustment.
+  const [baseline,   setBaseline]   = useState<Figures | null>(null);
+  const [noRecords,  setNoRecords]  = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [notice,     setNotice]     = useState('');
+  const [sorting,    setSorting]    = useState<{ done: number; total: number } | null>(null);
+  const [savingAdj,  setSavingAdj]  = useState(false);
+  const [adjSaved,   setAdjSaved]   = useState(0);
   // Review step before anything is sent to HMRC (WCAG 3.3.4 Error Prevention:
   // a submission has legal effect, so the figures are shown back for
   // confirmation first).
   const [confirming, setConfirming] = useState(false);
   const canSubmit = pulledAt != null;
 
-  // HMRC MTD-ITSA production requirement (In-Year #6): quarterly submission
-  // data must be populated from the customer's digital record (their business
-  // records, entered or imported on the Records page), not manually keyed on
-  // the submission screen. This handler pulls the totals for the period; the
-  // input fields below are rendered read-only so corrections must be made in
-  // /dashboard/reconcile (the Records page).
-  async function handlePull() {
-    if (!start || !end) { setError('Missing period dates in URL.'); return; }
+  // HMRC MTD-ITSA production requirement (In-Year #6): quarterly figures
+  // come from the customer's digital record (their business records). The
+  // figures are filled in from the records for the period. The customer may
+  // change a figure; before anything is sent, every change is saved to their
+  // records as an adjustment record dated at the end of the period, and the
+  // figures are pulled from the records again. What is sent to HMRC is
+  // therefore always what the records add up to.
+  const handlePull = useCallback(async (): Promise<Figures | null> => {
+    if (!start || !end) { setError('Missing period dates in URL.'); return null; }
     setPulling(true); setError(''); setConfirming(false);
     try {
       const res  = await fetch(`/api/individual/quarter-totals?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}${clientQs ? `&${clientQs}` : ''}`);
       const data = await res.json();
+      if (res.status === 404 && data.error === 'no_records') {
+        setNoRecords(true); setShowImport(true); setPulledAt(null); setBaseline(null);
+        setTurnover(''); setExpenses({});
+        return null;
+      }
       if (!res.ok || data.error) {
         setError(data.detail ?? data.error ?? 'Failed to pull totals from your records.');
-        return;
+        return null;
       }
-      setTurnover(String(data.turnover));
+      setNoRecords(false);
+      const fig: Figures = { turnover: Number(data.turnover) || 0, expenses: {} };
       const next: Record<string, string> = {};
-      for (const f of EXPENSE_FIELDS) next[f.key] = String(data.expenses[f.key] ?? 0);
+      for (const f of EXPENSE_FIELDS) {
+        fig.expenses[f.key] = Number(data.expenses[f.key] ?? 0) || 0;
+        next[f.key] = String(fig.expenses[f.key]);
+      }
+      setTurnover(String(fig.turnover));
       setExpenses(next);
+      setBaseline(fig);
       setUnreviewed(Number(data.unreviewed) || 0);
       setPulledAt(new Date().toISOString());
+      return fig;
     } finally {
       setPulling(false);
+    }
+  }, [start, end, clientQs]);
+
+  // Fill the figures in as soon as the page opens.
+  useEffect(() => { if (start && end) handlePull(); }, [start, end, handlePull]);
+
+  // After a statement is uploaded here: sort this period's new records with
+  // AI, then fill the figures in from the records.
+  async function afterImport(msg: string) {
+    setShowImport(false);
+    setNotice(msg.replace(' AI is now sorting them.', ''));
+    try {
+      const res = await fetch(`${recordsUrl(clientId)}${clientId ? '&' : '?'}start=${start}&end=${end}`);
+      const data = await res.json();
+      const ids: string[] = (data.records ?? []).filter((r: { category: string }) => r.category === 'unreviewed').map((r: { id: string }) => r.id);
+      if (ids.length) {
+        const { sorted } = await aiSortIds(clientId, ids, (done, total) => setSorting({ done, total }));
+        setNotice(n => `${n} AI sorted ${sorted} of the ${ids.length} records in this quarter.`);
+      }
+    } catch { /* sorting is a convenience; the figures are still pulled below */ }
+    finally { setSorting(null); }
+    await handlePull();
+  }
+
+  // Changes the customer made to the figures, as adjustment records.
+  function pendingAdjustments() {
+    if (!baseline) return [];
+    const out: { description: string; amount: number; category: 'business_income' | 'business_expense'; expenseBucket?: string; label: string; from: number; to: number }[] = [];
+    const t = round2(num(turnover));
+    if (!sameMoney(t, baseline.turnover)) {
+      out.push({ label: 'Turnover', from: baseline.turnover, to: t, category: 'business_income', amount: round2(t - baseline.turnover),
+        description: `Adjustment to turnover, quarterly update ${start} to ${end}` });
+    }
+    for (const f of EXPENSE_FIELDS) {
+      const v = round2(num(expenses[f.key]));
+      const was = baseline.expenses[f.key] ?? 0;
+      if (!sameMoney(v, was)) {
+        // Expenses are stored as money out (negative), so a higher expense is a more negative record.
+        out.push({ label: f.label, from: was, to: v, category: 'business_expense', expenseBucket: f.key, amount: round2(-(v - was)),
+          description: `Adjustment to ${f.label.toLowerCase()}, quarterly update ${start} to ${end}` });
+      }
+    }
+    return out;
+  }
+
+  // Save the changes to the records, then pull the figures from the records
+  // again so the submission matches them.
+  async function saveAdjustments(): Promise<boolean> {
+    const adj = pendingAdjustments();
+    if (!adj.length) return true;
+    setSavingAdj(true); setError('');
+    try {
+      const res = await fetch(recordsUrl(clientId), {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: 'manual', records: adj.map(a => ({ date: end, description: a.description, amount: a.amount, category: a.category, expenseBucket: a.expenseBucket })) }),
+      });
+      if (!res.ok) throw new Error();
+      const wanted = { t: round2(num(turnover)), e: Object.fromEntries(EXPENSE_FIELDS.map(f => [f.key, round2(num(expenses[f.key]))])) };
+      const fig = await handlePull();
+      if (!fig || !sameMoney(fig.turnover, wanted.t) || EXPENSE_FIELDS.some(f => !sameMoney(fig.expenses[f.key] ?? 0, wanted.e[f.key]))) {
+        setError('Your changes were saved to your records, but the records now add up to different figures. Please check the figures below.');
+        return false;
+      }
+      setAdjSaved(n => n + adj.length);
+      return true;
+    } catch {
+      setError('Your changes could not be saved to your records, so nothing has been sent. Please try again.');
+      return false;
+    } finally {
+      setSavingAdj(false);
     }
   }
 
@@ -93,7 +193,11 @@ function QuarterForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!confirming) { setConfirming(true); return; }
+    if (!confirming) {
+      if (!(await saveAdjustments())) return;
+      setConfirming(true);
+      return;
+    }
     setError('');
     setSubmitting(true);
 
@@ -167,36 +271,56 @@ function QuarterForm() {
         <div role="alert" className="p-4 rounded-xl mb-6 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>
       )}
 
-      {/* Digital-record source notice — HMRC MTD-ITSA compliance banner. */}
-      <div className="mb-6 p-4 rounded-2xl flex items-start gap-3" style={{ backgroundColor: '#F5EDDC', border: '1px solid #E5CFA8' }}>
-        <Lock size={16} style={{ color: '#8B6F1F', marginTop: 3, flexShrink: 0 }} />
-        <div className="flex-1 text-xs" style={{ color: '#4A4035', lineHeight: 1.55 }}>
-          <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Figures come from your digital record.</p>
-          <p className="mb-2">
-            HMRC rules for Making Tax Digital require the numbers you submit here to come from your business records, not be typed in on the submission screen. To add, correct or re-categorise a record, go to{' '}
-            <Link href={recordsHref} style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'underline' }}>Records</Link>, then re-pull below.
-          </p>
-          <div className="flex items-center gap-3 flex-wrap">
-            <button type="button" onClick={handlePull} disabled={pulling || !start || !end}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
-              style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: pulling ? 0.6 : 1, cursor: pulling ? 'wait' : 'pointer', border: 'none' }}>
-              {pulling
-                ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />Pulling…</>
-                : <><RefreshCw size={12} />{pulledAt ? 'Re-pull from Records' : 'Pull from Records'}</>}
-            </button>
-            {pulledAt && (
-              <span className="text-[11px]" style={{ color: '#4B6A4E' }}>
-                ✓ Populated {new Date(pulledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-              </span>
+      {/* Where the figures come from — HMRC MTD-ITSA In-Year #6. */}
+      <div className="mb-6 p-4 rounded-2xl" style={{ backgroundColor: '#F5EDDC', border: '1px solid #E5CFA8' }}>
+        <div className="flex items-start gap-3">
+          <FileText size={16} style={{ color: '#8B6F1F', marginTop: 3, flexShrink: 0 }} />
+          <div className="flex-1 text-sm" style={{ color: '#4A4035', lineHeight: 1.55 }}>
+            <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>
+              {noRecords ? 'Upload the bank statement for this quarter' : 'Figures are filled in from your records'}
+            </p>
+            <p className="mb-2 text-xs">
+              {noRecords
+                ? `There are no records between ${fmtDate(start)} and ${fmtDate(end)} yet. Upload a CSV statement and EasyTax will sort it with AI and fill in the figures.`
+                : 'You can change any figure below. When you continue, each change is saved to your records as an adjustment, so your records always match what you send to HMRC.'}
+            </p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <button type="button" onClick={() => setShowImport(v => !v)} aria-expanded={showImport}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
+                style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', border: 'none', cursor: 'pointer' }}>
+                Upload CSV statement
+              </button>
+              <button type="button" onClick={() => handlePull()} disabled={pulling || !start || !end}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full"
+                style={{ backgroundColor: '#1C1208', color: '#FDFCF8', opacity: pulling ? 0.6 : 1, cursor: pulling ? 'wait' : 'pointer', border: 'none' }}>
+                {pulling
+                  ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />Filling in…</>
+                  : <><RefreshCw size={12} />Refill from records</>}
+              </button>
+              <Link href={recordsHref} className="text-xs font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>See all records</Link>
+              {pulledAt && (
+                <span className="text-[11px]" style={{ color: '#4B6A4E' }}>
+                  ✓ Filled in {new Date(pulledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              )}
+            </div>
+            <div aria-live="polite">
+              {sorting && <p role="status" className="mt-2 text-xs font-semibold" style={{ color: '#7A4A1E' }}>✦ AI is sorting this quarter&apos;s records… {sorting.done} of {sorting.total}</p>}
+              {notice && !sorting && <p role="status" className="mt-2 text-xs font-semibold" style={{ color: '#4B6A4E' }}>{notice}</p>}
+            </div>
+            {pulledAt && unreviewed > 0 && (
+              <p role="status" className="mt-2 text-xs font-semibold" style={{ color: '#8A3A12' }}>
+                {unreviewed} record{unreviewed === 1 ? '' : 's'} in this period {unreviewed === 1 ? 'is' : 'are'} not yet marked as business or personal and {unreviewed === 1 ? 'is' : 'are'} not included.{' '}
+                <Link href={recordsHref} style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>.
+              </p>
             )}
           </div>
-          {pulledAt && unreviewed > 0 && (
-            <p role="status" className="mt-2 font-semibold" style={{ color: '#8A3A12' }}>
-              {unreviewed} record{unreviewed === 1 ? '' : 's'} in this period {unreviewed === 1 ? 'is' : 'are'} not yet marked as business or personal and {unreviewed === 1 ? 'is' : 'are'} not included.{' '}
-              <Link href={recordsHref} style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>.
-            </p>
-          )}
         </div>
+        {showImport && (
+          <div className="mt-4" style={{ marginLeft: 0 }}>
+            <CsvImport url={recordsUrl(clientId)} onDone={afterImport} onCancel={() => setShowImport(false)} />
+          </div>
+        )}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -214,13 +338,14 @@ function QuarterForm() {
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold" style={{ color: '#6B6256' }}>£</span>
                   <input
-                    type="number" min="0" step="0.01" required readOnly
-                    value={turnover} placeholder="0.00"
-                    className="w-full pl-8 pr-4 py-3.5 rounded-xl text-base font-semibold cursor-not-allowed"
-                    style={{ border: '1.5px solid #DDD5C8', backgroundColor: '#F5F0E6', outline: 'none', color: '#1C1208' }}
+                    type="number" min="0" step="0.01" required inputMode="decimal"
+                    value={turnover} placeholder="0.00" disabled={!pulledAt}
+                    onChange={e => { setTurnover(e.target.value); setConfirming(false); }}
+                    className="w-full pl-8 pr-4 py-3.5 rounded-xl text-base font-semibold focus-visible:outline-2 focus-visible:outline-[#A04E1C]"
+                    style={{ border: `1.5px solid ${baseline && !sameMoney(num(turnover), baseline.turnover) ? '#A04E1C' : '#DDD5C8'}`, backgroundColor: '#FFFFFF', color: '#1C1208' }}
                   />
                 </div>
-                <p className="text-xs mt-1.5" style={{ color: '#6B6256' }}>Populated from your Records — edit them there to change.</p>
+                <ChangedNote from={baseline?.turnover} to={num(turnover)} />
               </label>
             </div>
 
@@ -247,14 +372,16 @@ function QuarterForm() {
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm" style={{ color: '#6B6256' }}>£</span>
                       <input
-                        type="number" min="0" step="0.01" readOnly
+                        type="number" min="0" step="0.01" inputMode="decimal"
                         aria-label={f.label}
                         value={expenses[f.key] ?? ''}
-                        placeholder="0.00"
-                        className="w-full pl-7 pr-3 py-2.5 rounded-xl text-sm cursor-not-allowed"
-                        style={{ border: '1px solid #DDD5C8', backgroundColor: '#F5F0E6', outline: 'none', color: '#1C1208' }}
+                        placeholder="0.00" disabled={!pulledAt}
+                        onChange={e => { const v = e.target.value; setExpenses(x => ({ ...x, [f.key]: v })); setConfirming(false); }}
+                        className="w-full pl-7 pr-3 py-2.5 rounded-xl text-sm focus-visible:outline-2 focus-visible:outline-[#A04E1C]"
+                        style={{ border: `1px solid ${baseline && !sameMoney(num(expenses[f.key]), baseline.expenses[f.key] ?? 0) ? '#A04E1C' : '#DDD5C8'}`, backgroundColor: '#FFFFFF', color: '#1C1208' }}
                       />
                     </div>
+                    <ChangedNote from={baseline?.expenses[f.key]} to={num(expenses[f.key])} />
                   </div>
                 ))}
               </div>
@@ -269,7 +396,7 @@ function QuarterForm() {
                   <div className="flex justify-between gap-4"><dt>Total expenses</dt><dd style={{ fontWeight: 600 }}>£{totalExpenses.toFixed(2)}</dd></div>
                 </dl>
                 <p className="text-xs mb-4" style={{ color: '#4A4035', lineHeight: 1.55 }}>
-                  These figures will be sent to HMRC as your quarterly update. If something is wrong, go back and correct the records on the Records page. You can also correct a quarterly update later by submitting it again.
+                  These figures will be sent to HMRC as your quarterly update.{adjSaved > 0 ? ` ${adjSaved} change${adjSaved === 1 ? ' was' : 's were'} saved to your records as adjustment${adjSaved === 1 ? '' : 's'}.` : ''} If something is wrong, go back and change it. You can also correct a quarterly update later by submitting it again.
                 </p>
                 <button type="button" onClick={() => setConfirming(false)} className="text-sm font-semibold" style={{ background: 'none', border: 'none', padding: 0, color: '#A04E1C', textDecoration: 'underline', cursor: 'pointer' }}>
                   Go back and edit
@@ -277,17 +404,19 @@ function QuarterForm() {
               </div>
             )}
 
-            <button type="submit" disabled={submitting || !canSubmit}
+            <button type="submit" disabled={submitting || savingAdj || !canSubmit}
               className="w-full flex items-center justify-center gap-2 py-4 rounded-xl font-semibold"
               style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', opacity: (submitting || !canSubmit) ? 0.5 : 1, cursor: (submitting || !canSubmit) ? 'not-allowed' : 'pointer', border: 'none', fontSize: '0.95rem' }}
-              title={!canSubmit ? 'Pull figures from your Records first — the submission cannot be typed manually.' : undefined}>
-              {submitting
+              title={!canSubmit ? 'Upload a statement or add records for this quarter first.' : undefined}>
+              {savingAdj
+                ? <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />Saving your changes to records…</>
+                : submitting
                 ? <><div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />Submitting to HMRC…</>
                 : canSubmit && confirming
                 ? <>Confirm and submit to HMRC <ChevronRight size={16} /></>
                 : canSubmit
                 ? <>Review and submit <ChevronRight size={16} /></>
-                : <>Pull figures first</>}
+                : <>Add records for this quarter first</>}
             </button>
           </div>
 
@@ -333,6 +462,16 @@ function QuarterForm() {
         </div>
       </form>
     </div>
+  );
+}
+
+// Under a figure the customer changed: what the records say, and what happens.
+function ChangedNote({ from, to }: { from: number | undefined; to: number }) {
+  if (from == null || sameMoney(from, to)) return null;
+  return (
+    <p className="text-xs mt-1" style={{ color: '#7A4A1E' }}>
+      Changed from {gbp(from)} in your records. It will be saved as an adjustment of {to > from ? '+' : '−'}{gbp(Math.abs(round2(to - from)))} when you continue.
+    </p>
   );
 }
 
