@@ -72,6 +72,7 @@
 
 ## 在飞的分支
 
+- [PR #48](https://github.com/ysll2002/easytax/pull/48)（2026-11-15，**待 owner 决定合并**）：CSV 导入后 AI 自动分类（owner 要求「不需要人工手动分类」）。不确定的留 Unreviewed，AI 分的带「✦ AI」标记、用户一改就清除（隐私政策写了 AI 分类会呈现给用户审核）。新列 `business_records.ai_categorised`：**staging 库已加，production 库上线前必须先加**（records API 会 select 这一列）。AI 调用本身还没测，要合进 staging 后测。
 - [PR #47](https://github.com/ysll2002/easytax/pull/47)（2026-11-15，**已合进 staging** `d6a3a53`，owner 授权；还没进 main）：记录页 CSV 导入的 Choose file 改成按钮样式。
 - [PR #46](https://github.com/ysll2002/easytax/pull/46)（2026-11-15，**已合进 staging** `2ac2071`，owner 授权；还没进 main）：dashboard 首页去掉 Quick access / Business records。
 - **sandbox 里客户接受授权**：HMRC sandbox 没有客户确认网页（clientActionUrl 404），要用 Agent Authorisation Test Support API：`PUT https://test-api.service.hmrc.gov.uk/agent-authorisation-test-support/invitations/{id}`（开放接口，Accept `application/vnd.hmrc.1.0+json`，Content-Length 0；DELETE 为拒绝）。2026-11-15 已用它接受 Alex Lawrence 的 ITSA 邀请（AYJJ3W41GOLXJ，204）。
