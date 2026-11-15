@@ -23,7 +23,8 @@ export async function submitAsAgent(
 
   const result = await submitQuarterlyUpdate(client.nino, businessId, body, token);
 
-  const totalExpenses = Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0);
+  const round2 = (n: number) => Math.round(n * 100) / 100;
+  const totalExpenses = round2(Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0));
   await supabase.from('sa_filings').insert({
     user_id:         agentUserId,
     client_id:       client.id,
@@ -33,7 +34,7 @@ export async function submitAsAgent(
     period_end:      body.periodEndDate,
     turnover:        body.turnover,
     total_expenses:  totalExpenses,
-    net_profit:      body.turnover - totalExpenses,
+    net_profit:      round2(body.turnover - totalExpenses),
     expenses_detail: body.expenses,
     hmrc_response:   { result, submittedAs: 'agent' },
   });
