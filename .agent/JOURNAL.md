@@ -16,7 +16,7 @@
 ---
 
 ## 2026-11-15（owner 会话）
-**今日执行**：owner 要求先藏起 Company Tax → [PR #44](https://github.com/ysll2002/easytax/pull/44)（侧边栏、手机底栏、dashboard 卡片，`SHOW_COMPANY_TAX` 开关），owner 授权合进 staging `f25b383`，staging 已部署。没进 main/production。
+**今日执行**：owner 要求先藏起 Company Tax → [PR #44](https://github.com/ysll2002/easytax/pull/44)（侧边栏、手机底栏、dashboard 卡片，`SHOW_COMPANY_TAX` 开关），owner 授权合进 staging `f25b383`，staging 已部署。随后 owner 授权上线：main 快进到 `f25b383`，production 部署 nz0thv3ix Ready，首页/登录 200。
 **学到 / 决定**：Company Tax 暂不对用户展示（owner 决定，页面代码保留）。
 
 ## 2026-11-14（追加 · staging 全部上线 production）
