@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { FileText, Building2, User, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { SHOW_COMPANY_TAX } from '@/lib/features';
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -11,7 +12,7 @@ export default function MobileNav() {
 
   const nav = [
     { href: '/dashboard/individual',       label: t('selfAssessShort'), icon: FileText },
-    { href: '/dashboard/company',   label: t('companyShort'),    icon: Building2 },
+    ...(SHOW_COMPANY_TAX ? [{ href: '/dashboard/company', label: t('companyShort'), icon: Building2 }] : []),
     { href: '/dashboard/profile',   label: t('profile'),         icon: User },
   ];
 
