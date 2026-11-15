@@ -4,13 +4,50 @@ import Link from 'next/link';
 import type { AgentClientView, AuthStatus } from '@/lib/agent-types';
 import RecordsClient from '@/app/dashboard/reconcile/RecordsClient';
 import { card, primaryBtn, secondaryBtn, h1Style, h2Style, StatusBadge, api } from '../../ui';
+import { EXPENSE_BUCKETS } from '@/lib/records';
 
 type ItsaOb = { periodKey: string; periodStartDate: string; periodEndDate: string; dueDate: string; receivedDate?: string; status: 'Open' | 'Fulfilled' };
 type VatOb = { periodKey: string; start: string; end: string; due: string; received?: string; status: 'O' | 'F' };
 type Obligations = { itsa?: { obligations?: ItsaOb[]; error?: string }; vat?: { obligations?: VatOb[]; error?: string } };
-type Filing = { id: string; tax_year: string; filing_type: string; period_start: string | null; period_end: string | null; turnover: number | null; net_profit: number | null; submitted_at: string };
+type Filing = {
+  id: string; tax_year: string; filing_type: string; period_start: string | null; period_end: string | null;
+  turnover: number | string | null; total_expenses: number | string | null; net_profit: number | string | null;
+  expenses_detail: Record<string, number> | null;
+  hmrc_response: { result?: { periodId?: string; submissionId?: string; formBundleNumber?: string } } | null;
+  submitted_at: string;
+};
 
 const fmt = (d: string) => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const fmtTime = (d: string) => new Date(d).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+const gbp = (v: number | string | null | undefined) =>
+  `£${(Math.round(Number(v ?? 0) * 100) / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+// The figures sent to HMRC for one filing, as they were submitted.
+function SubmittedFigures({ f }: { f: Filing }) {
+  const ref = f.hmrc_response?.result?.periodId ?? f.hmrc_response?.result?.submissionId ?? f.hmrc_response?.result?.formBundleNumber;
+  const row = (label: string, value: string, strong = false) => (
+    <tr key={label} style={{ borderTop: '1px solid #F0EBE1' }}>
+      <th scope="row" style={{ textAlign: 'left', fontWeight: strong ? 700 : 400, padding: '0.35rem 0.5rem 0.35rem 0', color: '#1C1208' }}>{label}</th>
+      <td style={{ textAlign: 'right', fontWeight: strong ? 700 : 400, padding: '0.35rem 0', fontVariantNumeric: 'tabular-nums', color: '#1C1208' }}>{value}</td>
+    </tr>
+  );
+  return (
+    <div className="mt-2 p-3 rounded-xl" style={{ backgroundColor: '#F7F3EC', border: '1px solid #EDE6DA' }}>
+      <table className="w-full text-sm" style={{ borderCollapse: 'collapse', maxWidth: '32rem' }}>
+        <caption className="sr-only">Figures submitted to HMRC</caption>
+        <tbody>
+          {row('Turnover', gbp(f.turnover), true)}
+          {EXPENSE_BUCKETS.map(b => row(b.label, gbp(f.expenses_detail?.[b.key])))}
+          {row('Total expenses', gbp(f.total_expenses), true)}
+          {row('Net profit', gbp(f.net_profit), true)}
+        </tbody>
+      </table>
+      <p className="text-xs mt-2" style={{ color: '#4A4035' }}>
+        Submitted {fmtTime(f.submitted_at)} by you as agent · tax year {f.tax_year}{ref ? ` · HMRC reference ${ref}` : ''}
+      </p>
+    </div>
+  );
+}
 // UK tax year a date falls in, e.g. 2026-07-06 → 2026-27.
 function taxYearOf(d: string) {
   const [y, m, day] = d.split('-').map(Number);
@@ -162,13 +199,23 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
               {itsaDone.map(o => {
                 const f = filedQuarter(o.periodStartDate, o.periodEndDate);
                 const when = f?.submitted_at ?? o.receivedDate;
-                return (
-                  <li key={'i' + o.periodKey + o.periodStartDate} className="flex flex-wrap items-center gap-2">
+                const head = (
+                  <>
                     <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
                     <span>Income Tax quarterly update · {fmt(o.periodStartDate)} – {fmt(o.periodEndDate)}</span>
-                    <span style={{ color: '#4A4035' }}>
-                      {when ? `· submitted ${fmt(when)}` : '· submitted'}{f ? ' from EasyTax' : ''}
-                    </span>
+                    <span style={{ color: '#4A4035' }}>{when ? `· submitted ${fmt(when)}` : '· submitted'}{f ? ' from EasyTax' : ''}</span>
+                  </>
+                );
+                return (
+                  <li key={'i' + o.periodKey + o.periodStartDate}>
+                    {f ? (
+                      <details>
+                        <summary className="flex flex-wrap items-center gap-2 cursor-pointer">{head}<span style={{ color: '#A04E1C', fontWeight: 600 }}>View submission</span></summary>
+                        <SubmittedFigures f={f} />
+                      </details>
+                    ) : (
+                      <div className="flex flex-wrap items-center gap-2">{head}<span className="text-xs" style={{ color: '#6B6256' }}>(submitted outside EasyTax — no copy here)</span></div>
+                    )}
                   </li>
                 );
               })}
@@ -180,10 +227,16 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
                 </li>
               ))}
               {otherFilings.map(f => (
-                <li key={'f' + f.id} className="flex flex-wrap items-center gap-2">
-                  <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
-                  <span>{f.filing_type === 'quarterly' ? 'Income Tax quarterly update' : f.filing_type} · {f.period_start && f.period_end ? `${fmt(f.period_start)} – ${fmt(f.period_end)}` : f.tax_year}</span>
-                  <span style={{ color: '#4A4035' }}>· submitted {fmt(f.submitted_at)} from EasyTax</span>
+                <li key={'f' + f.id}>
+                  <details>
+                    <summary className="flex flex-wrap items-center gap-2 cursor-pointer">
+                      <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
+                      <span>{f.filing_type === 'quarterly' ? 'Income Tax quarterly update' : f.filing_type} · {f.period_start && f.period_end ? `${fmt(f.period_start)} – ${fmt(f.period_end)}` : f.tax_year}</span>
+                      <span style={{ color: '#4A4035' }}>· submitted {fmt(f.submitted_at)} from EasyTax</span>
+                      <span style={{ color: '#A04E1C', fontWeight: 600 }}>View submission</span>
+                    </summary>
+                    <SubmittedFigures f={f} />
+                  </details>
                 </li>
               ))}
             </ul>
