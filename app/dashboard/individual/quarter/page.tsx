@@ -50,7 +50,9 @@ function QuarterForm() {
   const clientId = params.get('clientId');
   const clientQs = clientId ? `clientId=${encodeURIComponent(clientId)}` : '';
   const backHref = clientId ? `/dashboard/agent/clients/${clientId}` : '/dashboard/individual/tasks';
-  const recordsHref = clientId ? `/dashboard/agent/clients/${clientId}#records` : '/dashboard/reconcile';
+  // An agent's client has no separate records page: their records are
+  // managed here, by uploading the statement for the quarter.
+  const recordsHref = clientId ? null : '/dashboard/reconcile';
 
   const [turnover,   setTurnover]   = useState('');
   const [expenses,   setExpenses]   = useState<Record<string, string>>({});
@@ -297,7 +299,7 @@ function QuarterForm() {
                   ? <><div className="w-3 h-3 rounded-full border-2 border-white border-t-transparent animate-spin" />Filling in…</>
                   : <><RefreshCw size={12} />Refill from records</>}
               </button>
-              <Link href={recordsHref} className="text-xs font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>See all records</Link>
+              {recordsHref && <Link href={recordsHref} className="text-xs font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>See all records</Link>}
               {pulledAt && (
                 <span className="text-[11px]" style={{ color: '#4B6A4E' }}>
                   ✓ Filled in {new Date(pulledAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
@@ -311,7 +313,9 @@ function QuarterForm() {
             {pulledAt && unreviewed > 0 && (
               <p role="status" className="mt-2 text-xs font-semibold" style={{ color: '#8A3A12' }}>
                 {unreviewed} record{unreviewed === 1 ? '' : 's'} in this period {unreviewed === 1 ? 'is' : 'are'} not yet marked as business or personal and {unreviewed === 1 ? 'is' : 'are'} not included.{' '}
-                <Link href={recordsHref} style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>.
+                {recordsHref
+                  ? <Link href={recordsHref} style={{ color: '#A04E1C', textDecoration: 'underline' }}>Review them in Records</Link>
+                  : 'Change a figure below if any of them should be counted.'}
               </p>
             )}
           </div>
