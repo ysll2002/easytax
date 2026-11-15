@@ -15,6 +15,10 @@
 
 ---
 
+## 2026-11-15（owner 会话）
+**今日执行**：owner 要求先藏起 Company Tax → [PR #44](https://github.com/ysll2002/easytax/pull/44)（侧边栏、手机底栏、dashboard 卡片，`SHOW_COMPANY_TAX` 开关），owner 授权合进 staging `f25b383`，staging 已部署。没进 main/production。
+**学到 / 决定**：Company Tax 暂不对用户展示（owner 决定，页面代码保留）。
+
 ## 2026-11-14（追加 · staging 全部上线 production）
 **今日执行**：owner 授权「把 staging 的改动都发布到 production」。main 上有另一会话直接合的 PR #39、#41，不在 staging；先在本地把 main 合进 staging，`app/dashboard/layout.tsx` 冲突：保留 main 的 #41（语言/Homepage 放侧边栏，已在线）+ staging 的 Agent 导航，丢掉我 #42 的做法。build 通过。先在 production 库跑两个 migration（records、agent），再把合并提交 `1a2afdd` 普通 push 到 staging 和 main（两边都是快进，无 force）。production 部署 lqbrr2pk6 Ready；线上冒烟：主要页面 200、无 Open Banking/Plaid 文案、/api/records 和 /api/agent/setup 未登录 401、/api/plaid 404、/dashboard/banking 跳登录、条款第 7 节已更新；production 的 HMRC_ENV 在，代理模式和旧横幅都被挡住。
 **没做 / 没验证**：没有在 production 登录测试（避免在生产库建测试账号）；production 现有 bank_connections 数据未处理；数据库里的博客文章没查 Open Banking 说法。
