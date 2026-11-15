@@ -15,6 +15,10 @@
 
 ---
 
+## 2026-11-15（owner 会话，下午）
+**今日执行**：代理模式 sandbox 测试——发邀请报 RESOURCE_FORBIDDEN，原因是 sandbox app 只订阅了 Agent Authorisation 3.0、代码调 2.0；owner 加订 2.0、重新登录后给 Alex Lawrence 发 ITSA 邀请成功。owner 要求客户表加操作列 → [PR #45](https://github.com/ysll2002/easytax/pull/45)，授权合进 staging `c8d922d`，staging 已部署。
+**学到 / 决定**：HMRC sandbox 的代理登录也会出 IV stub。Agent Authorisation 有 3.0，上线前要评估是否迁移。
+
 ## 2026-11-15（owner 会话）
 **今日执行**：owner 要求先藏起 Company Tax → [PR #44](https://github.com/ysll2002/easytax/pull/44)（侧边栏、手机底栏、dashboard 卡片，`SHOW_COMPANY_TAX` 开关），owner 授权合进 staging `f25b383`，staging 已部署。随后 owner 授权上线：main 快进到 `f25b383`，production 部署 nz0thv3ix Ready，首页/登录 200。
 **学到 / 决定**：Company Tax 暂不对用户展示（owner 决定，页面代码保留）。
