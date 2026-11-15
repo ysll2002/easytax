@@ -22,6 +22,16 @@ const fmtTime = (d: string) => new Date(d).toLocaleString('en-GB', { day: 'numer
 const gbp = (v: number | string | null | undefined) =>
   `£${(Math.round(Number(v ?? 0) * 100) / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+// The button on a Done item that opens and closes its submitted figures.
+function SubmissionToggle() {
+  return (
+    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#1D4ED8] text-white group-hover:bg-[#1E40AF]">
+      <span className="group-open:hidden">View submission</span>
+      <span className="hidden group-open:inline">Hide submission</span>
+    </span>
+  );
+}
+
 // The figures sent to HMRC for one filing, as they were submitted.
 function SubmittedFigures({ f }: { f: Filing }) {
   const ref = f.hmrc_response?.result?.periodId ?? f.hmrc_response?.result?.submissionId ?? f.hmrc_response?.result?.formBundleNumber;
@@ -209,8 +219,8 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
                 return (
                   <li key={'i' + o.periodKey + o.periodStartDate}>
                     {f ? (
-                      <details>
-                        <summary className="flex flex-wrap items-center gap-2 cursor-pointer">{head}<span style={{ color: '#A04E1C', fontWeight: 600 }}>View submission</span></summary>
+                      <details className="group">
+                        <summary className="flex flex-wrap items-center gap-2 cursor-pointer">{head}<SubmissionToggle /></summary>
                         <SubmittedFigures f={f} />
                       </details>
                     ) : (
@@ -228,12 +238,12 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
               ))}
               {otherFilings.map(f => (
                 <li key={'f' + f.id}>
-                  <details>
+                  <details className="group">
                     <summary className="flex flex-wrap items-center gap-2 cursor-pointer">
                       <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
                       <span>{f.filing_type === 'quarterly' ? 'Income Tax quarterly update' : f.filing_type} · {f.period_start && f.period_end ? `${fmt(f.period_start)} – ${fmt(f.period_end)}` : f.tax_year}</span>
                       <span style={{ color: '#4A4035' }}>· submitted {fmt(f.submitted_at)} from EasyTax</span>
-                      <span style={{ color: '#A04E1C', fontWeight: 600 }}>View submission</span>
+                      <SubmissionToggle />
                     </summary>
                     <SubmittedFigures f={f} />
                   </details>
