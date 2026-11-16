@@ -74,7 +74,7 @@
 
 ## 在飞的分支
 
-- **HMRC Agent Authorisation 2.0 production 申请（2026-11-16 回信，Patrick Gordon）**：要 sandbox application ID + 6 个端点的测试时间戳（Create / Get all 30 天 / Get by id / Cancel / Relationship status / De-authorise）。owner 尚未回复。
+- **HMRC Agent Authorisation 2.0 production 申请（2026-11-16 回信，Patrick Gordon）**：要 sandbox application ID + 6 个端点的测试时间戳（Create / Get all 30 天 / Get by id / Cancel / Relationship status / De-authorise）。2026-11-16 13:55–13:57 UTC owner 在 staging 点完，6 个端点全部 2xx（agent_api_log 有记录；HMRC sandbox 不返回 X-Correlation-Id）。已在 Gmail 起草回信（草稿，回复 Support Ref 2026-CRJ844 线程，sandbox app ID 30fb333c-45de-4ce3-9ffa-c3c0beb809e8），**等 owner 自己发**。Alex 已被 deauthorise，后续测试需重新邀请+Test Support 接受。
 - [PR #57](https://github.com/ysll2002/easytax/pull/57)（2026-11-16，**已合进 staging** `1fe64fb`）：新增 GET /agents/{arn}/invitations（Check authorisations 先调它）；新表 agent_api_log 记录每次代理 API 调用（端点名、状态、correlation id、时间），staging 库已建。用来给 HMRC 出时间戳。
 - [PR #56](https://github.com/ysll2002/easytax/pull/56)（2026-11-15，**已合进 staging** `db03e3c`）：代理客户页去掉整个 records 区块（列表、添加、导入、AI 助手），客户记录改为只在季度申报页上传；客户表已授权的 Next step 改为 File updates。个人用户自己的 Records 页（/dashboard/reconcile）不变。
 - [PR #55](https://github.com/ysll2002/easytax/pull/55)（2026-11-15，**已合进 staging** `15adce9`）：View submission 改绿色，大小同 Prepare update（取代 #53 的蓝色）。
