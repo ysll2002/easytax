@@ -207,7 +207,11 @@ export default function YearEndClient() {
   // as intent-to-finalise. The sandbox-only override covers both.
   const canDeclare = (isFinalCalc && calcErrors.length === 0) || (!!calc && ignoreErrors);
   const bsasSummary = (bsas?.adjustedSummaryCalculation ?? bsas?.adjustableSummaryCalculation) as Json | undefined;
-  const bsasAdjusted = !!bsas?.adjustedSummaryCalculation;
+  // HMRC's sandbox examples include an adjusted summary even before anything
+  // is adjusted, so on this sandbox-only page "adjusted" means the customer
+  // sent adjustments here. Revisit when year-end is approved for production:
+  // there adjustedSummaryCalculation is the reliable signal.
+  const bsasAdjusted = !!adjustDone;
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl" id="year-end">
