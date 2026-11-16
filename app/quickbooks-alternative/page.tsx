@@ -9,11 +9,11 @@ import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('QuickBooks Alternative UK — MTD ITSA Software'),
-  description: 'Looking for a QuickBooks alternative in the UK? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC. Free — no monthly subscription, no filing fee.',
+  description: 'Looking for a QuickBooks alternative in the UK? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC. Free — no monthly subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/quickbooks-alternative' },
   openGraph: {
     title: 'QuickBooks Alternative UK — MTD ITSA + Self Assessment + VAT',
-    description: 'QuickBooks charges £30+/month. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no subscription, no filing fee.',
+    description: 'QuickBooks charges £30+/month. EasyTax files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
     url: 'https://easytax.vip/quickbooks-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -35,10 +35,10 @@ const rows: Row[] = [
   { feature: 'No monthly subscription',               easytax: true,               qb: false,                    note: 'EasyTax is pay-per-submission, not a recurring fee' },
   { feature: 'No card required to sign up',           easytax: true,               qb: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               qb: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,               qb: true },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               qb: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,               qb: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: true,               qb: true },
-  { feature: 'Limited company P&L and Balance Sheet', easytax: true,               qb: true },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,               qb: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet', easytax: false,               qb: true, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',             easytax: true,               qb: false,                    note: 'EasyTax uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,               qb: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,              qb: true,                     note: 'EasyTax focuses on tax filing, not a full ledger' },
@@ -61,7 +61,7 @@ export default async function QuickBooksAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'QuickBooks Alternative UK — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and QuickBooks for UK sole traders, landlords and limited companies.',
+    description: 'Side-by-side comparison of EasyTax and QuickBooks for UK sole traders and the self-employed.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/quickbooks-alternative',
@@ -84,7 +84,7 @@ export default async function QuickBooksAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£14–£38/month</em> for QuickBooks? Switch to free — no subscription, no filing fee.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              QuickBooks is powerful — but if you are a UK sole trader who mainly needs <strong style={{ color: '#1C1208' }}>MTD ITSA filing</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying a monthly fee for features you don&apos;t use. EasyTax is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
+              QuickBooks is powerful — but if you are a UK sole trader who mainly needs <strong style={{ color: '#1C1208' }}>MTD ITSA filing</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying a monthly fee for features you don&apos;t use. EasyTax is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -194,7 +194,7 @@ export default async function QuickBooksAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              QuickBooks earns its subscription if you need invoicing, payroll, inventory, or a full ledger. But if you are a <strong>sole trader or landlord who mainly needs to stay HMRC-compliant</strong> — quarterly MTD updates and an annual Self Assessment — EasyTax gives you the same compliance at a fraction of the cost.
+              QuickBooks earns its subscription if you need invoicing, payroll, inventory, or a full ledger. But if you are a <strong>sole trader who mainly needs to stay HMRC-compliant</strong> — quarterly MTD updates and VAT returns — EasyTax gives you the same compliance at a fraction of the cost.
             </p>
           </div>
         </section>
@@ -211,7 +211,7 @@ export default async function QuickBooksAlternative() {
                 },
                 {
                   q: 'Can EasyTax replace QuickBooks for a sole trader?',
-                  a: "If you use QuickBooks mainly for MTD ITSA, Self Assessment, and bank reconciliation — yes, EasyTax covers all of that. If you also rely on QuickBooks for invoicing or payroll, you'd pair EasyTax with a specialist invoicing tool (we recommend GrumpyWhales, which is free) and a payroll tool.",
+                  a: "If you use QuickBooks mainly for MTD ITSA quarterly updates, VAT returns and keeping your income and expense records — yes, EasyTax covers that. It does not file the year-end Self Assessment return yet. If you also rely on QuickBooks for invoicing or payroll, you'd pair EasyTax with a specialist invoicing tool (we recommend GrumpyWhales, which is free) and a payroll tool.",
                 },
                 {
                   q: 'How do I migrate my QuickBooks data?',
@@ -219,7 +219,7 @@ export default async function QuickBooksAlternative() {
                 },
                 {
                   q: 'Does EasyTax support MTD VAT and CT600?',
-                  a: 'Yes — EasyTax files MTD VAT returns and CT600 Corporation Tax directly to HMRC, and produces P&L and Balance Sheet for limited companies.',
+                  a: 'EasyTax files MTD VAT returns directly to HMRC. It does not file CT600 Corporation Tax or prepare limited company accounts.',
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',

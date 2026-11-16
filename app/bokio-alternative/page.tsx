@@ -21,11 +21,11 @@ function daysUntilBokioCloses(): number {
 
 export const metadata: Metadata = {
   title: pageTitle('Bokio Alternative — MTD ITSA Software UK'),
-  description: 'Bokio UK closes 7 July 2026. Migrate to EasyTax — MTD ITSA quarterly updates, Self Assessment, VAT and CT600 for UK sole traders, landlords and limited companies. Free, no subscription, no card to sign up.',
+  description: 'Bokio UK closes 7 July 2026. Migrate to EasyTax — MTD ITSA quarterly updates and VAT returns for UK sole traders and the self-employed. Free, no subscription, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/bokio-alternative' },
   openGraph: {
     title: 'Bokio Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Bokio is closing 7 July 2026. EasyTax is the free, no-subscription MTD-ready alternative for UK sole traders, landlords and limited companies.',
+    description: 'Bokio is closing 7 July 2026. EasyTax is the free, no-subscription MTD-ready alternative for UK sole traders and the self-employed.',
     url: 'https://easytax.vip/bokio-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -48,10 +48,10 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                  easytax: TYPICAL_ANNUAL_COST,                 bokio: '£299.40 (£24.95/mo)' },
   { feature: 'No card to sign up',                   easytax: true,                    bokio: false },
   { feature: 'MTD ITSA quarterly updates',           easytax: true,                    bokio: false,                  note: 'Bokio never built MTD ITSA' },
-  { feature: 'Self Assessment (SA100, SA103, SA105)',easytax: true,                    bokio: false,                  note: 'Bokio did not file SA' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)',easytax: false,                    bokio: false, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                   easytax: true,                    bokio: true },
-  { feature: 'CT600 Corporation Tax filing',         easytax: true,                    bokio: false,                  note: 'Bokio supports CT prep but not filing' },
-  { feature: 'Limited company P&L and Balance Sheet',easytax: true,                    bokio: true },
+  { feature: 'CT600 Corporation Tax filing',         easytax: false,                    bokio: false, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet',easytax: false,                    bokio: true, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',            easytax: true,                    bokio: false,                  note: 'EasyTax uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',               easytax: true,                    bokio: false },
   { feature: 'Full double-entry bookkeeping',        easytax: false,                   bokio: true,                   note: 'EasyTax focuses on tax filing, not full ledger' },
@@ -73,7 +73,7 @@ export default async function BokioAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Bokio Alternative — MTD ITSA Software for UK Sole Traders & Ltd Companies',
-    description: 'Bokio UK is closing on 7 July 2026. Side-by-side comparison of EasyTax and Bokio for UK sole traders, landlords and limited companies.',
+    description: 'Bokio UK is closing on 7 July 2026. Side-by-side comparison of EasyTax and Bokio for UK sole traders and the self-employed.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/bokio-alternative',
@@ -107,7 +107,7 @@ export default async function BokioAlternative() {
               Bokio is closing on <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to EasyTax in minutes.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong>, with no monthly subscription and no filing fee — and since April 2026 you are legally required to file quarterly anyway.
+              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong>, with no monthly subscription and no filing fee — and since April 2026 you are legally required to file quarterly anyway.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -247,7 +247,7 @@ export default async function BokioAlternative() {
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax is better</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No subscription and no per-filing fee. Nothing to pay at all.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Files Self Assessment, MTD ITSA quarterly updates, and CT600 directly to HMRC.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Files MTD ITSA quarterly updates and MTD VAT returns directly to HMRC.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>AI categorisation and AI reconciliation chat.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Still here on 8 July 2026.</span></li>
                 </ul>
@@ -255,7 +255,7 @@ export default async function BokioAlternative() {
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C30' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>Where Bokio was better</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping ledger (we do P&L and Balance Sheet for Ltd companies, not a full ledger).</span></li>
+                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping ledger.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Native invoicing inside the same app (we pair with GrumpyWhales for that).</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>A few more integrations on payroll / payments.</span></li>
                 </ul>
@@ -284,11 +284,11 @@ export default async function BokioAlternative() {
                 { q: 'I am VAT-registered. Does EasyTax file MTD VAT?',
                   a: 'Yes — EasyTax files MTD VAT returns directly to HMRC. If you are over the £90,000 VAT threshold, this is mandatory.' },
                 { q: 'I run a limited company. Does EasyTax do CT600?',
-                  a: 'Yes — EasyTax files CT600 Corporation Tax directly to HMRC, and produces a P&L and Balance Sheet from your bank transactions. It is not a full double-entry ledger like Bokio, but it covers the filings HMRC and Companies House actually need.' },
+                  a: 'No. EasyTax does not file CT600 Corporation Tax or prepare company accounts. For a limited company it files MTD VAT returns only, so you will need other software or an accountant for Corporation Tax and Companies House.' },
                 { q: 'Can I keep my existing invoice number sequence (e.g. INV-2024-0042)?',
                   a: 'Yes. After we import your invoice history, your next invoice continues the existing sequence rather than restarting. Tell us your preference in the migration email.' },
                 { q: 'What about MTD ITSA — when do I need it?',
-                  a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.' },
+                  a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.' },
                 { q: 'Can I import my bank statements?',
                   a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.' },
               ].map((item) => (

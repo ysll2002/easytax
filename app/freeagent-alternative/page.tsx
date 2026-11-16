@@ -9,11 +9,11 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('FreeAgent Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a FreeAgent alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
+  description: 'Looking for a FreeAgent alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/freeagent-alternative' },
   openGraph: {
     title: 'FreeAgent Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'FreeAgent charges £228+/year on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no subscription, no filing fee.',
+    description: 'FreeAgent charges £228+/year on subscription. EasyTax files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
     url: 'https://easytax.vip/freeagent-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -35,10 +35,10 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,       freeagent: '£228+',              note: 'EasyTax is free however many times you file' },
   { feature: 'No card to sign up',                    easytax: true,        freeagent: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,        freeagent: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,        freeagent: true },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,        freeagent: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,        freeagent: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: true,        freeagent: true },
-  { feature: 'Limited company P&L and Balance Sheet', easytax: true,        freeagent: true },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,        freeagent: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet', easytax: false,        freeagent: true, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',             easytax: true,        freeagent: false,                 note: 'EasyTax uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,        freeagent: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,       freeagent: true,                  note: 'EasyTax focuses on tax filing, not a full ledger' },
@@ -61,7 +61,7 @@ export default async function FreeAgentAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'FreeAgent Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and FreeAgent for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free, with no subscription.',
+    description: 'Side-by-side comparison of EasyTax and FreeAgent for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/freeagent-alternative',
@@ -85,7 +85,7 @@ export default async function FreeAgentAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£228/year</em> for FreeAgent? EasyTax files the same returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              FreeAgent is a fine product — but if you are a UK sole trader or landlord who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying for a lot of features you will never use. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly subscription, and no charge when you file.
+              FreeAgent is a fine product — but if you are a UK sole trader who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying for a lot of features you will never use. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly subscription, and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -190,7 +190,7 @@ export default async function FreeAgentAlternative() {
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C30' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>Where FreeAgent wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping and ledger (EasyTax does P&L and Balance Sheet for Ltd companies, not a full ledger).</span></li>
+                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping and ledger.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Native invoicing with client management and payment links.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Built-in payroll and CIS.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Project time tracking for client billing.</span></li>
@@ -199,7 +199,7 @@ export default async function FreeAgentAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you run a small agency, have employees to pay, or need invoicing in the same tool — FreeAgent may be worth the subscription. But if you are a <strong>freelancer or landlord who mainly wants to stay HMRC-compliant at zero cost</strong>, EasyTax is the better fit.
+              If you run a small agency, have employees to pay, or need invoicing in the same tool — FreeAgent may be worth the subscription. But if you are a <strong>freelancer or sole trader who mainly wants to stay HMRC-compliant at zero cost</strong>, EasyTax is the better fit.
             </p>
           </div>
         </section>
@@ -229,8 +229,8 @@ export default async function FreeAgentAlternative() {
                   body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
-                  title: 'File your next quarterly update or Self Assessment',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA and Self Assessment APIs. You get a confirmation receipt.',
+                  title: 'File your next quarterly update',
+                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -273,11 +273,11 @@ export default async function FreeAgentAlternative() {
                 },
                 {
                   q: 'Can EasyTax handle VAT and CT600 as well as Self Assessment?',
-                  a: 'Yes — EasyTax files MTD VAT returns, CT600 Corporation Tax, and Self Assessment (SA100 with SA103 and SA105 supplementary pages) directly to HMRC. It also supports P&L and Balance Sheet for limited companies.',
+                  a: 'Partly. EasyTax files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration (crystallisation).',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',

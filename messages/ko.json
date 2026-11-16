@@ -25,14 +25,14 @@
     "announcement": {
       "live": "Making Tax Digital가 시작되었습니다.",
       "nextUpdate": "다음 분기 신고: {date}.",
-      "status": "HMRC 프로덕션 접근 권한 승인 —— MTD ITSA, Self Assessment, VAT 신고가 열렸습니다."
+      "status": "HMRC 운영 환경 접근 승인 완료 — MTD ITSA 분기별 업데이트와 VAT 신고를 이용할 수 있습니다."
     },
     "hero": {
       "pill": "다음 MTD ITSA 분기 신고: {date} — {days}일 남음",
       "title1": "MTD ITSA 시대.",
       "title2": "HMRC에 분기 신고",
       "title3": "무료로.",
-      "subtitle": "2026년 4월부터 연 £50,000 이상 소득의 자영업자와 임대인은 HMRC에 분기별 업데이트를 보내야 합니다. EasyTax는 몇 분 만에 처리합니다 —— Self Assessment, VAT, 법인 회계까지.",
+      "subtitle": "2026년 4월부터 연 소득 5만 파운드를 넘는 개인사업자는 HMRC에 분기별 업데이트를 보내야 합니다. EasyTax로 몇 분이면 끝나고, VAT 신고도 함께 처리합니다.",
       "subtitleEmph": "구독료도, 건당 수수료도 없습니다 —— EasyTax는 무료입니다.",
       "badgeFree": "무료",
       "badgeNoCard": "가입 시 카드 불필요",
@@ -46,7 +46,7 @@
       "security": "은행 로그인 불필요",
       "fast": "ICO 등록번호 ZA540758",
       "ai": "Finance Panda Limited",
-      "company": "법인 지원"
+      "company": "MTD VAT"
     },
     "tools": {
       "title": "지금 바로 쓸 수 있는 무료 도구",
@@ -56,45 +56,45 @@
     "services": {
       "title1": "모든 것을 지원,",
       "title2": "당신이 누구든.",
-      "subtitle": "Self Assessment을 제출하는 프리랜서든, 전체 회계를 관리하는 법인이든 EasyTax가 함께합니다.",
+      "subtitle": "개인사업자의 분기별 업데이트든 사업체의 VAT 신고든, EasyTax가 HMRC에 바로 제출합니다.",
       "freelancer": {
         "kicker": "프리랜서 및 자영업자용",
         "title": "개인 및 자영 소득",
-        "f1Label": "Self Assessment (SA100)",
-        "f1Desc": "연간 신고서를 몇 분 안에 HMRC에 직접 제출.",
+        "f1Label": "HMRC 마감일",
+        "f1Desc": "어떤 분기가 남아 있고 각 업데이트의 마감일이 언제인지 HMRC에서 바로 확인하세요.",
         "f2Label": "Making Tax Digital (MTD ITSA)",
         "f2Desc": "HMRC에 분기별 업데이트 —— 2026년 의무화 대비.",
         "f3Label": "CSV 가져오기",
         "f3Desc": "은행 CSV 명세서를 가져오거나 직접 기록을 입력하세요.",
         "f4Label": "지출 분류",
         "f4Desc": "AI가 모든 거래에 태그를 답니다. 당신은 몇 초 만에 승인합니다.",
-        "cta": "Self Assessment 시작 →"
+        "cta": "분기별 업데이트 시작 →"
       },
       "company": {
-        "kicker": "법인용",
-        "title": "법인 회계 및 세무",
+        "kicker": "VAT 등록 사업체용",
+        "title": "MTD VAT",
         "f1Label": "VAT 신고",
         "f1Desc": "MTD 호환 API로 분기 또는 연간 VAT를 직접 신고.",
-        "f2Label": "CT600 법인세",
-        "f2Desc": "법인세 신고를 HMRC에 직접 제출 —— 회계사 불필요.",
-        "f3Label": "대차대조표",
-        "f3Desc": "분류된 사업 기록에서 자동 생성됩니다.",
-        "f4Label": "손익계산서",
-        "f4Desc": "수입과 지출 유형별로 분류된 실시간 P&L.",
-        "cta": "법인 계정 설정 →"
+        "f2Label": "미제출 VAT 기간",
+        "f2Desc": "어떤 VAT 신고가 언제 마감인지 HMRC에서 바로 확인하세요.",
+        "f3Label": "HMRC 접수 확인",
+        "f3Desc": "제출할 때마다 HMRC의 확인을 받아 기록으로 보관할 수 있습니다.",
+        "f4Label": "미지원: CT600 및 회사 결산",
+        "f4Desc": "EasyTax는 법인세(CT600) 신고나 대차대조표·손익계산서 작성을 지원하지 않습니다.",
+        "cta": "VAT 신고 시작 →"
       }
     },
     "how": {
       "title1": "5분 만에 신고,",
       "title2": "5시간이 아니라.",
-      "body": "HMRC 계정을 연결하고 수입과 지출을 추가하세요. 은행 CSV 명세서를 가져오거나 직접 입력할 수 있습니다. EasyTax가 AI로 분류하고 Self Assessment, VAT 신고, 회사 결산까지 제출합니다.",
+      "body": "HMRC 계정을 연결하고 수입과 지출을 추가하세요 — 은행 CSV 명세서를 가져오거나 직접 입력하면 됩니다. EasyTax가 AI로 분류한 뒤 분기별 업데이트나 VAT 신고를 제출합니다.",
       "priceLabel": "무료",
       "priceCaption": "구독료도 신고 건당 수수료도 없습니다. HMRC 연결, 기록 가져오기, AI 분류, HMRC 신고가 모두 무료입니다.",
       "cta": "신고 시작 →",
       "step1Title": "계정 연결",
       "step1Desc": "Government Gateway ID를 연결한 뒤 은행 CSV 명세서를 가져오거나 수입과 지출을 직접 입력하세요.",
       "step2Title": "AI가 어려운 작업 처리",
-      "step2Desc": "AI가 모든 거래를 분류하고, 공제 가능한 지출을 계산하며, 신고 또는 법인 회계를 준비합니다.",
+      "step2Desc": "AI가 모든 거래를 분류하고 공제 가능한 비용을 계산해 분기별 업데이트를 준비합니다.",
       "step3Title": "검토 후 제출",
       "step3Desc": "쉬운 요약을 확인하고 HMRC에 직접 제출 —— 즉시 확인."
     },
@@ -102,17 +102,17 @@
       "title1": "질문에",
       "title2": "답해드립니다.",
       "q1Q": "EasyTax는 법인을 지원하나요?",
-      "q1A": "네. EasyTax는 자영업자/프리랜서(Self Assessment, MTD ITSA)와 법인(VAT 신고, CT600 법인세, 대차대조표, P&L) 모두 지원합니다. 요금은 무료입니다 —— 월 구독료도, 건당 수수료도 없습니다.",
+      "q1A": "일부 지원합니다. EasyTax는 개인사업자의 MTD ITSA 분기별 업데이트와 VAT 등록 사업체(유한회사 포함)의 MTD VAT 신고를 제출합니다. 법인세(CT600), 회사 결산, 연말 Self Assessment는 아직 지원하지 않습니다. 요금: 무료 — 월 구독료도, 신고당 수수료도 없습니다.",
       "q2Q": "지원하는 VAT 제도는?",
       "q2A": "Standard, Flat Rate, Annual VAT Accounting을 지원하며 MTD 호환 API로 HMRC에 직접 제출합니다.",
-      "q3Q": "대차대조표는 어떻게 생성되나요?",
-      "q3A": "EasyTax는 분류된 수입·지출 기록과 설정 시 입력한 기초 잔액으로 대차대조표를 만듭니다.",
+      "q3Q": "EasyTax로 연말 Self Assessment를 제출할 수 있나요?",
+      "q3A": "아직은 안 됩니다. EasyTax는 MTD 분기별 업데이트를 제출합니다. 연말 최종 신고(final declaration), 연간 SA100 신고, 부동산 소득은 아직 EasyTax에서 지원하지 않으므로, 이 단계는 HMRC 온라인 서비스나 HMRC가 인정한 다른 소프트웨어를 이용하세요.",
       "q4Q": "CT600은 무엇이며 필요한가요?",
-      "q4A": "CT600은 영국의 모든 법인이 매년 HMRC에 제출해야 하는 법인세 신고서입니다. EasyTax가 P&L과 법인 회계를 기반으로 준비하고 제출합니다.",
+      "q4A": "CT600은 영국의 모든 유한회사가 매년 HMRC에 제출해야 하는 법인세 신고서입니다. EasyTax는 CT600을 제출하지 않습니다 — HMRC 법인세 온라인 서비스, 회계사 또는 다른 소프트웨어를 이용하세요.",
       "q5Q": "HMRC 데이터는 안전한가요?",
       "q5A": "자격 증명은 절대 저장하지 않습니다. 암호화된 연결로 기록을 가져온 후 즉시 폐기합니다.",
       "q6Q": "Self Assessment 마감일은?",
-      "q6A": "온라인 Self Assessment 신고는 매년 1월 31일 마감. VAT 신고는 각 기간 종료 후 1개월 7일 이내. EasyTax가 모든 마감일을 자동 추적합니다."
+      "q6A": "Self Assessment 온라인 신고 마감일은 매년 1월 31일입니다. VAT 신고는 각 VAT 기간이 끝나고 1개월 7일 후가 마감입니다. EasyTax는 HMRC에서 받은 MTD 분기별 업데이트와 VAT 마감일을 보여 줍니다."
     },
     "tips": {
       "kicker": "매일 업데이트",
@@ -132,7 +132,7 @@
     "finalCta": {
       "title1": "더 이상 서류 작업을",
       "title2": "두려워하지 마세요.",
-      "subtitle": "영국 프리랜서와 법인을 위한 서비스. 계정을 연결하고 몇 분 만에 HMRC에 신고하세요 —— 무료, 구독 없음.",
+      "subtitle": "영국 프리랜서와 개인사업자를 위한 서비스. HMRC를 연결하고 몇 분 만에 분기별 업데이트를 제출하세요 — 무료, 구독 없음.",
       "button": "신고 시작 →"
     },
     "footer": {
@@ -142,8 +142,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "EasyTax — 영국 자영업자 및 법인을 위한 MTD ITSA 소프트웨어",
-      "description": "영국 자영업자, 임대인, 법인을 위한 MTD ITSA 소프트웨어. HMRC에 분기 업데이트, Self Assessment, VAT, CT600을 신고. 무료, 구독 없음 —— 가입 시 카드 불필요."
+      "title": "영국 개인사업자를 위한 MTD ITSA 소프트웨어",
+      "description": "영국 개인사업자와 자영업자를 위한 MTD ITSA 소프트웨어. HMRC 분기별 업데이트와 VAT 신고 — 무료, 구독 없음."
     },
     "toolsStrip": {
       "kicker": "무료 · 가입 불필요",
@@ -387,7 +387,7 @@
     "terms": "이용약관",
     "vs": "EasyTax와 {name} 비교",
     "tagline": "Finance Panda Limited. 런던에서 만들었습니다.",
-    "disclaimer": "EasyTax는 Finance Panda Limited의 제품입니다. 무료 도구는 HMRC가 공개한 규정에 대한 일반 정보를 제공할 뿐 세무 자문이 아닙니다. HMRC는 2026년 11월 11일 MTD ITSA, Self Assessment, VAT를 대상으로 당사의 프로덕션 접근 권한을 승인했습니다.",
+    "disclaimer": "EasyTax는 Finance Panda Limited의 제품입니다. 무료 도구는 HMRC가 공개한 규정에 대한 일반 정보를 제공하며 세무 자문이 아닙니다. HMRC는 2026년 11월 11일 MTD ITSA 분기별 업데이트와 VAT에 대한 운영 환경 접근을 승인했습니다.",
     "notifyHeading": "가장 먼저 신고하세요",
     "notifyBlurb": "MTD 신고가 열리는 날 이메일로 알려드립니다. 다른 메일은 보내지 않으며 한 번의 클릭으로 수신을 해지할 수 있습니다.",
     "accessibility": "접근성"

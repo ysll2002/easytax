@@ -11,11 +11,11 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: pageTitle('Coconut Alternative — MTD ITSA Software for Sole Traders'),
-  description: 'Looking for a Coconut alternative? EasyTax offers MTD ITSA quarterly updates, Self Assessment, VAT and CT600 free — no subscription, no filing fee, no card to sign up. Built for UK sole traders, landlords and limited companies.',
+  description: 'Looking for a Coconut alternative? EasyTax offers MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee, no card to sign up. Built for UK sole traders and the self-employed.',
   alternates: { canonical: 'https://easytax.vip/coconut-alternative' },
   openGraph: {
     title: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'MTD ITSA software for sole traders, landlords and limited companies. Free, no subscription.',
+    description: 'MTD ITSA software for sole traders and the self-employed. Free, no subscription.',
     url: 'https://easytax.vip/coconut-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Coconut Alternative — MTD ITSA Software, Free',
-    description: 'MTD ITSA software for sole traders, landlords and limited companies. Free, no subscription.',
+    description: 'MTD ITSA software for sole traders and the self-employed. Free, no subscription.',
   },
 };
 
@@ -37,10 +37,10 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                easytax: TYPICAL_ANNUAL_COST,          coconut: '£99.99 – £159.99' },
   { feature: 'No trial limit, no card needed',     easytax: true,           coconut: false,             note: 'Coconut is 14-day trial then paid' },
   { feature: 'MTD ITSA quarterly updates',         easytax: true,           coconut: true },
-  { feature: 'Self Assessment (SA100)',            easytax: true,           coconut: true },
+  { feature: 'Self Assessment (SA100)',            easytax: false,           coconut: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'VAT returns (MTD VAT)',              easytax: true,           coconut: false,             note: 'Coconut focuses on Income Tax, not VAT' },
-  { feature: 'CT600 Corporation Tax',              easytax: true,           coconut: false,             note: 'Coconut does not file company tax' },
-  { feature: 'Limited company accounts (P&L, Balance Sheet)', easytax: true, coconut: false },
+  { feature: 'CT600 Corporation Tax',              easytax: false,           coconut: false, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company accounts (P&L, Balance Sheet)', easytax: false, coconut: false, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',          easytax: true,           coconut: false,             note: 'EasyTax uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',             easytax: true,           coconut: false },
   { feature: 'CIS subcontractor support',          easytax: false,          coconut: true,              note: 'On EasyTax roadmap' },
@@ -61,7 +61,7 @@ export default async function CoconutAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Coconut for UK sole traders, landlords and limited companies looking for MTD ITSA software without a subscription.',
+    description: 'Side-by-side comparison of EasyTax and Coconut for UK sole traders and the self-employed looking for MTD ITSA software without a subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/coconut-alternative',
@@ -85,7 +85,7 @@ export default async function CoconutAlternative() {
               Looking for a <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Coconut alternative</em>?
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year, billed whether you file or not. EasyTax is <strong style={{ color: '#4B6A4E' }}>free</strong>, with no subscription and no per-filing fee — and we cover limited companies, which Coconut doesn&apos;t.
+              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year, billed whether you file or not. EasyTax is <strong style={{ color: '#4B6A4E' }}>free</strong>, with no subscription and no per-filing fee.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -149,8 +149,8 @@ export default async function CoconutAlternative() {
                   body: 'Coconut’s free tier is a 14-day trial. After that you’re on £99.99 – £159.99/year whether you file or not. EasyTax has no subscription and no per-filing fee — nothing to sign up, nothing when you submit to HMRC, and no countdown.',
                 },
                 {
-                  title: 'You can file company tax (CT600), not just sole trader',
-                  body: 'Coconut is built for sole traders, landlords and CIS subcontractors. If you have a limited company, you still need a separate tool for CT600, Balance Sheet and P&L. EasyTax does all of it in one place.',
+                  title: 'Quarterly updates and VAT returns in one place',
+                  body: 'If you are VAT-registered, EasyTax files your MTD VAT returns in the same place as your MTD ITSA quarterly updates, at no cost.',
                 },
                 {
                   title: 'VAT returns are first-class, not missing',
@@ -193,7 +193,7 @@ export default async function CoconutAlternative() {
               ))}
             </ul>
             <p className="text-sm" style={{ color: '#6B6256' }}>
-              For everyone else — especially sole traders who don’t want to pay £100+/year, and limited companies that need CT600 — EasyTax is the simpler, cheaper choice.
+              For everyone else — especially sole traders who don’t want to pay £100+/year — EasyTax is the simpler, cheaper choice.
             </p>
           </div>
         </section>
@@ -207,10 +207,10 @@ export default async function CoconutAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 { q: 'How much does EasyTax cost?',                       a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.' },
-                { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax sends quarterly updates and final declarations to HMRC via the official MTD ITSA API. We are completing HMRC production approval before live submissions are enabled.' },
+                { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax is recognised by HMRC and sends MTD ITSA quarterly updates directly to HMRC through the official API. The year-end final declaration is not available in EasyTax yet.' },
                 { q: 'Can I migrate from Coconut?',                       a: 'Yes. Sign up free, then import CSV statements downloaded from your bank (or export your transactions from Coconut as CSV) on the Records page.' },
-                { q: 'Does EasyTax support Self Assessment (SA100)?',     a: 'Yes — including SA100, employment income, self-employment (SA103), property income (SA105), and dividends. We file directly to HMRC.' },
-                { q: 'Does EasyTax support limited companies?',           a: 'Yes — that’s the biggest gap vs Coconut. EasyTax does VAT returns (MTD VAT), CT600 Corporation Tax, Balance Sheet, and P&L for UK limited companies.' },
+                { q: 'Does EasyTax support Self Assessment (SA100)?',     a: 'Not yet. EasyTax files MTD ITSA quarterly updates for self-employment and MTD VAT returns. It does not file the annual SA100 return or its supplementary pages yet.' },
+                { q: 'Does EasyTax support limited companies?',           a: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies. It does not file CT600 Corporation Tax or prepare company accounts.' },
                 { q: 'Will it stay free?',                                 a: 'That is the intention, and there is no paid tier today. If charges are ever introduced, account holders will be told by email at least 30 days beforehand, and nothing you have already filed would be charged for.' },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -233,7 +233,7 @@ export default async function CoconutAlternative() {
               <em style={{ color: '#E8895A', fontStyle: 'italic' }}>Pay only when you file.</em>
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card to sign up. No 14-day countdown. Nothing to pay, at sign-up or when you file. Built for UK sole traders, landlords, and limited companies.
+              No card to sign up. No 14-day countdown. Nothing to pay, at sign-up or when you file. Built for UK sole traders and the self-employed.
             </p>
             <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium transition-all" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
               Get started →

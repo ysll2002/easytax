@@ -25,14 +25,14 @@
     "announcement": {
       "live": "Making Tax Digital has started.",
       "nextUpdate": "Next quarterly update: {date}.",
-      "status": "HMRC production access approved — MTD ITSA, Self Assessment and VAT filing are open."
+      "status": "HMRC production access approved — MTD ITSA quarterly updates and VAT filing are open."
     },
     "hero": {
       "pill": "Next MTD ITSA quarterly update: {date} — {days} days to go",
       "title1": "MTD ITSA is here.",
       "title2": "File quarterly to HMRC",
       "title3": "for free.",
-      "subtitle": "From April 2026, sole traders and landlords earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — plus Self Assessment, VAT, and full company accounts.",
+      "subtitle": "From April 2026, self-employed sole traders earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — and files your VAT returns too.",
       "subtitleEmph": "No subscription, no filing fee — EasyTax is free to use.",
       "badgeFree": "Free to use",
       "badgeNoCard": "No card to sign up",
@@ -46,7 +46,7 @@
       "security": "No bank login needed",
       "fast": "ICO reg. ZA540758",
       "ai": "Finance Panda Limited",
-      "company": "Limited Companies"
+      "company": "MTD VAT"
     },
     "tools": {
       "title": "Free tools you can use right now",
@@ -56,45 +56,45 @@
     "services": {
       "title1": "Everything covered,",
       "title2": "whoever you are.",
-      "subtitle": "Whether you're a freelancer filing Self Assessment or a limited company managing full accounts, EasyTax has you covered.",
+      "subtitle": "Whether you send quarterly updates as a sole trader or VAT returns for your business, EasyTax files them straight to HMRC.",
       "freelancer": {
         "kicker": "For Freelancers & Sole Traders",
         "title": "Personal & Self-Employment",
-        "f1Label": "Self Assessment (SA100)",
-        "f1Desc": "File your annual return directly to HMRC in minutes.",
+        "f1Label": "Your HMRC deadlines",
+        "f1Desc": "See which quarters are open and when each update is due, straight from HMRC.",
         "f2Label": "Making Tax Digital (MTD ITSA)",
         "f2Desc": "Quarterly updates to HMRC — stay ahead of the 2026 mandate.",
         "f3Label": "CSV import",
         "f3Desc": "Import your bank's CSV statement or add records by hand.",
         "f4Label": "Expense Categorisation",
         "f4Desc": "AI tags every transaction. You approve in seconds.",
-        "cta": "Start Self Assessment →"
+        "cta": "Start your quarterly update →"
       },
       "company": {
-        "kicker": "For Limited Companies",
-        "title": "Company Accounts & Tax",
+        "kicker": "For VAT-registered businesses",
+        "title": "MTD VAT",
         "f1Label": "VAT Return",
         "f1Desc": "File quarterly or annual VAT returns directly via MTD-compliant API.",
-        "f2Label": "CT600 Company Tax",
-        "f2Desc": "Corporation Tax return filed to HMRC — no accountant needed.",
-        "f3Label": "Balance Sheet",
-        "f3Desc": "Automatically generated from your categorised business records.",
-        "f4Label": "Profit & Loss",
-        "f4Desc": "Real-time P&L statement, categorised by income and expense type.",
-        "cta": "Set Up Company Account →"
+        "f2Label": "Open VAT periods",
+        "f2Desc": "See which VAT returns are due and when, straight from HMRC.",
+        "f3Label": "HMRC receipt",
+        "f3Desc": "Every submission comes back with HMRC's confirmation for your records.",
+        "f4Label": "Not covered: CT600 and company accounts",
+        "f4Desc": "EasyTax does not file Corporation Tax (CT600) or prepare a Balance Sheet or P&L.",
+        "cta": "Start a VAT return →"
       }
     },
     "how": {
       "title1": "File in five minutes,",
       "title2": "not five hours.",
-      "body": "Connect your HMRC account and add your income and expenses — import a CSV statement from your bank or type them in. EasyTax categorises everything with AI and files — whether it's a Self Assessment, VAT return, or full company accounts.",
+      "body": "Connect your HMRC account and add your income and expenses — import a CSV statement from your bank or type them in. EasyTax categorises everything with AI and files your quarterly update or VAT return.",
       "priceLabel": "Free",
       "priceCaption": "No subscription and no per-filing fee. Connecting HMRC, importing your records, AI categorisation and filing to HMRC are all free.",
       "cta": "Start Filing →",
       "step1Title": "Connect your accounts",
       "step1Desc": "Link your Government Gateway ID, then import a CSV statement from your bank or add your income and expenses by hand.",
       "step2Title": "AI does the heavy lifting",
-      "step2Desc": "Our AI categorises every transaction, calculates allowable expenses, and prepares your return or company accounts.",
+      "step2Desc": "Our AI categorises every transaction, calculates allowable expenses, and prepares your quarterly update.",
       "step3Title": "Review & file",
       "step3Desc": "Check a plain-English summary of your return and submit directly to HMRC — instantly confirmed."
     },
@@ -102,17 +102,17 @@
       "title1": "Questions,",
       "title2": "answered.",
       "q1Q": "Does EasyTax support limited companies?",
-      "q1A": "Yes. EasyTax supports both sole traders / freelancers (Self Assessment, MTD ITSA) and limited companies (VAT returns, CT600 Corporation Tax, Balance Sheet, and P&L). Pricing: free — no monthly subscription and no per-filing fee.",
+      "q1A": "Partly. EasyTax files MTD ITSA quarterly updates for sole traders and MTD VAT returns for VAT-registered businesses, including limited companies. It does not file Corporation Tax (CT600), company accounts or the year-end Self Assessment return yet. Pricing: free — no monthly subscription and no per-filing fee.",
       "q2Q": "What VAT schemes do you support?",
       "q2A": "We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.",
-      "q3Q": "How is the Balance Sheet generated?",
-      "q3A": "EasyTax derives your Balance Sheet from your categorised income and expense records and the opening balances you provide during setup.",
+      "q3Q": "Can EasyTax file my year-end Self Assessment?",
+      "q3A": "Not yet. EasyTax files your MTD quarterly updates. The year-end final declaration, the annual SA100 return and property income are not available in EasyTax yet, so use HMRC's online service or other HMRC-recognised software for that step.",
       "q4Q": "What is the CT600 and do I need it?",
-      "q4A": "CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax prepares and submits it based on your P&L and company accounts.",
+      "q4A": "CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax does not file it — use HMRC's Corporation Tax online service, an accountant or other software.",
       "q5Q": "Is my HMRC data safe?",
       "q5A": "Your credentials are never stored. We use them to fetch your records via a secure, encrypted connection and discard them immediately after.",
       "q6Q": "What's the Self Assessment deadline?",
-      "q6A": "Online Self Assessment returns are due 31 January each year. VAT returns are due one month and seven days after each VAT period ends. EasyTax tracks all your deadlines automatically."
+      "q6A": "Online Self Assessment returns are due 31 January each year. VAT returns are due one month and seven days after each VAT period ends. EasyTax shows your MTD quarterly update and VAT deadlines from HMRC."
     },
     "tips": {
       "kicker": "Updated daily",
@@ -132,7 +132,7 @@
     "finalCta": {
       "title1": "Stop dreading",
       "title2": "the paperwork.",
-      "subtitle": "For UK freelancers and limited companies. Connect your accounts, file to HMRC in minutes — free, no subscription.",
+      "subtitle": "For UK freelancers and sole traders. Connect HMRC and file your quarterly updates in minutes — free, no subscription.",
       "button": "Start filing →"
     },
     "footer": {
@@ -142,8 +142,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "MTD ITSA Software for UK Sole Traders & Landlords",
-      "description": "MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free, no subscription."
+      "title": "MTD ITSA Software for UK Sole Traders",
+      "description": "MTD ITSA software for UK sole traders and the self-employed. Quarterly HMRC updates and VAT returns — free, no subscription."
     },
     "toolsStrip": {
       "kicker": "Free · no account needed",
@@ -387,7 +387,7 @@
     "terms": "Terms",
     "vs": "EasyTax vs {name}",
     "tagline": "Finance Panda Limited. Built in London.",
-    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA, Self Assessment and VAT.",
+    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA quarterly updates and VAT.",
     "notifyHeading": "Be first to file",
     "notifyBlurb": "We will email you the day MTD filing opens — nothing else, unsubscribe in one click.",
     "accessibility": "Accessibility"

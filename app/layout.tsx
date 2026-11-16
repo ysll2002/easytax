@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   title: {
     // 55 characters. The old default was 67 and led with a brand nobody has
     // searched for; the category is what a stranger types.
-    default: 'MTD ITSA Software for Sole Traders & Landlords | EasyTax',
+    default: 'MTD ITSA Software for Sole Traders | EasyTax',
     // Kept for any route that has not been moved to `pageTitle()`. Routes that
     // have use `{ absolute }` and opt out of it — which is what stops the
     // `| EasyTax | EasyTax` doubling recurring.
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   // 146 characters. The previous text ran to 253 and was inherited by every
   // page without its own, so the site's most-used description was cut off in
   // results mid-clause.
-  description: 'MTD ITSA software for UK sole traders, landlords and limited companies. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free to use.',
+  description: 'MTD ITSA software for UK sole traders and the self-employed. Quarterly HMRC updates and VAT returns — free to use.',
   keywords: [
     'MTD ITSA software',
     'MTD for income tax UK',
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     url: 'https://easytax.vip',
     siteName: 'EasyTax',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file Self Assessment, VAT and CT600 — free, no subscription.',
+    description: 'MTD ITSA is live. Send quarterly updates to HMRC, file VAT returns — free, no subscription.',
     // No `images` here on purpose. This used to name `/og-image.png`, a file
     // that has never existed in `public/` — so every page on the site
     // advertised a preview image that returned 404, and every link the last
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
-    description: 'MTD ITSA is live. Quarterly HMRC updates, Self Assessment, VAT and CT600 — free, no subscription.',
+    description: 'MTD ITSA is live. Quarterly HMRC updates and VAT returns — free, no subscription.',
     // Likewise: inherited from the generated Open Graph card.
   },
   alternates: { canonical: 'https://easytax.vip' },
@@ -148,7 +148,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
               url: 'https://easytax.vip',
-              description: 'UK tax software for freelancers and limited companies. File Self Assessment, VAT returns, Balance Sheet and P&L directly with HMRC, free.',
+              description: 'UK Making Tax Digital software for sole traders and freelancers. File MTD ITSA quarterly updates and VAT returns directly with HMRC, free.',
               // Shares one Offer object with the homepage node, which carries
               // the same @id. Two Offers for one entity that disagree are a
               // rich-result liability and read as a bait-and-switch to anyone
@@ -156,12 +156,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               // neither restates the price.
               offers: OFFER_JSONLD,
               featureList: [
-                'Self Assessment (SA100)',
                 'Making Tax Digital for Income Tax (MTD ITSA)',
                 'Quarterly HMRC updates',
                 'VAT returns (MTD VAT)',
-                'Balance Sheet',
-                'Profit & Loss',
                 'CSV bank statement import',
                 'AI expense categorisation',
               ],

@@ -9,11 +9,11 @@ import { OFFER_JSONLD, PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Self Assessment Software UK — Free, No Subscription'),
-  description: 'Self Assessment software on the HMRC MTD API for UK sole traders. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC — free, no subscription, no filing fee.',
+  description: 'MTD for Income Tax software on the HMRC MTD API for UK sole traders. File your Making Tax Digital quarterly updates and VAT returns directly to HMRC — free, no subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/self-assessment-software' },
   openGraph: {
     title: 'Self Assessment Software UK — EasyTax, Free',
-    description: 'Self Assessment software built on the HMRC MTD API for sole traders. SA100, SA103, SA105, and MTD ITSA quarterly updates — free, no subscription.',
+    description: 'Making Tax Digital software for sole traders: MTD ITSA quarterly updates and VAT returns — free, no subscription.',
     url: 'https://easytax.vip/self-assessment-software',
     type: 'article',
     locale: 'en_GB',
@@ -38,7 +38,7 @@ export default async function SelfAssessmentSoftware() {
     name: 'EasyTax',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
-    description: 'Self Assessment software built on the HMRC MTD API for UK sole traders and the self-employed. File SA100, SA103, SA105 and MTD ITSA quarterly updates directly to HMRC.',
+    description: 'Making Tax Digital software on the HMRC MTD API for UK sole traders and the self-employed. File MTD ITSA quarterly updates and VAT returns directly to HMRC.',
     url: 'https://easytax.vip',
     offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
@@ -54,7 +54,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'What is self assessment software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Self assessment software is a tool that lets UK taxpayers file their Self Assessment tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. It typically guides you through the return, calculates your tax liability, and submits the data via HMRC\'s API. Software like EasyTax, which connects to the HMRC MTD API, can also handle supplementary pages such as SA103 (self-employment) and SA105 (UK property income).',
+          text: 'Self assessment software is a tool that lets UK taxpayers file their Self Assessment tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. It typically guides you through the return, calculates your tax liability, and submits the data via HMRC\'s API. Under Making Tax Digital, self-employed people also send quarterly updates through recognised software. EasyTax files those quarterly updates; it does not file the annual SA100 return yet.',
         },
       },
       {
@@ -70,15 +70,15 @@ export default async function SelfAssessmentSoftware() {
         name: 'How much does EasyTax self assessment software cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Nothing. EasyTax is free to use — no monthly subscription and no per-filing fee. A sole trader filing one annual SA100 pays £0, and so does one running the full MTD ITSA cycle of 4 quarterly updates plus a final declaration. Connecting HMRC and importing your records is free too.',
+          text: 'Nothing. EasyTax is free to use — no monthly subscription and no per-filing fee. A sole trader filing 4 MTD ITSA quarterly updates a year pays £0. Connecting HMRC and importing your records is free too.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Which SA supplementary pages does EasyTax support?',
+        name: 'Which Self Assessment pages does EasyTax file?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'EasyTax supports SA100 (main return), SA103 (self-employment income and expenses), and SA105 (UK property income). CT600 Corporation Tax and MTD VAT are also supported for limited companies and VAT-registered businesses.',
+          text: 'None yet. EasyTax files MTD ITSA quarterly updates for self-employment and MTD VAT returns. EasyTax does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software.',
         },
       },
       {
@@ -86,7 +86,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'Is EasyTax recognised by HMRC for self assessment?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates, Self Assessment and VAT. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
+          text: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
         },
       },
       {
@@ -94,7 +94,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'What is MTD ITSA and how does it affect my self assessment?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'MTD ITSA (Making Tax Digital for Income Tax Self Assessment) replaces the annual SA return with four quarterly income/expense updates plus a final year-end declaration, all via recognised software. From 6 April 2026, this is mandatory if your combined self-employment and property income exceeds £50,000. The threshold drops to £30,000 from April 2027. EasyTax handles both the quarterly updates and the final declaration in the same workflow.',
+          text: 'MTD ITSA (Making Tax Digital for Income Tax Self Assessment) replaces the annual SA return with four quarterly income/expense updates plus a final year-end declaration, all via recognised software. From 6 April 2026, this is mandatory if your combined self-employment and property income exceeds £50,000. The threshold drops to £30,000 from April 2027. EasyTax files the quarterly updates; the year-end final declaration is not available in EasyTax yet.',
         },
       },
       {
@@ -102,7 +102,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'Can I use EasyTax alongside my existing bookkeeping software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. EasyTax focuses on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere (Xero, FreeAgent, spreadsheets) and use EasyTax purely for the HMRC filing step — SA100, quarterly MTD updates, or VAT returns. Alternatively, you can import your bank statements as CSV and let EasyTax handle everything.',
+          text: 'Yes. EasyTax focuses on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere (Xero, FreeAgent, spreadsheets) and use EasyTax purely for the HMRC filing step — quarterly MTD updates or VAT returns. Alternatively, you can import your bank statements as CSV and let EasyTax handle everything.',
         },
       },
       {
@@ -117,13 +117,13 @@ export default async function SelfAssessmentSoftware() {
   };
 
   const comparisonRows = [
-    { feature: 'Self Assessment SA100', easytax: true, taxcalc: true, taxfiler: true, hmrcPortal: true },
-    { feature: 'SA103 (self-employment)', easytax: true, taxcalc: true, taxfiler: true, hmrcPortal: true },
-    { feature: 'SA105 (property income)', easytax: true, taxcalc: true, taxfiler: true, hmrcPortal: true },
+    { feature: 'Self Assessment SA100', easytax: false, taxcalc: true, taxfiler: true, hmrcPortal: true },
+    { feature: 'SA103 (self-employment)', easytax: false, taxcalc: true, taxfiler: true, hmrcPortal: true },
+    { feature: 'SA105 (property income)', easytax: false, taxcalc: true, taxfiler: true, hmrcPortal: true },
     { feature: 'MTD ITSA quarterly updates', easytax: true, taxcalc: true, taxfiler: false, hmrcPortal: false },
-    { feature: 'MTD ITSA final declaration', easytax: true, taxcalc: true, taxfiler: false, hmrcPortal: false },
+    { feature: 'MTD ITSA final declaration', easytax: false, taxcalc: true, taxfiler: false, hmrcPortal: false },
     { feature: 'MTD VAT return', easytax: true, taxcalc: true, taxfiler: false, hmrcPortal: false },
-    { feature: 'CT600 Corporation Tax', easytax: true, taxcalc: true, taxfiler: true, hmrcPortal: false },
+    { feature: 'CT600 Corporation Tax', easytax: false, taxcalc: true, taxfiler: true, hmrcPortal: false },
     { feature: 'AI expense categorisation', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: false },
     { feature: 'No monthly subscription', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: true },
     { feature: 'No card required to start', easytax: true, taxcalc: false, taxfiler: false, hmrcPortal: true },
@@ -149,13 +149,13 @@ export default async function SelfAssessmentSoftware() {
               Self assessment software for UK sole traders — <em style={{ color: '#4B6A4E', fontStyle: 'italic' }}>free, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>Self Assessment software built on the HMRC MTD API</strong> built for UK sole traders, the self-employed, and landlords. File your SA100 (plus SA103 and SA105 supplementary pages), quarterly MTD ITSA updates, VAT returns and CT600 directly to HMRC — <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to start.
+              EasyTax is <strong style={{ color: '#1C1208' }}>Self Assessment software built on the HMRC MTD API</strong> built for UK sole traders and the self-employed. File your quarterly MTD ITSA updates and VAT returns directly to HMRC — <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA103 · SA105 included</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA quarterly updates</span>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
@@ -175,13 +175,13 @@ export default async function SelfAssessmentSoftware() {
               What does self assessment software do?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Self assessment software connects to HMRC on your behalf and submits your tax return digitally — more reliably and with better guidance than HMRC&rsquo;s own web portal. EasyTax goes further: import a CSV statement from your bank or add records by hand, and it AI-categorises them against HMRC allowable expenses and builds your return in real time. You review, approve, and submit in minutes.
+              Self assessment software connects to HMRC on your behalf and submits your tax return digitally — more reliably and with better guidance than HMRC&rsquo;s own web portal. EasyTax goes further: import a CSV statement from your bank or add records by hand, and it AI-categorises them against HMRC allowable expenses and builds your quarterly update in real time. You review, approve, and submit in minutes.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { label: 'Annual SA filing', title: 'SA100 + supplementary pages', body: 'File your full Self Assessment return — SA100 main form, SA103 (self-employment), SA105 (property income) — directly to HMRC via the official API.' },
-                { label: 'Since April 2026', title: 'MTD ITSA quarterly updates', body: 'For those earning over £50,000, quarterly income and expense submissions are now mandatory. EasyTax handles both the quarterly cycle and the annual final declaration.' },
-                { label: 'Already mandatory', title: 'MTD VAT', body: 'If you are VAT-registered above £90,000 turnover, MTD VAT is already required. EasyTax files VAT returns directly to HMRC alongside your SA.' },
+                { label: 'Annual SA filing', title: 'SA100 + supplementary pages', body: 'The annual return for the 2025/26 tax year and earlier. EasyTax does not file it yet — use HMRC’s online service or other HMRC-recognised software.' },
+                { label: 'Since April 2026', title: 'MTD ITSA quarterly updates', body: 'For those earning over £50,000, quarterly income and expense submissions are now mandatory. EasyTax files the quarterly updates; the annual final declaration is not available in EasyTax yet.' },
+                { label: 'Already mandatory', title: 'MTD VAT', body: 'If you are VAT-registered above £90,000 turnover, MTD VAT is already required. EasyTax files VAT returns directly to HMRC alongside your quarterly updates.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>{item.label}</p>
@@ -197,40 +197,20 @@ export default async function SelfAssessmentSoftware() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.75rem' }}>
-              Everything EasyTax files to HMRC
+              What EasyTax files to HMRC
             </h2>
             <p className="text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              One tool covers your entire HMRC filing obligation — from the annual Self Assessment to quarterly MTD updates.
+              Your MTD ITSA quarterly updates and VAT returns, and the records behind them. EasyTax does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software. CT600 Corporation Tax is not supported.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               {[
-                {
-                  title: 'SA100 — main Self Assessment return',
-                  body: 'The full Self Assessment tax return for individuals, submitted directly to HMRC via the official API. EasyTax calculates your tax liability and sends a complete, HMRC-compliant SA100.',
-                },
-                {
-                  title: 'SA103 — self-employment pages',
-                  body: 'The supplementary pages for self-employment income and allowable expenses (Class 4 NIC, capital allowances, simplified expenses). Required for sole traders and freelancers.',
-                },
-                {
-                  title: 'SA105 — UK property income pages',
-                  body: 'The supplementary pages for UK residential and commercial property rental income, mortgage interest relief, and allowable property expenses. Required for landlords.',
-                },
                 {
                   title: 'MTD ITSA quarterly updates',
                   body: 'Four quarterly income and expense submissions per year as required by Making Tax Digital for Income Tax. Import a CSV statement from your bank and EasyTax AI-categorises it, so each quarter takes minutes not hours.',
                 },
                 {
-                  title: 'MTD ITSA final declaration (crystallisation)',
-                  body: 'The year-end confirmation that replaces the old January SA deadline under MTD ITSA. EasyTax handles this in the same workflow as your quarterly updates.',
-                },
-                {
                   title: 'MTD VAT return',
                   body: 'Submit your VAT return directly to HMRC via the MTD VAT API. Mandatory for VAT-registered businesses above the £90,000 threshold.',
-                },
-                {
-                  title: 'CT600 Corporation Tax',
-                  body: 'For limited company directors, EasyTax prepares and files the CT600 Corporation Tax return alongside P&L and Balance Sheet statements.',
                 },
                 {
                   title: 'Bank statement import',
@@ -325,12 +305,12 @@ export default async function SelfAssessmentSoftware() {
                   body: 'Import a CSV statement from your bank or add records by hand. EasyTax AI-categorises them against HMRC allowable expenses. Describe an unusual transaction in plain English and the AI resolves it. No spreadsheets, no manual coding.',
                 },
                 {
-                  title: 'SA103 and SA105 supplementary pages included',
-                  body: 'EasyTax files the full self-employment supplementary page (SA103) and the property income page (SA105) as part of the same workflow — not as a separate paid add-on. Landlords who are also self-employed can file both in one submission.',
+                  title: 'Built around HMRC’s expense categories',
+                  body: 'Every record is sorted into the same expense categories HMRC uses for self-employment, so each quarterly update adds up the way HMRC expects — with no separate paid add-on.',
                 },
                 {
                   title: 'Direct HMRC API — no middlemen',
-                  body: 'EasyTax submits via the official HMRC Self Assessment and MTD ITSA APIs. No intermediary agent, no manual re-keying. You receive a real HMRC acknowledgment and submission ID as proof of receipt.',
+                  body: 'EasyTax submits via the official HMRC MTD ITSA and MTD VAT APIs. No intermediary agent, no manual re-keying. You receive a real HMRC acknowledgment and submission ID as proof of receipt.',
                 },
                 {
                   title: 'Designed for self-filers, not accountants',
@@ -362,7 +342,7 @@ export default async function SelfAssessmentSoftware() {
               {[
                 { label: '6 April 2026', title: 'MTD ITSA — £50k+ income', body: 'Sole traders and landlords with combined self-employment and property income above £50,000 must switch to quarterly MTD filing. HMRC\'s own portal will not be an option.' },
                 { label: '6 April 2027', title: 'MTD ITSA — £30k+ income', body: 'The threshold drops to £30,000. Around 1.4 million more taxpayers join the quarterly cycle.' },
-                { label: 'Five submissions per year', title: 'The new filing calendar', body: 'Q1 by 7 Aug · Q2 by 7 Nov · Q3 by 7 Feb · Q4 by 7 May · Final declaration by 31 Jan. EasyTax tracks all five deadlines on your dashboard.' },
+                { label: 'Five submissions per year', title: 'The new filing calendar', body: 'Q1 by 7 Aug · Q2 by 7 Nov · Q3 by 7 Feb · Q4 by 7 May · Final declaration by 31 Jan. EasyTax files the four quarterly updates and shows their deadlines on your dashboard; the final declaration is not available in EasyTax yet.' },
                 { label: 'Below the threshold?', title: 'The annual SA still applies', body: 'If your income is below the MTD threshold, you keep filing annually via software. The 31 January deadline stays the same. EasyTax covers both routes from one account.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -379,7 +359,7 @@ export default async function SelfAssessmentSoftware() {
         <section className="py-16 sm:py-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              How to file your self assessment with EasyTax
+              How to file your MTD quarterly updates with EasyTax
             </h2>
             <ol className="space-y-5">
               {[
@@ -393,7 +373,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'Review your income and expenses',
-                  body: 'Check the AI-categorised transactions, correct any line, or type a plain-English description and let the AI resolve it. Your SA103 or SA105 figures build in real time.',
+                  body: 'Check the AI-categorised transactions, correct any line, or type a plain-English description and let the AI resolve it. Your quarterly figures build in real time.',
                 },
                 {
                   title: 'Connect to HMRC',
@@ -401,7 +381,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'Review and submit',
-                  body: 'EasyTax shows you a summary of your income, expenses, and tax liability. Click Submit — EasyTax sends the SA100 (and supplementary pages) directly to HMRC via the official API. You receive an HMRC acknowledgment receipt.',
+                  body: 'EasyTax shows you a summary of your income and expenses for the quarter. Click Submit — EasyTax sends your quarterly update directly to HMRC via the official API. You receive an HMRC acknowledgment receipt.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -428,7 +408,7 @@ export default async function SelfAssessmentSoftware() {
               {[
                 {
                   q: 'What is self assessment software?',
-                  a: 'Self assessment software is a tool that lets UK taxpayers file their SA tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. Software like EasyTax, which connects to the HMRC MTD API, can also handle supplementary pages such as SA103 (self-employment) and SA105 (property income), and submit quarterly MTD ITSA updates.',
+                  a: 'Self assessment software is a tool that lets UK taxpayers file their SA tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. Under Making Tax Digital, self-employed people also send quarterly updates through recognised software. EasyTax files those quarterly updates; it does not file the annual SA100 return yet.',
                 },
                 {
                   q: 'Do I need self assessment software if I already use HMRC\'s website?',
@@ -436,23 +416,23 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   q: 'How much does EasyTax self assessment software cost?',
-                  a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing one annual SA100 pays £0; so does the full MTD ITSA annual cycle of 4 quarterly updates plus a final declaration. Connecting your bank and HMRC is free too.',
+                  a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing 4 MTD ITSA quarterly updates a year pays £0. Connecting your bank and HMRC is free too.',
                 },
                 {
-                  q: 'Which SA supplementary pages does EasyTax support?',
-                  a: 'EasyTax supports SA100 (main return), SA103 (self-employment) and SA105 (property income), plus MTD VAT for VAT-registered businesses. Corporation Tax (CT600) is not supported — it is not part of the Making Tax Digital APIs.',
+                  q: 'Which Self Assessment pages does EasyTax file?',
+                  a: 'None yet. EasyTax files MTD ITSA quarterly updates for self-employment and MTD VAT returns. EasyTax does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software. Corporation Tax (CT600) is not supported either.',
                 },
                 {
                   q: 'Is EasyTax recognised by HMRC for self assessment?',
-                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates, Self Assessment and VAT. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
+                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
                 },
                 {
                   q: 'What is MTD ITSA and how does it affect my self assessment?',
-                  a: 'MTD ITSA replaces the annual SA return with four quarterly updates plus a year-end final declaration, all via recognised software. From 6 April 2026, mandatory for combined self-employment and property income over £50,000. EasyTax handles both quarterly updates and the annual declaration in one workflow.',
+                  a: 'MTD ITSA replaces the annual SA return with four quarterly updates plus a year-end final declaration, all via recognised software. From 6 April 2026, mandatory for combined self-employment and property income over £50,000. EasyTax files the quarterly updates; the annual final declaration is not available in EasyTax yet.',
                 },
                 {
                   q: 'Can I use EasyTax alongside my existing bookkeeping software?',
-                  a: 'Yes. EasyTax focuses on HMRC submissions. You can keep your invoicing or bookkeeping elsewhere and use EasyTax purely for the filing step — SA100, quarterly MTD updates, or VAT returns.',
+                  a: 'Yes. EasyTax focuses on HMRC submissions. You can keep your invoicing or bookkeeping elsewhere and use EasyTax purely for the filing step — quarterly MTD updates or VAT returns.',
                 },
                 {
                   q: 'When is the self assessment deadline?',
@@ -478,7 +458,7 @@ export default async function SelfAssessmentSoftware() {
               Self assessment software that charges you <em style={{ color: '#E8895A', fontStyle: 'italic' }}>nothing</em>, per filing or per year.
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card required. SA100 · SA103 · SA105 · MTD ITSA. Built on the HMRC MTD API.
+              No card required. MTD ITSA quarterly updates · MTD VAT. Built on the HMRC MTD API.
             </p>
             <div className="flex items-center justify-center gap-3 flex-wrap">
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>

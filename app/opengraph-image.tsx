@@ -1,7 +1,7 @@
 import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og';
 import { getMtdStatus } from '@/lib/mtd-status';
 
-export const alt = 'EasyTax — MTD ITSA software for UK sole traders and landlords';
+export const alt = 'EasyTax — MTD ITSA software for UK sole traders';
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
@@ -21,7 +21,7 @@ export default async function Image() {
   const subtitle =
     status.isLive && status.dueQuarter && status.daysUntilDue !== null
       ? `${status.dueQuarter.taxYear} ${status.dueQuarter.key} quarterly update due ${status.dueQuarter.deadlineLabel}. Free — no subscription, no filing fee.`
-      : 'Quarterly updates, Self Assessment, VAT and CT600 — free, no subscription, no filing fee.';
+      : 'Quarterly updates and VAT returns — free, no subscription, no filing fee.';
 
   return renderOgCard({
     eyebrow: status.isLive ? 'Making Tax Digital is live' : 'Making Tax Digital for Income Tax',

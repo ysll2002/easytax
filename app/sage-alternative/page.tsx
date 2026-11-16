@@ -9,11 +9,11 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('Sage Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a Sage Accounting alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
+  description: 'Looking for a Sage Accounting alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
   alternates: { canonical: 'https://easytax.vip/sage-alternative' },
   openGraph: {
     title: 'Sage Accounting Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Sage Accounting charges up to £336+/year on subscription. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no subscription, no filing fee.',
+    description: 'Sage Accounting charges up to £336+/year on subscription. EasyTax files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
     url: 'https://easytax.vip/sage-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -35,10 +35,10 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,          sage: '£144–£336+',         note: 'EasyTax is free however many times you file; Sage Start/Standard plans are billed monthly' },
   { feature: 'No card to sign up',                    easytax: true,             sage: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,             sage: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,             sage: true },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,             sage: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,             sage: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: true,             sage: true },
-  { feature: 'Limited company P&L and Balance Sheet', easytax: true,             sage: true },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,             sage: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet', easytax: false,             sage: true, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',             easytax: true,             sage: false,                note: 'EasyTax uses Claude AI to categorise your income and expense records' },
   { feature: 'AI categorisation chat',                easytax: true,             sage: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,            sage: true,                 note: 'EasyTax focuses on tax filing; Sage is a full accounting ledger' },
@@ -62,7 +62,7 @@ export default async function SageAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Sage Accounting Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Sage Accounting for UK sole traders and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free, with no subscription.',
+    description: 'Side-by-side comparison of EasyTax and Sage Accounting for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/sage-alternative',
@@ -86,7 +86,7 @@ export default async function SageAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£336/year</em> for Sage? EasyTax files the same HMRC returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Sage Accounting is a powerful platform — but if you are a UK sole trader, landlord, or small limited company mainly needing <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you are paying for a full accounting suite you will never fully use. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, and no charge when you file.
+              Sage Accounting is a powerful platform — but if you are a UK sole trader mainly needing <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying for a full accounting suite you will never fully use. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -200,7 +200,7 @@ export default async function SageAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you have employees, manage stock, or need a full accounting ledger in the same product — Sage may justify its subscription. But if you are a <strong>freelancer, contractor, or landlord who mainly needs to stay HMRC-compliant at low cost</strong>, EasyTax is the better fit.
+              If you have employees, manage stock, or need a full accounting ledger in the same product — Sage may justify its subscription. But if you are a <strong>freelancer or contractor who mainly needs to stay HMRC-compliant at low cost</strong>, EasyTax is the better fit.
             </p>
           </div>
         </section>
@@ -230,8 +230,8 @@ export default async function SageAlternative() {
                   body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
-                  title: 'File your next quarterly update or Self Assessment',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA and Self Assessment APIs. You get a confirmation receipt for every submission.',
+                  title: 'File your next quarterly update',
+                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt for every submission.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -266,15 +266,15 @@ export default async function SageAlternative() {
                 },
                 {
                   q: 'Does EasyTax support VAT returns like Sage does?',
-                  a: 'Yes — EasyTax files MTD VAT returns directly to HMRC via the official Making Tax Digital API. It also handles CT600 Corporation Tax and Self Assessment (SA100 with SA103 and SA105 supplementary pages).',
+                  a: 'Yes — EasyTax files MTD VAT returns directly to HMRC via the official Making Tax Digital API. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'I have employees — can I use EasyTax instead of Sage?',
-                  a: 'EasyTax does not include payroll. If you need payroll, Sage Payroll or a dedicated payroll service is the right fit. EasyTax is best for self-employed individuals and owner-managed limited companies without payroll requirements.',
+                  a: 'EasyTax does not include payroll. If you need payroll, Sage Payroll or a dedicated payroll service is the right fit. EasyTax is best for self-employed individuals without payroll requirements.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',

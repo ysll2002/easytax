@@ -9,11 +9,11 @@ import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Xero Alternative — MTD ITSA Software for UK Sole Traders'),
-  description: 'Looking for a Xero alternative in the UK? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC. Free — no monthly subscription, no filing fee.',
+  description: 'Looking for a Xero alternative in the UK? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC. Free — no monthly subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/xero-alternative' },
   openGraph: {
     title: 'Xero Alternative UK — MTD ITSA + Self Assessment + VAT',
-    description: 'Xero charges £16–£47/month. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 to HMRC free — no subscription, no filing fee.',
+    description: 'Xero charges £16–£47/month. EasyTax files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
     url: 'https://easytax.vip/xero-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -35,10 +35,10 @@ const rows: Row[] = [
   { feature: 'No monthly subscription',               easytax: true,               xero: false,                  note: 'EasyTax is pay-per-submission, not a recurring fee' },
   { feature: 'No card required to sign up',           easytax: true,               xero: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               xero: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,               xero: true },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               xero: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,               xero: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: true,               xero: true },
-  { feature: 'Limited company P&L and Balance Sheet', easytax: true,               xero: true },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,               xero: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet', easytax: false,               xero: true, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',             easytax: true,               xero: false,                  note: 'EasyTax uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,               xero: false },
   { feature: 'Full double-entry bookkeeping',         easytax: false,              xero: true,                   note: 'EasyTax focuses on tax filing, not a full ledger' },
@@ -61,7 +61,7 @@ export default async function XeroAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Xero Alternative UK — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Xero for UK sole traders, landlords and limited companies.',
+    description: 'Side-by-side comparison of EasyTax and Xero for UK sole traders and the self-employed.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/xero-alternative',
@@ -84,7 +84,7 @@ export default async function XeroAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£16–£47/month</em> for Xero? Switch to free.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero is a strong product — but for a UK sole trader who needs <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong>, you&apos;re paying £192–£564/year for functionality you may never use. EasyTax is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
+              Xero is a strong product — but for a UK sole trader who needs <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you&apos;re paying £192–£564/year for functionality you may never use. EasyTax is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -110,7 +110,7 @@ export default async function XeroAlternative() {
               What does Xero actually cost a sole trader?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero Starter costs £16/month + VAT but limits you to 20 bank transactions per month — most sole traders quickly move to Standard at £33/month + VAT. That&apos;s <strong>£475/year inc. VAT</strong>. EasyTax charges nothing. Four MTD quarterly updates plus one Self Assessment come to <strong>£0</strong>.
+              Xero Starter costs £16/month + VAT but limits you to 20 bank transactions per month — most sole traders quickly move to Standard at £33/month + VAT. That&apos;s <strong>£475/year inc. VAT</strong>. EasyTax charges nothing. Four MTD quarterly updates come to <strong>£0</strong>.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -192,7 +192,7 @@ export default async function XeroAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero is worth the subscription if your accountant uses it, if you need multi-currency, or if you have employees to pay. But if you are a <strong>sole trader or landlord who mainly needs to file quarterly and annually with HMRC</strong>, EasyTax does that job for a fraction of the cost.
+              Xero is worth the subscription if your accountant uses it, if you need multi-currency, or if you have employees to pay. But if you are a <strong>sole trader who mainly needs to file quarterly updates with HMRC</strong>, EasyTax does that job for a fraction of the cost.
             </p>
           </div>
         </section>
@@ -209,7 +209,7 @@ export default async function XeroAlternative() {
                 },
                 {
                   q: 'My accountant uses Xero. Can I still use EasyTax?',
-                  a: "If your accountant needs Xero access for year-end work, you may want to keep Xero for that relationship. EasyTax is the right fit if you want to handle your own quarterly MTD updates and Self Assessment without paying a monthly subscription — or if you're looking for a simpler tool alongside a Xero-using accountant.",
+                  a: "If your accountant needs Xero access for year-end work, you may want to keep Xero for that relationship. EasyTax is the right fit if you want to handle your own quarterly MTD updates and VAT returns without paying a monthly subscription — or if you're looking for a simpler tool alongside a Xero-using accountant.",
                 },
                 {
                   q: 'How do I migrate from Xero?',
@@ -221,7 +221,7 @@ export default async function XeroAlternative() {
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',
-                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.',
+                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>

@@ -25,14 +25,14 @@
     "announcement": {
       "live": "Making Tax Digital ya ha comenzado.",
       "nextUpdate": "Próxima declaración trimestral: {date}.",
-      "status": "Acceso de producción aprobado por HMRC: la presentación de MTD ITSA, Self Assessment e IVA ya está abierta."
+      "status": "HMRC ha aprobado nuestro acceso de producción: ya se pueden presentar las actualizaciones trimestrales de MTD ITSA y el IVA."
     },
     "hero": {
       "pill": "Próxima actualización trimestral de MTD ITSA: {date} — faltan {days} días",
       "title1": "MTD ITSA ya llegó.",
       "title2": "A HMRC cada trimestre",
       "title3": "totalmente gratis.",
-      "subtitle": "Desde abril de 2026, los autónomos y arrendadores con ingresos superiores a £50.000 deben enviar actualizaciones trimestrales a HMRC. EasyTax lo hace en minutos — además de Self Assessment, IVA y cuentas anuales completas.",
+      "subtitle": "Desde abril de 2026, los autónomos que ganan más de 50.000 £ deben enviar actualizaciones trimestrales a HMRC. EasyTax lo hace en minutos y también presenta tus declaraciones de IVA.",
       "subtitleEmph": "Sin suscripción y sin coste por declaración — EasyTax es gratis.",
       "badgeFree": "Gratis",
       "badgeNoCard": "Sin tarjeta para registrarte",
@@ -46,7 +46,7 @@
       "security": "Sin acceso a tu banco",
       "fast": "Registro ICO ZA540758",
       "ai": "Finance Panda Limited",
-      "company": "Sociedades limitadas"
+      "company": "MTD IVA"
     },
     "tools": {
       "title": "Herramientas gratuitas que puedes usar ahora",
@@ -56,45 +56,45 @@
     "services": {
       "title1": "Todo cubierto,",
       "title2": "seas quien seas.",
-      "subtitle": "Tanto si eres un freelance presentando Self Assessment como una sociedad limitada gestionando sus cuentas, EasyTax te tiene cubierto.",
+      "subtitle": "Tanto si envías actualizaciones trimestrales como autónomo como si presentas el IVA de tu empresa, EasyTax las envía directamente a HMRC.",
       "freelancer": {
         "kicker": "Para freelancers y autónomos",
         "title": "Personal y trabajo autónomo",
-        "f1Label": "Self Assessment (SA100)",
-        "f1Desc": "Presenta tu declaración anual directamente a HMRC en minutos.",
+        "f1Label": "Tus plazos de HMRC",
+        "f1Desc": "Consulta qué trimestres están abiertos y cuándo vence cada actualización, directamente desde HMRC.",
         "f2Label": "Making Tax Digital (MTD ITSA)",
         "f2Desc": "Actualizaciones trimestrales a HMRC — adelántate al mandato de 2026.",
         "f3Label": "Importación CSV",
         "f3Desc": "Importa el extracto CSV de tu banco o añade registros a mano.",
         "f4Label": "Categorización de gastos",
         "f4Desc": "La IA etiqueta cada transacción. Tú confirmas en segundos.",
-        "cta": "Empezar Self Assessment →"
+        "cta": "Empieza tu actualización trimestral →"
       },
       "company": {
-        "kicker": "Para sociedades limitadas",
-        "title": "Cuentas y fiscalidad de empresa",
+        "kicker": "Para empresas registradas en el IVA",
+        "title": "MTD IVA",
         "f1Label": "Declaración de IVA",
         "f1Desc": "Presenta declaraciones de IVA trimestrales o anuales mediante API compatible con MTD.",
-        "f2Label": "CT600 impuesto de sociedades",
-        "f2Desc": "Declaración del impuesto de sociedades presentada a HMRC — sin contable.",
-        "f3Label": "Balance",
-        "f3Desc": "Generados automáticamente a partir de tus registros categorizados.",
-        "f4Label": "Pérdidas y ganancias",
-        "f4Desc": "Estado de P&L en tiempo real, categorizado por tipo de ingreso y gasto.",
-        "cta": "Configurar cuenta de empresa →"
+        "f2Label": "Periodos de IVA abiertos",
+        "f2Desc": "Consulta qué declaraciones de IVA vencen y cuándo, directamente desde HMRC.",
+        "f3Label": "Justificante de HMRC",
+        "f3Desc": "Cada envío vuelve con la confirmación de HMRC para tus registros.",
+        "f4Label": "No incluido: CT600 y cuentas de la empresa",
+        "f4Desc": "EasyTax no presenta el Impuesto de Sociedades (CT600) ni prepara balance ni cuenta de resultados.",
+        "cta": "Empieza una declaración de IVA →"
       }
     },
     "how": {
       "title1": "Presenta en cinco minutos,",
       "title2": "no en cinco horas.",
-      "body": "Conecta tu cuenta de HMRC y añade tus ingresos y gastos: importa un extracto CSV de tu banco o escríbelos. EasyTax lo categoriza todo con IA y presenta tus declaraciones, ya sea Self Assessment, IVA o las cuentas de tu empresa.",
+      "body": "Conecta tu cuenta de HMRC y añade tus ingresos y gastos: importa un extracto CSV de tu banco o escríbelos a mano. EasyTax lo clasifica todo con IA y presenta tu actualización trimestral o tu declaración de IVA.",
       "priceLabel": "Gratis",
       "priceCaption": "Sin suscripción ni tarifa por declaración. Conectar HMRC, importar tus registros, la categorización con IA y la presentación ante HMRC son gratis.",
       "cta": "Empezar a presentar →",
       "step1Title": "Conecta tus cuentas",
       "step1Desc": "Vincula tu ID de Government Gateway y luego importa un extracto CSV de tu banco o añade tus ingresos y gastos a mano.",
       "step2Title": "La IA hace el trabajo pesado",
-      "step2Desc": "Nuestra IA categoriza cada transacción, calcula gastos deducibles y prepara tu declaración o cuentas.",
+      "step2Desc": "Nuestra IA clasifica cada transacción, calcula los gastos deducibles y prepara tu actualización trimestral.",
       "step3Title": "Revisa y presenta",
       "step3Desc": "Revisa un resumen en lenguaje claro y envía directamente a HMRC — confirmado al instante."
     },
@@ -102,17 +102,17 @@
       "title1": "Preguntas,",
       "title2": "respondidas.",
       "q1Q": "¿EasyTax soporta sociedades limitadas?",
-      "q1A": "Sí. EasyTax soporta tanto autónomos/freelancers (Self Assessment, MTD ITSA) como sociedades limitadas (declaraciones de IVA, CT600, balance y P&L). Precio: gratis — sin suscripción mensual y sin coste por declaración.",
+      "q1A": "En parte. EasyTax presenta las actualizaciones trimestrales de MTD ITSA para autónomos y las declaraciones de IVA (MTD VAT) para empresas registradas en el IVA, incluidas las sociedades limitadas. Todavía no presenta el Impuesto de Sociedades (CT600), las cuentas anuales ni la declaración anual de Self Assessment. Precio: gratis, sin suscripción mensual ni coste por presentación.",
       "q2Q": "¿Qué regímenes de IVA soportáis?",
       "q2A": "Soportamos los regímenes Standard, Flat Rate y Annual VAT Accounting, presentados directamente a HMRC vía APIs compatibles con MTD.",
-      "q3Q": "¿Cómo se genera el balance?",
-      "q3A": "EasyTax elabora tu balance a partir de tus registros de ingresos y gastos categorizados y de los saldos iniciales que indicas al configurar.",
+      "q3Q": "¿Puede EasyTax presentar mi Self Assessment de fin de año?",
+      "q3A": "Todavía no. EasyTax presenta tus actualizaciones trimestrales de MTD. La declaración final de fin de año, la declaración anual SA100 y los ingresos por alquileres aún no están disponibles en EasyTax; para ese paso usa el servicio en línea de HMRC u otro software reconocido por HMRC.",
       "q4Q": "¿Qué es el CT600 y lo necesito?",
-      "q4A": "CT600 es la declaración del impuesto de sociedades que toda sociedad limitada del Reino Unido debe presentar a HMRC cada año. EasyTax la prepara y envía basándose en tu P&L y cuentas.",
+      "q4A": "El CT600 es la declaración del Impuesto de Sociedades que toda sociedad limitada del Reino Unido debe presentar cada año ante HMRC. EasyTax no lo presenta: usa el servicio en línea de HMRC, un contable u otro software.",
       "q5Q": "¿Mis datos HMRC están seguros?",
       "q5A": "Tus credenciales nunca se almacenan. Las usamos para obtener tus registros mediante una conexión cifrada y las descartamos inmediatamente.",
       "q6Q": "¿Cuál es el plazo del Self Assessment?",
-      "q6A": "Las declaraciones online de Self Assessment vencen el 31 de enero de cada año. Las declaraciones de IVA vencen un mes y siete días tras el cierre de cada periodo. EasyTax sigue todos tus plazos automáticamente."
+      "q6A": "Las declaraciones de Self Assessment en línea vencen el 31 de enero de cada año. Las declaraciones de IVA vencen un mes y siete días después del final de cada periodo. EasyTax muestra los plazos de tus actualizaciones trimestrales de MTD y del IVA según HMRC."
     },
     "tips": {
       "kicker": "Actualizado a diario",
@@ -132,7 +132,7 @@
     "finalCta": {
       "title1": "Deja de temer",
       "title2": "el papeleo.",
-      "subtitle": "Para freelancers y sociedades limitadas del Reino Unido. Conecta tus cuentas y presenta a HMRC en minutos — gratis, sin suscripción.",
+      "subtitle": "Para freelancers y autónomos del Reino Unido. Conecta HMRC y presenta tus actualizaciones trimestrales en minutos: gratis y sin suscripción.",
       "button": "Empezar a presentar →"
     },
     "footer": {
@@ -142,8 +142,8 @@
       "twitter": "Twitter"
     },
     "meta": {
-      "title": "Software MTD ITSA para autónomos en el Reino Unido",
-      "description": "Software MTD ITSA para autónomos, arrendadores y sociedades del Reino Unido. Actualizaciones trimestrales a HMRC, Self Assessment, IVA y CT600 — gratis, sin suscripción."
+      "title": "Software MTD ITSA para autónomos del Reino Unido",
+      "description": "Software MTD ITSA para autónomos del Reino Unido. Actualizaciones trimestrales a HMRC y declaraciones de IVA: gratis y sin suscripción."
     },
     "toolsStrip": {
       "kicker": "Gratis · sin cuenta",
@@ -387,7 +387,7 @@
     "terms": "Términos",
     "vs": "EasyTax frente a {name}",
     "tagline": "Finance Panda Limited. Hecho en Londres.",
-    "disclaimer": "EasyTax es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no son asesoramiento fiscal. HMRC aprobó nuestro acceso de producción el 11 de noviembre de 2026 para MTD ITSA, Self Assessment e IVA.",
+    "disclaimer": "EasyTax es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no constituyen asesoramiento fiscal. HMRC aprobó nuestro acceso de producción el 11 de noviembre de 2026 para las actualizaciones trimestrales de MTD ITSA y el IVA.",
     "notifyHeading": "Presenta el primero",
     "notifyBlurb": "Te escribiremos el día que se abran las declaraciones MTD; nada más, y puedes darte de baja con un clic.",
     "accessibility": "Accesibilidad"
