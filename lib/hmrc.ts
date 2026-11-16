@@ -139,18 +139,60 @@ export async function fraudHeaders(): Promise<Record<string, string>> {
   return Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== ''));
 }
 
+// HMRC's API and endpoint names for a call, for the call log.
+function describeCall(method: string, path: string): { api: string; endpoint: string; masked: string } {
+  const masked = path
+    .replace(/\/[A-Z]{2}\d{6}[A-D]?(?=\/|$|\?)/, '/{nino}')
+    .replace(/\/organisations\/vat\/\d{9}/, '/organisations/vat/{vrn}');
+  const p = masked.split('?')[0];
+  const rules: [string, RegExp, string, string][] = [
+    ['POST', /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/trigger\//, 'Individual Calculations', 'Trigger a Self Assessment Tax Calculation'],
+    ['POST', /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/[^/]+\/final-declaration$/, 'Individual Calculations', 'Submit a Self Assessment Final Declaration'],
+    ['GET',  /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/[^/]+$/, 'Individual Calculations', 'Retrieve a Self Assessment Tax Calculation'],
+    ['GET',  /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+$/, 'Individual Calculations', 'List Self Assessment Tax Calculations'],
+    ['GET',  /^\/obligations\/details\/\{nino\}\/crystallisation$/, 'Obligations', 'Retrieve Final Declaration Obligations'],
+    ['GET',  /^\/obligations\/details\/\{nino\}\/income-and-expenditure$/, 'Obligations', 'Retrieve Income and Expenditure Obligations'],
+    ['GET',  /^\/individuals\/self-assessment\/income-summary\/\{nino\}\/self-employment\//, 'Business Income Source Summary', 'Retrieve a Self-Employment BISS'],
+    ['POST', /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/trigger$/, 'Business Source Adjustable Summary', 'Trigger a Business Source Adjustable Summary'],
+    ['POST', /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/self-employment\/[^/]+\/adjust\//, 'Business Source Adjustable Summary', 'Submit Self-Employment Accounting Adjustments'],
+    ['GET',  /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/self-employment\//, 'Business Source Adjustable Summary', 'Retrieve a Self-Employment BSAS'],
+    ['GET',  /^\/individuals\/losses\/\{nino\}\/brought-forward-losses\//, 'Individual Losses', 'List Brought Forward Losses'],
+    ['GET',  /^\/individuals\/losses\/\{nino\}\/loss-claims\//, 'Individual Losses', 'List Loss Claims'],
+    ['GET',  /^\/individuals\/business\/details\/\{nino\}\/list$/, 'Business Details', 'List All Businesses'],
+  ];
+  for (const [m, re, api, endpoint] of rules) if (m === method && re.test(p)) return { api, endpoint, masked };
+  return { api: '', endpoint: `${method} ${p}`, masked };
+}
+
+async function logHmrcCall(method: string, path: string, status: number | null, correlationId: string | null) {
+  try {
+    const { api, endpoint, masked } = describeCall(method, path);
+    let userId: string | null = null;
+    try { userId = (await auth())?.user?.profileId ?? null; } catch { /* outside a request */ }
+    await supabase.from('hmrc_api_log').insert({ user_id: userId, api: api || null, endpoint, method, path: masked, http_status: status, correlation_id: correlationId });
+  } catch { /* logging must never break a filing */ }
+}
+
 async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
   const fh = await fraudHeaders();
-  const res = await fetch(`${BASE}${path}`, {
-    ...opts,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept:        'application/vnd.hmrc.2.0+json',
-      'Content-Type': 'application/json',
-      ...fh,
-      ...(opts.headers as Record<string, string> ?? {}),
-    },
-  });
+  const method = (opts.method ?? 'GET').toUpperCase();
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`, {
+      ...opts,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept:        'application/vnd.hmrc.2.0+json',
+        'Content-Type': 'application/json',
+        ...fh,
+        ...(opts.headers as Record<string, string> ?? {}),
+      },
+    });
+  } catch (err) {
+    await logHmrcCall(method, path, null, null);
+    throw err;
+  }
+  await logHmrcCall(method, path, res.status, res.headers.get('x-correlation-id'));
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     // HMRC's own code, passed through unchanged. This used to be re-labelled
