@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · 税年 {taxYear}",
       "subSaFiling": "税年 {taxYear} · {date} 到期",
       "subVat": "Making Tax Digital · VAT · {date} 到期",
-      "subPayment": "Self Assessment {taxYear} · {date} 到期",
+      "subPayment": "Self Assessment {taxYear} · 截止 {date} · 提醒——仅在你有税款要缴时适用",
       "errNotAuthorisedTitle": "HMRC 未授权访问此记录",
       "errNotAuthorisedIntro": "HMRC 拒绝了请求，但没有说明原因。常见原因如下，按可能性排序：",
       "errNotAuthorisedCause1": "你尚未注册 Making Tax Digital for Income Tax。有 HMRC 账号和国民保险号，与已登记 MTD 是两回事 —— MTD 需要单独注册。",

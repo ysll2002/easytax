@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · Año fiscal {taxYear}",
       "subSaFiling": "Año fiscal {taxYear} · Vence el {date}",
       "subVat": "Making Tax Digital · IVA · Vence el {date}",
-      "subPayment": "Self Assessment {taxYear} · Vence el {date}",
+      "subPayment": "Self Assessment {taxYear} · Vence {date} · Recordatorio: solo si tienes un importe a pagar",
       "errNotAuthorisedTitle": "HMRC no ha autorizado el acceso a este registro",
       "errNotAuthorisedIntro": "HMRC rechazó la solicitud sin indicar el motivo. Estas son las causas habituales, de más a menos probable:",
       "errNotAuthorisedCause1": "No estás dado de alta en Making Tax Digital for Income Tax. Tener una cuenta de HMRC y un número de seguridad social no es lo mismo: MTD requiere un alta aparte.",

@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · Tax year {taxYear}",
       "subSaFiling": "Tax year {taxYear} · Due {date}",
       "subVat": "Making Tax Digital · VAT · Due {date}",
-      "subPayment": "Self Assessment {taxYear} · Due {date}",
+      "subPayment": "Self Assessment {taxYear} · Due {date} · Reminder — only if you have a bill to pay",
       "errNotAuthorisedTitle": "HMRC has not authorised access to this record",
       "errNotAuthorisedIntro": "HMRC refused the request without saying why. These are the usual causes, most likely first:",
       "errNotAuthorisedCause1": "You are not signed up for Making Tax Digital for Income Tax. Having an HMRC account and a National Insurance number is not the same thing — MTD is a separate sign-up.",

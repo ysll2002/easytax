@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { getValidToken, getObligations, getVatObligations } from '@/lib/hmrc';
+import { taxYearFor, paymentReminders } from '@/lib/tax-tasks';
 
 export type TaskType =
   | 'quarterly_mtd'
@@ -28,10 +29,6 @@ export type Task = {
   taxYear?: string;
 };
 
-function taxYearFor(date: Date): string {
-  const y = date.getMonth() >= 3 ? date.getFullYear() : date.getFullYear() - 1;
-  return `${y}-${String(y + 1).slice(2)}`;
-}
 
 function daysUntil(dateStr: string): number {
   return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
@@ -49,43 +46,6 @@ function fmtPeriod(start: string, end: string): string {
   const s = new Date(start).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
   const e = new Date(end).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
   return `${s} – ${e}`;
-}
-
-// Generate SA payment deadlines for a given tax year end (e.g. 2026 for 2025/26)
-function paymentTasks(taxYearEndYear: number): Task[] {
-  const jan31 = `${taxYearEndYear + 1}-01-31`;
-  const jul31 = `${taxYearEndYear + 1}-07-31`;
-  const taxYear = `${taxYearEndYear - 1}-${String(taxYearEndYear).slice(2)}`;
-
-  return [
-    {
-      id:        `poa1-${taxYearEndYear}`,
-      type:      'payment_poa1',
-      title:     '1st Payment on Account',
-      subtitle:  `Self Assessment ${taxYear} · Due 31 Jan ${taxYearEndYear + 1}`,
-      dueDate:   jan31,
-      status:    taskStatus(jan31, false),
-      taxYear,
-    },
-    {
-      id:        `poa2-${taxYearEndYear}`,
-      type:      'payment_poa2',
-      title:     '2nd Payment on Account',
-      subtitle:  `Self Assessment ${taxYear} · Due 31 Jul ${taxYearEndYear + 1}`,
-      dueDate:   jul31,
-      status:    taskStatus(jul31, false),
-      taxYear,
-    },
-    {
-      id:        `balancing-${taxYearEndYear + 1}`,
-      type:      'payment_balancing',
-      title:     'Balancing Payment',
-      subtitle:  `Self Assessment ${taxYear} · Due 31 Jan ${taxYearEndYear + 1}`,
-      dueDate:   jan31,
-      status:    taskStatus(jan31, false),
-      taxYear,
-    },
-  ];
 }
 
 export async function GET() {
@@ -170,23 +130,8 @@ export async function GET() {
       } catch { /* VAT may not be set up */ }
     }
 
-    // ── Payment on account deadlines ─────────────────────────────────────────
-    // Show for current and next tax year if they are within ±1 year
-    const now = new Date();
-    const currentTaxYearEndYear = now.getMonth() >= 3 ? now.getFullYear() : now.getFullYear() - 1;
-    const oneYearAgo = new Date(now); oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-    const oneYearAhead = new Date(now); oneYearAhead.setFullYear(oneYearAhead.getFullYear() + 1);
-
-    for (const year of [currentTaxYearEndYear - 1, currentTaxYearEndYear, currentTaxYearEndYear + 1]) {
-      for (const pt of paymentTasks(year)) {
-        const d = new Date(pt.dueDate);
-        if (d >= oneYearAgo && d <= oneYearAhead) {
-          // Avoid duplicate if SA filing task already covers this period
-          tasks.push(pt);
-        }
-      }
-    }
-
+    // ── Self Assessment payment reminders (not from HMRC) ───────────────────
+    tasks.push(...paymentReminders());
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: msg }, { status: 502 });
