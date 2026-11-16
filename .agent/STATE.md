@@ -60,9 +60,9 @@
 
 ## Deployment 状态
 
-- **staging = `5695c33`**（比 production 多 PR #61）。
-- **Production = main = `3d085d6`**（2026-11-16 14:46 UTC 上线，owner 授权；含 PR #50–#60；production 库已先建 agent_api_log；冒烟通过，公开页面无夸大声明）。
-- **任务列表两个 bug 已在 staging 修好（PR #61，未上 production）**：/api/hmrc/tasks ① taxYearFor 把 4 月 1–5 日算进下一税年（6 Jan–5 Apr 2019 显示成 2019-20）② 预缴款（POA1/POA2/Balancing）是按日历凭空生成的，永远不会标为已完成，对所有用户都显示 overdue，且 POA 的税年标签错（31 Jan 2026 的 POA1 属 2025-26，标成 2024-25）。
+- **Production = main = staging = `5695c33`**（2026-11-16 15:00 UTC 上线 PR #61，owner 授权；冒烟通过）。
+- 上一版 production：`3d085d6`（2026-11-16 14:46 UTC 上线，owner 授权；含 PR #50–#60；production 库已先建 agent_api_log；冒烟通过，公开页面无夸大声明）。
+- **任务列表两个 bug 已修并上线（PR #61）**：/api/hmrc/tasks ① taxYearFor 把 4 月 1–5 日算进下一税年（6 Jan–5 Apr 2019 显示成 2019-20）② 预缴款（POA1/POA2/Balancing）是按日历凭空生成的，永远不会标为已完成，对所有用户都显示 overdue，且 POA 的税年标签错（31 Jan 2026 的 POA1 属 2025-26，标成 2024-25）。
 - **owner 对话里的改动直接合进 staging，不用问**（2026-11-15 owner 授权；main/production 仍要明说；定时 agent 不适用）。
 - 上一版 production：`ea28c1f`（2026-11-15 14:09 UTC 上线，owner 授权；含 PR #45–#49；production 库已先加 ai_categorised 列；冒烟检查通过）。f25b383 于 2026-11-15 09:31 UTC 上线，owner 授权；比 1a2afdd 多了 PR #44：藏起 Company Tax。
 - 原 production 记录：**Production = main = staging = `1a2afdd`**（2026-11-14 22:23 UTC 上线，owner 授权「把 staging 的改动都发布到 production」）。包含：PR #36（去掉银行连接，改手动录入 + CSV）、#37（代理模式，production 里被 HMRC_ENV 挡住）、#38（CSV 修复）、#40（dashboard 清理）、#43（导航去掉 Records），以及另一会话直接合进 main 的 #39（去掉 dashboard footer 的范围说明）和 #41（语言/Homepage 移到侧边栏；#42 的做法在合并冲突时被它取代）。
