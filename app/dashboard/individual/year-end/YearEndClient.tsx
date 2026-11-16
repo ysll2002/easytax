@@ -202,7 +202,10 @@ export default function YearEndClient() {
   const messages = (calc?.messages ?? {}) as { errors?: Message[]; warnings?: Message[]; info?: Message[] };
   const calcErrors = messages.errors ?? [];
   const isFinalCalc = !!calc && (calc.metadata as Json | undefined)?.intentToSubmitFinalDeclaration === true;
-  const canDeclare = isFinalCalc && (calcErrors.length === 0 || ignoreErrors);
+  // HMRC's sandbox test calculation is canned: it carries error C95005 and
+  // does not always mark itself as a final calculation, even when triggered
+  // as intent-to-finalise. The sandbox-only override covers both.
+  const canDeclare = (isFinalCalc && calcErrors.length === 0) || (!!calc && ignoreErrors);
   const bsasSummary = (bsas?.adjustedSummaryCalculation ?? bsas?.adjustableSummaryCalculation) as Json | undefined;
   const bsasAdjusted = !!bsas?.adjustedSummaryCalculation;
 
@@ -380,12 +383,12 @@ export default function YearEndClient() {
         ) : !canDeclare ? (
           <>
             <Note>You cannot declare yet: HMRC reported errors on this calculation, or it is not a final calculation. Fix the errors and calculate again.</Note>
-            {isFinalCalc && calcErrors.length > 0 && (
+            {!!calc && (
               <div className="flex gap-3 items-start p-4 rounded-xl mt-3" style={{ backgroundColor: '#FFF4D6', border: '1px solid #E8D29A' }}>
                 <input id="ye-ignore" type="checkbox" checked={ignoreErrors} onChange={e => setIgnoreErrors(e.target.checked)}
                   style={{ width: '1.1rem', height: '1.1rem', marginTop: '0.2rem', flexShrink: 0 }} />
                 <label htmlFor="ye-ignore" className="text-sm" style={{ color: '#5C4210', lineHeight: 1.6 }}>
-                  <strong>Sandbox test only:</strong> declare anyway. HMRC&apos;s test calculation always includes these errors, so this lets you test the final declaration call. Real customers will never see this option.
+                  <strong>Sandbox test only:</strong> declare anyway. HMRC&apos;s test calculation is fixed sample data (it always includes these errors), so this lets you test the final declaration call. Real customers will never see this option.
                 </label>
               </div>
             )}
