@@ -94,6 +94,10 @@ export default function YearEndClient() {
   const [agreed,      setAgreed]      = useState(false);
   const [declareErr,  setDeclareErr]  = useState('');
   const [declared,    setDeclared]    = useState<{ submittedAt: string; calculationId: string } | null>(null);
+  // Sandbox only (this page never runs in production): HMRC's default test
+  // calculation always reports error C95005, so allow declaring anyway to
+  // exercise the final declaration endpoint.
+  const [ignoreErrors, setIgnoreErrors] = useState(false);
 
   async function call(action: string, extra: Json = {}): Promise<Json> {
     const r = await hmrcFetch('/api/hmrc/year-end', {
@@ -123,7 +127,7 @@ export default function YearEndClient() {
 
   function resetFrom(step: 'year' | 'bsas' | 'calc') {
     if (step === 'year') { setOverview(null); setOverviewErr(''); setBsasId(''); setBsas(null); setBsasErr(''); setAdjust({}); setAdjustDone(''); }
-    if (step === 'year' || step === 'bsas' || step === 'calc') { setCalcId(''); setCalc(null); setCalcErr(''); setAgreed(false); setDeclareErr(''); setDeclared(null); }
+    if (step === 'year' || step === 'bsas' || step === 'calc') { setCalcId(''); setCalc(null); setCalcErr(''); setAgreed(false); setIgnoreErrors(false); setDeclareErr(''); setDeclared(null); }
   }
 
   async function loadOverview() {
@@ -189,7 +193,7 @@ export default function YearEndClient() {
   async function declare() {
     setBusy('declare'); setDeclareErr('');
     try {
-      const d = await call('declare', { calculationId: calcId, confirmed: true }) as { submittedAt: string; calculationId: string };
+      const d = await call('declare', { calculationId: calcId, confirmed: true, sandboxIgnoreErrors: ignoreErrors }) as { submittedAt: string; calculationId: string };
       setDeclared(d);
     } catch (err) { setDeclareErr(err instanceof Error ? err.message : String(err)); }
     finally { setBusy(null); }
@@ -197,7 +201,8 @@ export default function YearEndClient() {
 
   const messages = (calc?.messages ?? {}) as { errors?: Message[]; warnings?: Message[]; info?: Message[] };
   const calcErrors = messages.errors ?? [];
-  const canDeclare = !!calc && calcErrors.length === 0 && (calc.metadata as Json | undefined)?.intentToSubmitFinalDeclaration === true;
+  const isFinalCalc = !!calc && (calc.metadata as Json | undefined)?.intentToSubmitFinalDeclaration === true;
+  const canDeclare = isFinalCalc && (calcErrors.length === 0 || ignoreErrors);
   const bsasSummary = (bsas?.adjustedSummaryCalculation ?? bsas?.adjustableSummaryCalculation) as Json | undefined;
   const bsasAdjusted = !!bsas?.adjustedSummaryCalculation;
 
@@ -373,7 +378,18 @@ export default function YearEndClient() {
         ) : !calc ? (
           <Note>Run the final calculation first. You can only declare against a calculation you have reviewed.</Note>
         ) : !canDeclare ? (
-          <Note>You cannot declare yet: HMRC reported errors on this calculation, or it is not a final calculation. Fix the errors and calculate again.</Note>
+          <>
+            <Note>You cannot declare yet: HMRC reported errors on this calculation, or it is not a final calculation. Fix the errors and calculate again.</Note>
+            {isFinalCalc && calcErrors.length > 0 && (
+              <div className="flex gap-3 items-start p-4 rounded-xl mt-3" style={{ backgroundColor: '#FFF4D6', border: '1px solid #E8D29A' }}>
+                <input id="ye-ignore" type="checkbox" checked={ignoreErrors} onChange={e => setIgnoreErrors(e.target.checked)}
+                  style={{ width: '1.1rem', height: '1.1rem', marginTop: '0.2rem', flexShrink: 0 }} />
+                <label htmlFor="ye-ignore" className="text-sm" style={{ color: '#5C4210', lineHeight: 1.6 }}>
+                  <strong>Sandbox test only:</strong> declare anyway. HMRC&apos;s test calculation always includes these errors, so this lets you test the final declaration call. Real customers will never see this option.
+                </label>
+              </div>
+            )}
+          </>
         ) : (
           <>
             <div className="flex gap-3 items-start p-4 rounded-xl mb-4" style={{ backgroundColor: '#F7F2E8', border: '1px solid #DDD5C8' }}>
