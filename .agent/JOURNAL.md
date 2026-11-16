@@ -15,6 +15,9 @@
 
 ---
 
+## 2026-11-16（owner 会话）
+**今日执行**：HMRC 回信要 Agent Authorisation 2.0 六个端点的 sandbox 测试时间戳。发现「Get all requests (30 天)」没实现、调用时间没留痕 → PR #57（list 接口 + agent_api_log 表）合进 staging `1fe64fb`。等 owner 在 staging 按步骤点一遍，再从日志出表、起草回信（只 create_draft）。
+
 ## 2026-11-15（owner 会话，下午）
 **今日执行**：代理模式 sandbox 测试——发邀请报 RESOURCE_FORBIDDEN，原因是 sandbox app 只订阅了 Agent Authorisation 3.0、代码调 2.0；owner 加订 2.0、重新登录后给 Alex Lawrence 发 ITSA 邀请成功。owner 要求客户表加操作列 → [PR #45](https://github.com/ysll2002/easytax/pull/45)，授权合进 staging `c8d922d`，staging 已部署。
 之后：客户授权链接在 sandbox 404 → 查到 Test Support API，替 Alex 接受邀请成功（204）。PR #46（dashboard 去 Quick access）合进 staging `2ac2071`；PR #47（CSV Choose file 按钮样式）也合进 staging `d6a3a53`，确认样式已进 staging 的 CSS。
