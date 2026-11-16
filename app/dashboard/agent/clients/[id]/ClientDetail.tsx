@@ -66,7 +66,7 @@ function taxYearOf(d: string) {
   return `${start}-${String(start + 1).slice(2)}`;
 }
 
-export default function ClientDetail({ initial }: { initial: AgentClientView }) {
+export default function ClientDetail({ initial, sandbox = false }: { initial: AgentClientView; sandbox?: boolean }) {
   const [client, setClient] = useState(initial);
   const [obs, setObs] = useState<Obligations | null>(null);
   const [filings, setFilings] = useState<Filing[]>([]);
@@ -86,7 +86,7 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
     try {
       const r = await api<{ client: AgentClientView }>(`/api/agent/clients/${client.id}`, { method: 'PATCH', body: JSON.stringify({ action, service }) });
       setClient(r.client);
-      setStatus({ refresh: 'Checked with HMRC.', invite: 'New authorisation request sent.', cancel: 'Request cancelled.', deauthorise: 'You are no longer authorised for this client.' }[action] ?? 'Done.');
+      setStatus({ refresh: 'Checked with HMRC.', invite: 'New authorisation request sent.', cancel: 'Request cancelled.', deauthorise: 'You are no longer authorised for this client.', 'sandbox-accept': 'Sandbox: the client accepted. You are now authorised.', 'sandbox-reject': 'Sandbox: the client declined the request.' }[action] ?? 'Done.');
     } catch (e) { setError((e as Error).message); }
     finally { setBusy(''); }
   }
@@ -117,6 +117,13 @@ export default function ClientDetail({ initial }: { initial: AgentClientView }) 
         )}
         <div className="flex flex-wrap gap-2 mt-2">
           {st === 'pending' && <button type="button" style={secondaryBtn} disabled={!!busy} onClick={() => act('cancel', service, `Cancel the ${label} authorisation request?`)}>Cancel request</button>}
+          {st === 'pending' && sandbox && (
+            <span className="inline-flex flex-wrap items-center gap-2 px-2 py-1 rounded-full" style={{ border: '1px dashed #B8AE9F' }}>
+              <span className="text-xs font-semibold" style={{ color: '#7A4A1E' }}>Sandbox test:</span>
+              <button type="button" style={{ ...secondaryBtn, backgroundColor: '#E2EDE2', color: '#2F5232' }} disabled={!!busy} onClick={() => act('sandbox-accept', service)}>Simulate client accepting</button>
+              <button type="button" style={{ ...secondaryBtn, backgroundColor: '#FEE2E2', color: '#991B1B' }} disabled={!!busy} onClick={() => act('sandbox-reject', service)}>Simulate client declining</button>
+            </span>
+          )}
           {['none', 'rejected', 'expired', 'cancelled', 'deauthorised'].includes(st) && <button type="button" style={secondaryBtn} disabled={!!busy} onClick={() => act('invite', service)}>Send a new request</button>}
           {st === 'authorised' && <button type="button" style={secondaryBtn} disabled={!!busy} onClick={() => act('deauthorise', service, `Stop acting for ${client.display_name} for ${label}? HMRC will remove your authorisation, and your client would have to approve you again.`)}>Stop acting for client</button>}
         </div>
