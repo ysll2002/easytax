@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import {
   AGENT_MODE_AVAILABLE, getClient, getValidAgentToken, getInvitation, cancelInvitation,
-  checkRelationship, deauthoriseClient, mapInvitationStatus,
+  checkRelationship, deauthoriseClient, mapInvitationStatus, sandboxRespondAsClient,
   type AgentClient, type AuthStatus, type Service,
 } from '@/lib/agent';
 import { agentUserId, errorResponse } from '../../_shared';
@@ -12,6 +12,7 @@ import { sendInvitation } from '@/lib/agent-invitations';
 // PATCH  { action: 'refresh' }                    re-check both authorisations with HMRC
 //        { action: 'invite' | 'cancel' | 'deauthorise', service: 'itsa'|'vat' }
 //        { action: 'rename', displayName }
+//        { action: 'sandbox-accept' | 'sandbox-reject', service }  sandbox only: answer as the client
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -92,6 +93,18 @@ export async function PATCH(req: NextRequest, { params }: Ctx) {
         const { token, arn } = await getValidAgentToken(uid);
         await deauthoriseClient(arn, token, client, service);
         await save({ [`${service}_status`]: 'deauthorised', [`${service}_client_action_url`]: null });
+        break;
+      }
+      case 'sandbox-accept':
+      case 'sandbox-reject': {
+        if (!service) return NextResponse.json({ error: 'INVALID_SERVICE' }, { status: 400 });
+        const invitationId = client[`${service}_invitation_id`];
+        if (!invitationId || client[`${service}_status`] !== 'pending') {
+          return NextResponse.json({ error: 'NOT_PENDING', message: 'There is no pending request to answer.' }, { status: 409 });
+        }
+        await sandboxRespondAsClient(invitationId, body.action === 'sandbox-accept');
+        // Read the new state back from HMRC, as a real client's answer would be.
+        await save({ ...(await refreshService(uid, client, service)), last_checked_at: new Date().toISOString() });
         break;
       }
       case 'rename': {

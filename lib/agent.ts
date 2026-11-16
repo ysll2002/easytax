@@ -225,6 +225,27 @@ export async function listInvitations(arn: string, token: string): Promise<SentI
   }).filter(i => i.invitationId);
 }
 
+// Sandbox only: answer an authorisation request as the client would, using
+// HMRC's Agent Authorisation Test Support API. The sandbox has no page where
+// a test client can accept, so this stands in for it. Never in production.
+export const SANDBOX_CLIENT_SIMULATION = !IS_HMRC_PRODUCTION;
+export async function sandboxRespondAsClient(invitationId: string, accept: boolean) {
+  if (!SANDBOX_CLIENT_SIMULATION) throw new AgentError('NOT_AVAILABLE', 403, 'Only available in the HMRC sandbox.');
+  const path = `/agent-authorisation-test-support/invitations/${encodeURIComponent(invitationId)}`;
+  const method = accept ? 'PUT' : 'DELETE';
+  const res = await fetch(`${BASE}${path}`, { method, headers: { Accept: 'application/vnd.hmrc.1.0+json', 'Content-Length': '0' } });
+  try {
+    await supabase.from('agent_api_log').insert({
+      method, endpoint: accept ? 'Test support: accept invitation' : 'Test support: reject invitation',
+      path, http_status: res.status, correlation_id: res.headers.get('x-correlation-id'),
+    });
+  } catch { /* logging must never break the call */ }
+  if (res.status !== 204) {
+    const body = await res.json().catch(() => null) as { code?: string; message?: string } | null;
+    throw new AgentError(body?.code ?? `HMRC_${res.status}`, res.status >= 500 ? 502 : 400, body?.message ?? `HMRC returned ${res.status}`);
+  }
+}
+
 export async function cancelInvitation(arn: string, token: string, invitationId: string) {
   const r = await agentApi(`/agents/${arn}/invitations/${encodeURIComponent(invitationId)}`, token, { method: 'DELETE' });
   if (r.status !== 204) throw hmrcError(r);

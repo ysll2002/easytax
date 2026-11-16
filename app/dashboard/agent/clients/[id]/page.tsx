@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { auth } from '@/auth';
-import { AGENT_MODE_AVAILABLE, getClient, AgentError } from '@/lib/agent';
+import { AGENT_MODE_AVAILABLE, SANDBOX_CLIENT_SIMULATION, getClient, AgentError } from '@/lib/agent';
 import ClientDetail from './ClientDetail';
 
 export default async function ClientPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +9,7 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
   const { id } = await params;
   try {
     const client = await getClient(session!.user.profileId, id);
-    return <ClientDetail initial={client} />;
+    return <ClientDetail initial={client} sandbox={SANDBOX_CLIENT_SIMULATION} />;
   } catch (err) {
     if (err instanceof AgentError) notFound();
     throw err;
