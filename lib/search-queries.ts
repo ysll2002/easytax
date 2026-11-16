@@ -287,8 +287,8 @@ const LINK_LABELS: Record<string, string> = {
   '/timetable': 'See the full MTD and Self Assessment timetable',
   '/tools': 'Try our free tax calculators',
   '/mtd-software': 'See how EasyTax files your MTD updates',
-  '/self-assessment-software': 'See how EasyTax handles Self Assessment',
-  '/landlord-tax-software': 'See how EasyTax works for landlords',
+  '/self-assessment-software': 'See what EasyTax files for Self Assessment',
+  '/landlord-tax-software': 'See what EasyTax does (and does not yet do) for landlords',
   '/pricing': 'See EasyTax pricing',
 };
 

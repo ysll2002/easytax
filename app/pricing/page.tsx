@@ -10,11 +10,11 @@ import { OFFER_JSONLD, PRICE_DISPLAY, PRICE_MODEL, TYPICAL_ANNUAL_COST } from '@
 
 export const metadata: Metadata = {
   title: pageTitle('Pricing — free, no subscription, no filing fee'),
-  description: 'EasyTax is free. MTD ITSA quarterly updates, Self Assessment and VAT returns — no monthly subscription, no per-filing fee, no card needed to sign up.',
+  description: 'EasyTax is free. MTD ITSA quarterly updates and VAT returns — no monthly subscription, no per-filing fee, no card needed to sign up.',
   alternates: { canonical: 'https://easytax.vip/pricing' },
   openGraph: {
     title: 'EasyTax Pricing — Free, No Subscription',
-    description: 'File MTD ITSA, Self Assessment and VAT returns to HMRC for free. No monthly subscription, no per-filing fee, no card needed to sign up.',
+    description: 'File MTD ITSA quarterly updates and VAT returns to HMRC for free. No monthly subscription, no per-filing fee, no card needed to sign up.',
     url: 'https://easytax.vip/pricing',
     type: 'website',
     locale: 'en_GB',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'EasyTax Pricing — Free, No Subscription',
-    description: 'MTD ITSA, Self Assessment and VAT — free. No monthly fee, no filing fee.',
+    description: 'MTD ITSA quarterly updates and VAT returns — free. No monthly fee, no filing fee.',
   },
 };
 
@@ -32,11 +32,11 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type CompRow = { feature: string; included: boolean; note?: string };
 
 const included: CompRow[] = [
-  { feature: 'MTD ITSA quarterly updates (sole traders & landlords)', included: true },
-  { feature: 'Self Assessment filing (SA100, SA103, SA105)', included: true },
+  { feature: 'MTD ITSA quarterly updates (self-employment)', included: true },
+  { feature: 'Year-end Self Assessment return / final declaration (SA100, SA105)', included: false, note: 'Not available in EasyTax yet' },
   { feature: 'MTD VAT returns', included: true },
   { feature: 'CT600 Corporation Tax filing', included: false, note: 'Filed through HMRC\'s Corporation Tax Online service, not the MTD APIs' },
-  { feature: 'Limited company P&L and Balance Sheet', included: true },
+  { feature: 'Limited company P&L and Balance Sheet', included: false, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation (Claude)', included: true },
   { feature: 'AI categorisation chat',      included: true },
   { feature: 'No monthly subscription', included: true },
@@ -68,7 +68,7 @@ export default async function PricingPage() {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: 'EasyTax — MTD ITSA Filing Software',
-    description: 'MTD ITSA quarterly updates, Self Assessment and VAT returns for UK sole traders and limited companies. Free — no subscription, no per-filing fee.',
+    description: 'MTD ITSA quarterly updates and VAT returns for UK sole traders and the self-employed. Free — no subscription, no per-filing fee.',
     brand: { '@type': 'Organization', name: 'Finance Panda Limited' },
     url: 'https://easytax.vip',
     // Shares one Offer with the SoftwareApplication node in lib/site-entity.ts.
@@ -91,7 +91,7 @@ export default async function PricingPage() {
         name: 'How much does EasyTax cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates and 1 final declaration pays £0 for the year.',
+          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates pays £0 for the year.',
         },
       },
       {
@@ -99,7 +99,7 @@ export default async function PricingPage() {
         name: 'What is included?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Every HMRC submission type we support — quarterly MTD ITSA updates, Self Assessment (SA100, SA103, SA105) and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier. Corporation Tax (CT600) is not supported.',
+          text: 'Every HMRC submission type we support — quarterly MTD ITSA updates and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier. The year-end Self Assessment return (final declaration) and property income are not available in EasyTax yet. Corporation Tax (CT600) is not supported.',
         },
       },
       {
@@ -123,7 +123,7 @@ export default async function PricingPage() {
         name: 'Does EasyTax support limited companies?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. EasyTax supports both sole traders / landlords (MTD ITSA, Self Assessment) and limited companies (VAT returns, Balance Sheet and P&L). All of it is free. Corporation Tax (CT600) is not supported.',
+          text: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies, free. It does not file Corporation Tax (CT600) or prepare company accounts.',
         },
       },
     ],
@@ -205,7 +205,7 @@ export default async function PricingPage() {
                 How does it compare?
               </h2>
               <p style={{ color: '#4A4035', fontSize: '1rem', maxWidth: '480px', margin: '0 auto' }}>
-                Based on a typical sole trader filing 4 quarterly updates + 1 final declaration per year.
+                Based on a typical sole trader filing 4 quarterly updates per year.
                 The subscriptions below are charged whether you file once or twelve times.
               </p>
             </div>
@@ -262,11 +262,11 @@ export default async function PricingPage() {
               {[
                 {
                   q: 'How much does EasyTax cost?',
-                  a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates and 1 final declaration pays £0 for the year.',
+                  a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates pays £0 for the year.',
                 },
                 {
                   q: 'What is included?',
-                  a: 'Every HMRC submission type we support — quarterly MTD ITSA updates, Self Assessment (SA100/SA103/SA105) and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier, so nothing is held back. Corporation Tax (CT600) is not supported: it is filed through HMRC\'s older Corporation Tax Online service, not the MTD APIs.',
+                  a: 'Every HMRC submission type we support — quarterly MTD ITSA updates and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier, so nothing is held back. Corporation Tax (CT600) is not supported: it is filed through HMRC\'s older Corporation Tax Online service, not the MTD APIs.',
                 },
                 {
                   q: 'Do I need a credit card to sign up?',
@@ -278,7 +278,7 @@ export default async function PricingPage() {
                 },
                 {
                   q: 'Does EasyTax work for limited companies?',
-                  a: 'Yes. EasyTax supports both sole traders and landlords (MTD ITSA quarterly updates, Self Assessment) and limited companies (VAT returns, P&L and Balance Sheet). All of it is free. Corporation Tax (CT600) is the one thing we cannot file.',
+                  a: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies, free. It does not file Corporation Tax (CT600) or prepare company accounts.',
                 },
                 {
                   q: 'Is there a free trial?',
@@ -315,7 +315,7 @@ export default async function PricingPage() {
               Start filing without paying for it
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', maxWidth: '460px', margin: '0 auto 2rem' }}>
-              Sign up free — no card required, nothing to pay. MTD ITSA, Self Assessment and VAT, all included.
+              Sign up free — no card required, nothing to pay. MTD ITSA quarterly updates and VAT returns, all included.
             </p>
             <Link href={ctaHref} className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-semibold text-sm transition-all" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
               Get started free <ArrowRight size={16} />

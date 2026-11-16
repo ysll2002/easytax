@@ -9,11 +9,11 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('Crunch Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a Crunch alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — no monthly subscription, no filing fee.',
+  description: 'Looking for a Crunch alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/crunch-alternative' },
   openGraph: {
     title: 'Crunch Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Crunch charges £35–110+VAT/month for software + accountancy. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free — no subscription, no filing fee.',
+    description: 'Crunch charges £35–110+VAT/month for software + accountancy. EasyTax files MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee.',
     url: 'https://easytax.vip/crunch-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -35,10 +35,10 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            crunch: '£420–1,320+VAT',         note: 'EasyTax is free however many times you file; Crunch Sole Trader to Limited plans' },
   { feature: 'No card to sign up',                    easytax: true,              crunch: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,              crunch: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,              crunch: true },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,              crunch: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,              crunch: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: true,              crunch: true },
-  { feature: 'Limited company P&L and Balance Sheet', easytax: true,              crunch: true },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,              crunch: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet', easytax: false,              crunch: true, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',             easytax: true,              crunch: false,                    note: 'EasyTax uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,              crunch: false },
   { feature: 'Dedicated accountant support',          easytax: false,             crunch: true,                    note: 'Crunch includes human accountant support; EasyTax is self-serve software only' },
@@ -61,7 +61,7 @@ export default async function CrunchAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Crunch Alternative — MTD ITSA Software for UK Freelancers',
-    description: 'Side-by-side comparison of EasyTax and Crunch for UK sole traders, landlords and limited companies. EasyTax files MTD ITSA, Self Assessment, VAT and CT600 free, with no subscription.',
+    description: 'Side-by-side comparison of EasyTax and Crunch for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/crunch-alternative',
@@ -85,7 +85,7 @@ export default async function CrunchAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£420–1,320/year</em> for Crunch? EasyTax files the same returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Crunch bundles software with accountancy support — a useful combination if you want a human accountant in the loop. But if you are a UK freelancer who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>Self Assessment</strong> yourself, you are paying a significant monthly fee for a service tier you may not need. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
+              Crunch bundles software with accountancy support — a useful combination if you want a human accountant in the loop. But if you are a UK freelancer who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong> yourself, you are paying a significant monthly fee for a service tier you may not need. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -191,7 +191,7 @@ export default async function CrunchAlternative() {
                 <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>Where Crunch wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Dedicated human accountant support — ideal if you want someone to check your numbers and advise on tax planning.</span></li>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping and management accounts (EasyTax does P&L and Balance Sheet for Ltd, not a full ledger).</span></li>
+                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Full double-entry bookkeeping and management accounts.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Native invoicing with client records and payment tracking.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Built-in payroll and CIS management on higher plans.</span></li>
                   <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>Established brand with a large support community for UK freelancers.</span></li>
@@ -199,7 +199,7 @@ export default async function CrunchAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or landlord who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially now that HMRC MTD ITSA is mandatory.
+              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or sole trader who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially now that HMRC MTD ITSA is mandatory.
             </p>
           </div>
         </section>
@@ -229,8 +229,8 @@ export default async function CrunchAlternative() {
                   body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
-                  title: 'File your next quarterly update or Self Assessment',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA and Self Assessment APIs. You get a confirmation receipt for every submission.',
+                  title: 'File your next quarterly update',
+                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt for every submission.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -265,11 +265,11 @@ export default async function CrunchAlternative() {
                 },
                 {
                   q: 'Does EasyTax handle VAT and CT600 as well as Self Assessment?',
-                  a: 'Yes — EasyTax files MTD VAT returns, CT600 Corporation Tax, and Self Assessment (SA100 with SA103 and SA105 supplementary pages) directly to HMRC. It also supports P&L and Balance Sheet for limited companies.',
+                  a: 'Partly. EasyTax files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration (crystallisation).',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',

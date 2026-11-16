@@ -62,7 +62,7 @@ export default function Privacy() {
 
             <H3>2.2 Tax and Financial Data</H3>
             <P>National Insurance number (NINO), Unique Taxpayer Reference (UTR), income figures, expense records, and data retrieved from HMRC on your behalf (obligations, calculations, previously submitted returns).</P>
-            <Legal basis="Contract" detail="Necessary to calculate and submit your Self Assessment tax return." />
+            <Legal basis="Contract" detail="Necessary to prepare and submit your Making Tax Digital quarterly updates and VAT returns." />
 
             <H3>2.3 Business Records</H3>
             <P>Income and expense records you enter by hand or import from CSV bank statements you download yourself: date, description, amount and how you categorise each line. We read only the rows you choose to import. EasyTax does not connect to your bank account.</P>

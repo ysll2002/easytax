@@ -59,14 +59,15 @@ export const FULL_TEXT_LIMIT = 120;
  * who bounces on arrival and trusts us less for it.
  */
 export const SITE_SUMMARY = [
-  'EasyTax is a UK tax filing and record-keeping app for sole traders, landlords',
-  'and small limited companies, built against HMRC Making Tax Digital (MTD) APIs',
-  'by Finance Panda Limited.',
+  'EasyTax is a UK tax filing and record-keeping app for self-employed sole',
+  'traders, built against HMRC Making Tax Digital (MTD) APIs by Finance Panda',
+  'Limited. It files MTD ITSA quarterly updates and MTD VAT returns.',
   '',
   'Status: HMRC granted production access on 11 November 2026, covering MTD ITSA',
-  'quarterly updates, Self Assessment and VAT. Filing is open to the public. The',
+  'quarterly updates and VAT returns. Filing is open to the public. The',
   'user must be signed up for Making Tax Digital with HMRC in their own right.',
-  'Corporation Tax (CT600) is not supported. The free calculators, the deadline',
+  'Not supported yet: the year-end final declaration (SA100), property income',
+  '(landlords) and Corporation Tax (CT600). The free calculators, the deadline',
   'checker and the Tax Tips archive remain free and need no account.',
 ].join('\n');
 

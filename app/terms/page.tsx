@@ -55,7 +55,7 @@ export default function Terms() {
               <li>Keep income and expense records, entered by hand or imported from CSV statements downloaded from their bank</li>
               <li>Categorise expenses using AI-assisted tools</li>
               <li>Connect to HMRC via Government Gateway OAuth</li>
-              <li>Prepare and submit Self Assessment tax returns directly to HMRC</li>
+              <li>Prepare and submit Making Tax Digital quarterly updates and VAT returns directly to HMRC</li>
               <li>View their HMRC obligations, calculations, and VAT returns</li>
             </ul>
             <Callout>

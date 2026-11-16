@@ -2,18 +2,26 @@ import type { Metadata } from 'next';
 import { pageTitle } from '@/lib/seo-meta';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
-import { Check, X, Sparkles, ArrowRight } from 'lucide-react';
+import { Check, X, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
-import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
+
+// Landlords and Making Tax Digital — and, honestly, what EasyTax does and does
+// not do for them. EasyTax does not file property income yet (no Property
+// Business API subscription), so this page says so plainly and points
+// landlords to HMRC's list of software that does. HMRC's Terms of Use ask for
+// an accurate description of the product; this page used to claim SA105
+// property filing, CT600 and the year-end return, none of which EasyTax files.
+
+const GOV_UK_FIND_SOFTWARE = 'https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax';
 
 export const metadata: Metadata = {
-  title: pageTitle('Landlord Tax Software — MTD ITSA for UK Landlords'),
-  description: 'MTD ITSA software built for UK landlords. File quarterly updates and Self Assessment (SA100 + SA105 property supplement) directly to HMRC — free, with no subscription, no filing fee and no accountant required.',
+  title: pageTitle('Landlords and Making Tax Digital — What EasyTax Covers'),
+  description: 'Making Tax Digital for Income Tax applies to UK landlords with qualifying income over £50,000. EasyTax does not file property income yet — here is what it does cover, and where landlords can find software that files property income.',
   alternates: { canonical: 'https://easytax.vip/landlord-tax-software' },
   openGraph: {
-    title: 'Landlord Tax Software — MTD ITSA, SA100 + SA105, Free',
-    description: 'EasyTax files MTD ITSA quarterly updates and Self Assessment (including SA105 property income) for UK landlords. Free, no monthly subscription, no accountant needed.',
+    title: 'Landlords and Making Tax Digital — What EasyTax Covers',
+    description: 'EasyTax does not file property income yet. What it covers, and where UK landlords can find MTD software that does.',
     url: 'https://easytax.vip/landlord-tax-software',
     type: 'article',
     locale: 'en_GB',
@@ -21,36 +29,22 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Landlord Tax Software — MTD ITSA + SA105, Free',
-    description: 'MTD ITSA quarterly updates and Self Assessment for UK landlords — free, no subscription, no accountant required.',
+    title: 'Landlords and Making Tax Digital — What EasyTax Covers',
+    description: 'EasyTax does not file property income yet. What it covers, and where landlords can find software that does.',
   },
 };
 
 const display = 'var(--font-display), Playfair Display, Georgia, serif';
 
-type Row = { feature: string; easytax: string | boolean; accountant: string | boolean; suite: string | boolean; note?: string };
-
-const rows: Row[] = [
-  { feature: 'Pricing model',                              easytax: PRICE_TABLE_CELL,   accountant: '£400–£1,200/yr',   suite: '£144–£708/yr',   note: 'EasyTax charges nothing at all; accountants charge annually; software suites charge monthly subscription' },
-  { feature: 'MTD ITSA quarterly updates',                 easytax: true,               accountant: true,               suite: true },
-  { feature: 'Self Assessment — SA100',                    easytax: true,               accountant: true,               suite: true },
-  { feature: 'Property income supplement — SA105',         easytax: true,               accountant: true,               suite: true,             note: 'EasyTax files the SA105 property pages alongside the SA100 main return' },
-  { feature: 'AI categorisation of rental expenses',       easytax: true,               accountant: false,              suite: false,            note: 'EasyTax uses Claude AI to categorise repairs, insurance, mortgage interest and agent fees against HMRC allowable expenses' },
-  { feature: 'AI categorisation chat',                     easytax: true,               accountant: false,              suite: false },
-  { feature: 'MTD VAT submission',                         easytax: true,               accountant: true,               suite: true },
-  { feature: 'CT600 Corporation Tax (Ltd BTL)',            easytax: true,               accountant: true,               suite: true,             note: 'For landlords who hold property in a limited company (Buy-to-Let Ltd)' },
-  { feature: 'No card to sign up',                         easytax: true,               accountant: false,              suite: false },
-  { feature: 'No monthly subscription',                    easytax: true,               accountant: false,              suite: false },
-  { feature: 'Capital Gains Tax (CGT) advice',             easytax: false,              accountant: true,               suite: false,            note: 'EasyTax covers income tax filings; CGT on property disposal requires a specialist' },
-  { feature: 'Full bookkeeping / accounts preparation',    easytax: false,              accountant: true,               suite: true,             note: 'EasyTax focuses on HMRC filing; full bookkeeping is not included' },
-  { feature: 'Payroll for portfolio companies',            easytax: false,              accountant: true,               suite: true },
+const covers: { text: string; yes: boolean }[] = [
+  { text: 'MTD ITSA quarterly updates for self-employment income (if you also run a business or freelance)', yes: true },
+  { text: 'MTD VAT returns, if you are VAT-registered', yes: true },
+  { text: 'Keeping your income and expense records: CSV statement import, AI categorisation', yes: true },
+  { text: 'Quarterly updates for UK or foreign property income', yes: false },
+  { text: 'The year-end final declaration or the SA100 / SA105 return', yes: false },
+  { text: 'CT600 Corporation Tax or company accounts for a buy-to-let limited company', yes: false },
+  { text: 'Capital Gains Tax on selling a property', yes: false },
 ];
-
-function Cell({ value }: { value: string | boolean }) {
-  if (value === true)  return <Check size={18} color="#4B6A4E" strokeWidth={2.5} className="mx-auto" />;
-  if (value === false) return <X     size={18} color="#C46262" strokeWidth={2.5} className="mx-auto" />;
-  return <span className="text-sm" style={{ color: '#1C1208' }}>{value}</span>;
-}
 
 export default async function LandlordTaxSoftware() {
   const session = await auth();
@@ -59,39 +53,31 @@ export default async function LandlordTaxSoftware() {
   const faqItems = [
     {
       q: 'When does MTD ITSA apply to landlords?',
-      a: 'From 6 April 2026, landlords whose total property income (plus any self-employment income) exceeds £50,000 per year must use MTD-compatible software to file quarterly updates to HMRC. The threshold drops to £30,000 from 6 April 2027. If you are above the threshold, you are already required to file quarterly — EasyTax is built on the HMRC MTD API for this.',
+      a: 'From 6 April 2026, landlords whose qualifying income (gross property income plus any self-employment income) exceeds £50,000 must keep digital records and send quarterly updates to HMRC through compatible software. The threshold drops to £30,000 from 6 April 2027 and £20,000 from 6 April 2028.',
     },
     {
-      q: 'What is an SA105 and does EasyTax file it?',
-      a: 'The SA105 is the property income supplementary page attached to your Self Assessment (SA100) return. It captures UK property rental income, allowable expenses (repairs, insurance, mortgage interest, letting agent fees), and calculates the taxable profit or loss. EasyTax files the SA105 as part of your full Self Assessment submission — no separate step required.',
+      q: 'Can EasyTax file my property income?',
+      a: 'Not yet. EasyTax files MTD ITSA quarterly updates for self-employment income and MTD VAT returns. It does not send quarterly updates for UK or foreign property, and it does not file the SA105 property pages or the year-end return. Use software from HMRC\'s list on GOV.UK that supports property income.',
     },
     {
-      q: 'What rental expenses can I claim through EasyTax?',
-      a: 'EasyTax supports all standard HMRC-allowable landlord expenses: mortgage interest (subject to Section 24 restrictions), letting agent fees, property management costs, repairs and maintenance (not capital improvements), buildings and contents insurance, ground rent and service charges, utility bills you pay, and accountancy fees. Our AI categorisation maps your bank transactions to the correct expense categories automatically.',
-    },
-    {
-      q: 'Do I need an accountant if I use EasyTax?',
-      a: 'For most straightforward landlords — those with one or a few buy-to-let properties, no complex structures, and no property disposals — EasyTax handles all the HMRC filings you need. If you have a large portfolio, properties held in a limited company, or are disposing of property (CGT), you may benefit from a specialist tax adviser alongside EasyTax for the filings.',
+      q: 'I am a landlord and also self-employed. Can I use EasyTax?',
+      a: 'For your self-employment, yes: EasyTax can send those quarterly updates. Your property income still needs software that supports it, and HMRC expects all of your income sources to be covered, so check that the combination of software you choose covers every source.',
     },
     {
       q: 'I hold my property in a limited company. Can I use EasyTax?',
-      a: 'Yes — EasyTax supports CT600 Corporation Tax filing and company accounts (P&L and Balance Sheet) for limited company landlords (buy-to-let Ltd). The MTD ITSA quarterly update requirement applies to the individual director\'s personal income, not the company itself.',
+      a: 'Only for VAT, if the company is VAT-registered. EasyTax does not file CT600 Corporation Tax or prepare company accounts.',
     },
     {
-      q: 'How do I get my rental income into EasyTax?',
-      a: 'Download a CSV statement from your bank and import it on the Records page, or add payments by hand. Rent received and expenses paid — insurance direct debits, maintenance, agent fees — are AI-categorised. You review and confirm before any HMRC submission.',
-    },
-    {
-      q: 'What happens between quarterly updates and the final Self Assessment?',
-      a: 'Each quarter you file a short MTD ITSA update with your rental income and expenses — this takes about 5 minutes in EasyTax. At the end of the tax year you submit the full Self Assessment (SA100 + SA105), which consolidates the quarterly figures and calculates your final tax bill. You pay your tax bill directly to HMRC, not through EasyTax.',
+      q: 'Will EasyTax support landlords in future?',
+      a: 'We would like to. Until EasyTax can file property income, this page will say so. If you want to hear when that changes, email hello@easytax.vip.',
     },
   ];
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Landlord Tax Software — MTD ITSA Filing for UK Landlords, Free',
-    description: 'MTD ITSA quarterly updates and Self Assessment (SA100 + SA105 property supplement) filed directly to HMRC for UK landlords. Free, no subscription.',
+    headline: 'Landlords and Making Tax Digital — What EasyTax Covers',
+    description: 'EasyTax does not file property income yet. What it covers for UK landlords, and where to find MTD software that files property income.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/landlord-tax-software',
@@ -119,28 +105,19 @@ export default async function LandlordTaxSoftware() {
         {/* ── Hero ── */}
         <section className="pt-12 sm:pt-16 pb-10 sm:pb-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-5" style={{ backgroundColor: '#F0EBE1', color: '#A04E1C', border: '1px solid #A04E1C30' }}>
-              <Sparkles size={12} /> MTD ITSA mandatory since April 2026 — £50k+ landlords
-            </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Landlord tax software.<br />
-              <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>MTD ITSA + SA105. Free. No subscription.</em>
+              Landlords and Making Tax Digital.<br />
+              <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>What EasyTax covers — and what it doesn&apos;t yet.</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              UK landlords with income above £50,000 must now file quarterly updates to HMRC under Making Tax Digital. EasyTax handles your <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and your <strong style={{ color: '#1C1208' }}>Self Assessment — including the SA105 property income supplement</strong> — <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no accountant required.
+              <strong style={{ color: '#1C1208' }}>EasyTax does not file property income yet.</strong> If you are a landlord, you will need software that supports property income for your quarterly updates and year-end return. HMRC keeps a list of compatible software on GOV.UK.
             </p>
-            <div className="flex items-center gap-3 flex-wrap mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>Built on the HMRC MTD API</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>MTD ITSA ready</span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>SA105 property supplement</span>
-            </div>
             <div className="flex items-center gap-3 flex-wrap">
-              <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
-                Get started →
-              </Link>
-              <a href="mailto:hello@easytax.vip?subject=Landlord%20MTD%20ITSA" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
-                Ask us a question
+              <a href={GOV_UK_FIND_SOFTWARE} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }} rel="noopener">
+                Find software on GOV.UK →
+              </a>
+              <a href="mailto:hello@easytax.vip?subject=Landlord%20support" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+                Tell me when EasyTax supports landlords
               </a>
             </div>
           </div>
@@ -150,16 +127,16 @@ export default async function LandlordTaxSoftware() {
         <section className="py-12 sm:py-14" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3.5vw, 2rem)', fontWeight: 700, marginBottom: '1.25rem' }}>
-              MTD ITSA has been mandatory for landlords since April 2026
+              MTD ITSA has applied to landlords since April 2026
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Making Tax Digital for Income Tax Self Assessment (MTD ITSA) requires UK landlords and sole traders to send quarterly income and expense updates to HMRC digitally — in addition to the existing annual Self Assessment. If your total property income (plus any self-employment income) exceeds the threshold, you must use Software like EasyTax, which connects to the HMRC MTD API,.
+              Making Tax Digital for Income Tax requires UK landlords and sole traders above the income threshold to keep digital records, send quarterly income and expense updates to HMRC, and make a final declaration after the tax year — all through HMRC-compatible software.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { label: 'April 2026', title: 'MTD ITSA: £50k+', body: 'Quarterly updates now mandatory for landlords and sole traders with total income over £50,000 per year.' },
-                { label: 'April 2027', title: 'MTD ITSA: £30k+', body: 'Threshold drops to £30,000. Around 1.4 million more landlords and sole traders join the quarterly filing cycle.' },
-                { label: 'Ongoing', title: 'MTD VAT: £90k+', body: 'If you are VAT-registered (for furnished holiday lets or a trading business), MTD VAT is already mandatory.' },
+                { label: 'April 2026', title: 'MTD ITSA: £50k+', body: 'Quarterly updates mandatory for landlords and sole traders with qualifying income over £50,000.' },
+                { label: 'April 2027', title: 'MTD ITSA: £30k+', body: 'The threshold drops to £30,000.' },
+                { label: 'April 2028', title: 'MTD ITSA: £20k+', body: 'The threshold drops to £20,000.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>{item.label}</p>
@@ -171,127 +148,26 @@ export default async function LandlordTaxSoftware() {
           </div>
         </section>
 
-        {/* ── Comparison table ── */}
+        {/* ── What EasyTax covers ── */}
         <section className="py-16 sm:py-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.5rem' }}>
-              EasyTax vs an accountant vs a full accounting suite
-            </h2>
-            <p className="text-base mb-8" style={{ color: '#4A4035' }}>For a UK landlord who mainly needs MTD ITSA compliance and Self Assessment</p>
-            <div className="rounded-2xl overflow-x-auto" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
-              <div style={{ minWidth: '640px' }}>
-                <div className="grid grid-cols-[1.8fr_1fr_1fr_1fr]">
-                  <div className="px-4 sm:px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#6B6256', backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
-                    Feature
-                  </div>
-                  <div className="px-3 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
-                    <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
-                  </div>
-                  <div className="px-3 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#6B6256' }}>Accountant</p>
-                    <p className="text-sm font-bold" style={{ color: '#1C1208' }}>£400–£1,200/yr</p>
-                  </div>
-                  <div className="px-3 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
-                    <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#6B6256' }}>Suite (Xero etc.)</p>
-                    <p className="text-sm font-bold" style={{ color: '#1C1208' }}>£144–£708/yr</p>
-                  </div>
-
-                  {rows.map((r, i) => (
-                    <div key={r.feature} className="contents">
-                      <div className="px-4 sm:px-6 py-4 text-sm" style={{ borderBottom: i === rows.length - 1 ? 'none' : '1px solid #F0EBE1', color: '#1C1208' }}>
-                        <p className="font-medium">{r.feature}</p>
-                        {r.note && <p className="text-xs mt-1" style={{ color: '#6B6256' }}>{r.note}</p>}
-                      </div>
-                      <div className="px-3 py-4 text-center flex items-center justify-center" style={{ borderBottom: i === rows.length - 1 ? 'none' : '1px solid #F0EBE1', backgroundColor: '#FFFFFF' }}>
-                        <Cell value={r.easytax} />
-                      </div>
-                      <div className="px-3 py-4 text-center flex items-center justify-center" style={{ borderBottom: i === rows.length - 1 ? 'none' : '1px solid #F0EBE1', backgroundColor: '#FAFAF7' }}>
-                        <Cell value={r.accountant} />
-                      </div>
-                      <div className="px-3 py-4 text-center flex items-center justify-center" style={{ borderBottom: i === rows.length - 1 ? 'none' : '1px solid #F0EBE1', backgroundColor: '#FAFAF7' }}>
-                        <Cell value={r.suite} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <p className="text-xs mt-3" style={{ color: '#6B6256' }}>
-              Accountant fees are indicative for simple landlord Self Assessment cases. Accounting suite pricing reflects Xero and similar mid-range plans as of mid-2026. EasyTax is not affiliated with any third party mentioned.
-            </p>
-          </div>
-        </section>
-
-        {/* ── How it works for landlords ── */}
-        <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              How EasyTax works for landlords
+              What EasyTax does for landlords today
             </h2>
-            <ol className="space-y-5">
-              {[
-                {
-                  title: 'Add your income and expenses',
-                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
-                },
-                {
-                  title: 'Review and confirm your income and expenses',
-                  body: 'EasyTax groups your transactions into HMRC categories — rental income, repairs, insurance, mortgage interest, agent fees. You review and confirm in a simple dashboard. The AI handles the categorisation; you stay in control.',
-                },
-                {
-                  title: 'File your quarterly MTD ITSA update',
-                  body: 'Once you have confirmed the quarter\'s figures, submit your update to HMRC with one click. EasyTax uses the official MTD ITSA API — you get a submission receipt. Typical time: under 5 minutes per quarter.',
-                },
-                {
-                  title: 'File your Self Assessment at the end of the tax year',
-                  body: 'At year end, EasyTax consolidates your four quarterly updates into the SA100 main return and the SA105 property income supplement. Review the figures, submit, and download your confirmation.',
-                },
-                {
-                  title: 'Pay your tax bill directly to HMRC',
-                  body: 'EasyTax shows you your estimated tax liability as the year progresses. When the final bill is confirmed after Self Assessment, you pay HMRC directly — not through EasyTax.',
-                },
-              ].map((step, i) => (
-                <li key={step.title} className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
-                    {i + 1}
-                  </div>
-                  <div>
-                    <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>{step.title}</p>
-                    <p className="text-sm leading-relaxed" style={{ color: '#4A4035' }}>{step.body}</p>
-                  </div>
+            <ul className="space-y-3" style={{ listStyle: 'none', padding: 0 }}>
+              {covers.map(c => (
+                <li key={c.text} className="flex gap-3 text-sm sm:text-base" style={{ color: '#1C1208' }}>
+                  {c.yes
+                    ? <Check size={20} color="#4B6A4E" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" aria-hidden />
+                    : <X size={20} color="#C46262" strokeWidth={2.5} className="flex-shrink-0 mt-0.5" aria-hidden />}
+                  <span><span className="sr-only">{c.yes ? 'Covered: ' : 'Not covered: '}</span>{c.text}</span>
                 </li>
               ))}
-            </ol>
-          </div>
-        </section>
-
-        {/* ── Honest tradeoffs ── */}
-        <section className="py-16 sm:py-20" style={{ backgroundColor: '#FDFCF8' }}>
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Honest tradeoffs
-            </h2>
-            <div className="grid sm:grid-cols-2 gap-5">
-              <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>EasyTax is the right fit if…</p>
-                <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You have one to a handful of buy-to-let or residential rental properties.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Your main goal is HMRC compliance at the lowest cost — not full bookkeeping software.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You want AI to categorise your income and expenses from your bank statements so you are not coding every line by hand.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>You are paying £400–£1,200/year for an accountant to do a straightforward landlord Self Assessment — and want to do it yourself for nothing.</span></li>
-                </ul>
-              </div>
-              <div className="p-6 rounded-2xl" style={{ backgroundColor: '#F5E4D8', border: '1px solid #A04E1C30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#A04E1C' }}>Consider a specialist if…</p>
-                <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>You are disposing of property and need Capital Gains Tax (CGT) calculations and reporting.</span></li>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>You have a large portfolio (10+ properties) with complex ownership structures or partnership arrangements.</span></li>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>You hold property in a limited company and need full company accounts prepared for Companies House as well as HMRC.</span></li>
-                  <li className="flex gap-2"><ArrowRight size={16} color="#A04E1C" className="flex-shrink-0 mt-0.5" /><span>You need advice on tax planning, mortgage structuring, or portfolio optimisation.</span></li>
-                </ul>
-              </div>
-            </div>
+            </ul>
+            <p className="text-sm mt-6" style={{ color: '#4A4035' }}>
+              If you also have self-employment income, EasyTax can send those quarterly updates.{' '}
+              <Link href={ctaHref} style={{ color: '#A04E1C', fontWeight: 600 }}>Get started <ArrowRight size={14} className="inline" aria-hidden /></Link>
+            </p>
           </div>
         </section>
 
@@ -299,7 +175,7 @@ export default async function LandlordTaxSoftware() {
         <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Landlord MTD ITSA — frequently asked questions
+              Landlords and MTD — frequently asked questions
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {faqItems.map((item) => (
@@ -311,27 +187,6 @@ export default async function LandlordTaxSoftware() {
                   <p className="mt-3 text-sm leading-relaxed" style={{ color: '#4A4035' }}>{item.a}</p>
                 </details>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── CTA ── */}
-        <section className="py-20 sm:py-24" style={{ backgroundColor: '#1C1208' }}>
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
-              MTD ITSA is here for landlords.<br />
-              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>File for nothing — not £1,000/year.</em>
-            </h2>
-            <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
-              No card required. Import your bank statement and file your first quarterly update in minutes.
-            </p>
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
-                Get started →
-              </Link>
-              <a href="mailto:hello@easytax.vip?subject=Landlord%20MTD%20ITSA" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
-                Ask us a question
-              </a>
             </div>
           </div>
         </section>

@@ -91,7 +91,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
               ${[
                 ['📋', 'Connect your HMRC account', 'Link your Government Gateway to fetch your tax obligations automatically.'],
                 ['🧾', 'Add your income and expenses', 'Import a CSV statement from your bank or type them in — we never need your bank login.'],
-                ['📊', 'File your Self Assessment', 'Submit quarterly updates and your final declaration directly to HMRC.'],
+                ['📊', 'File your quarterly updates', 'Submit your MTD quarterly updates directly to HMRC.'],
               ].map(([icon, title, desc]) => `
               <tr>
                 <td style="padding:12px 0;border-bottom:1px solid #F0EBE1;vertical-align:top">

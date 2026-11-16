@@ -9,11 +9,11 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('TaxScouts Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a TaxScouts alternative? EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 directly to HMRC free — software you control, no waiting for an accountant.',
+  description: 'Looking for a TaxScouts alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — software you control, no waiting for an accountant.',
   alternates: { canonical: 'https://easytax.vip/taxscouts-alternative' },
   openGraph: {
     title: 'TaxScouts Alternative — MTD ITSA + Self Assessment, Free',
-    description: 'TaxScouts charges £119–169+ per year and assigns you an accountant. EasyTax lets you file MTD ITSA quarterly updates and Self Assessment yourself, free.',
+    description: 'TaxScouts charges £119–169+ per year and assigns you an accountant. EasyTax lets you file your MTD ITSA quarterly updates yourself, free.',
     url: 'https://easytax.vip/taxscouts-alternative',
     type: 'article',
     locale: 'en_GB',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'TaxScouts Alternative — MTD ITSA Software, Free',
-    description: 'TaxScouts uses an accountant. EasyTax is software — file MTD ITSA and Self Assessment yourself, free.',
+    description: 'TaxScouts uses an accountant. EasyTax is software — file your MTD ITSA quarterly updates yourself, free.',
   },
 };
 
@@ -35,10 +35,10 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            taxscouts: '£119–169+',           note: 'EasyTax is free however many times you file; TaxScouts: one Self Assessment filing per year' },
   { feature: 'No card to sign up',                    easytax: true,               taxscouts: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               taxscouts: false,                 note: 'TaxScouts focuses on annual Self Assessment; EasyTax is built for the new mandatory quarterly MTD cycle' },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: true,               taxscouts: true },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               taxscouts: true, note: 'EasyTax does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,               taxscouts: false },
-  { feature: 'CT600 Corporation Tax filing',          easytax: true,               taxscouts: false },
-  { feature: 'Limited company P&L and Balance Sheet', easytax: true,               taxscouts: false },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,               taxscouts: false, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'Limited company P&L and Balance Sheet', easytax: false,               taxscouts: false, note: 'Not offered at the moment' },
   { feature: 'AI expense categorisation',             easytax: true,               taxscouts: false,                 note: 'EasyTax uses Claude AI to categorise and reconcile transactions against HMRC allowable expenses' },
   { feature: 'AI categorisation chat',                easytax: true,               taxscouts: false },
   { feature: 'File in your own time, instantly',      easytax: true,               taxscouts: false,                 note: 'TaxScouts assigns you an accountant — filing depends on their availability' },
@@ -61,7 +61,7 @@ export default async function TaxScoutsAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'TaxScouts Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and TaxScouts for UK sole traders and landlords. EasyTax files MTD ITSA quarterly updates, Self Assessment, VAT and CT600 free — no waiting for an accountant.',
+    description: 'Side-by-side comparison of EasyTax and TaxScouts for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free — no waiting for an accountant.',
     author: { '@type': 'Organization', name: 'EasyTax' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
     mainEntityOfPage: 'https://easytax.vip/taxscouts-alternative',
@@ -184,7 +184,7 @@ export default async function TaxScoutsAlternative() {
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Built for MTD ITSA quarterly updates — the mandatory new filing cycle from April 2026.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>File on your own schedule, any time — no waiting for an accountant to become available.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>CSV statement import: download a statement from your bank, import it, and AI categorises each line.</span></li>
-                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Covers VAT returns and CT600 Corporation Tax — not just Self Assessment.</span></li>
+                  <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Covers MTD VAT returns as well as MTD ITSA quarterly updates.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No card required to sign up. Try before you pay.</span></li>
                 </ul>
               </div>
@@ -199,7 +199,7 @@ export default async function TaxScoutsAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If your tax situation is complex — multiple income streams, significant capital gains, or you simply want an expert to check your numbers — TaxScouts or a traditional accountant may be the right call. But if you are a <strong>straightforward sole trader or landlord who wants to stay HMRC-compliant at the lowest possible cost and on your own schedule</strong>, EasyTax is built for you.
+              If your tax situation is complex — multiple income streams, significant capital gains, or you simply want an expert to check your numbers — TaxScouts or a traditional accountant may be the right call. But if you are a <strong>straightforward sole trader who wants to stay HMRC-compliant at the lowest possible cost and on your own schedule</strong>, EasyTax is built for you.
             </p>
           </div>
         </section>
@@ -229,8 +229,8 @@ export default async function TaxScoutsAlternative() {
                   body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
-                  title: 'File your first quarterly MTD update or Self Assessment',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA and Self Assessment APIs. You get a confirmation receipt instantly — no waiting for an accountant to review and submit.',
+                  title: 'File your first quarterly MTD update',
+                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt instantly — no waiting for an accountant to review and submit.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -261,11 +261,11 @@ export default async function TaxScoutsAlternative() {
                 },
                 {
                   q: 'Does EasyTax replace a human accountant?',
-                  a: "No — EasyTax is self-serve software, not an accountancy service. If your tax situation is straightforward (sole trader or landlord income, standard allowances), EasyTax handles it. If you have complex mixed income, significant capital gains, or want human oversight, you may prefer TaxScouts or a traditional accountant. Both can co-exist: some EasyTax users keep an accountant for advice but file directly.",
+                  a: "No — EasyTax is self-serve software, not an accountancy service. If your tax situation is straightforward (self-employment income, standard allowances), EasyTax handles it. If you have complex mixed income, significant capital gains, or want human oversight, you may prefer TaxScouts or a traditional accountant. Both can co-exist: some EasyTax users keep an accountant for advice but file directly.",
                 },
                 {
                   q: "Can EasyTax handle MTD ITSA quarterly updates as well as annual Self Assessment?",
-                  a: 'Yes — MTD ITSA quarterly updates are at the core of what EasyTax is built for. You submit four quarterly updates to HMRC each tax year, then a final declaration. EasyTax manages the full cycle. TaxScouts currently focuses on the annual Self Assessment return.',
+                  a: 'Quarterly updates, yes — they are at the core of what EasyTax is built for. You submit four quarterly updates to HMRC each tax year, then a final declaration at year end. EasyTax handles the quarterly updates; the final declaration is not available in EasyTax yet. TaxScouts currently focuses on the annual Self Assessment return.',
                 },
                 {
                   q: 'What if HMRC has a question about my filing?',
@@ -273,11 +273,11 @@ export default async function TaxScoutsAlternative() {
                 },
                 {
                   q: 'Can EasyTax handle VAT and Corporation Tax as well as Self Assessment?',
-                  a: 'Yes — EasyTax files MTD VAT returns, CT600 Corporation Tax, and Self Assessment (SA100 with SA103 and SA105 supplementary pages) directly to HMRC. It also supports P&L and Balance Sheet for limited companies.',
+                  a: 'Partly. EasyTax files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates and the final declaration.',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',

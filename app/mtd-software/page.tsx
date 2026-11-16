@@ -9,11 +9,11 @@ import { OFFER_JSONLD, PRICE_CHIP } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('MTD Software UK — Making Tax Digital for Income Tax'),
-  description: 'MTD ITSA software on the HMRC MTD API for UK sole traders, the self-employed and landlords. Quarterly updates, Self Assessment and VAT — free, no subscription, no filing fee.',
+  description: 'MTD ITSA software on the HMRC MTD API for UK sole traders and the self-employed. Quarterly updates and VAT returns — free, no subscription, no filing fee.',
   alternates: { canonical: 'https://easytax.vip/mtd-software' },
   openGraph: {
     title: 'MTD ITSA Software — EasyTax, Free, No Subscription',
-    description: 'Making Tax Digital software built on the HMRC MTD API for sole traders and landlords. Quarterly updates, Self Assessment, VAT, CT600 — free, no monthly fee.',
+    description: 'Making Tax Digital software built on the HMRC MTD API for sole traders and the self-employed. Quarterly updates and VAT returns — free, no monthly fee.',
     url: 'https://easytax.vip/mtd-software',
     type: 'article',
     locale: 'en_GB',
@@ -38,7 +38,7 @@ export default async function MtdSoftware() {
     name: 'EasyTax',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
-    description: 'MTD ITSA software built on the HMRC MTD API for UK sole traders, self-employed and landlords. File Making Tax Digital quarterly updates, Self Assessment, VAT and CT600 directly to HMRC.',
+    description: 'MTD ITSA software built on the HMRC MTD API for UK sole traders and the self-employed. File Making Tax Digital quarterly updates and VAT returns directly to HMRC.',
     url: 'https://easytax.vip',
     offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
@@ -92,10 +92,10 @@ export default async function MtdSoftware() {
               <Sparkles size={12} /> MTD ITSA software built on the HMRC MTD API
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              MTD software for UK sole traders and landlords — <em style={{ color: '#4B6A4E', fontStyle: 'italic' }}>free, no subscription</em>
+              MTD software for UK sole traders and the self-employed — <em style={{ color: '#4B6A4E', fontStyle: 'italic' }}>free, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built specifically for UK sole traders, the self-employed and landlords. Submit quarterly MTD ITSA updates, Self Assessment, VAT returns and CT600 filings directly to HMRC — and it is <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to sign up.
+              EasyTax is <strong style={{ color: '#1C1208' }}>Making Tax Digital software built on the HMRC MTD API</strong> built for UK sole traders and the self-employed. Submit quarterly MTD ITSA updates and MTD VAT returns directly to HMRC — and it is <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to sign up.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -146,7 +146,7 @@ export default async function MtdSoftware() {
               Everything EasyTax files to HMRC
             </h2>
             <p className="text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              One tool for all your HMRC digital filing obligations — quarterly MTD updates, Self Assessment, VAT and Corporation Tax.
+              Your quarterly MTD updates and VAT returns, and the records behind them, in one place. Not yet available in EasyTax: the year-end final declaration, property income (landlords) and CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               {[
@@ -155,20 +155,8 @@ export default async function MtdSoftware() {
                   body: 'Submit income and expenses each quarter directly to HMRC. Import a CSV statement from your bank and EasyTax AI-categorises it against HMRC allowable expenses — so each quarter takes minutes, not hours.',
                 },
                 {
-                  title: 'MTD ITSA final declaration (crystallisation)',
-                  body: 'The end-of-year confirmation that locks in your Self Assessment for the tax year. EasyTax handles this in the same flow as your quarterly updates.',
-                },
-                {
-                  title: 'Self Assessment — SA100, SA103, SA105',
-                  body: 'Full Self Assessment return including self-employment (SA103) and property income (SA105) supplementary pages, submitted directly to HMRC via the official API.',
-                },
-                {
                   title: 'MTD VAT return',
                   body: 'If you are VAT-registered, EasyTax submits your MTD VAT return directly to HMRC. MTD VAT is already mandatory for businesses above £90,000 turnover.',
-                },
-                {
-                  title: 'CT600 Corporation Tax',
-                  body: 'For limited companies, EasyTax files the CT600 Corporation Tax return directly to HMRC, alongside P&L and Balance Sheet preparation.',
                 },
                 {
                   title: 'Bank statement import',
@@ -202,7 +190,7 @@ export default async function MtdSoftware() {
                 { title: 'Landlords', body: 'Property landlords with gross rental income (before expenses) above the threshold. Includes residential and commercial let income.' },
                 { title: 'Both combined', body: 'The £50k / £30k threshold applies to your total income from self-employment and property combined, not each source separately.' },
                 { title: 'VAT-registered businesses', body: 'If you are already VAT-registered above £90,000 turnover, MTD VAT is already mandatory regardless of ITSA thresholds.' },
-                { title: 'Limited company directors', body: 'Directors taking self-employed income alongside a salary may be affected. EasyTax also files CT600 and P&L/Balance Sheet for the company.' },
+                { title: 'Limited company directors', body: 'Directors taking self-employed income alongside a salary may be affected. EasyTax does not file CT600 or company accounts for the company itself.' },
                 { title: 'Below-threshold earners (voluntarily)', body: 'You can join MTD voluntarily even below the threshold to simplify your record-keeping and get used to quarterly filing before it becomes mandatory.' },
               ].map(item => (
                 <div key={item.title} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -243,7 +231,7 @@ export default async function MtdSoftware() {
                 },
                 {
                   title: 'Direct HMRC API connection',
-                  body: 'EasyTax uses the official HMRC MTD ITSA, Self Assessment, VAT and Corporation Tax APIs. Submissions go directly to HMRC — no intermediary agent, no manual re-keying. You receive an HMRC confirmation receipt.',
+                  body: 'EasyTax uses the official HMRC MTD ITSA and MTD VAT APIs. Submissions go directly to HMRC — no intermediary agent, no manual re-keying. You receive an HMRC confirmation receipt.',
                 },
                 {
                   title: 'Simple enough to file yourself',
@@ -315,7 +303,7 @@ export default async function MtdSoftware() {
               {[
                 {
                   q: 'Is EasyTax recognised by HMRC for MTD ITSA?',
-                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates, Self Assessment and VAT. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s. See our HMRC status page for exactly what our access covers.',
+                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s. See our HMRC status page for exactly what our access covers.',
                 },
                 {
                   q: 'What does MTD ITSA software actually do?',
@@ -331,11 +319,11 @@ export default async function MtdSoftware() {
                 },
                 {
                   q: 'Can I use EasyTax for Self Assessment as well as quarterly updates?',
-                  a: 'Yes — EasyTax files both. Under MTD ITSA, the annual Self Assessment (the "final declaration" or "crystallisation") is part of the same workflow as your quarterly updates. EasyTax handles the full SA100 with supplementary pages SA103 (self-employment) and SA105 (property income).',
+                  a: 'Not yet. EasyTax files your MTD ITSA quarterly updates. The year-end final declaration (which replaces the annual Self Assessment return under MTD) is not available in EasyTax yet, and nor is property income (SA105). For the year-end step, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'Does EasyTax work for limited companies?',
-                  a: 'Yes — EasyTax files CT600 Corporation Tax, prepares P&L and Balance Sheet, and handles MTD VAT for limited companies. Directors who also have self-employment income can manage both through EasyTax.',
+                  a: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies. It does not file CT600 Corporation Tax or prepare company accounts. Directors who also have self-employment income can file their own MTD ITSA quarterly updates with EasyTax.',
                 },
                 {
                   q: 'Can I import my bank statements?',
