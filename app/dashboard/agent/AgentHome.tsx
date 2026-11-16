@@ -47,6 +47,9 @@ export default function AgentHome() {
   async function refreshAll() {
     setBusy(true); setError('');
     try {
+      // One call for every request sent in the last 30 days, then each client
+      // is confirmed (accepted requests and live relationships).
+      await api('/api/agent/invitations');
       for (const c of clients) await api(`/api/agent/clients/${c.id}`, { method: 'PATCH', body: JSON.stringify({ action: 'refresh' }) });
       await load(); setStatus('Authorisations checked with HMRC.');
     } catch (err) { setError((err as Error).message); }
