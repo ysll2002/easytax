@@ -117,8 +117,32 @@ export async function getValidAgentToken(userId: string): Promise<{ token: strin
 
 const ACCEPT = 'application/vnd.hmrc.2.0+json';
 
+// The Agent Authorisation API endpoint a call is, by HMRC's names.
+function endpointName(method: string, path: string): string {
+  const p = path.replace(/^\/agents\/[^/]+/, '');
+  if (method === 'POST' && p === '/invitations') return 'Create a new authorisation';
+  if (method === 'GET' && (p === '/invitations' || p.startsWith('/invitations?'))) return 'Get all authorisation requests for the last 30 days';
+  if (method === 'GET' && p.startsWith('/invitations/')) return 'Get an invitation by id';
+  if (method === 'DELETE' && p.startsWith('/invitations/')) return 'Cancel an invitation by id';
+  if (method === 'POST' && p === '/relationships') return 'Get status of a relationship';
+  if (method === 'PUT' && p === '/deauthorise-client') return 'De-authorise an existing client relationship';
+  return `${method} ${p}`;
+}
+
+async function logCall(path: string, method: string, status: number | null, correlationId: string | null) {
+  try {
+    await supabase.from('agent_api_log').insert({
+      arn: path.match(/^\/agents\/([^/?]+)/)?.[1] ?? null,
+      method, endpoint: endpointName(method, path), path, http_status: status, correlation_id: correlationId,
+    });
+  } catch { /* logging must never break a filing */ }
+}
+
 async function agentApi(path: string, token: string, init: RequestInit = {}) {
-  const res = await fetch(`${BASE}${path}`, {
+  const method = (init.method ?? 'GET').toUpperCase();
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`, {
     ...init,
     headers: {
       Authorization: `Bearer ${token}`,
@@ -128,6 +152,11 @@ async function agentApi(path: string, token: string, init: RequestInit = {}) {
       ...(init.headers as Record<string, string> ?? {}),
     },
   });
+  } catch (err) {
+    await logCall(path, method, null, null);
+    throw err;
+  }
+  await logCall(path, method, res.status, res.headers.get('x-correlation-id'));
   const text = await res.text();
   let body: unknown = null;
   try { body = text ? JSON.parse(text) : null; } catch { body = text; }
@@ -173,6 +202,27 @@ export async function getInvitation(arn: string, token: string, invitationId: st
   const r = await agentApi(`/agents/${arn}/invitations/${encodeURIComponent(invitationId)}`, token);
   if (!r.ok) throw hmrcError(r);
   return r.body as Invitation;
+}
+
+export type SentInvitation = { invitationId: string; status: string; service?: string; clientActionUrl?: string; expiresOn?: string; created?: string };
+
+// Authorisation requests the agent has sent in the last 30 days (HMRC's
+// default window).
+export async function listInvitations(arn: string, token: string): Promise<SentInvitation[]> {
+  const r = await agentApi(`/agents/${arn}/invitations`, token);
+  if (r.status === 404) return [];  // HMRC: no requests in the period
+  if (!r.ok) throw hmrcError(r);
+  const raw = Array.isArray(r.body) ? r.body : ((r.body as { invitations?: unknown[] } | null)?.invitations ?? []);
+  return (raw as Record<string, unknown>[]).map(i => {
+    const href = (i._links as { self?: { href?: string } } | undefined)?.self?.href ?? '';
+    const service = Array.isArray(i.service) ? String(i.service[0]) : (i.service as string | undefined);
+    return {
+      invitationId: String(i.invitationId ?? i.id ?? href.split('/').pop() ?? ''),
+      status: String(i.status ?? ''),
+      service, clientActionUrl: i.clientActionUrl as string | undefined,
+      expiresOn: i.expiresOn as string | undefined, created: i.created as string | undefined,
+    };
+  }).filter(i => i.invitationId);
 }
 
 export async function cancelInvitation(arn: string, token: string, invitationId: string) {
