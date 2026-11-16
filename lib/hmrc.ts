@@ -192,7 +192,7 @@ async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
     await logHmrcCall(method, path, null, null);
     throw err;
   }
-  await logHmrcCall(method, path, res.status, res.headers.get('x-correlation-id'));
+  await logHmrcCall(method, path, res.status, res.headers.get('x-correlationid') ?? res.headers.get('x-correlation-id'));
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     // HMRC's own code, passed through unchanged. This used to be re-labelled

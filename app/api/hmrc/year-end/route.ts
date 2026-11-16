@@ -35,6 +35,15 @@ const TAX_YEAR_RE = /^\d{4}-\d{2}$/;
 // lib/hmrc.ts drops the header altogether in production.
 const SCENARIO_RE = /^[A-Z0-9_]{1,60}$/;
 
+// The scenario picker lists Individual Calculations scenarios, so it is sent
+// only to the calculation and final declaration calls. Other APIs reject or
+// misread those values.
+//
+// BSAS retrieve in the sandbox answers 404 by default ("no data found"), even
+// straight after a successful trigger, so it is asked for HMRC's
+// self-employment profit example instead.
+const SANDBOX_BSAS_RETRIEVE_SCENARIO = 'SELF_EMPLOYMENT_PROFIT';
+
 type Body = {
   action?:        string;
   taxYear?:       string;
@@ -42,6 +51,9 @@ type Body = {
   adjustments?:   BsasAdjustments;
   confirmed?:     boolean;
   scenario?:      string;
+  // Sandbox only: HMRC's default test calculation always carries error
+  // C95005, so the declaration can be sent anyway to exercise the endpoint.
+  sandboxIgnoreErrors?: boolean;
 };
 
 function errorMessage(err: unknown) {
@@ -108,29 +120,29 @@ export async function POST(req: NextRequest) {
       case 'overview': {
         const bid = await businessId();
         const [obligations, biss, broughtForwardLosses, lossClaims] = await Promise.all([
-          settle(() => getFinalDeclarationObligations(nino, taxYear, token, scenario)),
-          settle(() => getSelfEmploymentBiss(nino, taxYear, bid, token, scenario)),
-          settle(() => listBroughtForwardLosses(nino, taxYear, token, scenario)),
-          settle(() => listLossClaims(nino, taxYear, token, scenario)),
+          settle(() => getFinalDeclarationObligations(nino, taxYear, token)),
+          settle(() => getSelfEmploymentBiss(nino, taxYear, bid, token)),
+          settle(() => listBroughtForwardLosses(nino, taxYear, token)),
+          settle(() => listLossClaims(nino, taxYear, token)),
         ]);
         return NextResponse.json({ businessId: bid, obligations, biss, broughtForwardLosses, lossClaims });
       }
 
       case 'bsas-trigger': {
-        const result = await triggerSelfEmploymentBsas(nino, taxYear, await businessId(), token, scenario);
+        const result = await triggerSelfEmploymentBsas(nino, taxYear, await businessId(), token);
         return NextResponse.json({ calculationId: result?.calculationId });
       }
 
       case 'bsas-get': {
         if (!calculationId) return NextResponse.json({ error: 'calculationId is required.' }, { status: 400 });
-        return NextResponse.json(await getSelfEmploymentBsas(nino, taxYear, calculationId, token, scenario));
+        return NextResponse.json(await getSelfEmploymentBsas(nino, taxYear, calculationId, token, SANDBOX_BSAS_RETRIEVE_SCENARIO));
       }
 
       case 'bsas-adjust': {
         if (!calculationId || !body.adjustments) {
           return NextResponse.json({ error: 'calculationId and adjustments are required.' }, { status: 400 });
         }
-        await submitSelfEmploymentBsasAdjustments(nino, taxYear, calculationId, body.adjustments, token, scenario);
+        await submitSelfEmploymentBsasAdjustments(nino, taxYear, calculationId, body.adjustments, token);
         return NextResponse.json({ success: true });
       }
 
@@ -157,7 +169,7 @@ export async function POST(req: NextRequest) {
         if (calc?.metadata?.intentToSubmitFinalDeclaration !== true) {
           return NextResponse.json({ error: 'This calculation cannot be used for a final declaration. Run the final calculation again.' }, { status: 409 });
         }
-        if ((calc?.messages?.errors ?? []).length > 0) {
+        if ((calc?.messages?.errors ?? []).length > 0 && body.sandboxIgnoreErrors !== true) {
           return NextResponse.json({ error: 'HMRC reported errors on this calculation. Fix them and run the calculation again.' }, { status: 409 });
         }
 
@@ -168,7 +180,7 @@ export async function POST(req: NextRequest) {
           user_id:       profileId,
           tax_year:      taxYear,
           filing_type:   'final_declaration',
-          hmrc_response: { calculationId, totalIncomeTaxAndNicsDue: totalDue ?? null, environment: 'sandbox' },
+          hmrc_response: { calculationId, totalIncomeTaxAndNicsDue: totalDue ?? null, environment: 'sandbox', ignoredErrors: body.sandboxIgnoreErrors === true },
         });
         // HMRC has accepted the declaration at this point, so a failed local
         // record must not be reported to the customer as a failed filing.
