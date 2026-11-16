@@ -60,7 +60,8 @@
 
 ## Deployment 状态
 
-- **Production = main = staging = `5695c33`**（2026-11-16 15:00 UTC 上线 PR #61，owner 授权；冒烟通过）。
+- **staging = `40df790`**（比 production 多 PR #62；**上线前 production 库要先建 hmrc_api_log**）。
+- **Production = main = `5695c33`**（2026-11-16 15:00 UTC 上线 PR #61，owner 授权；冒烟通过）。
 - 上一版 production：`3d085d6`（2026-11-16 14:46 UTC 上线，owner 授权；含 PR #50–#60；production 库已先建 agent_api_log；冒烟通过，公开页面无夸大声明）。
 - **任务列表两个 bug 已修并上线（PR #61）**：/api/hmrc/tasks ① taxYearFor 把 4 月 1–5 日算进下一税年（6 Jan–5 Apr 2019 显示成 2019-20）② 预缴款（POA1/POA2/Balancing）是按日历凭空生成的，永远不会标为已完成，对所有用户都显示 overdue，且 POA 的税年标签错（31 Jan 2026 的 POA1 属 2025-26，标成 2024-25）。
 - **owner 对话里的改动直接合进 staging，不用问**（2026-11-15 owner 授权；main/production 仍要明说；定时 agent 不适用）。
