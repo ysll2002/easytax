@@ -120,8 +120,12 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
           {st === 'pending' && sandbox && (
             <span className="inline-flex flex-wrap items-center gap-2 px-2 py-1 rounded-full" style={{ border: '1px dashed #B8AE9F' }}>
               <span className="text-xs font-semibold" style={{ color: '#7A4A1E' }}>Sandbox test:</span>
-              <button type="button" style={{ ...secondaryBtn, backgroundColor: '#E2EDE2', color: '#2F5232' }} disabled={!!busy} onClick={() => act('sandbox-accept', service)}>Simulate client accepting</button>
-              <button type="button" style={{ ...secondaryBtn, backgroundColor: '#FEE2E2', color: '#991B1B' }} disabled={!!busy} onClick={() => act('sandbox-reject', service)}>Simulate client declining</button>
+              <button type="button" style={{ ...secondaryBtn, backgroundColor: '#E2EDE2', color: '#2F5232', opacity: busy && busy !== 'sandbox-accept' + service ? 0.5 : 1 }} disabled={!!busy} aria-busy={busy === 'sandbox-accept' + service} onClick={() => act('sandbox-accept', service)}>
+                {busy === 'sandbox-accept' + service ? 'Accepting… checking with HMRC' : 'Simulate client accepting'}
+              </button>
+              <button type="button" style={{ ...secondaryBtn, backgroundColor: '#FEE2E2', color: '#991B1B', opacity: busy && busy !== 'sandbox-reject' + service ? 0.5 : 1 }} disabled={!!busy} aria-busy={busy === 'sandbox-reject' + service} onClick={() => act('sandbox-reject', service)}>
+                {busy === 'sandbox-reject' + service ? 'Declining… checking with HMRC' : 'Simulate client declining'}
+              </button>
             </span>
           )}
           {['none', 'rejected', 'expired', 'cancelled', 'deauthorised'].includes(st) && <button type="button" style={secondaryBtn} disabled={!!busy} onClick={() => act('invite', service)}>Send a new request</button>}
@@ -157,8 +161,6 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
         <h1 style={h1Style}>{client.display_name}</h1>
         <p className="text-sm mb-4" style={{ color: '#4A4035' }}>{client.client_type === 'business' ? 'Company or partnership' : 'Individual or sole trader'}{client.last_checked_at ? ` · checked with HMRC ${fmt(client.last_checked_at)}` : ''}</p>
 
-        <div aria-live="polite">{status && <p role="status" className="mb-3 text-sm" style={{ color: '#2F5232', fontWeight: 600 }}>{status}</p>}</div>
-        {error && <div role="alert" className="p-4 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>}
 
         <section style={card} className="mb-6" aria-labelledby="auth-h">
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -167,6 +169,10 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
           </div>
           {authRow('itsa')}
           {authRow('vat')}
+          <div aria-live="polite">
+            {status && <p className="mt-3 text-sm" style={{ color: '#2F5232', fontWeight: 600 }}>{status}</p>}
+            {error && <p role="alert" className="mt-3 text-sm" style={{ color: '#991B1B', fontWeight: 600 }}>{error}</p>}
+          </div>
         </section>
 
         <section style={card} className="mb-6" aria-labelledby="due-h">
