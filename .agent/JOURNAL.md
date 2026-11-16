@@ -16,7 +16,7 @@
 ---
 
 ## 2026-11-16（owner 会话）
-**今日执行**：HMRC 回信要 Agent Authorisation 2.0 六个端点的 sandbox 测试时间戳。发现「Get all requests (30 天)」没实现、调用时间没留痕 → PR #57（list 接口 + agent_api_log 表）合进 staging `1fe64fb`。等 owner 在 staging 按步骤点一遍，再从日志出表、起草回信（只 create_draft）。owner 点完：6 个端点 13:55–13:57 UTC 全部成功，回信草稿已建（未发送）。owner 重新授权卡在客户接受 → 我替 Alex 接受，并做 PR #58（sandbox 模拟客户同意/拒绝按钮）合进 staging `d2871ad`。
+**今日执行**：HMRC 回信要 Agent Authorisation 2.0 六个端点的 sandbox 测试时间戳。发现「Get all requests (30 天)」没实现、调用时间没留痕 → PR #57（list 接口 + agent_api_log 表）合进 staging `1fe64fb`。等 owner 在 staging 按步骤点一遍，再从日志出表、起草回信（只 create_draft）。owner 点完：6 个端点 13:55–13:57 UTC 全部成功，回信草稿已建（未发送）。owner 重新授权卡在客户接受 → 我替 Alex 接受，并做 PR #58（sandbox 模拟客户同意/拒绝按钮）合进 staging `d2871ad`。owner 反馈按钮没反应：实为 ~10 秒无提示（Iona 实际已授权）+ Alex 遇 HMRC relationships 500 → PR #59 合进 staging `d5dcba1`。
 
 ## 2026-11-15（owner 会话，下午）
 **今日执行**：代理模式 sandbox 测试——发邀请报 RESOURCE_FORBIDDEN，原因是 sandbox app 只订阅了 Agent Authorisation 3.0、代码调 2.0；owner 加订 2.0、重新登录后给 Alex Lawrence 发 ITSA 邀请成功。owner 要求客户表加操作列 → [PR #45](https://github.com/ysll2002/easytax/pull/45)，授权合进 staging `c8d922d`，staging 已部署。
