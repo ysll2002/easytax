@@ -60,7 +60,7 @@
 
 ## Deployment 状态
 
-- **staging = `d5dcba1`**（比 production 多 PR #50–#59，还没进 main；**上线前 production 库要先建 agent_api_log 表**）。
+- **staging = `3d085d6`**（比 production 多 PR #50–#60，还没进 main；**上线前 production 库要先建 agent_api_log 表**）。
 - **owner 对话里的改动直接合进 staging，不用问**（2026-11-15 owner 授权；main/production 仍要明说；定时 agent 不适用）。
 - **Production = main = `ea28c1f`**（2026-11-15 14:09 UTC 上线，owner 授权；含 PR #45–#49；production 库已先加 ai_categorised 列；冒烟检查通过）。f25b383 于 2026-11-15 09:31 UTC 上线，owner 授权；比 1a2afdd 多了 PR #44：藏起 Company Tax。
 - 原 production 记录：**Production = main = staging = `1a2afdd`**（2026-11-14 22:23 UTC 上线，owner 授权「把 staging 的改动都发布到 production」）。包含：PR #36（去掉银行连接，改手动录入 + CSV）、#37（代理模式，production 里被 HMRC_ENV 挡住）、#38（CSV 修复）、#40（dashboard 清理）、#43（导航去掉 Records），以及另一会话直接合进 main 的 #39（去掉 dashboard footer 的范围说明）和 #41（语言/Homepage 移到侧边栏；#42 的做法在合并冲突时被它取代）。
@@ -74,8 +74,9 @@
 
 ## 在飞的分支
 
-- **HMRC Software Choices 上架（2026-11-16 Paul Anderson 回信）**：本周五（2026-11-20）更新时加入 gov.uk Software Choices。Paul 问列表是否标注无障碍功能 → 已起草回信（Gmail 草稿，答 Yes + 指向 /accessibility，Property Business API 以后找 SDST 带测试证据申请），**待 owner 发**。附了非强制收入类型对应 API 表（UK interest→Individual Savings Income 等）。**上架前风险：stg-010 仍未修**，/mtd-software 仍声称 CT600、landlord、final declaration；PR #39 删掉的 dashboard 不支持收入类型提示也还没确认。
+- **HMRC Software Choices 上架（2026-11-16 Paul Anderson 回信）**：本周五（2026-11-20）更新时加入 gov.uk Software Choices。Paul 问列表是否标注无障碍功能 → 已起草回信（Gmail 草稿，答 Yes + 指向 /accessibility，Property Business API 以后找 SDST 带测试证据申请），**待 owner 发**。附了非强制收入类型对应 API 表（UK interest→Individual Savings Income 等）。**stg-010 已在 staging 修好（PR #60），周五上架前要发 production**；PR #39 删掉的 dashboard 不支持收入类型提示也还没确认。
 - **HMRC Agent Authorisation 2.0 production 申请（2026-11-16 回信，Patrick Gordon）**：要 sandbox application ID + 6 个端点的测试时间戳（Create / Get all 30 天 / Get by id / Cancel / Relationship status / De-authorise）。2026-11-16 13:55–13:57 UTC owner 在 staging 点完，6 个端点全部 2xx（agent_api_log 有记录；HMRC sandbox 不返回 X-Correlation-Id）。已在 Gmail 起草回信（草稿，回复 Support Ref 2026-CRJ844 线程，sandbox app ID 30fb333c-45de-4ce3-9ffa-c3c0beb809e8），**等 owner 自己发**。之后 owner 重新邀请 Alex/Iona（都 pending）；Alex 新邀请 AB7WWMDX6XC8L 已由我用 Test Support 接受（204）。
+- [PR #60](https://github.com/ysll2002/easytax/pull/60)（2026-11-16，**已合进 staging** `3d085d6`；还没进 main）：stg-010。公开页面只写实际能提交的：MTD ITSA 季度更新（自雇）+ MTD VAT。去掉 SA100/SA105、final declaration、房产/landlord、CT600、公司账目的提交声明：首页 7 语言、/mtd-software、/self-assessment-software、9 个 alternative 页、/pricing、layout 元数据/JSON-LD、邮件、llms、条款 §3 服务列表和隐私法律依据一行。/landlord-tax-software 重写为如实页面（暂不支持房产收入，链 GOV.UK 软件列表）。staging 上抓取核对，剩下的 CT600 都是「does not file」。
 - [PR #59](https://github.com/ysll2002/easytax/pull/59)（2026-11-16，**已合进 staging** `d5dcba1`）：sandbox 按钮显示进度、结果显示在授权卡片内；刚被接受的请求遇到 relationships 500 时保留 authorised。Iona 已 Authorised；Alex 因 HMRC 500 仍 pending，需再点 Check。
 - [PR #58](https://github.com/ysll2002/easytax/pull/58)（2026-11-16，**已合进 staging** `d2871ad`）：sandbox 专用「Simulate client accepting / declining」按钮（调 Test Support API，再从 HMRC 读回状态；production 不显示、服务端拒绝）。以后 sandbox 测试不用再找我手动接受。
 - [PR #57](https://github.com/ysll2002/easytax/pull/57)（2026-11-16，**已合进 staging** `1fe64fb`）：新增 GET /agents/{arn}/invitations（Check authorisations 先调它）；新表 agent_api_log 记录每次代理 API 调用（端点名、状态、correlation id、时间），staging 库已建。用来给 HMRC 出时间戳。
