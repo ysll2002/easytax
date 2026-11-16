@@ -41,7 +41,15 @@ async function refreshService(uid: string, client: AgentClient, service: Service
   // Accepted requests, and relationships we think are live, are confirmed
   // against HMRC: the client can remove an agent at any time.
   if (next === 'authorised') {
-    next = (await checkRelationship(arn, token, client, service)) ? 'authorised' : 'deauthorised';
+    const wasPending = status === 'pending';
+    try {
+      next = (await checkRelationship(arn, token, client, service)) ? 'authorised' : 'deauthorised';
+    } catch (err) {
+      // HMRC has just told us the request was accepted. If the relationship
+      // check itself fails (HMRC 5xx), trust that answer rather than failing
+      // the whole check; the next check confirms the relationship.
+      if (!wasPending) throw err;
+    }
   }
   update[`${p}_status`] = next;
   return update;
