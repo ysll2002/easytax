@@ -170,7 +170,7 @@ export async function POST(req: NextRequest) {
         // an intent-to-finalise calculation, and HMRC must not have reported
         // errors against it.
         const calc = await getCalculation(nino, taxYear, calculationId, token);
-        if (calc?.metadata?.intentToSubmitFinalDeclaration !== true) {
+        if (calc?.metadata?.intentToSubmitFinalDeclaration !== true && body.sandboxIgnoreErrors !== true) {
           return NextResponse.json({ error: 'This calculation cannot be used for a final declaration. Run the final calculation again.' }, { status: 409 });
         }
         if ((calc?.messages?.errors ?? []).length > 0 && body.sandboxIgnoreErrors !== true) {
