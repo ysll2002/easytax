@@ -117,7 +117,9 @@ export async function getValidAgentToken(userId: string): Promise<{ token: strin
 
 const ACCEPT = 'application/vnd.hmrc.2.0+json';
 
-async function agentApi(path: string, token: string, init: RequestInit = {}) {
+// Exported for the sandbox evidence run (app/api/agent/sandbox-evidence),
+// which needs the raw status of every call, failures included.
+export async function agentApi(path: string, token: string, init: RequestInit = {}) {
   const res = await fetch(`${BASE}${path}`, {
     ...init,
     headers: {
@@ -141,7 +143,7 @@ function hmrcError(r: { status: number; body: unknown }): AgentError {
 
 export type Service = 'itsa' | 'vat';
 
-function invitationBody(client: AgentClient, service: Service) {
+export function invitationBody(client: Pick<AgentClient, 'nino' | 'postcode' | 'itsa_agent_type' | 'vrn' | 'vat_reg_date' | 'client_type'>, service: Service) {
   if (service === 'itsa') {
     return {
       service: ['MTD-IT'], clientType: 'personal', clientIdType: 'ni',
@@ -167,6 +169,17 @@ export async function createInvitation(arn: string, token: string, client: Agent
   const invitationId = r.location?.split('/').pop() ?? null;
   if (!invitationId) throw new AgentError('NO_INVITATION_ID', 502, 'HMRC did not return the authorisation request id.');
   return invitationId;
+}
+
+/**
+ * "Get all authorisation requests for the last 30 days". HMRC answers 204
+ * when there are none, so an empty list is not an error.
+ */
+export async function listInvitations(arn: string, token: string): Promise<(Invitation & { invitationId?: string; created?: string })[]> {
+  const r = await agentApi(`/agents/${arn}/invitations`, token);
+  if (r.status === 204) return [];
+  if (!r.ok) throw hmrcError(r);
+  return Array.isArray(r.body) ? r.body : [];
 }
 
 export async function getInvitation(arn: string, token: string, invitationId: string): Promise<Invitation> {

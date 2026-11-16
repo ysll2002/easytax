@@ -168,6 +168,7 @@ function SandboxHelper({ busy, users, onCreate, onUse }: { busy: boolean; users:
         <button type="button" disabled={busy} onClick={() => onCreate('agent')} style={secondaryBtn}>Create test agent</button>
         <button type="button" disabled={busy} onClick={() => onCreate('individual')} style={secondaryBtn}>Create test individual client</button>
         <button type="button" disabled={busy} onClick={() => onCreate('organisation')} style={secondaryBtn}>Create test VAT business client</button>
+        <Link href="/dashboard/agent/evidence" style={secondaryBtn}>API evidence for HMRC →</Link>
       </div>
       {users.map(u => (
         <div key={u.userId} className="text-xs mb-2 p-3 rounded-lg" style={{ backgroundColor: '#FDFCF8', border: '1px solid #DDD5C8', color: '#1C1208', fontFamily: 'ui-monospace, monospace', overflowWrap: 'anywhere' }}>
