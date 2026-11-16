@@ -131,3 +131,4 @@
 - HMRC FPH 团队对 9-25 回信的答复（Gmail 恢复后先查）。
 - Google organic 7d 从 6 涨到 17：下次看是哪些落地页带来的。
 - **Software Choices 年终功能承诺（Paul Anderson, 2026-11-16）**：HMRC 要确认 2027-04 前支持 end-of-year reporting 才能列为「in development」。owner 已确认并发送（答 Yes，2026-11-16）→ BACKLOG stg-014。这是对 HMRC 的时间承诺：须在 2027-04 前拿到 SDST 批准并上线年终流程（BSAS / Calculations / Losses / final declaration）。下一步仍是 owner 在 staging 跑年终流程出 SDST 证据。
+- **年终 SDST 证据（2026-11-16）**：staging 现为 `ed16322`（PR #63）。待 owner：sandbox 应用订阅 Individual Losses **6.0** → 重跑 /dashboard/individual/year-end 全 5 步 → 从 staging `hmrc_api_log` 出时间戳表、起草 SDST 申请。production 发布 PR #62/#63 前需先在 production 库建 `hmrc_api_log`。
