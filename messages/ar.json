@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · السنة الضريبية {taxYear}",
       "subSaFiling": "السنة الضريبية {taxYear} · تستحق في {date}",
       "subVat": "Making Tax Digital · VAT · تستحق في {date}",
-      "subPayment": "Self Assessment {taxYear} · تستحق في {date}",
+      "subPayment": "Self Assessment {taxYear} · الاستحقاق {date} · تذكير — فقط إذا كان عليك مبلغ مستحق",
       "errNotAuthorisedTitle": "لم تصرّح HMRC بالوصول إلى هذا السجل",
       "errNotAuthorisedIntro": "رفضت HMRC الطلب دون بيان السبب. هذه هي الأسباب المعتادة، مرتّبة من الأرجح إلى الأقل:",
       "errNotAuthorisedCause1": "أنت غير مسجَّل في Making Tax Digital for Income Tax. امتلاك حساب لدى HMRC ورقم تأمين وطني ليس كالتسجيل في MTD — فالتسجيل في MTD منفصل.",
