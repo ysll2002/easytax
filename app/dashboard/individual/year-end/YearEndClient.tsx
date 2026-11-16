@@ -111,12 +111,12 @@ export default function YearEndClient() {
   }
 
   /** HMRC computes summaries and calculations asynchronously; retrieve answers 404 until they are ready. */
-  async function poll(action: string, calculationId: string): Promise<Json> {
+  async function poll(action: string, calculationId: string, extra: Json = {}): Promise<Json> {
     let lastError = '';
     for (let i = 0; i < 8; i++) {
       await new Promise(res => setTimeout(res, i === 0 ? 3000 : 2000));
       try {
-        return await call(action, { calculationId });
+        return await call(action, { calculationId, ...extra });
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
         if (!lastError.includes('HMRC 404')) throw err;
@@ -175,7 +175,7 @@ export default function YearEndClient() {
       setAdjustDone(zero ? 'Recorded with HMRC: no adjustments needed.' : 'Adjustments sent to HMRC.');
       resetFrom('calc');
       // Re-read so the adjusted figures are what the customer sees.
-      setBsas(await poll('bsas-get', bsasId));
+      setBsas(await poll('bsas-get', bsasId, { afterAdjust: true }));
     } catch (err) { setBsasErr(err instanceof Error ? err.message : String(err)); }
     finally { setBusy(null); }
   }

@@ -41,8 +41,11 @@ const SCENARIO_RE = /^[A-Z0-9_]{1,60}$/;
 //
 // BSAS retrieve in the sandbox answers 404 by default ("no data found"), even
 // straight after a successful trigger, so it is asked for HMRC's
-// self-employment profit example instead.
-const SANDBOX_BSAS_RETRIEVE_SCENARIO = 'SELF_EMPLOYMENT_PROFIT';
+// self-employment examples instead: the unadjusted one before the customer
+// adjusts (so the adjustment form is offered), the adjusted profit example
+// after.
+const SANDBOX_BSAS_BEFORE = 'SELF_EMPLOYMENT_UNADJUSTED';
+const SANDBOX_BSAS_AFTER  = 'SELF_EMPLOYMENT_PROFIT';
 
 type Body = {
   action?:        string;
@@ -54,6 +57,7 @@ type Body = {
   // Sandbox only: HMRC's default test calculation always carries error
   // C95005, so the declaration can be sent anyway to exercise the endpoint.
   sandboxIgnoreErrors?: boolean;
+  afterAdjust?:   boolean;
 };
 
 function errorMessage(err: unknown) {
@@ -135,7 +139,7 @@ export async function POST(req: NextRequest) {
 
       case 'bsas-get': {
         if (!calculationId) return NextResponse.json({ error: 'calculationId is required.' }, { status: 400 });
-        return NextResponse.json(await getSelfEmploymentBsas(nino, taxYear, calculationId, token, SANDBOX_BSAS_RETRIEVE_SCENARIO));
+        return NextResponse.json(await getSelfEmploymentBsas(nino, taxYear, calculationId, token, body.afterAdjust ? SANDBOX_BSAS_AFTER : SANDBOX_BSAS_BEFORE));
       }
 
       case 'bsas-adjust': {
