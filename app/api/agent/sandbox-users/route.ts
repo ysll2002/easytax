@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { HMRC_SANDBOX_BASE as SANDBOX } from '@/lib/hmrc-env';
-import { AGENT_MODE_AVAILABLE } from '@/lib/agent';
+import { SANDBOX_CLIENT_SIMULATION } from '@/lib/agent';
 import { agentUserId } from '../_shared';
 
 // Sandbox only: creates HMRC test users so agent mode can be tried end to
@@ -30,7 +30,7 @@ const KINDS = {
 export async function POST(req: NextRequest) {
   const uid = await agentUserId();
   if (!uid) return NextResponse.json({ error: 'unauthorised' }, { status: 401 });
-  if (!AGENT_MODE_AVAILABLE) return NextResponse.json({ error: 'AGENT_MODE_NOT_AVAILABLE' }, { status: 403 });
+  if (!SANDBOX_CLIENT_SIMULATION) return NextResponse.json({ error: 'SANDBOX_ONLY' }, { status: 403 });
   const { kind } = await req.json().catch(() => ({}));
   const k = KINDS[kind as keyof typeof KINDS];
   if (!k) return NextResponse.json({ error: 'INVALID_KIND' }, { status: 400 });

@@ -16,7 +16,7 @@ const CALLBACK_ERRORS: Record<string, string> = {
   db: 'Your HMRC sign-in could not be saved. Please try again.',
 };
 
-export default function AgentHome() {
+export default function AgentHome({ sandbox = false }: { sandbox?: boolean }) {
   const sp = useSearchParams();
   const [setup, setSetup] = useState<Setup | null>(null);
   const [clients, setClients] = useState<AgentClientView[]>([]);
@@ -79,7 +79,7 @@ export default function AgentHome() {
       <div aria-live="polite">{status && <p role="status" className="mb-4 text-sm" style={{ color: '#2F5232', fontWeight: 600 }}>{status}</p>}</div>
       {error && <div role="alert" className="p-4 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>}
 
-      <p className="mb-4 text-xs font-semibold" style={{ color: '#7A4A1E' }}>HMRC sandbox — test data only. No real client data is sent to HMRC.</p>
+      {sandbox && <p className="mb-4 text-xs font-semibold" style={{ color: '#7A4A1E' }}>HMRC sandbox — test data only. No real client data is sent to HMRC.</p>}
 
       {step < 3 && (
         <section style={card} className="mb-6" aria-labelledby="setup-h">
@@ -105,7 +105,7 @@ export default function AgentHome() {
         </section>
       )}
 
-      <SandboxHelper busy={busy} users={testUsers} onCreate={makeTestUser} onUse={u => { setPrefill(u); setShowAdd(true); }} />
+      {sandbox && <SandboxHelper busy={busy} users={testUsers} onCreate={makeTestUser} onUse={u => { setPrefill(u); setShowAdd(true); }} />}
 
       {setup.arn && (
         <section aria-labelledby="clients-h">
