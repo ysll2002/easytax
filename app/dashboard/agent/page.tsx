@@ -1,4 +1,4 @@
-import { AGENT_MODE_AVAILABLE } from '@/lib/agent';
+import { AGENT_MODE_AVAILABLE, SANDBOX_CLIENT_SIMULATION } from '@/lib/agent';
 import { Suspense } from 'react';
 import AgentHome from './AgentHome';
 
@@ -13,5 +13,5 @@ export default function AgentPage() {
       </div>
     );
   }
-  return <Suspense><AgentHome /></Suspense>;
+  return <Suspense><AgentHome sandbox={SANDBOX_CLIENT_SIMULATION} /></Suspense>;
 }

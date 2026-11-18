@@ -15,13 +15,15 @@
 //   4. The agent then files for the client with the same MTD APIs a taxpayer
 //      uses, called with the agent's token and the client's NINO / VRN.
 //
-// Sandbox only until HMRC grants production access for agent services.
+// HMRC granted production access to Agent Authorisation 2.0 on 2026-11-18
+// (SDST ref 2026-CRJ844). Sandbox-only helpers (test users, simulating the
+// client's answer) stay behind SANDBOX_CLIENT_SIMULATION.
 
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { fraudHeaders } from '@/lib/hmrc';
 import { HMRC_API_BASE as BASE, IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
 
-export const AGENT_MODE_AVAILABLE = !IS_HMRC_PRODUCTION;
+export const AGENT_MODE_AVAILABLE = true;
 
 // Agent Authorisation API scopes, plus the MTD scopes the agent files with.
 export const AGENT_SCOPES = [
