@@ -4,11 +4,7 @@
 > 每日条目模板：
 >
 > ```
-> ## 2026-11-18（owner 对话）
-
-**今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
-
-## YYYY-MM-DD
+> ## YYYY-MM-DD
 > **HMRC**：…
 > **指标**：注册 X(+d) · HMRC 连接 X(+d, 转化 Y%) · 申报 X(+d)
 > **今日执行**：…（分支 / PR，或说明为什么没实现）
@@ -18,6 +14,10 @@
 > ```
 
 ---
+
+## 2026-11-18（owner 对话）
+
+**今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
 
 ## 2026-11-16（owner 会话）
 **今日执行**：HMRC 回信要 Agent Authorisation 2.0 六个端点的 sandbox 测试时间戳。发现「Get all requests (30 天)」没实现、调用时间没留痕 → PR #57（list 接口 + agent_api_log 表）合进 staging `1fe64fb`。等 owner 在 staging 按步骤点一遍，再从日志出表、起草回信（只 create_draft）。owner 点完：6 个端点 13:55–13:57 UTC 全部成功，回信草稿已建（未发送）。owner 重新授权卡在客户接受 → 我替 Alex 接受，并做 PR #58（sandbox 模拟客户同意/拒绝按钮）合进 staging `d2871ad`。owner 反馈按钮没反应：实为 ~10 秒无提示（Iona 实际已授权）+ Alex 遇 HMRC relationships 500 → PR #59 合进 staging `d5dcba1`。HMRC 代理 API 证据邮件草稿已更新（加重新授权测试）。Paul 回信：周五上 Software Choices，问无障碍标注 → 起草回信（Yes）。owner 批准修 stg-010 → PR #60 合进 staging `3d085d6`（公开页面去掉 SA/CT600/房产/公司账目的夸大声明，7 语言首页，landlord 页重写）。owner 授权上线：production 库建 agent_api_log → main 快进到 `3d085d6`，部署 1vli2yd86 Ready，9 个公开页 200 且无夸大声明。owner 问任务列表来源 → 发现税年和预缴款两个 bug → owner 批准修 → PR #61 合进 staging `5695c33`（税年从 4/6 起算；预缴款只显示未来 12 个月的提醒、不标逾期、税年标签改正）。owner 授权上线：main 快进到 `5695c33`，部署 2eo00o2wt Ready，冒烟通过。owner 要申请年终 API（SDST）→ PR #62（HMRC 调用日志）合进 staging `40df790`，等 owner 在 staging 跑年终流程。HMRC 发来 Bulk Data File List API checklist（工单 RTI609）→ 判断为误申请，起草撤回回信（未发）；随后 owner 决定继续申请 → sandbox 调通 3 个端点（18:46 UTC），表格已填（缺 3 项待 owner 补）。owner 补齐地址/Companies House/sandbox 应用名 → 表格填完，提交回信草稿 r4324883775115802728（带附件，未发），撤回草稿已删。Paul 回信：年终功能须走 SDST 并提交测试证据，问能否 2027-04 前支持年终申报（才能列为 in development）→ 起草回信 r5454416146971119693（答 Yes、说明年终流程已在 sandbox 测试、将走 SDST），未发，需 owner 确认承诺。owner 已发（承诺 2027-04）→ stg-014。owner 在 staging 跑年终流程：Losses 403（sandbox 应用未订阅 Individual Losses 6.0，List 端点只在 6.0，7.0 没有）、BSAS retrieve 404（sandbox 默认就是「无数据」）、计算带 C95005（sandbox 默认桩数据）→ PR #63 合进 staging `ed16322`：BSAS retrieve 用 SELF_EMPLOYMENT_PROFIT 场景、场景下拉只发给计算/申报调用、sandbox 专用「仍然申报」、日志改读 X-CorrelationId（之前一直为空）。等 owner 订阅 Losses 6.0 后重跑。owner 订阅 6.0 并重跑；又修 3 处 sandbox 桩数据问题：PR #64（BSAS 未调整示例）、#65（「仍然申报」勾选框不出现：sandbox 计算未标 intent）、#66（BSAS 示例总带 adjusted，表单一直隐藏）→ staging `fee43cf`。20:45–20:48 UTC 全部 11 个年终端点成功（Final Declaration 204、Adjustments 200），带 correlation id。证据 `hmrc/2026-11-year-end-sdst/year-end-sandbox-evidence.csv`，SDST 申请草稿 r-203315455819601518（带附件，未发）。
