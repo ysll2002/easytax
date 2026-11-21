@@ -425,6 +425,9 @@
     "homeAgentLogin": "Connexion agent",
     "homeGoDashboard": "Aller à votre tableau de bord",
     "heroAgentText": "Comptable ou agent fiscal ?",
-    "heroAgentLink": "Inscrivez-vous comme agent"
+    "heroAgentLink": "Inscrivez-vous comme agent",
+    "firmName": "Nom du cabinet comptable",
+    "firmPlaceholder": "ex. : Smith & Co Accountants",
+    "firmRequired": "Saisissez le nom de votre cabinet."
   }
 }

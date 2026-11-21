@@ -8,9 +8,14 @@ import { asAccountType } from '@/lib/account-type';
 export async function POST(req: NextRequest) {
   // anonId is optional — it lets a completed registration be stitched back to
   // the anonymous page views that preceded it.
-  const { name, email, password, anonId, accountType: rawType } = await req.json();
+  const { name, email, password, anonId, accountType: rawType, firmName: rawFirm } = await req.json();
   // Fixed at sign-up: /register makes an individual account, /agent/register an agent one.
   const accountType = asAccountType(rawType);
+  // Agents give the name of their accounting firm.
+  const firmName = typeof rawFirm === 'string' ? rawFirm.trim().replace(/\s+/g, ' ') : '';
+  if (accountType === 'agent' && (firmName.length < 2 || firmName.length > 120)) {
+    return NextResponse.json({ error: 'Enter your accounting firm\'s name.', code: 'missing_firm_name' }, { status: 400 });
+  }
 
   if (!email || !password) {
     return NextResponse.json({ error: 'Email and password are required', code: 'missing_fields' }, { status: 400 });
@@ -34,7 +39,7 @@ export async function POST(req: NextRequest) {
 
   const { data: created, error } = await supabase
     .from('profiles')
-    .insert({ name: finalName, email, password_hash, account_type: accountType })
+    .insert({ name: finalName, email, password_hash, account_type: accountType, firm_name: accountType === 'agent' ? firmName : null })
     .select('id')
     .single();
 

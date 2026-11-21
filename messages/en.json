@@ -425,6 +425,9 @@
     "homeAgentLogin": "Agent sign in",
     "homeGoDashboard": "Go to your dashboard",
     "heroAgentText": "Accountant or tax agent?",
-    "heroAgentLink": "Sign up as an agent"
+    "heroAgentLink": "Sign up as an agent",
+    "firmName": "Accounting firm name",
+    "firmPlaceholder": "e.g. Smith & Co Accountants",
+    "firmRequired": "Enter your firm's name."
   }
 }
