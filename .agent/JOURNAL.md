@@ -21,6 +21,8 @@
 
 **发布 production**（owner 明说）：production 库先建 hmrc_api_log、再跑 `20261121_lock_filed_records`（验证：表、触发器、record_ids、FK=restrict 均就位）→ main 快进 `5695c33..aff2356`（PR #62–#68）→ 部署 p9huhofra Ready（09:46 UTC）。冒烟：公开页 200，dashboard/agent、year-end 未登录 307 到 /login，/api/agent/setup 401。代理模式已在 production 打开；年终页在 production 仍被拦。
 
+**个人 / 代理账号分开**（owner 要求两个入口、互相隔离）：owner 选「一个邮箱只能一种类型」、staging 的 gabriel@gmail.com 设为 agent。PR #69 合进 staging `d1684ac`：profiles.account_type（注册时定，不能改）；入口 /login /register（个人）和 /agent/login /agent/register（代理），互相有链接；在错的入口登录会被拒并指向正确入口（密码登录用 CredentialsSignin code，Google 用 cookie + 回跳）；middleware 按类型分流（代理只能带 ?clientId= 打开报税页）；导航分开；代理 API、records、submit-quarter 都检查类型。迁移已上 staging。staging 页面没能在浏览器里验证（pane 卡在 Vercel 登录）。**未上 production**。
+
 ## 2026-11-18（owner 对话）
 
 **今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
