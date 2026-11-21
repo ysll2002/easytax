@@ -11,12 +11,12 @@ export async function figuresMatchRecords(
   userId: string,
   clientId: string | null,
   body: { periodStartDate?: string; periodEndDate?: string; turnover?: number; expenses?: Record<string, number | undefined> },
-): Promise<{ ok: true } | { ok: false; reason: string }> {
+): Promise<{ ok: true; recordIds: string[] } | { ok: false; reason: string }> {
   const start = body.periodStartDate, end = body.periodEndDate;
   if (!start || !end || !ISO_DATE.test(start) || !ISO_DATE.test(end)) return { ok: false, reason: 'Missing period dates.' };
 
   const { data, error } = await ownerFilter(
-    supabase.from('business_records').select('description, amount, category, expense_bucket').eq('user_id', userId),
+    supabase.from('business_records').select('id, description, amount, category, expense_bucket').eq('user_id', userId),
     clientId,
   ).gte('txn_date', start).lte('txn_date', end);
   if (error) return { ok: false, reason: 'Could not read your records.' };
@@ -31,5 +31,6 @@ export async function figuresMatchRecords(
       return { ok: false, reason: 'The expenses do not match your records for this period.' };
     }
   }
-  return { ok: true };
+  // The records this update is built from, kept with the filing.
+  return { ok: true, recordIds: (data ?? []).map(r => r.id as string) };
 }

@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { AgentError } from '@/lib/agent';
 import { recordsOwner, ownerFilter } from '@/lib/records-owner';
+import { filedPeriods, inFiledPeriod } from '@/lib/records-lock';
 import {
   RECORD_CATEGORIES, EXPENSE_BUCKET_KEYS, ISO_DATE,
   type RecordCategory, type ExpenseBucket,
@@ -14,6 +15,9 @@ import {
 //   POST   { records: [...], source }         add records (manual or CSV import)
 //   PATCH  { ids, category?, expenseBucket? } re-categorise
 //   DELETE { ids }                            delete
+// Records dated in a quarter already filed with HMRC are locked (see
+// lib/records-lock.ts): they come back with locked: true, cannot be changed
+// or deleted, and new records cannot be dated in that quarter.
 // Every method takes ?clientId= to work on an agent client's records instead
 // of the user's own.
 
@@ -59,9 +63,14 @@ export async function GET(req: NextRequest) {
   let q = ownerFilter(supabase.from('business_records').select(COLUMNS).eq('user_id', uid), clientId);
   if (start) q = q.gte('txn_date', start);
   if (end) q = q.lte('txn_date', end);
-  const { data, error } = await q.order('txn_date', { ascending: false }).order('created_at', { ascending: false }).limit(5000);
+  const [{ data, error }, periods] = await Promise.all([
+    q.order('txn_date', { ascending: false }).order('created_at', { ascending: false }).limit(5000),
+    filedPeriods(uid, clientId),
+  ]);
   if (error) return bad('db_error', 500);
-  return NextResponse.json({ records: (data ?? []).map(r => ({ ...r, amount: Number(r.amount) })) });
+  return NextResponse.json({
+    records: (data ?? []).map(r => ({ ...r, amount: Number(r.amount), locked: inFiledPeriod(String(r.txn_date), periods) })),
+  });
 }
 
 type Incoming = { date?: unknown; description?: unknown; amount?: unknown; category?: unknown; expenseBucket?: unknown };
@@ -99,13 +108,21 @@ export async function POST(req: NextRequest) {
     rows.push({ user_id: uid, client_id: clientId, txn_date: date, description, amount, category, expense_bucket, source, import_hash });
   }
 
-  let toInsert = rows;
-  if (source === 'csv') {
+  // Nothing new can be dated in a quarter already filed with HMRC. A line
+  // typed by hand is refused with a reason; statement lines for a filed
+  // quarter are skipped and counted.
+  const periods = await filedPeriods(uid, clientId);
+  const inFiled = rows.filter(r => inFiledPeriod(r.txn_date, periods));
+  if (source === 'manual' && inFiled.length > 0) return bad('period_filed', 409);
+  const open = rows.filter(r => !inFiledPeriod(r.txn_date, periods));
+
+  let toInsert = open;
+  if (source === 'csv' && open.length > 0) {
     // Fetch the fingerprints already stored for this owner over the
     // statement's date range in one query. (Sending every fingerprint in the
     // filter made the request URL too long for statements of a few hundred
     // lines, and the import failed with a 500.)
-    const dates = rows.map(r => r.txn_date).sort();
+    const dates = open.map(r => r.txn_date).sort();
     const existing = new Set<string>();
     const PAGE = 1000;
     for (let from = 0; ; from += PAGE) {
@@ -122,7 +139,7 @@ export async function POST(req: NextRequest) {
       for (const d of data ?? []) existing.add(d.import_hash as string);
       if (!data || data.length < PAGE) break;
     }
-    toInsert = rows.filter(r => !existing.has(r.import_hash as string));
+    toInsert = open.filter(r => !existing.has(r.import_hash as string));
   }
 
   if (toInsert.length > 0) {
@@ -132,7 +149,17 @@ export async function POST(req: NextRequest) {
       return bad('db_error', 500);
     }
   }
-  return NextResponse.json({ added: toInsert.length, duplicates: rows.length - toInsert.length });
+  return NextResponse.json({ added: toInsert.length, duplicates: open.length - toInsert.length, filed: inFiled.length });
+}
+
+// Refuses a change to any record dated in a quarter already filed with HMRC.
+async function lockedAmong(uid: string, clientId: string | null, ids: string[]): Promise<boolean | null> {
+  const [{ data, error }, periods] = await Promise.all([
+    ownerFilter(supabase.from('business_records').select('txn_date').eq('user_id', uid), clientId).in('id', ids),
+    filedPeriods(uid, clientId),
+  ]);
+  if (error) return null;
+  return (data ?? []).some(r => inFiledPeriod(String(r.txn_date), periods));
 }
 
 export async function PATCH(req: NextRequest) {
@@ -155,6 +182,10 @@ export async function PATCH(req: NextRequest) {
   // The customer has now decided this record themselves.
   update.ai_categorised = false;
 
+  const locked = await lockedAmong(uid, clientId, body.ids);
+  if (locked === null) return bad('db_error', 500);
+  if (locked) return bad('records_locked', 409);
+
   const { error } = await ownerFilter(supabase.from('business_records').update(update).eq('user_id', uid), clientId).in('id', body.ids);
   if (error) return bad('db_error', 500);
   return NextResponse.json({ ok: true });
@@ -166,6 +197,9 @@ export async function DELETE(req: NextRequest) {
   const { uid, clientId } = o;
   const body = await req.json().catch(() => null) as { ids?: unknown } | null;
   if (!validIds(body?.ids)) return bad('invalid_ids');
+  const locked = await lockedAmong(uid, clientId, body.ids);
+  if (locked === null) return bad('db_error', 500);
+  if (locked) return bad('records_locked', 409);
   const { error } = await ownerFilter(supabase.from('business_records').delete().eq('user_id', uid), clientId).in('id', body.ids);
   if (error) return bad('db_error', 500);
   return NextResponse.json({ ok: true });

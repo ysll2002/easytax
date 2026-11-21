@@ -59,6 +59,7 @@ export type BusinessRecord = {
   expense_bucket: ExpenseBucket | null;
   source: 'manual' | 'csv';
   ai_categorised?: boolean;  // sorted by AI and not yet changed by the customer
+  locked?: boolean;          // in a quarter already filed with HMRC: cannot change
 };
 
 export function bucketOf(r: Pick<BusinessRecord, 'description' | 'expense_bucket'>): ExpenseBucket {
