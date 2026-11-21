@@ -23,6 +23,8 @@
 
 **个人 / 代理账号分开**（owner 要求两个入口、互相隔离）：owner 选「一个邮箱只能一种类型」、staging 的 gabriel@gmail.com 设为 agent。PR #69 合进 staging `d1684ac`：profiles.account_type（注册时定，不能改）；入口 /login /register（个人）和 /agent/login /agent/register（代理），互相有链接；在错的入口登录会被拒并指向正确入口（密码登录用 CredentialsSignin code，Google 用 cookie + 回跳）；middleware 按类型分流（代理只能带 ?clientId= 打开报税页）；导航分开；代理 API、records、submit-quarter 都检查类型。迁移已上 staging。staging 页面没能在浏览器里验证（pane 卡在 Vercel 登录）。**未上 production**。
 
+**代理入口更显眼**（owner：代理注册入口不明显、首页要加两个入口）→ PR #70 合进 staging `463f5e1`：登录/注册页顶部加「个人 / 会计师·代理」切换；页头加「For agents」按钮、手机菜单加代理区；首页 hero 下加「Who are you filing for?」两张卡（为自己 / 为客户，各有注册+登录），hero 加代理注册链接；新文案 7 种语言。本地 dev 验证四个入口页 200、切换和卡片渲染正常。**未上 production**。
+
 ## 2026-11-18（owner 对话）
 
 **今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。

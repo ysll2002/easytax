@@ -135,4 +135,4 @@
 - **HMRC 工单状态（2026-11-18 核对 Gmail）**：RTI609 Bulk Data File List 1.0 **已批准**（11-17 Nazam Arif，EasyTax VIP production）。年终 SDST 申请 11-16 20:54 已发，工单 **2026-WFG726**，仅自动回执。ASA / Agent Authorisation 2.0（CRJ844）**11-18 已批准**（Patrick Gordon），已订阅到 production 应用 EasyTax VIP。另有 11-14 的 9 个订阅申请工单（LPT621、KEL296、HCN995、NYY501、AJL884、CBZ675、RRF754、YAV656、ULJ714）只有自动回执。SDST 自动回执说 MTD IT 积压、请勿催办。
 - **代理模式（2026-11-21 上线）**：production = main = staging = `aff2356`，代理模式已在 production 打开。待 owner 用真实 ARN + 代理 Government Gateway 在 easytax.vip 连接并添加第一个真实客户。
 - **已申报季度锁定（2026-11-21）**：PR #68 在 staging `aff2356`。2026-11-21 已上 production（两个迁移均已在 production 库执行）。注意：触发器会让「删除用户 profile」级联删记录时失败（6 年保留期内本就不该删），以后做账户删除功能要另行处理。
-- **个人 / 代理账号分开（2026-11-21）**：PR #69 在 staging `d1684ac`。上 production 前要在 production 库跑 `20261121_profiles_account_type`（51 个现有账号默认 individual）。需 owner 在 staging 用 gabriel（代理）和一个个人账号各登录验证。
+- **个人 / 代理账号分开（2026-11-21）**：PR #69 + #70（入口：切换、页头、首页卡片）在 staging `463f5e1`。上 production 前要在 production 库跑 `20261121_profiles_account_type`（51 个现有账号默认 individual）。需 owner 在 staging 用 gabriel（代理）和一个个人账号各登录验证。
