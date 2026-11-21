@@ -15,6 +15,10 @@
 
 ---
 
+## 2026-11-21（owner 对话）
+
+**今日执行**：owner 问 MTD 季度申报报的是总数还是明细 → 只报 turnover + 8 个费用类别合计，明细留在 business_records。发现缺口：已申报季度的记录仍可改/删、申报不记录用了哪些记录、删代理客户会级联删记录。owner 批准锁定 → PR #68 合进 staging `aff2356`：已申报季度内的记录不能改/删/新增（API 409 + 数据库触发器兜底），CSV 中已申报季度的行跳过并提示，sa_filings.record_ids 存每次申报用到的记录，business_records.client_id 改 ON DELETE RESTRICT，Records 页显示「🔒 Filed」。迁移 `20261121_lock_filed_records` 已上 staging 并验证（改已申报记录被拒）。**未上 production**。
+
 ## 2026-11-18（owner 对话）
 
 **今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
