@@ -425,6 +425,9 @@
     "homeAgentLogin": "تسجيل دخول الوكيل",
     "homeGoDashboard": "الانتقال إلى لوحة التحكم",
     "heroAgentText": "محاسب أو وكيل ضريبي؟",
-    "heroAgentLink": "سجّل كوكيل"
+    "heroAgentLink": "سجّل كوكيل",
+    "firmName": "اسم مكتب المحاسبة",
+    "firmPlaceholder": "مثال: Smith & Co Accountants",
+    "firmRequired": "أدخل اسم مكتبك."
   }
 }

@@ -425,6 +425,9 @@
     "homeAgentLogin": "대리인 로그인",
     "homeGoDashboard": "대시보드로 이동",
     "heroAgentText": "회계사 또는 세무 대리인이신가요?",
-    "heroAgentLink": "대리인으로 가입"
+    "heroAgentLink": "대리인으로 가입",
+    "firmName": "회계법인 이름",
+    "firmPlaceholder": "예: Smith & Co Accountants",
+    "firmRequired": "회계법인 이름을 입력하세요."
   }
 }

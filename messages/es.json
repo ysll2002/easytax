@@ -425,6 +425,9 @@
     "homeAgentLogin": "Acceso para agentes",
     "homeGoDashboard": "Ir a su panel",
     "heroAgentText": "¿Es contable o agente fiscal?",
-    "heroAgentLink": "Regístrese como agente"
+    "heroAgentLink": "Regístrese como agente",
+    "firmName": "Nombre de la firma contable",
+    "firmPlaceholder": "p. ej., Smith & Co Accountants",
+    "firmRequired": "Introduzca el nombre de su firma."
   }
 }

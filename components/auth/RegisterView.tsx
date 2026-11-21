@@ -27,7 +27,7 @@ export default function RegisterView({ accountType = 'individual' }: { accountTy
   const agent = accountType === 'agent';
   const t = useTranslations('auth.register');
   const ta = useTranslations('accounts');
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', firm: '' });
   const [agreed, setAgreed] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState('');
@@ -66,6 +66,12 @@ export default function RegisterView({ accountType = 'individual' }: { accountTy
       return;
     }
 
+    if (agent && form.firm.trim().length < 2) {
+      setError(ta('firmRequired'));
+      track('register_failed', { method: 'email', reason: 'missing_firm_name' });
+      return;
+    }
+
     setLoading(true);
     track('register_attempted', { method: 'email' });
     trackClient('register_started', { method: 'email' });
@@ -81,6 +87,7 @@ export default function RegisterView({ accountType = 'individual' }: { accountTy
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name,
+          firmName: agent ? form.firm : undefined,
           email: form.email,
           password: form.password,
           accountType,
@@ -188,6 +195,16 @@ export default function RegisterView({ accountType = 'individual' }: { accountTy
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {agent && (
+              <div>
+                <label htmlFor="firm" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
+                  {ta('firmName')}
+                </label>
+                <input id="firm" autoComplete="organization" type="text" required maxLength={120} placeholder={ta('firmPlaceholder')} value={form.firm}
+                  onChange={e => setForm(f => ({ ...f, firm: e.target.value }))} style={inputStyle} />
+              </div>
+            )}
+
             <div>
               <label className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
                 {t('fullName')} <span style={{ color: '#6B6256', fontWeight: 400 }}>{t('nameOptional')}</span>

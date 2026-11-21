@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import type { AgentClientView } from '@/lib/agent-types';
 import { card, input, labelStyle, primaryBtn, secondaryBtn, h1Style, h2Style, StatusBadge, api } from './ui';
 
-type Setup = { available: boolean; arn: string | null; connected: boolean; connectedAt: string | null };
+type Setup = { available: boolean; firmName: string | null; arn: string | null; connected: boolean; connectedAt: string | null };
 type TestUser = { kind: string; userId: string; password: string; name: string | null; arn: string | null; nino: string | null; postcode: string | null; vrn: string | null; vatRegDate: string | null };
 
 const CALLBACK_ERRORS: Record<string, string> = {
@@ -21,6 +21,7 @@ export default function AgentHome({ sandbox = false }: { sandbox?: boolean }) {
   const [setup, setSetup] = useState<Setup | null>(null);
   const [clients, setClients] = useState<AgentClientView[]>([]);
   const [arn, setArn] = useState('');
+  const [firm, setFirm] = useState('');
   const [error, setError] = useState(CALLBACK_ERRORS[sp.get('error') ?? ''] ?? '');
   const [status, setStatus] = useState(sp.get('connected') ? 'Signed in to HMRC as an agent.' : '');
   const [showAdd, setShowAdd] = useState(false);
@@ -36,6 +37,14 @@ export default function AgentHome({ sandbox = false }: { sandbox?: boolean }) {
     } catch (e) { setError((e as Error).message); }
   }, []);
   useEffect(() => { load(); }, [load]);
+
+  // Agents who signed up with Google were not asked for their firm's name.
+  async function saveFirm(e: React.FormEvent) {
+    e.preventDefault(); setError(''); setBusy(true);
+    try { await api('/api/agent/setup', { method: 'POST', body: JSON.stringify({ firmName: firm }) }); setStatus('Firm name saved.'); await load(); }
+    catch (err) { setError((err as Error).message); }
+    finally { setBusy(false); }
+  }
 
   async function saveArn(e: React.FormEvent) {
     e.preventDefault(); setError(''); setBusy(true);
@@ -72,6 +81,7 @@ export default function AgentHome({ sandbox = false }: { sandbox?: boolean }) {
   return (
     <div className="p-4 sm:p-8 max-w-4xl">
       <h1 style={h1Style}>Agent clients</h1>
+      {setup.firmName && <p className="mb-2 text-sm font-semibold" style={{ color: '#6B6256' }}>{setup.firmName}</p>}
       <p className="mb-5" style={{ color: '#4A4035', lineHeight: 1.6, maxWidth: '42rem' }}>
         File Making Tax Digital updates for your clients as their HMRC-authorised agent. Your client approves you once on HMRC&apos;s website; after that you keep their records and submit their Income Tax quarterly updates and VAT returns here.
       </p>
@@ -80,6 +90,19 @@ export default function AgentHome({ sandbox = false }: { sandbox?: boolean }) {
       {error && <div role="alert" className="p-4 rounded-xl mb-4 text-sm" style={{ backgroundColor: '#FEE2E2', color: '#991B1B' }}>{error}</div>}
 
       {sandbox && <p className="mb-4 text-xs font-semibold" style={{ color: '#7A4A1E' }}>HMRC sandbox — test data only. No real client data is sent to HMRC.</p>}
+
+      {!setup.firmName && (
+        <section style={card} className="mb-6" aria-labelledby="firm-h">
+          <h2 id="firm-h" style={h2Style}>Your accounting firm</h2>
+          <form onSubmit={saveFirm} className="flex flex-wrap gap-2 items-end">
+            <label style={{ flex: '1 1 16rem' }}>
+              <span style={labelStyle}>Accounting firm name</span>
+              <input value={firm} onChange={e => setFirm(e.target.value)} placeholder="e.g. Smith & Co Accountants" required minLength={2} maxLength={120} style={input} autoComplete="organization" />
+            </label>
+            <button type="submit" disabled={busy} style={primaryBtn}>Save</button>
+          </form>
+        </section>
+      )}
 
       {step < 3 && (
         <section style={card} className="mb-6" aria-labelledby="setup-h">

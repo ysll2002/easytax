@@ -425,6 +425,9 @@
     "homeAgentLogin": "代理登录",
     "homeGoDashboard": "进入你的控制台",
     "heroAgentText": "你是会计师或税务代理？",
-    "heroAgentLink": "以代理身份注册"
+    "heroAgentLink": "以代理身份注册",
+    "firmName": "会计事务所名称",
+    "firmPlaceholder": "例如：Smith & Co Accountants",
+    "firmRequired": "请填写你的事务所名称。"
   }
 }

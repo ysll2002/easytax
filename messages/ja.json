@@ -425,6 +425,9 @@
     "homeAgentLogin": "代理人ログイン",
     "homeGoDashboard": "ダッシュボードへ",
     "heroAgentText": "会計士・税務代理人の方は",
-    "heroAgentLink": "代理人として登録"
+    "heroAgentLink": "代理人として登録",
+    "firmName": "会計事務所名",
+    "firmPlaceholder": "例：Smith & Co Accountants",
+    "firmRequired": "事務所名を入力してください。"
   }
 }
