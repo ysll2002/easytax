@@ -27,6 +27,8 @@
 
 **发布 production**（owner 明说）：production 库加 profiles.account_type（51 个账号全部 individual）→ main 快进 `aff2356..463f5e1`（PR #69 #70）→ 部署 8mqj0jnt4 Ready。冒烟：/、/login、/register、/agent/login、/agent/register、/pricing 200；首页有「Who are you filing for?」和「For agents」；未登录 /dashboard → /login，/dashboard/agent → /agent/login；/api/auth/session 200。真实登录未测。
 
+MTD 状态条之前在 /login /register 被故意隐藏、代理页却显示 → owner 要两边都显示 → PR #71 合进 staging `3f1ae08`（从 HIDDEN_ON 去掉两项）。未上 production。
+
 ## 2026-11-18（owner 对话）
 
 **今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
