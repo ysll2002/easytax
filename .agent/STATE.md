@@ -136,3 +136,4 @@
 - **代理模式（2026-11-21 上线）**：代理模式已在 production 打开（当前 production = `3f1ae08`）。待 owner 用真实 ARN + 代理 Government Gateway 在 easytax.vip 连接并添加第一个真实客户。
 - **已申报季度锁定（2026-11-21）**：PR #68 在 staging `aff2356`。2026-11-21 已上 production（两个迁移均已在 production 库执行）。注意：触发器会让「删除用户 profile」级联删记录时失败（6 年保留期内本就不该删），以后做账户删除功能要另行处理。
 - **个人 / 代理账号分开（2026-11-21 已上线）**：PR #69 + #70，production = main = staging = `3f1ae08`。production 库已加 account_type（51 个账号均 individual）。真实登录（个人 / 代理 / 错入口提示）尚未有人测过。
+- **代理事务所名称（2026-11-21）**：PR #72 在 staging `b402c50`，未上 production；发布前在 production 库跑 `20261121_profiles_firm_name`。

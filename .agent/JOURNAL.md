@@ -29,6 +29,8 @@
 
 MTD 状态条之前在 /login /register 被故意隐藏、代理页却显示 → owner 要两边都显示 → PR #71 合进 staging `3f1ae08`（从 HIDDEN_ON 去掉两项）→ owner 明说发布，main 快进 `463f5e1..3f1ae08`，部署 q1ddfhywc Ready，/login /register /agent/login 均 200 且有状态条。
 
+代理注册要采集会计事务所名称（owner）→ PR #72 合进 staging `b402c50`：profiles.firm_name；/agent/register 必填「Accounting firm name」（前后端都校验）；Google 注册的代理在代理首页补填；7 语言。迁移已上 staging。本地验证字段只出现在代理注册页。未上 production（发布前要在 production 库跑 `20261121_profiles_firm_name`）。
+
 ## 2026-11-18（owner 对话）
 
 **今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
