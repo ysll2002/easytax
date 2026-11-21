@@ -31,11 +31,10 @@ import { trackClient } from './PageViewTracker';
 
 /** Pages where a deadline notice is noise, or already present.
  *  `/` carries its own richer announcement bar, which also states that filing
- *  opens on HMRC approval — showing both would say the same thing twice. */
+ *  opens on HMRC approval — showing both would say the same thing twice.
+ *  Sign-in and sign-up show it, for individuals and agents alike. */
 const HIDDEN_ON = [
   '/',
-  '/login',
-  '/register',
   '/forgot-password',
   '/reset-password',
   '/unsubscribe',
