@@ -2,9 +2,12 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { AgentError } from '@/lib/agent';
 
+// Agent APIs are for agent accounts only (lib/account-type.ts). An individual
+// account gets the same answer as a signed-out visitor.
 export async function agentUserId(): Promise<string | null> {
   const session = await auth();
-  return session?.user?.profileId ?? null;
+  if (session?.user?.accountType !== 'agent') return null;
+  return session.user.profileId ?? null;
 }
 
 export function errorResponse(err: unknown) {

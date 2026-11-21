@@ -2,15 +2,18 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { FileText, Building2, User, LogOut } from 'lucide-react';
+import { FileText, Building2, User, LogOut, Users } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import { SHOW_COMPANY_TAX } from '@/lib/features';
 
-export default function MobileNav() {
+export default function MobileNav({ accountType = 'individual' }: { accountType?: 'individual' | 'agent' }) {
   const pathname = usePathname();
   const t = useTranslations('dashboard.nav');
 
-  const nav = [
+  const nav = accountType === 'agent' ? [
+    { href: '/dashboard/agent',     label: t('clients'),         icon: Users },
+    { href: '/dashboard/profile',   label: t('profile'),         icon: User },
+  ] : [
     { href: '/dashboard/individual',       label: t('selfAssessShort'), icon: FileText },
     ...(SHOW_COMPANY_TAX ? [{ href: '/dashboard/company', label: t('companyShort'), icon: Building2 }] : []),
     { href: '/dashboard/profile',   label: t('profile'),         icon: User },

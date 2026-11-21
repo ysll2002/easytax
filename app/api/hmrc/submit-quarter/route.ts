@@ -22,6 +22,11 @@ export async function POST(req: NextRequest) {
   // ?clientId= : an agent submitting for an authorised client, with the
   // agent's own HMRC token and the client's NINO.
   const clientId = req.nextUrl.searchParams.get('clientId');
+  // Individual and agent accounts are separate: an agent files only for
+  // clients, an individual only for themselves.
+  const accountType = session.user.accountType;
+  if (clientId && accountType !== 'agent') return NextResponse.json({ error: 'Only agent accounts can file for clients.', code: 'AGENT_ACCOUNT_REQUIRED' }, { status: 403 });
+  if (!clientId && accountType === 'agent') return NextResponse.json({ error: 'Agent accounts file for clients only.', code: 'INDIVIDUAL_ACCOUNT_REQUIRED' }, { status: 403 });
   if (clientId) {
     try {
       const ctx = await clientFilingContext(profileId, clientId, 'itsa');

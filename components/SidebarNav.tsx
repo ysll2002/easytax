@@ -5,20 +5,21 @@ import { useTranslations } from 'next-intl';
 import { FileText, Building2, User, Settings, Users } from 'lucide-react';
 import { SHOW_COMPANY_TAX } from '@/lib/features';
 
-// showAgent: agent mode (acting for clients) is only offered where HMRC has
-// granted it — the layout decides on the server.
-export default function SidebarNav({ showAgent = false }: { showAgent?: boolean }) {
+// Individual and agent accounts see different dashboards (lib/account-type.ts):
+// an individual their own Self Assessment, an agent their clients.
+export default function SidebarNav({ accountType = 'individual' }: { accountType?: 'individual' | 'agent' }) {
+  const showAgent = accountType === 'agent';
   const pathname = usePathname();
   const t = useTranslations('dashboard.nav');
 
   const groups = [
-    {
+    ...(!showAgent ? [{
       label: t('personal'),
       items: [
         { href: '/dashboard/individual', label: t('selfAssessment'), icon: FileText },
       ],
-    },
-    ...(SHOW_COMPANY_TAX ? [{
+    }] : []),
+    ...(!showAgent && SHOW_COMPANY_TAX ? [{
       label: t('company'),
       items: [
         { href: '/dashboard/company', label: t('companyTax'), icon: Building2 },

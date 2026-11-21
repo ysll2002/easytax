@@ -1,12 +1,33 @@
-import NextAuth from 'next-auth';
+import NextAuth, { CredentialsSignin } from 'next-auth';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import { cookies } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import {
+  ACCOUNT_TYPE_COOKIE, LOGIN_PATH, WRONG_TYPE_ERROR, asAccountType, type AccountType,
+} from '@/lib/account-type';
 
 // Allow NextAuth to infer the URL from request headers on Vercel Preview deployments
 if (process.env.VERCEL_URL && !process.env.NEXTAUTH_URL) {
   process.env.NEXTAUTH_URL = `https://${process.env.VERCEL_URL}`;
+}
+
+// Individual and agent accounts are separate (lib/account-type.ts). Signing in
+// at one entry with an account of the other type is refused with a code the
+// sign-in page turns into "use the other sign-in".
+class WrongAccountType extends CredentialsSignin {
+  constructor(code: string) { super(); this.code = code; }
+}
+
+/** Which entry the person came through, from the cookie the sign-in page sets. */
+async function intendedType(): Promise<AccountType | null> {
+  try {
+    const v = (await cookies()).get(ACCOUNT_TYPE_COOKIE)?.value;
+    return v === 'agent' || v === 'individual' ? v : null;
+  } catch {
+    return null;
+  }
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -18,15 +39,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Credentials({
       credentials: {
-        email:    { label: 'Email',    type: 'email' },
-        password: { label: 'Password', type: 'password' },
+        email:       { label: 'Email',    type: 'email' },
+        password:    { label: 'Password', type: 'password' },
+        accountType: { label: 'Account type', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
         const { data: profile } = await supabase
           .from('profiles')
-          .select('id, email, name, avatar_url, password_hash')
+          .select('id, email, name, avatar_url, password_hash, account_type')
           .eq('email', credentials.email)
           .single();
 
@@ -34,6 +56,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const valid = await bcrypt.compare(credentials.password as string, profile.password_hash);
         if (!valid) return null;
+
+        // Checked only after the password, so the error cannot be used to
+        // find out what kind of account an email has.
+        const wanted = asAccountType(credentials.accountType);
+        if (asAccountType(profile.account_type) !== wanted) throw new WrongAccountType(WRONG_TYPE_ERROR[wanted]);
 
         return { id: profile.id, email: profile.email, name: profile.name, image: profile.avatar_url };
       },
@@ -43,9 +70,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === 'google' && user.email) {
+        const wanted = await intendedType();
         const { data: existing } = await supabase
           .from('profiles')
-          .select('id')
+          .select('id, account_type')
           .eq('email', user.email)
           .single();
 
@@ -54,28 +82,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             email: user.email,
             name:  user.name,
             avatar_url: user.image,
+            account_type: wanted ?? 'individual',
           });
+        } else if (wanted && asAccountType(existing.account_type) !== wanted) {
+          return `${LOGIN_PATH[wanted]}?error=${WRONG_TYPE_ERROR[wanted]}`;
         }
       }
       return true;
     },
-    async jwt({ token, user, account }) {
-      if (user) {
-        if (account?.provider === 'credentials') {
-          token.profileId = user.id;
-        } else {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('email', user.email!)
-            .single();
-          token.profileId = profile?.id;
-        }
+    async jwt({ token, user }) {
+      if (user?.email) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id, account_type')
+          .eq('email', user.email)
+          .single();
+        token.profileId = profile?.id;
+        token.accountType = asAccountType(profile?.account_type);
+      } else if (token.profileId && !token.accountType) {
+        // Sessions from before account types existed.
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('account_type')
+          .eq('id', token.profileId as string)
+          .single();
+        token.accountType = asAccountType(profile?.account_type);
       }
       return token;
     },
     async session({ session, token }) {
       session.user.profileId = token.profileId as string;
+      session.user.accountType = asAccountType(token.accountType);
       return session;
     },
     async redirect({ url, baseUrl }) {
