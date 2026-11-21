@@ -5,7 +5,7 @@ import NotifyMeForm from '@/components/NotifyMeForm';
 import TrackedCta from '@/components/TrackedCta';
 import { TOOLS } from '@/lib/tools';
 import { OFFER_JSONLD } from '@/lib/pricing';
-import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
+import { Landmark, Sparkles, Send, CheckCircle2, Clock, ShieldCheck, Calendar, FileText, BarChart2, Receipt, Building2, User, Users, AlertTriangle, Wallet, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
@@ -33,7 +33,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const session = await auth();
-  const ctaHref = session ? '/dashboard' : '/register';
+  const isAgent = session?.user?.accountType === 'agent';
+  const ctaHref = session ? (isAgent ? '/dashboard/agent' : '/dashboard') : '/register';
+  const ta = await getTranslations('accounts');
   const t = await getTranslations('home');
   const tn = await getTranslations('nav');
   const tf = await getTranslations('footer');
@@ -196,6 +198,15 @@ export default async function Home() {
                   </TrackedCta>
                 </div>
 
+                {!session && (
+                  <p className="mt-4 text-sm" style={{ color: '#4A4035' }}>
+                    {ta('heroAgentText')}{' '}
+                    <Link href="/agent/register" style={{ color: '#A04E1C', fontWeight: 600 }}>
+                      {ta('heroAgentLink')} <ArrowRight size={14} className="inline" aria-hidden />
+                    </Link>
+                  </p>
+                )}
+
                 <a href="#services" className="inline-block mt-4 text-sm font-medium" style={{ color: '#6B6256', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                   {t('hero.ctaSecondary')}
                 </a>
@@ -210,6 +221,50 @@ export default async function Home() {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Who are you filing for? ──
+            Individual and agent accounts are separate, each with its own
+            sign-up and sign-in (lib/account-type.ts), so the homepage offers
+            both entries side by side. */}
+        <section aria-labelledby="who-for" className="pb-14 sm:pb-20">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <h2 id="who-for" className="text-center mb-6" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.4rem, 3.5vw, 1.9rem)', fontWeight: 700, color: '#1C1208' }}>
+              {ta('homeTitle')}
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {([
+                { type: 'individual', Icon: User,  title: ta('homeIndividualTitle'), body: ta('homeIndividualBody'), cta: ta('homeIndividualCta'), ctaHref: '/register',       login: ta('homeIndividualLogin'), loginHref: '/login' },
+                { type: 'agent',      Icon: Users, title: ta('homeAgentTitle'),      body: ta('homeAgentBody'),      cta: ta('homeAgentCta'),      ctaHref: '/agent/register', login: ta('homeAgentLogin'),      loginHref: '/agent/login' },
+              ] as const).map(card => (
+                <div key={card.type} className="p-6 rounded-2xl flex flex-col" style={{ backgroundColor: card.type === 'agent' ? '#1C1208' : '#F0EBE1', border: '1px solid #DDD5C8' }}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="inline-flex items-center justify-center rounded-full" style={{ width: 40, height: 40, backgroundColor: card.type === 'agent' ? '#2E2418' : '#FDFCF8' }}>
+                      <card.Icon size={20} color={card.type === 'agent' ? '#E8895A' : '#A04E1C'} aria-hidden />
+                    </span>
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: card.type === 'agent' ? '#FDFCF8' : '#1C1208' }}>{card.title}</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed mb-5 flex-1" style={{ color: card.type === 'agent' ? '#D8CFC2' : '#4A4035' }}>{card.body}</p>
+                  {session ? (
+                    (card.type === 'agent') === isAgent && (
+                      <Link href={ctaHref} className="self-start px-5 py-2.5 rounded-full text-sm font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>
+                        {ta('homeGoDashboard')}
+                      </Link>
+                    )
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-4">
+                      <Link href={card.ctaHref} className="px-5 py-2.5 rounded-full text-sm font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8', textDecoration: 'none' }}>
+                        {card.cta}
+                      </Link>
+                      <Link href={card.loginHref} className="text-sm font-semibold" style={{ color: card.type === 'agent' ? '#E8895A' : '#A04E1C' }}>
+                        {card.login}
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </section>

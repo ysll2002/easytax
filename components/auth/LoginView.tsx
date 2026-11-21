@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
+import AccountTypeTabs from '@/components/auth/AccountTypeTabs';
 import {
   ACCOUNT_TYPE_COOKIE, HOME_PATH, LOGIN_PATH, REGISTER_PATH, WRONG_TYPE_ERROR, type AccountType,
 } from '@/lib/account-type';
@@ -12,20 +13,11 @@ import {
 // Sign-in for one kind of account: /login (individuals) or /agent/login
 // (agents acting for clients). The two are kept apart; see lib/account-type.ts.
 
-const AGENT_TEXT = {
-  title:      'Agent sign in',
-  subtitle:   'For accountants and tax agents filing for clients.',
-  noAccount:  'New to EasyTax as an agent?',
-  create:     'Create an agent account',
-  switchText: 'Filing your own taxes?',
-  switchLink: 'Sign in here',
-};
-const INDIVIDUAL_SWITCH = { switchText: 'Accountant or tax agent?', switchLink: 'Agent sign in' };
 
-/** "This email is an agent account" and the reverse, shown on the wrong sign-in page. */
-export function wrongTypeMessage(code: string | null): { text: string; href: string; link: string } | null {
-  if (code === WRONG_TYPE_ERROR.individual) return { text: 'This email is registered as an agent account.', href: LOGIN_PATH.agent, link: 'Go to agent sign in' };
-  if (code === WRONG_TYPE_ERROR.agent) return { text: 'This email is registered as an individual account, not an agent account.', href: LOGIN_PATH.individual, link: 'Go to individual sign in' };
+/** Which "wrong kind of account" message a sign-in error code stands for. */
+export function wrongTypeKind(code: string | null): 'agent' | 'individual' | null {
+  if (code === WRONG_TYPE_ERROR.individual) return 'agent';      // it is an agent account
+  if (code === WRONG_TYPE_ERROR.agent) return 'individual';      // it is an individual account
   return null;
 }
 
@@ -37,16 +29,17 @@ export default function LoginView({ accountType = 'individual' }: { accountType?
   const agent = accountType === 'agent';
   const router = useRouter();
   const t = useTranslations('auth.login');
+  const ta = useTranslations('accounts');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
-  const [wrongType, setWrongType] = useState<ReturnType<typeof wrongTypeMessage>>(null);
+  const [wrongType, setWrongType] = useState<'agent' | 'individual' | null>(null);
 
   // Google sign-in with the other kind of account comes back as ?error=.
   useEffect(() => {
-    setWrongType(wrongTypeMessage(new URLSearchParams(window.location.search).get('error')));
+    setWrongType(wrongTypeKind(new URLSearchParams(window.location.search).get('error')));
   }, []);
 
   const handleGoogleLogin = async () => {
@@ -66,7 +59,7 @@ export default function LoginView({ accountType = 'individual' }: { accountType?
       redirect: false,
     });
     if (result?.error) {
-      const wrong = wrongTypeMessage(result.code ?? null);
+      const wrong = wrongTypeKind(result.code ?? null);
       if (wrong) setWrongType(wrong); else setError(t('invalidCredentials'));
       setLoading(false);
     } else {
@@ -91,12 +84,14 @@ export default function LoginView({ accountType = 'individual' }: { accountType?
       <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
       <div className="w-full max-w-md">
 
+        <AccountTypeTabs current={accountType} mode="login" />
+
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            {agent ? AGENT_TEXT.title : t('title')}
+            {agent ? ta('agentLoginTitle') : t('title')}
           </h1>
           <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>
-            {agent ? AGENT_TEXT.subtitle : t('subtitle')}
+            {agent ? ta('agentLoginSubtitle') : t('subtitle')}
           </p>
         </div>
 
@@ -177,7 +172,10 @@ export default function LoginView({ accountType = 'individual' }: { accountType?
 
             {wrongType && (
               <p role="alert" className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>
-                {wrongType.text} <Link href={wrongType.href} style={{ fontWeight: 600, textDecoration: 'underline' }}>{wrongType.link}</Link>
+                {wrongType === 'agent' ? ta('wrongTypeAgent') : ta('wrongTypeIndividual')}{' '}
+                <Link href={LOGIN_PATH[wrongType]} style={{ fontWeight: 600, textDecoration: 'underline' }}>
+                  {wrongType === 'agent' ? ta('wrongTypeAgentLink') : ta('wrongTypeIndividualLink')}
+                </Link>
               </p>
             )}
             {error && <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>{error}</p>}
@@ -206,15 +204,9 @@ export default function LoginView({ accountType = 'individual' }: { accountType?
           </form>
 
           <p className="text-center text-sm mt-6" style={{ color: '#6B6256' }}>
-            {agent ? AGENT_TEXT.noAccount : t('noAccount')}{' '}
+            {agent ? ta('agentNoAccount') : t('noAccount')}{' '}
             <Link href={REGISTER_PATH[accountType]} style={{ color: '#A04E1C', fontWeight: 600 }}>
-              {agent ? AGENT_TEXT.create : t('createAccount')}
-            </Link>
-          </p>
-          <p className="text-center text-xs mt-3" style={{ color: '#6B6256' }}>
-            {agent ? AGENT_TEXT.switchText : INDIVIDUAL_SWITCH.switchText}{' '}
-            <Link href={LOGIN_PATH[agent ? 'individual' : 'agent']} style={{ color: '#A04E1C', fontWeight: 600 }}>
-              {agent ? AGENT_TEXT.switchLink : INDIVIDUAL_SWITCH.switchLink}
+              {agent ? ta('agentCreate') : t('createAccount')}
             </Link>
           </p>
         </div>
