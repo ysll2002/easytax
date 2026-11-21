@@ -27,7 +27,7 @@
 
 **发布 production**（owner 明说）：production 库加 profiles.account_type（51 个账号全部 individual）→ main 快进 `aff2356..463f5e1`（PR #69 #70）→ 部署 8mqj0jnt4 Ready。冒烟：/、/login、/register、/agent/login、/agent/register、/pricing 200；首页有「Who are you filing for?」和「For agents」；未登录 /dashboard → /login，/dashboard/agent → /agent/login；/api/auth/session 200。真实登录未测。
 
-MTD 状态条之前在 /login /register 被故意隐藏、代理页却显示 → owner 要两边都显示 → PR #71 合进 staging `3f1ae08`（从 HIDDEN_ON 去掉两项）。未上 production。
+MTD 状态条之前在 /login /register 被故意隐藏、代理页却显示 → owner 要两边都显示 → PR #71 合进 staging `3f1ae08`（从 HIDDEN_ON 去掉两项）→ owner 明说发布，main 快进 `463f5e1..3f1ae08`，部署 q1ddfhywc Ready，/login /register /agent/login 均 200 且有状态条。
 
 ## 2026-11-18（owner 对话）
 
