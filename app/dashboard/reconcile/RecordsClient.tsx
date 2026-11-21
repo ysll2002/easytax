@@ -106,20 +106,27 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
     catch { setError('That change could not be saved. Your records have been reloaded.'); load(); }
   }, [records, load]);
 
-  const setCategory = (ids: string[], category: RecordCategory) => {
+  // Records in a quarter already filed with HMRC cannot change.
+  const lockedIds = useMemo(() => new Set(records.filter(r => r.locked).map(r => r.id)), [records]);
+  const unlocked = (ids: string[]) => ids.filter(id => !lockedIds.has(id));
+
+  const setCategory = (allIds: string[], category: RecordCategory) => {
+    const ids = unlocked(allIds);
+    if (!ids.length) return;
     const idSet = new Set(ids);
     const next = records.map(r => idSet.has(r.id) ? { ...r, category, ai_categorised: false } : r);
     commit(next, () => patchGroups(url, new Map([[category, ids]]), 'category'));
   };
 
   const setBucket = (id: string, bucket: ExpenseBucket) => {
+    if (lockedIds.has(id)) return;
     const next = records.map(r => r.id === id ? { ...r, expense_bucket: bucket, ai_categorised: false } : r);
     commit(next, () => patchGroups(url, new Map([[bucket, [id]]]), 'expenseBucket'));
   };
 
   const remove = (id: string) => {
     const r = records.find(x => x.id === id);
-    if (!r || !window.confirm(`Delete "${r.description}" (${gbp(r.amount)}) on ${r.txn_date}? This cannot be undone.`)) return;
+    if (!r || r.locked || !window.confirm(`Delete "${r.description}" (${gbp(r.amount)}) on ${r.txn_date}? This cannot be undone.`)) return;
     setRecords(prev => prev.filter(x => x.id !== id));
     setHistory([]); // undo cannot bring back a deleted record
     send(url, 'DELETE', { ids: [id] }).then(() => setStatus('Record deleted.')).catch(() => { setError('The record could not be deleted.'); load(); });
@@ -128,7 +135,9 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
   const applyActions = (actions: ReconcileAction[]) => {
     let next = records;
     const groups = new Map<string, string[]>();
-    for (const action of actions) {
+    for (const raw of actions) {
+      const action = { ...raw, ids: unlocked(raw.ids) };
+      if (!action.ids.length) continue;
       const idSet = new Set(action.ids);
       next = next.map(r => idSet.has(r.id) ? { ...r, category: action.category, ai_categorised: false } : r);
       groups.set(action.category, [...(groups.get(action.category) ?? []), ...action.ids]);
@@ -287,19 +296,20 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
                         {new Date(r.txn_date + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         {r.source === 'csv' ? ' · imported' : ' · added by hand'}
                         {r.ai_categorised && <> · <AiTag /></>}
+                        {r.locked && <> · <LockedTag /></>}
                       </p>
                     </div>
                     <p style={{ fontWeight: 700, color: r.amount >= 0 ? '#4B6A4E' : '#A04E1C', whiteSpace: 'nowrap' }}>
                       <span className="sr-only">{r.amount >= 0 ? 'Money in ' : 'Money out '}</span>
                       {r.amount >= 0 ? '+' : '−'}{gbp(r.amount)}
                     </p>
-                    <button type="button" onClick={() => remove(r.id)} aria-label={`Delete ${r.description}`} style={{ background: 'none', border: 'none', color: '#6B6256', cursor: 'pointer', fontSize: '1rem', padding: '0 0.25rem' }}>✕</button>
+                    {!r.locked && <button type="button" onClick={() => remove(r.id)} aria-label={`Delete ${r.description}`} style={{ background: 'none', border: 'none', color: '#6B6256', cursor: 'pointer', fontSize: '1rem', padding: '0 0.25rem' }}>✕</button>}
                   </div>
                   <div className="flex flex-wrap items-center gap-2 mt-2">
                     <div role="group" aria-label={`Category for ${r.description}`} className="flex flex-wrap gap-1">
                       {CATEGORIES.map(c => (
-                        <button key={c.value} type="button" aria-pressed={r.category === c.value} onClick={() => r.category !== c.value && setCategory([r.id], c.value)}
-                          style={{ padding: '0.2rem 0.6rem', borderRadius: '1rem', fontSize: '0.75rem', fontWeight: 500, cursor: 'pointer', border: r.category === c.value ? `1.5px solid ${c.color}` : '1px solid transparent', backgroundColor: r.category === c.value ? c.bg : 'transparent', color: r.category === c.value ? c.color : '#4A4035' }}>
+                        <button key={c.value} type="button" aria-pressed={r.category === c.value} disabled={r.locked} onClick={() => r.category !== c.value && setCategory([r.id], c.value)}
+                          style={{ padding: '0.2rem 0.6rem', borderRadius: '1rem', fontSize: '0.75rem', fontWeight: 500, cursor: r.locked ? 'default' : 'pointer', opacity: r.locked && r.category !== c.value ? 0.45 : 1, border: r.category === c.value ? `1.5px solid ${c.color}` : '1px solid transparent', backgroundColor: r.category === c.value ? c.bg : 'transparent', color: r.category === c.value ? c.color : '#4A4035' }}>
                           {c.label}
                         </button>
                       ))}
@@ -307,7 +317,7 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
                     {r.category === 'business_expense' && (
                       <label className="flex items-center gap-1 text-xs" style={{ color: '#4A4035' }}>
                         <span className="sr-only">HMRC expense category for {r.description}</span>
-                        <select value={bucketOf(r)} onChange={e => setBucket(r.id, e.target.value as ExpenseBucket)} style={{ ...input, width: 'auto', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
+                        <select value={bucketOf(r)} disabled={r.locked} onChange={e => setBucket(r.id, e.target.value as ExpenseBucket)} style={{ ...input, width: 'auto', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
                           {EXPENSE_BUCKETS.map(b => <option key={b.key} value={b.key}>{b.label}</option>)}
                         </select>
                       </label>
@@ -337,6 +347,14 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
         </>
       )}
     </div>
+  );
+}
+
+function LockedTag() {
+  return (
+    <span title="This quarter has been filed with HMRC, so this record can no longer be changed. Put any correction in the current quarter." style={{ display: 'inline-block', padding: '0 0.4rem', borderRadius: '0.4rem', fontSize: '0.68rem', fontWeight: 600, color: '#2F5232', backgroundColor: '#E2EDE2' }}>
+      🔒 Filed
+    </span>
   );
 }
 
@@ -375,10 +393,15 @@ function AddRecordForm({ url, onDone, onCancel }: { url: string; onDone: (msg: s
           expenseBucket: kind === 'business_expense' ? (bucket || suggestBucket(description)) : undefined,
         }] }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error === 'period_filed'
+          ? 'That date is in a quarter you have already filed with HMRC, so it cannot be changed. Date the record in the current quarter instead.'
+          : 'The record could not be saved. Please try again.');
+      }
       onDone('Record added.');
-    } catch {
-      setError('The record could not be saved. Please try again.');
+    } catch (err) {
+      setError((err as Error).message || 'The record could not be saved. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -463,7 +486,7 @@ export function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg
   async function doImport() {
     if (!parsed.ok.length) return;
     setImporting(true); setError('');
-    let added = 0, dupes = 0;
+    let added = 0, dupes = 0, filed = 0;
     try {
       for (let i = 0; i < parsed.ok.length; i += 2000) {
         const res = await fetch(url, {
@@ -472,11 +495,12 @@ export function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
-        added += data.added; dupes += data.duplicates;
+        added += data.added; dupes += data.duplicates; filed += data.filed ?? 0;
       }
-      onDone(added === 0
-        ? `Nothing new to import: all ${dupes} row${dupes === 1 ? ' was' : 's were'} already imported.`
-        : `Imported ${added} record${added === 1 ? '' : 's'}${dupes ? ` (${dupes} already imported, skipped)` : ''}. AI is now sorting them.`);
+      const filedNote = filed ? ` ${filed} row${filed === 1 ? ' is' : 's are'} in a quarter already filed with HMRC and ${filed === 1 ? 'was' : 'were'} not imported.` : '';
+      onDone((added === 0
+        ? `Nothing new to import${dupes ? `: ${dupes} row${dupes === 1 ? ' was' : 's were'} already imported` : ''}.`
+        : `Imported ${added} record${added === 1 ? '' : 's'}${dupes ? ` (${dupes} already imported, skipped)` : ''}. AI is now sorting them.`) + filedNote);
     } catch {
       setError(`The import stopped after ${added} records. Please try again — records already imported will not be duplicated.`);
     } finally {

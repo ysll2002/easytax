@@ -9,6 +9,7 @@ export async function submitAsAgent(
   agentUserId: string,
   ctx: { client: AgentClient; token: string },
   body: QuarterlyData & { taxYear: string },
+  recordIds: string[] = [],
 ) {
   const { client, token } = ctx;
   if (!client.nino) throw new AgentError('MISSING_NINO', 400, 'This client has no National Insurance number.');
@@ -37,6 +38,7 @@ export async function submitAsAgent(
     net_profit:      round2(body.turnover - totalExpenses),
     expenses_detail: body.expenses,
     hmrc_response:   { result, submittedAs: 'agent' },
+    record_ids:      recordIds,
   });
   return { success: true, result };
 }

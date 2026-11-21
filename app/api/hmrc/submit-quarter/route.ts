@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       const ctx = await clientFilingContext(profileId, clientId, 'itsa');
       const check = await figuresMatchRecords(profileId, ctx.client.id, body);
       if (!check.ok) return mismatch(check.reason);
-      return NextResponse.json(await submitAsAgent(profileId, ctx, body));
+      return NextResponse.json(await submitAsAgent(profileId, ctx, body, check.recordIds));
     } catch (err) {
       if (err instanceof AgentError) return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
       return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 502 });
@@ -77,6 +77,7 @@ export async function POST(req: NextRequest) {
       net_profit:      body.turnover - totalExpenses,
       expenses_detail: body.expenses,
       hmrc_response:   result,
+      record_ids:      check.recordIds,
     });
 
     return NextResponse.json({ success: true, result });

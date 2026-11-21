@@ -5,6 +5,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { AgentError } from '@/lib/agent';
 import { recordsOwner, ownerFilter } from '@/lib/records-owner';
 import { EXPENSE_BUCKETS, EXPENSE_BUCKET_KEYS, type ExpenseBucket } from '@/lib/records';
+import { filedPeriods, inFiledPeriod } from '@/lib/records-lock';
 
 // POST /api/records/ai-classify?clientId=   { ids: string[] }
 //
@@ -108,7 +109,9 @@ export async function POST(req: NextRequest) {
     supabase.from('business_records').select('id, txn_date, description, amount').eq('user_id', uid), clientId,
   ).eq('category', 'unreviewed').in('id', ids);
   if (error) return bad('db_error', 500);
-  const rows = (data ?? []) as Row[];
+  // Records in a quarter already filed with HMRC are locked; leave them be.
+  const periods = await filedPeriods(uid, clientId);
+  const rows = ((data ?? []) as Row[]).filter(r => !inFiledPeriod(String(r.txn_date), periods));
   if (rows.length === 0) return NextResponse.json({ sorted: 0, unsure: 0 });
 
   let verdicts: Verdict[];
