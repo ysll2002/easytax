@@ -6,18 +6,12 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { trackClient, getStoredAnonId } from '@/components/PageViewTracker';
 import { rememberAccountType } from '@/components/auth/LoginView';
-import { HOME_PATH, LOGIN_PATH, REGISTER_PATH, type AccountType } from '@/lib/account-type';
+import AccountTypeTabs from '@/components/auth/AccountTypeTabs';
+import { HOME_PATH, LOGIN_PATH, type AccountType } from '@/lib/account-type';
 
 // Sign-up for one kind of account: /register (individuals) or /agent/register
 // (accountants and tax agents filing for clients). The type is fixed at
 // sign-up; see lib/account-type.ts.
-const AGENT_TEXT = {
-  title:      'Create an agent account',
-  subtitle:   'For accountants and tax agents filing Making Tax Digital updates for clients. You will need your Agent Services Account (ARN).',
-  switchText: 'Filing your own taxes?',
-  switchLink: 'Create an individual account',
-};
-const INDIVIDUAL_SWITCH = { switchText: 'Accountant or tax agent?', switchLink: 'Create an agent account' };
 
 declare global {
   interface Window { gtag?: (...args: unknown[]) => void }
@@ -32,6 +26,7 @@ function track(event: string, params?: Record<string, unknown>) {
 export default function RegisterView({ accountType = 'individual' }: { accountType?: AccountType }) {
   const agent = accountType === 'agent';
   const t = useTranslations('auth.register');
+  const ta = useTranslations('accounts');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [agreed, setAgreed] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
@@ -143,11 +138,13 @@ export default function RegisterView({ accountType = 'individual' }: { accountTy
       <SiteHeader />
       <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
       <div className="w-full max-w-md">
+        <AccountTypeTabs current={accountType} mode="register" />
+
         <div className="text-center mb-10">
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-            {agent ? AGENT_TEXT.title : t('title')}
+            {agent ? ta('agentRegisterTitle') : t('title')}
           </h1>
-          <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>{agent ? AGENT_TEXT.subtitle : t('subtitle')}</p>
+          <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>{agent ? ta('agentRegisterSubtitle') : t('subtitle')}</p>
         </div>
 
         <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
@@ -273,12 +270,6 @@ export default function RegisterView({ accountType = 'individual' }: { accountTy
           <p className="text-center text-sm mt-4" style={{ color: '#6B6256' }}>
             {t('haveAccount')}{' '}
             <Link href={LOGIN_PATH[accountType]} style={{ color: '#A04E1C', fontWeight: 600 }}>{t('logIn')}</Link>
-          </p>
-          <p className="text-center text-xs mt-3" style={{ color: '#6B6256' }}>
-            {agent ? AGENT_TEXT.switchText : INDIVIDUAL_SWITCH.switchText}{' '}
-            <Link href={REGISTER_PATH[agent ? 'individual' : 'agent']} style={{ color: '#A04E1C', fontWeight: 600 }}>
-              {agent ? AGENT_TEXT.switchLink : INDIVIDUAL_SWITCH.switchLink}
-            </Link>
           </p>
         </div>
       </div>
