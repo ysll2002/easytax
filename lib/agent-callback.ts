@@ -19,7 +19,8 @@ export async function handleAgentCallback(req: NextRequest, code: string | null,
   if (!AGENT_MODE_AVAILABLE) return back('error=not_available');
 
   const session = await auth();
-  if (!session?.user?.profileId) return NextResponse.redirect(new URL('/login', req.url));
+  if (!session?.user?.profileId) return NextResponse.redirect(new URL('/agent/login', req.url));
+  if (session.user.accountType !== 'agent') return NextResponse.redirect(new URL('/dashboard', req.url));
 
   const tokenRes = await fetch(`${BASE}/oauth/token`, {
     method: 'POST',

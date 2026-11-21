@@ -1,0 +1,225 @@
+'use client';
+import { useState, useEffect } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import SiteHeader from '@/components/SiteHeader';
+import {
+  ACCOUNT_TYPE_COOKIE, HOME_PATH, LOGIN_PATH, REGISTER_PATH, WRONG_TYPE_ERROR, type AccountType,
+} from '@/lib/account-type';
+
+// Sign-in for one kind of account: /login (individuals) or /agent/login
+// (agents acting for clients). The two are kept apart; see lib/account-type.ts.
+
+const AGENT_TEXT = {
+  title:      'Agent sign in',
+  subtitle:   'For accountants and tax agents filing for clients.',
+  noAccount:  'New to EasyTax as an agent?',
+  create:     'Create an agent account',
+  switchText: 'Filing your own taxes?',
+  switchLink: 'Sign in here',
+};
+const INDIVIDUAL_SWITCH = { switchText: 'Accountant or tax agent?', switchLink: 'Agent sign in' };
+
+/** "This email is an agent account" and the reverse, shown on the wrong sign-in page. */
+export function wrongTypeMessage(code: string | null): { text: string; href: string; link: string } | null {
+  if (code === WRONG_TYPE_ERROR.individual) return { text: 'This email is registered as an agent account.', href: LOGIN_PATH.agent, link: 'Go to agent sign in' };
+  if (code === WRONG_TYPE_ERROR.agent) return { text: 'This email is registered as an individual account, not an agent account.', href: LOGIN_PATH.individual, link: 'Go to individual sign in' };
+  return null;
+}
+
+export function rememberAccountType(type: AccountType) {
+  document.cookie = `${ACCOUNT_TYPE_COOKIE}=${type}; path=/; max-age=600; samesite=lax`;
+}
+
+export default function LoginView({ accountType = 'individual' }: { accountType?: AccountType }) {
+  const agent = accountType === 'agent';
+  const router = useRouter();
+  const t = useTranslations('auth.login');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [wrongType, setWrongType] = useState<ReturnType<typeof wrongTypeMessage>>(null);
+
+  // Google sign-in with the other kind of account comes back as ?error=.
+  useEffect(() => {
+    setWrongType(wrongTypeMessage(new URLSearchParams(window.location.search).get('error')));
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    rememberAccountType(accountType);
+    await signIn('google', { callbackUrl: HOME_PATH[accountType] });
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true); setError(''); setWrongType(null);
+    rememberAccountType(accountType);
+    const result = await signIn('credentials', {
+      email,
+      password,
+      accountType,
+      redirect: false,
+    });
+    if (result?.error) {
+      const wrong = wrongTypeMessage(result.code ?? null);
+      if (wrong) setWrongType(wrong); else setError(t('invalidCredentials'));
+      setLoading(false);
+    } else {
+      router.push(HOME_PATH[accountType]);
+    }
+  };
+
+  const inputStyle = {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    borderRadius: '0.75rem',
+    border: '1.5px solid #DDD5C8',
+    backgroundColor: '#FDFCF8',
+    color: '#1C1208',
+    fontSize: '0.875rem',
+    outline: 'none',
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen px-4" style={{ backgroundColor: '#FDFCF8' }}>
+      <SiteHeader />
+      <main id="main-content" className="flex flex-col items-center justify-center flex-1 py-12">
+      <div className="w-full max-w-md">
+
+        <div className="text-center mb-10">
+          <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
+            {agent ? AGENT_TEXT.title : t('title')}
+          </h1>
+          <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>
+            {agent ? AGENT_TEXT.subtitle : t('subtitle')}
+          </p>
+        </div>
+
+        <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
+
+          {/* Google OAuth Button */}
+          <button
+            onClick={handleGoogleLogin}
+            disabled={googleLoading}
+            className="w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-medium text-sm transition-all"
+            style={{
+              backgroundColor: '#FDFCF8',
+              border: '1.5px solid #DDD5C8',
+              color: '#1C1208',
+              cursor: googleLoading ? 'not-allowed' : 'pointer',
+              opacity: googleLoading ? 0.7 : 1,
+            }}
+          >
+            {googleLoading ? (
+              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
+                <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
+                <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+              </svg>
+            )}
+            {googleLoading ? t('redirecting') : t('continueGoogle')}
+          </button>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
+            <span className="text-xs" style={{ color: '#6B6256' }}>{t('or')}</span>
+            <div className="flex-1 h-px" style={{ backgroundColor: '#DDD5C8' }} />
+          </div>
+
+          {/* Email / Password form */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
+                {t('email')}
+              </label>
+              <input autoComplete="email"
+                id="email"
+                type="email"
+                required
+                placeholder={t('emailPlaceholder')}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold" style={{ color: '#1C1208' }}>
+                  {t('password')}
+                </label>
+                <Link href="/forgot-password" className="text-xs" style={{ color: '#A04E1C' }}>
+                  {t('forgotPassword')}
+                </Link>
+              </div>
+              <input autoComplete="current-password"
+                id="password"
+                type="password"
+                required
+                placeholder={t('passwordPlaceholder')}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={inputStyle}
+              />
+            </div>
+
+            {wrongType && (
+              <p role="alert" className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>
+                {wrongType.text} <Link href={wrongType.href} style={{ fontWeight: 600, textDecoration: 'underline' }}>{wrongType.link}</Link>
+              </p>
+            )}
+            {error && <p className="text-sm text-center py-2 px-3 rounded-lg" style={{ backgroundColor: '#F5E4D8', color: '#A04E1C' }}>{error}</p>}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 rounded-xl font-medium text-sm transition-all flex items-center justify-center gap-2"
+              style={{
+                backgroundColor: loading ? '#DDD5C8' : '#A04E1C',
+                color: '#FDFCF8',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                marginTop: '0.25rem',
+              }}
+            >
+              {loading ? (
+                <>
+                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  {t('loggingIn')}
+                </>
+              ) : t('logIn')}
+            </button>
+          </form>
+
+          <p className="text-center text-sm mt-6" style={{ color: '#6B6256' }}>
+            {agent ? AGENT_TEXT.noAccount : t('noAccount')}{' '}
+            <Link href={REGISTER_PATH[accountType]} style={{ color: '#A04E1C', fontWeight: 600 }}>
+              {agent ? AGENT_TEXT.create : t('createAccount')}
+            </Link>
+          </p>
+          <p className="text-center text-xs mt-3" style={{ color: '#6B6256' }}>
+            {agent ? AGENT_TEXT.switchText : INDIVIDUAL_SWITCH.switchText}{' '}
+            <Link href={LOGIN_PATH[agent ? 'individual' : 'agent']} style={{ color: '#A04E1C', fontWeight: 600 }}>
+              {agent ? AGENT_TEXT.switchLink : INDIVIDUAL_SWITCH.switchLink}
+            </Link>
+          </p>
+        </div>
+      </div>
+      </main>
+    </div>
+  );
+}

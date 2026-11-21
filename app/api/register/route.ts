@@ -3,11 +3,14 @@ import bcrypt from 'bcryptjs';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { sendWelcomeEmail } from '@/lib/email';
 import { trackAsync, EVENTS } from '@/lib/analytics';
+import { asAccountType } from '@/lib/account-type';
 
 export async function POST(req: NextRequest) {
   // anonId is optional — it lets a completed registration be stitched back to
   // the anonymous page views that preceded it.
-  const { name, email, password, anonId } = await req.json();
+  const { name, email, password, anonId, accountType: rawType } = await req.json();
+  // Fixed at sign-up: /register makes an individual account, /agent/register an agent one.
+  const accountType = asAccountType(rawType);
 
   if (!email || !password) {
     return NextResponse.json({ error: 'Email and password are required', code: 'missing_fields' }, { status: 400 });
@@ -31,7 +34,7 @@ export async function POST(req: NextRequest) {
 
   const { data: created, error } = await supabase
     .from('profiles')
-    .insert({ name: finalName, email, password_hash })
+    .insert({ name: finalName, email, password_hash, account_type: accountType })
     .select('id')
     .single();
 
@@ -49,8 +52,8 @@ export async function POST(req: NextRequest) {
     name:   EVENTS.registerCompleted,
     userId: created?.id ?? null,
     anonId: typeof anonId === 'string' ? anonId.slice(0, 64) : null,
-    path:   '/register',
-    props:  { method: 'password' },
+    path:   accountType === 'agent' ? '/agent/register' : '/register',
+    props:  { method: 'password', accountType },
   });
 
   return NextResponse.json({ ok: true });

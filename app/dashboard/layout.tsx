@@ -9,6 +9,7 @@ import MobileNav from '@/components/MobileNav';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import HomepageLink from '@/components/HomepageLink';
 import { AGENT_MODE_AVAILABLE } from '@/lib/agent';
+import { asAccountType } from '@/lib/account-type';
 
 // Default <title> for dashboard pages (WCAG 2.4.2); each route's own layout
 // overrides it.
@@ -21,13 +22,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session) redirect('/login');
 
   const user = session.user;
+  // Agent accounts get the agent dashboard only where agent mode is open.
+  const accountType = AGENT_MODE_AVAILABLE ? asAccountType(user.accountType) : 'individual';
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#FDFCF8' }}>
 
       {/* Sidebar — desktop only */}
       <aside className="hidden md:flex" style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
-        <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '1rem', display: 'block' }}>
+        <Link href={accountType === 'agent' ? '/dashboard/agent' : '/dashboard'} style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '1rem', display: 'block' }}>
           EasyTax
         </Link>
 
@@ -41,7 +44,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <HomepageLink compact />
         </div>
 
-        <SidebarNav showAgent={AGENT_MODE_AVAILABLE} />
+        <SidebarNav accountType={accountType} />
 
         <div style={{ padding: '0 1.5rem', borderTop: '1px solid #2E2418', paddingTop: '1.25rem', marginTop: '1rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
@@ -96,7 +99,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
       {/* Mobile bottom nav */}
       <div className="md:hidden">
-        <MobileNav />
+        <MobileNav accountType={accountType} />
       </div>
     </div>
   );

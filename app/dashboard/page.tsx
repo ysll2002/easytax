@@ -1,4 +1,5 @@
 import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { ChevronRight, User, Building2 } from 'lucide-react';
@@ -26,6 +27,9 @@ async function isOnLaunchList(email: string | null | undefined): Promise<boolean
 
 export default async function DashboardHome() {
   const session = await auth();
+  // Agent accounts have their own dashboard (middleware.ts sends them there
+  // too; this is the backstop).
+  if (session?.user.accountType === 'agent') redirect('/dashboard/agent');
   const t = await getTranslations('dashboard.home');
   const name = session?.user.name ?? session?.user.email ?? 'there';
   const firstName = name.split(' ')[0];

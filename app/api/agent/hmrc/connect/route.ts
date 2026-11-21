@@ -11,7 +11,8 @@ import { AGENT_MODE_AVAILABLE, AGENT_SCOPES, getAgentConnection } from '@/lib/ag
 // and checks it against the cookie set here.
 export async function GET(req: NextRequest) {
   const session = await auth();
-  if (!session?.user?.profileId) return NextResponse.redirect(new URL('/login', req.url));
+  if (!session?.user?.profileId) return NextResponse.redirect(new URL('/agent/login', req.url));
+  if (session.user.accountType !== 'agent') return NextResponse.redirect(new URL('/dashboard', req.url));
   if (!AGENT_MODE_AVAILABLE) return NextResponse.redirect(new URL('/dashboard/agent', req.url));
 
   const conn = await getAgentConnection(session.user.profileId);
