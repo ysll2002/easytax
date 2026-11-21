@@ -29,7 +29,7 @@
 
 MTD 状态条之前在 /login /register 被故意隐藏、代理页却显示 → owner 要两边都显示 → PR #71 合进 staging `3f1ae08`（从 HIDDEN_ON 去掉两项）→ owner 明说发布，main 快进 `463f5e1..3f1ae08`，部署 q1ddfhywc Ready，/login /register /agent/login 均 200 且有状态条。
 
-代理注册要采集会计事务所名称（owner）→ PR #72 合进 staging `b402c50`：profiles.firm_name；/agent/register 必填「Accounting firm name」（前后端都校验）；Google 注册的代理在代理首页补填；7 语言。迁移已上 staging。本地验证字段只出现在代理注册页。未上 production（发布前要在 production 库跑 `20261121_profiles_firm_name`）。
+代理注册要采集会计事务所名称（owner）→ PR #72 合进 staging `b402c50`：profiles.firm_name；/agent/register 必填「Accounting firm name」（前后端都校验）；Google 注册的代理在代理首页补填；7 语言。迁移已上 staging。本地验证字段只出现在代理注册页。→ owner 明说发布：production 库加 firm_name → main 快进 `3f1ae08..b402c50`，部署 d7w620dii Ready；/agent/register 有事务所字段，缺事务所名的代理注册被 API 拒（400 missing_firm_name）。
 
 ## 2026-11-18（owner 对话）
 
