@@ -15,6 +15,13 @@
 
 ---
 
+## 2026-11-23（owner 对话）
+
+**今日执行**：owner 问注册人数 → production 53 个账号，真实外部约 44 个，10-13 后无外部新注册，0 条记录、0 次申报。owner 要一年内做到 £10k/月的推广计划 → 写了 `agent/GROWTH_PLAN_2027.md`（BACKLOG stg-015，proposed）：代理为主（35 家 × £180）+ 个人（500 × £7.5）；12 月打地基（Stripe、文案、GOV.UK 列表、激活老用户），1–3 月代理试点，4 月扩容潮前上年终申报，8 月第二波。没有改代码。
+**学到 / 决定**：等 owner 决定定价、域名、每周销售时间、广告预算。
+
+---
+
 ## 2026-11-21（owner 对话）
 
 **今日执行**：owner 问 MTD 季度申报报的是总数还是明细 → 只报 turnover + 8 个费用类别合计，明细留在 business_records。发现缺口：已申报季度的记录仍可改/删、申报不记录用了哪些记录、删代理客户会级联删记录。owner 批准锁定 → PR #68 合进 staging `aff2356`：已申报季度内的记录不能改/删/新增（API 409 + 数据库触发器兜底），CSV 中已申报季度的行跳过并提示，sa_filings.record_ids 存每次申报用到的记录，business_records.client_id 改 ON DELETE RESTRICT，Records 页显示「🔒 Filed」。迁移 `20261121_lock_filed_records` 已上 staging 并验证（改已申报记录被拒）。**未上 production**。

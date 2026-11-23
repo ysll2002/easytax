@@ -22,6 +22,7 @@
 | stg-012 | 新建 sandbox VAT 测试机构用户，让 VAT Submit Return 在 30 天内有一次成功调用 | proposed | LOW（owner 在 Developer Hub 操作） | VAT Submit Return 返回 201 | — | 2026-10-04 新增。VRN 308930751 的期间都已提交过，所以一直 DUPLICATE_SUBMISSION。sandbox 应用订阅了 Create Test User 1.0，用它新建 organisation 用户，拿新 VRN，在 Profile 填入后重跑。服务于 VAT FPH 审查（CMQAA-712） |
 | stg-013 | 按 HMRC 要求用不同设备、不同用户各重测一轮；（可选）sandbox 测试遇到 429 自动重试 | proposed | HIGH（compliance：重试要改 `app/api/hmrc/sandbox-test/route.ts`） | FPH 团队收到多设备/多用户流量；单次运行 0 个 429 | — | 2026-10-10 新增。owner 先跑出 56/65（8 个 429），单标签页重跑后 **64/65**，证实是两轮同时在跑造成的限流，不是集成问题。owner 当天要求加重试，但改合规禁区文件的操作被权限检查拦下，没改。重试降为可选加固（只防多标签页同时跑）。主要剩余：多设备/多用户重测，只能 owner 亲自做 |
 | stg-014 | 年终申报（BSAS / Losses / Calculation / final declaration）走 SDST 审批并上线 | approved | HIGH（HMRC 审批） | SDST 批准 + production 可提交 final declaration，**2027-04 前** | PR #62（调用日志） | 2026-11-16 owner 已回信 HMRC（Paul Anderson）承诺 2027-04 前支持，Software Choices 列为 in development。2026-11-16 sandbox 证据已出、SDST 申请草稿已建（待 owner 发）。批准后：production 订阅 BSAS 7.0 / BISS 3.0 / Losses 6.0、去掉年终页 production 拦截和 sandbox 专用逻辑（PR #63–#66）。上线前公开页面不得宣称能做年终申报 |
+| stg-015 | 12 个月增长计划：2027-11 达到 MRR £10k（代理为主 + 个人） | proposed | N/A | owner 拍板定价/域名/时间/广告预算 4 件事 | `agent/GROWTH_PLAN_2027.md` | 2026-11-23 owner 要求出推广计划。混合模型：35 家代理所 × £180 + 500 个人 × £7.5。第 0 阶段（12 月）：Stripe 真收款、文案改「可真实报税」、上 GOV.UK 软件列表、激活 44 个注册用户。等 owner 决定后再排进 Top 5 |
 
 ## Owner 的长期禁区 / 已否决方向
 
