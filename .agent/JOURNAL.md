@@ -18,6 +18,8 @@
 ## 2026-11-23（owner 对话）
 
 **今日执行**：owner 问注册人数 → production 53 个账号，真实外部约 44 个，10-13 后无外部新注册，0 条记录、0 次申报。owner 要一年内做到 £10k/月的推广计划 → 写了 `agent/GROWTH_PLAN_2027.md`（BACKLOG stg-015，proposed）：代理为主（35 家 × £180）+ 个人（500 × £7.5）；12 月打地基（Stripe、文案、GOV.UK 列表、激活老用户），1–3 月代理试点，4 月扩容潮前上年终申报，8 月第二波。没有改代码。
+**HMRC 2026-ULJ714**（Jacob Barker，11-23 13:13 UTC）：11-14 申请的 9 个年终 API 订阅被退回——测试不满足 service guide 要求。要求：每个 API 都在 sandbox 测完（附 NINO / Sandbox ID）、Losses 7.0 必须连带订阅并测试 Individual Tax Liability Adjustments 1.0、in-year API 重测、填新 checklist；HMRC 只看最近 30 天调用。差距分析在 `hmrc/2026-11-eoy-subscriptions/GAP-ANALYSIS.md`：代码没有 Property / Employments / Pensions / State Benefits / Charges / Expenses（建议撤回），缺 Losses 7.0 全部端点、ITLA 1.0、BSAS List、BISS 调用、Periods of Account / Late Accounting Date Rule / Accounting Type、intent-to-amend / confirm-amendment、代理版 final declaration 声明。等 owner 决定范围。
+
 **学到 / 决定**：等 owner 决定定价、域名、每周销售时间、广告预算。
 
 ---
