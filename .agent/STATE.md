@@ -4,6 +4,11 @@
 
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
+## 2026-11-24 最新
+
+- staging = `0628843`（PR #62–#74）；production = `b402c50`（到 PR #72）。PR #74（年终全套 108 个端点 + 房产 records）**只在 staging**，迁移 `20261124_property_records` 只上了 staging。
+- HMRC 2026-ULJ714：年终订阅被退回，需要全量 sandbox 测试 + 新 checklist，计划见 `hmrc/2026-11-eoy-subscriptions/TESTING-PLAN.md`。SDST WFG726 仍在等。
+
 ## HMRC
 
 - 🎉 **2026-11-11 Production 已批准**（CMQAA-923 / 2026-NQM717，John Morris）：`EasyTax VIP`（ID 50b9bae2-5fa2-4145-a932-cb087495a255）获批 11 个 ITSA API + VAT (MTD) API；ITSA FPH 评估通过；重复应用 `EasyTax.VIP` 已拒。没批的只有 Check a UK VAT Number 2.0（代码没用到，11-13 草稿里撤回，**草稿待 owner 发**）。
