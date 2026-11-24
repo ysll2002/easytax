@@ -106,12 +106,12 @@ export async function POST(req: NextRequest) {
     || !ids.every(i => typeof i === 'string' && /^[0-9a-f-]{36}$/i.test(i))) return bad('invalid_ids');
 
   const { data, error } = await ownerFilter(
-    supabase.from('business_records').select('id, txn_date, description, amount').eq('user_id', uid), clientId,
+    supabase.from('business_records').select('id, txn_date, description, amount, income_source').eq('user_id', uid), clientId,
   ).eq('category', 'unreviewed').in('id', ids);
   if (error) return bad('db_error', 500);
   // Records in a quarter already filed with HMRC are locked; leave them be.
   const periods = await filedPeriods(uid, clientId);
-  const rows = ((data ?? []) as Row[]).filter(r => !inFiledPeriod(String(r.txn_date), periods));
+  const rows = ((data ?? []) as Row[]).filter(r => !inFiledPeriod(String(r.txn_date), periods, (r as Row & { income_source?: string }).income_source));
   if (rows.length === 0) return NextResponse.json({ sorted: 0, unsure: 0 });
 
   let verdicts: Verdict[];

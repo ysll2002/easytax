@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
 
   const { data, error } = await ownerFilter(supabase
     .from('business_records')
-    .select('description, amount, category, expense_bucket')
+    .select('description, amount, category, expense_bucket, income_source')
     .eq('user_id', session.user.profileId), clientId)
     .gte('txn_date', start)
     .lte('txn_date', end);

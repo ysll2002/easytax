@@ -6,14 +6,14 @@ import { AgentError } from '@/lib/agent';
 import { recordsOwner, ownerFilter } from '@/lib/records-owner';
 import { filedPeriods, inFiledPeriod } from '@/lib/records-lock';
 import {
-  RECORD_CATEGORIES, EXPENSE_BUCKET_KEYS, ISO_DATE,
-  type RecordCategory, type ExpenseBucket,
+  RECORD_CATEGORIES, EXPENSE_BUCKET_KEYS, ISO_DATE, INCOME_SOURCE_KEYS, PROPERTY_BUCKET_KEYS,
+  type RecordCategory, type ExpenseBucket, type IncomeSource, type PropertyBucket,
 } from '@/lib/records';
 
 // The customer's business records (see lib/records.ts).
 //   GET    ?start=YYYY-MM-DD&end=YYYY-MM-DD   list records in a period
 //   POST   { records: [...], source }         add records (manual or CSV import)
-//   PATCH  { ids, category?, expenseBucket? } re-categorise
+//   PATCH  { ids, category?, expenseBucket?, incomeSource?, propertyBucket?, propertyId? }  re-categorise
 //   DELETE { ids }                            delete
 // Records dated in a quarter already filed with HMRC are locked (see
 // lib/records-lock.ts): they come back with locked: true, cannot be changed
@@ -24,7 +24,10 @@ import {
 const MAX_BATCH = 2000;
 // ids go into the PostgREST query string, so keep each call well under URL limits.
 const MAX_IDS = 200;
-const COLUMNS = 'id, txn_date, description, amount, category, expense_bucket, source, ai_categorised';
+const COLUMNS = 'id, txn_date, description, amount, category, expense_bucket, income_source, property_bucket, property_id, source, ai_categorised';
+// Foreign property: HMRC's propertyId (2026-27 on) or the country code (ISO
+// 3166 alpha-3) for earlier years.
+const PROPERTY_ID = /^([0-9a-f-]{36}|[A-Z]{3})$/i;
 
 async function userId() {
   const session = await auth();
@@ -69,18 +72,20 @@ export async function GET(req: NextRequest) {
   ]);
   if (error) return bad('db_error', 500);
   return NextResponse.json({
-    records: (data ?? []).map(r => ({ ...r, amount: Number(r.amount), locked: inFiledPeriod(String(r.txn_date), periods) })),
+    records: (data ?? []).map(r => ({ ...r, amount: Number(r.amount), locked: inFiledPeriod(String(r.txn_date), periods, r.income_source) })),
   });
 }
 
-type Incoming = { date?: unknown; description?: unknown; amount?: unknown; category?: unknown; expenseBucket?: unknown };
+type Incoming = { date?: unknown; description?: unknown; amount?: unknown; category?: unknown; expenseBucket?: unknown; incomeSource?: unknown; propertyBucket?: unknown; propertyId?: unknown };
 
 export async function POST(req: NextRequest) {
   const o = await owner(req);
   if (o instanceof NextResponse) return o;
   const { uid, clientId } = o;
-  const body = await req.json().catch(() => null) as { records?: Incoming[]; source?: unknown } | null;
+  const body = await req.json().catch(() => null) as { records?: Incoming[]; source?: unknown; incomeSource?: unknown } | null;
   const source = body?.source === 'csv' ? 'csv' : 'manual';
+  // A CSV statement can be imported straight into one income source.
+  const batchSource = INCOME_SOURCE_KEYS.includes(body?.incomeSource as IncomeSource) ? body?.incomeSource as IncomeSource : 'self-employment';
   const input = body?.records;
   if (!Array.isArray(input) || input.length === 0) return bad('no_records');
   if (input.length > MAX_BATCH) return bad('too_many_records');
@@ -94,6 +99,9 @@ export async function POST(req: NextRequest) {
     if (!date || !description || amount == null || amount === 0 || Math.abs(amount) >= 1e12) return bad('invalid_record');
     const category: RecordCategory = RECORD_CATEGORIES.includes(r.category as RecordCategory) ? r.category as RecordCategory : 'unreviewed';
     const expense_bucket = EXPENSE_BUCKET_KEYS.includes(r.expenseBucket as ExpenseBucket) ? r.expenseBucket as ExpenseBucket : null;
+    const income_source: IncomeSource = INCOME_SOURCE_KEYS.includes(r.incomeSource as IncomeSource) ? r.incomeSource as IncomeSource : batchSource;
+    const property_bucket = income_source !== 'self-employment' && PROPERTY_BUCKET_KEYS.includes(r.propertyBucket as PropertyBucket) ? r.propertyBucket as PropertyBucket : null;
+    const property_id = income_source === 'foreign-property' && typeof r.propertyId === 'string' && PROPERTY_ID.test(r.propertyId) ? r.propertyId : null;
 
     let import_hash: string | null = null;
     if (source === 'csv') {
@@ -105,16 +113,16 @@ export async function POST(req: NextRequest) {
       seen.set(key, n);
       import_hash = createHash('sha256').update(`${key}|${n}`).digest('hex');
     }
-    rows.push({ user_id: uid, client_id: clientId, txn_date: date, description, amount, category, expense_bucket, source, import_hash });
+    rows.push({ user_id: uid, client_id: clientId, txn_date: date, description, amount, category, expense_bucket, income_source, property_bucket, property_id, source, import_hash });
   }
 
   // Nothing new can be dated in a quarter already filed with HMRC. A line
   // typed by hand is refused with a reason; statement lines for a filed
   // quarter are skipped and counted.
   const periods = await filedPeriods(uid, clientId);
-  const inFiled = rows.filter(r => inFiledPeriod(r.txn_date, periods));
+  const inFiled = rows.filter(r => inFiledPeriod(r.txn_date, periods, r.income_source));
   if (source === 'manual' && inFiled.length > 0) return bad('period_filed', 409);
-  const open = rows.filter(r => !inFiledPeriod(r.txn_date, periods));
+  const open = rows.filter(r => !inFiledPeriod(r.txn_date, periods, r.income_source));
 
   let toInsert = open;
   if (source === 'csv' && open.length > 0) {
@@ -153,20 +161,25 @@ export async function POST(req: NextRequest) {
 }
 
 // Refuses a change to any record dated in a quarter already filed with HMRC.
-async function lockedAmong(uid: string, clientId: string | null, ids: string[]): Promise<boolean | null> {
+// Moving a record to another income source counts as a change to both: it
+// must not leave a filed quarter, nor enter one.
+async function lockedAmong(uid: string, clientId: string | null, ids: string[], newSource?: string): Promise<boolean | null> {
   const [{ data, error }, periods] = await Promise.all([
-    ownerFilter(supabase.from('business_records').select('txn_date').eq('user_id', uid), clientId).in('id', ids),
+    ownerFilter(supabase.from('business_records').select('txn_date, income_source').eq('user_id', uid), clientId).in('id', ids),
     filedPeriods(uid, clientId),
   ]);
   if (error) return null;
-  return (data ?? []).some(r => inFiledPeriod(String(r.txn_date), periods));
+  return (data ?? []).some(r => inFiledPeriod(String(r.txn_date), periods, r.income_source)
+    || (newSource !== undefined && inFiledPeriod(String(r.txn_date), periods, newSource)));
 }
 
 export async function PATCH(req: NextRequest) {
   const o = await owner(req);
   if (o instanceof NextResponse) return o;
   const { uid, clientId } = o;
-  const body = await req.json().catch(() => null) as { ids?: unknown; category?: unknown; expenseBucket?: unknown } | null;
+  const body = await req.json().catch(() => null) as {
+    ids?: unknown; category?: unknown; expenseBucket?: unknown; incomeSource?: unknown; propertyBucket?: unknown; propertyId?: unknown;
+  } | null;
   if (!validIds(body?.ids)) return bad('invalid_ids');
 
   const update: Record<string, unknown> = { updated_at: new Date().toISOString() };
@@ -178,11 +191,25 @@ export async function PATCH(req: NextRequest) {
     if (body.expenseBucket !== null && !EXPENSE_BUCKET_KEYS.includes(body.expenseBucket as ExpenseBucket)) return bad('invalid_bucket');
     update.expense_bucket = body.expenseBucket;
   }
+  if (body.incomeSource !== undefined) {
+    if (!INCOME_SOURCE_KEYS.includes(body.incomeSource as IncomeSource)) return bad('invalid_income_source');
+    update.income_source = body.incomeSource;
+    if (body.incomeSource === 'self-employment') { update.property_bucket = null; update.property_id = null; }
+    if (body.incomeSource === 'uk-property') update.property_id = null;
+  }
+  if (body.propertyBucket !== undefined) {
+    if (body.propertyBucket !== null && !PROPERTY_BUCKET_KEYS.includes(body.propertyBucket as PropertyBucket)) return bad('invalid_bucket');
+    update.property_bucket = body.propertyBucket;
+  }
+  if (body.propertyId !== undefined) {
+    if (body.propertyId !== null && !(typeof body.propertyId === 'string' && PROPERTY_ID.test(body.propertyId))) return bad('invalid_property_id');
+    update.property_id = body.propertyId;
+  }
   if (Object.keys(update).length === 1) return bad('nothing_to_update');
   // The customer has now decided this record themselves.
   update.ai_categorised = false;
 
-  const locked = await lockedAmong(uid, clientId, body.ids);
+  const locked = await lockedAmong(uid, clientId, body.ids, typeof update.income_source === 'string' ? update.income_source : undefined);
   if (locked === null) return bad('db_error', 500);
   if (locked) return bad('records_locked', 409);
 

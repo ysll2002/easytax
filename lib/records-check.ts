@@ -16,7 +16,7 @@ export async function figuresMatchRecords(
   if (!start || !end || !ISO_DATE.test(start) || !ISO_DATE.test(end)) return { ok: false, reason: 'Missing period dates.' };
 
   const { data, error } = await ownerFilter(
-    supabase.from('business_records').select('id, description, amount, category, expense_bucket').eq('user_id', userId),
+    supabase.from('business_records').select('id, description, amount, category, expense_bucket, income_source').eq('user_id', userId),
     clientId,
   ).gte('txn_date', start).lte('txn_date', end);
   if (error) return { ok: false, reason: 'Could not read your records.' };
@@ -32,5 +32,5 @@ export async function figuresMatchRecords(
     }
   }
   // The records this update is built from, kept with the filing.
-  return { ok: true, recordIds: (data ?? []).map(r => r.id as string) };
+  return { ok: true, recordIds: (data ?? []).filter(r => (r.income_source ?? 'self-employment') === 'self-employment').map(r => r.id as string) };
 }

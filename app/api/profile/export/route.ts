@@ -19,7 +19,7 @@ export async function GET() {
     supabase.from('hmrc_connections').select('nino, vrn, business_id, connected_at, token_expires_at, adjustments_submitted').eq('user_id', profileId).maybeSingle(),
     supabase.from('bank_connections').select('provider, account_id, account_name, item_id, connected_at').eq('user_id', profileId),
     supabase.from('sa_filings').select('*').eq('user_id', profileId).order('created_at', { ascending: false }),
-    supabase.from('business_records').select('client_id, txn_date, description, amount, category, expense_bucket, source, created_at').eq('user_id', profileId).order('txn_date', { ascending: true }),
+    supabase.from('business_records').select('client_id, txn_date, description, amount, category, expense_bucket, income_source, property_bucket, property_id, source, created_at').eq('user_id', profileId).order('txn_date', { ascending: true }),
   ]);
 
   const bundle = {

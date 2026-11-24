@@ -175,6 +175,16 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
           </div>
         </section>
 
+        {client.itsa_status === 'authorised' && (
+          <section style={card} className="mb-6" aria-labelledby="ye-h">
+            <h2 id="ye-h" style={h2Style}>Year end and other income</h2>
+            <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.6 }}>
+              Property income, accounting adjustments, losses, employment, pensions, benefits and charges, and the final declaration for {client.display_name}.
+            </p>
+            <Link style={primaryBtn} href={`/dashboard/individual/year-end?clientId=${client.id}`}>Open year end</Link>
+          </section>
+        )}
+
         <section style={card} className="mb-6" aria-labelledby="due-h">
           <h2 id="due-h" style={h2Style}>To do{obs && anyAuthorised ? ` (${todoCount})` : ''}</h2>
           {!anyAuthorised ? (
