@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: pageTitle('Tax Tips & Insights'),
   description:
     'Daily UK tax tips, HMRC updates and Self Assessment guidance for freelancers and self-employed professionals.',
-  alternates: { canonical: 'https://easytax.vip/tax-tips' },
+  alternates: { canonical: 'https://mtdbuddy.com/tax-tips' },
 };
 
 export const revalidate = 3600;

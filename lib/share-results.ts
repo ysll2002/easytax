@@ -37,7 +37,7 @@ import {
 //     re-derived through the same calculation library the page uses. The card
 //     therefore renders numbers we computed, never a string somebody put in a
 //     query parameter — which is what stops the branded card being usable as a
-//     free "make EasyTax say anything" image generator.
+//     free "make MTD Buddy say anything" image generator.
 //  2. **The figures are never written to the address bar on their own.** These
 //     params carry someone's tax position. They appear in a URL only when the
 //     reader explicitly asks to copy or share the link; a calculation that is
@@ -94,8 +94,8 @@ export interface ShareCard {
   subtitle: string;
   figure?: { value: string; caption: string };
   /** The page `<title>` and OG title for a shared link. Deliberately without a
-   *  " | EasyTax" suffix: the root layout's title template appends one, and a
-   *  title that carries its own comes out as "… | EasyTax | EasyTax". */
+   *  " | MTD Buddy" suffix: the root layout's title template appends one, and a
+   *  title that carries its own comes out as "… | MTD Buddy | MTD Buddy". */
   metaTitle: string;
   /** Used verbatim as the meta description. */
   metaDescription: string;

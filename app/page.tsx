@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // tag should not depend on how a translator punctuated the string.
     title: pageTitle(t('title')),
     description: metaDescription(t('description')),
-    alternates: { canonical: 'https://easytax.vip' },
+    alternates: { canonical: 'https://mtdbuddy.com' },
   };
 }
 
@@ -99,11 +99,13 @@ export default async function Home() {
     '@type': 'SoftwareApplication',
     // Same @id as the node emitted in app/layout.tsx — one entity, described
     // once, so the two do not compete in search results.
-    '@id': 'https://easytax.vip/#software',
-    name: 'EasyTax',
+    '@id': 'https://mtdbuddy.com/#software',
+    name: 'MTD Buddy',
+    // Renamed from EasyTax; the alias ties the new name to the old one's history.
+    alternateName: 'EasyTax',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
-    url: 'https://easytax.vip',
+    url: 'https://mtdbuddy.com',
     description: 'MTD-compliant tax filing for UK sole traders and limited companies — MTD ITSA quarterly updates, Self Assessment and VAT returns filed directly to HMRC.',
     offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
@@ -216,7 +218,7 @@ export default async function Home() {
                 <div style={{ borderRadius: '1rem', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.12)', border: '1px solid #E8E2DA' }}>
                   <img
                     src="/dashboard-preview.png"
-                    alt="EasyTax dashboard"
+                    alt="MTD Buddy dashboard"
                     style={{ width: '100%', display: 'block' }}
                   />
                 </div>

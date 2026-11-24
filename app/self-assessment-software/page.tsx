@@ -10,18 +10,18 @@ import { OFFER_JSONLD, PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 export const metadata: Metadata = {
   title: pageTitle('Self Assessment Software UK — Free, No Subscription'),
   description: 'MTD for Income Tax software on the HMRC MTD API for UK sole traders. File your Making Tax Digital quarterly updates and VAT returns directly to HMRC — free, no subscription, no filing fee.',
-  alternates: { canonical: 'https://easytax.vip/self-assessment-software' },
+  alternates: { canonical: 'https://mtdbuddy.com/self-assessment-software' },
   openGraph: {
-    title: 'Self Assessment Software UK — EasyTax, Free',
+    title: 'Self Assessment Software UK — MTD Buddy, Free',
     description: 'Making Tax Digital software for sole traders: MTD ITSA quarterly updates and VAT returns — free, no subscription.',
-    url: 'https://easytax.vip/self-assessment-software',
+    url: 'https://mtdbuddy.com/self-assessment-software',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Self Assessment Software UK — EasyTax, Free',
+    title: 'Self Assessment Software UK — MTD Buddy, Free',
     description: 'Self Assessment software built on the HMRC MTD API. Free — no subscription, no filing fee.',
   },
 };
@@ -35,14 +35,14 @@ export default async function SelfAssessmentSoftware() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'EasyTax',
+    name: 'MTD Buddy',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
     description: 'Making Tax Digital software on the HMRC MTD API for UK sole traders and the self-employed. File MTD ITSA quarterly updates and VAT returns directly to HMRC.',
-    url: 'https://easytax.vip',
+    url: 'https://mtdbuddy.com',
     offers: OFFER_JSONLD,
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/self-assessment-software',
+    mainEntityOfPage: 'https://mtdbuddy.com/self-assessment-software',
   };
 
   const faqJsonLd = {
@@ -54,7 +54,7 @@ export default async function SelfAssessmentSoftware() {
         name: 'What is self assessment software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Self assessment software is a tool that lets UK taxpayers file their Self Assessment tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. It typically guides you through the return, calculates your tax liability, and submits the data via HMRC\'s API. Under Making Tax Digital, self-employed people also send quarterly updates through recognised software. EasyTax files those quarterly updates; it does not file the annual SA100 return yet.',
+          text: 'Self assessment software is a tool that lets UK taxpayers file their Self Assessment tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. It typically guides you through the return, calculates your tax liability, and submits the data via HMRC\'s API. Under Making Tax Digital, self-employed people also send quarterly updates through recognised software. MTD Buddy files those quarterly updates; it does not file the annual SA100 return yet.',
         },
       },
       {
@@ -62,28 +62,28 @@ export default async function SelfAssessmentSoftware() {
         name: 'Do I need self assessment software if I already use HMRC\'s website?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'It depends which tax year. Your 2025/26 return is still an ordinary Self Assessment return and can still be filed on HMRC\'s website — it is due by 31 January 2027. But from 2026/27 onwards, if your combined self-employment and property income was over £50,000, you have been inside Making Tax Digital for Income Tax since 6 April 2026. Quarterly updates have to go through MTD-compatible software, and HMRC\'s own web portal is not one — which is what recognised software like EasyTax is for.',
+          text: 'It depends which tax year. Your 2025/26 return is still an ordinary Self Assessment return and can still be filed on HMRC\'s website — it is due by 31 January 2027. But from 2026/27 onwards, if your combined self-employment and property income was over £50,000, you have been inside Making Tax Digital for Income Tax since 6 April 2026. Quarterly updates have to go through MTD-compatible software, and HMRC\'s own web portal is not one — which is what recognised software like MTD Buddy is for.',
         },
       },
       {
         '@type': 'Question',
-        name: 'How much does EasyTax self assessment software cost?',
+        name: 'How much does MTD Buddy self assessment software cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Nothing. EasyTax is free to use — no monthly subscription and no per-filing fee. A sole trader filing 4 MTD ITSA quarterly updates a year pays £0. Connecting HMRC and importing your records is free too.',
+          text: 'Nothing. MTD Buddy is free to use — no monthly subscription and no per-filing fee. A sole trader filing 4 MTD ITSA quarterly updates a year pays £0. Connecting HMRC and importing your records is free too.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Which Self Assessment pages does EasyTax file?',
+        name: 'Which Self Assessment pages does MTD Buddy file?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'None yet. EasyTax files MTD ITSA quarterly updates for self-employment and MTD VAT returns. EasyTax does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software.',
+          text: 'None yet. MTD Buddy files MTD ITSA quarterly updates for self-employment and MTD VAT returns. MTD Buddy does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Is EasyTax recognised by HMRC for self assessment?',
+        name: 'Is MTD Buddy recognised by HMRC for self assessment?',
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
@@ -94,15 +94,15 @@ export default async function SelfAssessmentSoftware() {
         name: 'What is MTD ITSA and how does it affect my self assessment?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'MTD ITSA (Making Tax Digital for Income Tax Self Assessment) replaces the annual SA return with four quarterly income/expense updates plus a final year-end declaration, all via recognised software. From 6 April 2026, this is mandatory if your combined self-employment and property income exceeds £50,000. The threshold drops to £30,000 from April 2027. EasyTax files the quarterly updates; the year-end final declaration is not available in EasyTax yet.',
+          text: 'MTD ITSA (Making Tax Digital for Income Tax Self Assessment) replaces the annual SA return with four quarterly income/expense updates plus a final year-end declaration, all via recognised software. From 6 April 2026, this is mandatory if your combined self-employment and property income exceeds £50,000. The threshold drops to £30,000 from April 2027. MTD Buddy files the quarterly updates; the year-end final declaration is not available in MTD Buddy yet.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Can I use EasyTax alongside my existing bookkeeping software?',
+        name: 'Can I use MTD Buddy alongside my existing bookkeeping software?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Yes. EasyTax focuses on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere (Xero, FreeAgent, spreadsheets) and use EasyTax purely for the HMRC filing step — quarterly MTD updates or VAT returns. Alternatively, you can import your bank statements as CSV and let EasyTax handle everything.',
+          text: 'Yes. MTD Buddy focuses on HMRC submissions. Many users keep their invoicing and bookkeeping elsewhere (Xero, FreeAgent, spreadsheets) and use MTD Buddy purely for the HMRC filing step — quarterly MTD updates or VAT returns. Alternatively, you can import your bank statements as CSV and let MTD Buddy handle everything.',
         },
       },
       {
@@ -149,7 +149,7 @@ export default async function SelfAssessmentSoftware() {
               Self assessment software for UK sole traders — <em style={{ color: '#4B6A4E', fontStyle: 'italic' }}>free, no subscription</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>Self Assessment software built on the HMRC MTD API</strong> built for UK sole traders and the self-employed. File your quarterly MTD ITSA updates and VAT returns directly to HMRC — <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to start.
+              MTD Buddy is <strong style={{ color: '#1C1208' }}>Self Assessment software built on the HMRC MTD API</strong> built for UK sole traders and the self-employed. File your quarterly MTD ITSA updates and VAT returns directly to HMRC — <strong style={{ color: '#4B6A4E' }}>free</strong>. No monthly subscription, no per-filing fee, no card to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -161,7 +161,7 @@ export default async function SelfAssessmentSoftware() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started free →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Self%20assessment%20software%20question" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Self%20assessment%20software%20question" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
               </a>
             </div>
@@ -175,13 +175,13 @@ export default async function SelfAssessmentSoftware() {
               What does self assessment software do?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Self assessment software connects to HMRC on your behalf and submits your tax return digitally — more reliably and with better guidance than HMRC&rsquo;s own web portal. EasyTax goes further: import a CSV statement from your bank or add records by hand, and it AI-categorises them against HMRC allowable expenses and builds your quarterly update in real time. You review, approve, and submit in minutes.
+              Self assessment software connects to HMRC on your behalf and submits your tax return digitally — more reliably and with better guidance than HMRC&rsquo;s own web portal. MTD Buddy goes further: import a CSV statement from your bank or add records by hand, and it AI-categorises them against HMRC allowable expenses and builds your quarterly update in real time. You review, approve, and submit in minutes.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
-                { label: 'Annual SA filing', title: 'SA100 + supplementary pages', body: 'The annual return for the 2025/26 tax year and earlier. EasyTax does not file it yet — use HMRC’s online service or other HMRC-recognised software.' },
-                { label: 'Since April 2026', title: 'MTD ITSA quarterly updates', body: 'For those earning over £50,000, quarterly income and expense submissions are now mandatory. EasyTax files the quarterly updates; the annual final declaration is not available in EasyTax yet.' },
-                { label: 'Already mandatory', title: 'MTD VAT', body: 'If you are VAT-registered above £90,000 turnover, MTD VAT is already required. EasyTax files VAT returns directly to HMRC alongside your quarterly updates.' },
+                { label: 'Annual SA filing', title: 'SA100 + supplementary pages', body: 'The annual return for the 2025/26 tax year and earlier. MTD Buddy does not file it yet — use HMRC’s online service or other HMRC-recognised software.' },
+                { label: 'Since April 2026', title: 'MTD ITSA quarterly updates', body: 'For those earning over £50,000, quarterly income and expense submissions are now mandatory. MTD Buddy files the quarterly updates; the annual final declaration is not available in MTD Buddy yet.' },
+                { label: 'Already mandatory', title: 'MTD VAT', body: 'If you are VAT-registered above £90,000 turnover, MTD VAT is already required. MTD Buddy files VAT returns directly to HMRC alongside your quarterly updates.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>{item.label}</p>
@@ -193,20 +193,20 @@ export default async function SelfAssessmentSoftware() {
           </div>
         </section>
 
-        {/* ── What EasyTax files ── */}
+        {/* ── What MTD Buddy files ── */}
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.75rem' }}>
-              What EasyTax files to HMRC
+              What MTD Buddy files to HMRC
             </h2>
             <p className="text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Your MTD ITSA quarterly updates and VAT returns, and the records behind them. EasyTax does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software. CT600 Corporation Tax is not supported.
+              Your MTD ITSA quarterly updates and VAT returns, and the records behind them. MTD Buddy does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software. CT600 Corporation Tax is not supported.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               {[
                 {
                   title: 'MTD ITSA quarterly updates',
-                  body: 'Four quarterly income and expense submissions per year as required by Making Tax Digital for Income Tax. Import a CSV statement from your bank and EasyTax AI-categorises it, so each quarter takes minutes not hours.',
+                  body: 'Four quarterly income and expense submissions per year as required by Making Tax Digital for Income Tax. Import a CSV statement from your bank and MTD Buddy AI-categorises it, so each quarter takes minutes not hours.',
                 },
                 {
                   title: 'MTD VAT return',
@@ -233,17 +233,17 @@ export default async function SelfAssessmentSoftware() {
         <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.75rem' }}>
-              EasyTax vs other UK self assessment software
+              MTD Buddy vs other UK self assessment software
             </h2>
             <p className="text-base leading-relaxed mb-8" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Most self assessment software charges a flat annual fee — even in years where you barely use it. EasyTax charges nothing at all, and has both MTD ITSA quarterly updates and AI categorisation built in.
+              Most self assessment software charges a flat annual fee — even in years where you barely use it. MTD Buddy charges nothing at all, and has both MTD ITSA quarterly updates and AI categorisation built in.
             </p>
             <div className="overflow-x-auto rounded-2xl" style={{ border: '1px solid #DDD5C8' }}>
               <table className="w-full text-sm" style={{ backgroundColor: '#FFFFFF', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ backgroundColor: '#1C1208' }}>
                     <th className="text-left px-4 py-3 font-semibold" style={{ color: '#FDFCF8', minWidth: '200px' }}>Feature</th>
-                    <th className="px-4 py-3 font-semibold text-center" style={{ color: '#E8895A' }}>EasyTax</th>
+                    <th className="px-4 py-3 font-semibold text-center" style={{ color: '#E8895A' }}>MTD Buddy</th>
                     <th className="px-4 py-3 font-semibold text-center" style={{ color: '#C9BFB2' }}>TaxCalc</th>
                     <th className="px-4 py-3 font-semibold text-center" style={{ color: '#C9BFB2' }}>Taxfiler</th>
                     <th className="px-4 py-3 font-semibold text-center" style={{ color: '#C9BFB2' }}>HMRC portal</th>
@@ -281,28 +281,28 @@ export default async function SelfAssessmentSoftware() {
           </div>
         </section>
 
-        {/* ── Why EasyTax ── */}
+        {/* ── Why MTD Buddy ── */}
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '0.75rem' }}>
-              Why choose EasyTax for self assessment?
+              Why choose MTD Buddy for self assessment?
             </h2>
             <p className="text-base leading-relaxed mb-10" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              There is no shortage of self assessment software. Here is what EasyTax does differently.
+              There is no shortage of self assessment software. Here is what MTD Buddy does differently.
             </p>
             <div className="grid sm:grid-cols-2 gap-6">
               {[
                 {
                   title: 'Free — no subscription, no filing fee',
-                  body: 'Most self assessment software charges £50–£199 per year, whether you file once or use it every month. EasyTax charges nothing, whichever you do. That\'s it.',
+                  body: 'Most self assessment software charges £50–£199 per year, whether you file once or use it every month. MTD Buddy charges nothing, whichever you do. That\'s it.',
                 },
                 {
                   title: 'MTD ITSA ready from day one',
-                  body: 'Many legacy self assessment tools are retrofitting MTD support. EasyTax was built from scratch for the MTD ITSA quarterly cycle. When HMRC makes quarterly updates mandatory for you, EasyTax is already ready — same account, same workflow.',
+                  body: 'Many legacy self assessment tools are retrofitting MTD support. MTD Buddy was built from scratch for the MTD ITSA quarterly cycle. When HMRC makes quarterly updates mandatory for you, MTD Buddy is already ready — same account, same workflow.',
                 },
                 {
                   title: 'AI bank categorisation — no bookkeeping needed',
-                  body: 'Import a CSV statement from your bank or add records by hand. EasyTax AI-categorises them against HMRC allowable expenses. Describe an unusual transaction in plain English and the AI resolves it. No spreadsheets, no manual coding.',
+                  body: 'Import a CSV statement from your bank or add records by hand. MTD Buddy AI-categorises them against HMRC allowable expenses. Describe an unusual transaction in plain English and the AI resolves it. No spreadsheets, no manual coding.',
                 },
                 {
                   title: 'Built around HMRC’s expense categories',
@@ -310,11 +310,11 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'Direct HMRC API — no middlemen',
-                  body: 'EasyTax submits via the official HMRC MTD ITSA and MTD VAT APIs. No intermediary agent, no manual re-keying. You receive a real HMRC acknowledgment and submission ID as proof of receipt.',
+                  body: 'MTD Buddy submits via the official HMRC MTD ITSA and MTD VAT APIs. No intermediary agent, no manual re-keying. You receive a real HMRC acknowledgment and submission ID as proof of receipt.',
                 },
                 {
                   title: 'Designed for self-filers, not accountants',
-                  body: 'EasyTax is built for people who want to file their own taxes confidently. The guided workflow takes you from your first record to HMRC submission — no accounting knowledge required.',
+                  body: 'MTD Buddy is built for people who want to file their own taxes confidently. The guided workflow takes you from your first record to HMRC submission — no accounting knowledge required.',
                 },
               ].map(item => (
                 <div key={item.title} className="flex gap-4">
@@ -342,8 +342,8 @@ export default async function SelfAssessmentSoftware() {
               {[
                 { label: '6 April 2026', title: 'MTD ITSA — £50k+ income', body: 'Sole traders and landlords with combined self-employment and property income above £50,000 must switch to quarterly MTD filing. HMRC\'s own portal will not be an option.' },
                 { label: '6 April 2027', title: 'MTD ITSA — £30k+ income', body: 'The threshold drops to £30,000. Around 1.4 million more taxpayers join the quarterly cycle.' },
-                { label: 'Five submissions per year', title: 'The new filing calendar', body: 'Q1 by 7 Aug · Q2 by 7 Nov · Q3 by 7 Feb · Q4 by 7 May · Final declaration by 31 Jan. EasyTax files the four quarterly updates and shows their deadlines on your dashboard; the final declaration is not available in EasyTax yet.' },
-                { label: 'Below the threshold?', title: 'The annual SA still applies', body: 'If your income is below the MTD threshold, you keep filing annually via software. The 31 January deadline stays the same. EasyTax covers both routes from one account.' },
+                { label: 'Five submissions per year', title: 'The new filing calendar', body: 'Q1 by 7 Aug · Q2 by 7 Nov · Q3 by 7 Feb · Q4 by 7 May · Final declaration by 31 Jan. MTD Buddy files the four quarterly updates and shows their deadlines on your dashboard; the final declaration is not available in MTD Buddy yet.' },
+                { label: 'Below the threshold?', title: 'The annual SA still applies', body: 'If your income is below the MTD threshold, you keep filing annually via software. The 31 January deadline stays the same. MTD Buddy covers both routes from one account.' },
               ].map(item => (
                 <div key={item.label} className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#A04E1C' }}>{item.label}</p>
@@ -359,7 +359,7 @@ export default async function SelfAssessmentSoftware() {
         <section className="py-16 sm:py-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              How to file your MTD quarterly updates with EasyTax
+              How to file your MTD quarterly updates with MTD Buddy
             </h2>
             <ol className="space-y-5">
               {[
@@ -369,7 +369,7 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'Add your income and expenses',
-                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and MTD Buddy AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Review your income and expenses',
@@ -377,11 +377,11 @@ export default async function SelfAssessmentSoftware() {
                 },
                 {
                   title: 'Connect to HMRC',
-                  body: 'Authorise EasyTax with your HMRC Government Gateway account via the official OAuth flow. EasyTax never stores your password.',
+                  body: 'Authorise MTD Buddy with your HMRC Government Gateway account via the official OAuth flow. MTD Buddy never stores your password.',
                 },
                 {
                   title: 'Review and submit',
-                  body: 'EasyTax shows you a summary of your income and expenses for the quarter. Click Submit — EasyTax sends your quarterly update directly to HMRC via the official API. You receive an HMRC acknowledgment receipt.',
+                  body: 'MTD Buddy shows you a summary of your income and expenses for the quarter. Click Submit — MTD Buddy sends your quarterly update directly to HMRC via the official API. You receive an HMRC acknowledgment receipt.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -408,31 +408,31 @@ export default async function SelfAssessmentSoftware() {
               {[
                 {
                   q: 'What is self assessment software?',
-                  a: 'Self assessment software is a tool that lets UK taxpayers file their SA tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. Under Making Tax Digital, self-employed people also send quarterly updates through recognised software. EasyTax files those quarterly updates; it does not file the annual SA100 return yet.',
+                  a: 'Self assessment software is a tool that lets UK taxpayers file their SA tax return (SA100) directly to HMRC without using HMRC\'s own website or a paper form. Under Making Tax Digital, self-employed people also send quarterly updates through recognised software. MTD Buddy files those quarterly updates; it does not file the annual SA100 return yet.',
                 },
                 {
                   q: 'Do I need self assessment software if I already use HMRC\'s website?',
                   a: 'It depends which tax year. Your 2025/26 return is still an ordinary Self Assessment return and can still be filed on HMRC\'s website, by 31 January 2027. But from 2026/27 onwards, if your combined self-employment and property income was over £50,000, you have been inside Making Tax Digital for Income Tax since 6 April 2026 — quarterly updates must go through MTD-compatible software, and HMRC\'s web portal is not one.',
                 },
                 {
-                  q: 'How much does EasyTax self assessment software cost?',
+                  q: 'How much does MTD Buddy self assessment software cost?',
                   a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing 4 MTD ITSA quarterly updates a year pays £0. Connecting your bank and HMRC is free too.',
                 },
                 {
-                  q: 'Which Self Assessment pages does EasyTax file?',
-                  a: 'None yet. EasyTax files MTD ITSA quarterly updates for self-employment and MTD VAT returns. EasyTax does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software. Corporation Tax (CT600) is not supported either.',
+                  q: 'Which Self Assessment pages does MTD Buddy file?',
+                  a: 'None yet. MTD Buddy files MTD ITSA quarterly updates for self-employment and MTD VAT returns. MTD Buddy does not file the annual SA100 return, the SA105 property pages or the year-end final declaration yet; for those, use HMRC’s online service or other HMRC-recognised software. Corporation Tax (CT600) is not supported either.',
                 },
                 {
-                  q: 'Is EasyTax recognised by HMRC for self assessment?',
+                  q: 'Is MTD Buddy recognised by HMRC for self assessment?',
                   a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s.',
                 },
                 {
                   q: 'What is MTD ITSA and how does it affect my self assessment?',
-                  a: 'MTD ITSA replaces the annual SA return with four quarterly updates plus a year-end final declaration, all via recognised software. From 6 April 2026, mandatory for combined self-employment and property income over £50,000. EasyTax files the quarterly updates; the annual final declaration is not available in EasyTax yet.',
+                  a: 'MTD ITSA replaces the annual SA return with four quarterly updates plus a year-end final declaration, all via recognised software. From 6 April 2026, mandatory for combined self-employment and property income over £50,000. MTD Buddy files the quarterly updates; the annual final declaration is not available in MTD Buddy yet.',
                 },
                 {
-                  q: 'Can I use EasyTax alongside my existing bookkeeping software?',
-                  a: 'Yes. EasyTax focuses on HMRC submissions. You can keep your invoicing or bookkeeping elsewhere and use EasyTax purely for the filing step — quarterly MTD updates or VAT returns.',
+                  q: 'Can I use MTD Buddy alongside my existing bookkeeping software?',
+                  a: 'Yes. MTD Buddy focuses on HMRC submissions. You can keep your invoicing or bookkeeping elsewhere and use MTD Buddy purely for the filing step — quarterly MTD updates or VAT returns.',
                 },
                 {
                   q: 'When is the self assessment deadline?',

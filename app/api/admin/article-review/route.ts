@@ -118,7 +118,7 @@ export async function GET(req: NextRequest) {
     upgrades_note: upgradesUnavailable
       ? 'Run supabase/migrations/20260909_article_upgrades.sql to enable staged rewrites.'
       : undefined,
-    review_url: `https://easytax.vip/api/admin/article-review?key=…&slug=<slug>`,
+    review_url: `https://mtdbuddy.com/api/admin/article-review?key=…&slug=<slug>`,
   });
 }
 
@@ -236,7 +236,7 @@ export async function POST(req: NextRequest) {
   const reviewer =
     typeof b.reviewer === 'string' && b.reviewer.trim()
       ? b.reviewer.trim().slice(0, 120)
-      : 'the EasyTax editorial team';
+      : 'the MTD Buddy editorial team';
 
   if (!slug || !action) {
     return NextResponse.json(

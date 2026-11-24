@@ -26,15 +26,15 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://easytax.vip'),
+  metadataBase: new URL('https://mtdbuddy.com'),
   title: {
     // 55 characters. The old default was 67 and led with a brand nobody has
     // searched for; the category is what a stranger types.
-    default: 'MTD ITSA Software for Sole Traders | EasyTax',
+    default: 'MTD ITSA Software for Sole Traders | MTD Buddy',
     // Kept for any route that has not been moved to `pageTitle()`. Routes that
     // have use `{ absolute }` and opt out of it — which is what stops the
-    // `| EasyTax | EasyTax` doubling recurring.
-    template: '%s | EasyTax',
+    // `| MTD Buddy | MTD Buddy` doubling recurring.
+    template: '%s | MTD Buddy',
   },
   // 146 characters. The previous text ran to 253 and was inherited by every
   // page without its own, so the site's most-used description was cut off in
@@ -66,16 +66,16 @@ export const metadata: Metadata = {
     'profit and loss software UK',
     'balance sheet software UK',
   ],
-  authors: [{ name: 'EasyTax', url: 'https://easytax.vip' }],
-  creator: 'EasyTax',
+  authors: [{ name: 'MTD Buddy', url: 'https://mtdbuddy.com' }],
+  creator: 'MTD Buddy',
   publisher: 'Finance Panda Limited',
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   openGraph: {
     type: 'website',
     locale: 'en_GB',
-    url: 'https://easytax.vip',
-    siteName: 'EasyTax',
-    title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
+    url: 'https://mtdbuddy.com',
+    siteName: 'MTD Buddy',
+    title: 'MTD Buddy — MTD ITSA Software for UK Sole Traders & Limited Companies',
     description: 'MTD ITSA is live. Send quarterly updates to HMRC, file VAT returns — free, no subscription.',
     // No `images` here on purpose. This used to name `/og-image.png`, a file
     // that has never existed in `public/` — so every page on the site
@@ -86,11 +86,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EasyTax — MTD ITSA Software for UK Sole Traders & Limited Companies',
+    title: 'MTD Buddy — MTD ITSA Software for UK Sole Traders & Limited Companies',
     description: 'MTD ITSA is live. Quarterly HMRC updates and VAT returns — free, no subscription.',
     // Likewise: inherited from the generated Open Graph card.
   },
-  alternates: { canonical: 'https://easytax.vip' },
+  alternates: { canonical: 'https://mtdbuddy.com' },
   verification: {
     google: 'GZdrRpA0y85OwCBOYVWYrdxur7Jur44AfjMbeH8MliE',
     // Bing is one of only two search referrers the site sees at all, and it is
@@ -114,7 +114,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <head>
         {/* Feed autodiscovery — the `<link rel="alternate">` a reader, a
             browser extension or an aggregator looks for when someone pastes
-            easytax.vip into it. Without it the feeds exist but can only be
+            mtdbuddy.com into it. Without it the feeds exist but can only be
             found by guessing the URL.
 
             Declared here rather than through `metadata.alternates.types`,
@@ -125,14 +125,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <link
           rel="alternate"
           type="application/rss+xml"
-          title="EasyTax Tax Tips"
-          href="https://easytax.vip/tax-tips/feed.xml"
+          title="MTD Buddy Tax Tips"
+          href="https://mtdbuddy.com/tax-tips/feed.xml"
         />
         <link
           rel="alternate"
           type="application/feed+json"
-          title="EasyTax Tax Tips"
-          href="https://easytax.vip/tax-tips/feed.json"
+          title="MTD Buddy Tax Tips"
+          href="https://mtdbuddy.com/tax-tips/feed.json"
         />
         <script
           type="application/ld+json"
@@ -143,11 +143,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               // Shared @id with the node on the homepage so Google treats the
               // two as one entity rather than two competing descriptions of
               // the same app.
-              '@id': 'https://easytax.vip/#software',
-              name: 'EasyTax',
+              '@id': 'https://mtdbuddy.com/#software',
+              name: 'MTD Buddy',
+              // Renamed from EasyTax; the alias ties the new name to the old one's history.
+              alternateName: 'EasyTax',
               applicationCategory: 'FinanceApplication',
               operatingSystem: 'Web',
-              url: 'https://easytax.vip',
+              url: 'https://mtdbuddy.com',
               description: 'UK Making Tax Digital software for sole traders and freelancers. File MTD ITSA quarterly updates and VAT returns directly with HMRC, free.',
               // Shares one Offer object with the homepage node, which carries
               // the same @id. Two Offers for one entity that disagree are a
@@ -162,7 +164,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
                 'CSV bank statement import',
                 'AI expense categorisation',
               ],
-              publisher: { '@type': 'Organization', name: 'Finance Panda Limited', url: 'https://easytax.vip' },
+              publisher: { '@type': 'Organization', name: 'Finance Panda Limited', url: 'https://mtdbuddy.com' },
               audience: {
                 '@type': 'Audience',
                 audienceType: 'UK freelancers, sole traders, contractors, and limited companies',
@@ -180,7 +182,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <ContactWidget />
           {/* Unlike GA/Vercel Analytics below, this runs in preview too: it is
               the only way to verify tracking works before it reaches
-              easytax.vip. Rows carry the deploy environment (see /api/track)
+              mtdbuddy.com. Rows carry the deploy environment (see /api/track)
               so preview traffic is excluded from the funnel. */}
           <PageViewTracker />
           {/* page_view says somebody loaded this. This says whether anybody

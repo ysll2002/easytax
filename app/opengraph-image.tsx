@@ -1,7 +1,7 @@
 import { renderOgCard, OG_SIZE, OG_CONTENT_TYPE } from '@/lib/og';
 import { getMtdStatus } from '@/lib/mtd-status';
 
-export const alt = 'EasyTax — MTD ITSA software for UK sole traders';
+export const alt = 'MTD Buddy — MTD ITSA software for UK sole traders';
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

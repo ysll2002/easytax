@@ -19,7 +19,7 @@ export function taxYearFor(date: Date): string {
 
 const label = (startYear: number) => `${startYear}-${String(startYear + 1).slice(2)}`;
 
-// Self Assessment payment dates as reminders. EasyTax cannot see what the
+// Self Assessment payment dates as reminders. MTD Buddy cannot see what the
 // customer owes or has paid (that needs HMRC's Self Assessment Accounts API),
 // so these are never marked overdue or done: only dates still ahead, within
 // the next 12 months, are shown, labelled with the tax year each payment is for.

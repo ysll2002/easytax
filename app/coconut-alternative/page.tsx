@@ -11,15 +11,15 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: pageTitle('Coconut Alternative — MTD ITSA Software for Sole Traders'),
-  description: 'Looking for a Coconut alternative? EasyTax offers MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee, no card to sign up. Built for UK sole traders and the self-employed.',
-  alternates: { canonical: 'https://easytax.vip/coconut-alternative' },
+  description: 'Looking for a Coconut alternative? MTD Buddy offers MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee, no card to sign up. Built for UK sole traders and the self-employed.',
+  alternates: { canonical: 'https://mtdbuddy.com/coconut-alternative' },
   openGraph: {
     title: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
     description: 'MTD ITSA software for sole traders and the self-employed. Free, no subscription.',
-    url: 'https://easytax.vip/coconut-alternative',
+    url: 'https://mtdbuddy.com/coconut-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
@@ -37,13 +37,13 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                easytax: TYPICAL_ANNUAL_COST,          coconut: '£99.99 – £159.99' },
   { feature: 'No trial limit, no card needed',     easytax: true,           coconut: false,             note: 'Coconut is 14-day trial then paid' },
   { feature: 'MTD ITSA quarterly updates',         easytax: true,           coconut: true },
-  { feature: 'Self Assessment (SA100)',            easytax: false,           coconut: true, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'Self Assessment (SA100)',            easytax: false,           coconut: true, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'VAT returns (MTD VAT)',              easytax: true,           coconut: false,             note: 'Coconut focuses on Income Tax, not VAT' },
-  { feature: 'CT600 Corporation Tax',              easytax: false,           coconut: false, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax',              easytax: false,           coconut: false, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company accounts (P&L, Balance Sheet)', easytax: false, coconut: false, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',          easytax: true,           coconut: false,             note: 'EasyTax uses Claude to categorise and reconcile' },
+  { feature: 'AI expense categorisation',          easytax: true,           coconut: false,             note: 'MTD Buddy uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',             easytax: true,           coconut: false },
-  { feature: 'CIS subcontractor support',          easytax: false,          coconut: true,              note: 'On EasyTax roadmap' },
+  { feature: 'CIS subcontractor support',          easytax: false,          coconut: true,              note: 'On MTD Buddy roadmap' },
   { feature: 'Mobile app',                         easytax: 'Web (mobile-optimised)', coconut: 'Native iOS/Android' },
 ];
 
@@ -61,10 +61,10 @@ export default async function CoconutAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Coconut Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Coconut for UK sole traders and the self-employed looking for MTD ITSA software without a subscription.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Side-by-side comparison of MTD Buddy and Coconut for UK sole traders and the self-employed looking for MTD ITSA software without a subscription.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/coconut-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/coconut-alternative',
   };
 
   return (
@@ -85,7 +85,7 @@ export default async function CoconutAlternative() {
               Looking for a <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Coconut alternative</em>?
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '640px' }}>
-              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year, billed whether you file or not. EasyTax is <strong style={{ color: '#4B6A4E' }}>free</strong>, with no subscription and no per-filing fee.
+              Coconut starts at <strong style={{ color: '#1C1208' }}>£99.99/year</strong> and tops out at £159.99/year, billed whether you file or not. MTD Buddy is <strong style={{ color: '#4B6A4E' }}>free</strong>, with no subscription and no per-filing fee.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -105,7 +105,7 @@ export default async function CoconutAlternative() {
                   Feature
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -139,26 +139,26 @@ export default async function CoconutAlternative() {
         <section className="py-16 sm:py-20" style={{ backgroundColor: '#F0EBE1' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '2rem' }}>
-              Why people switch from <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Coconut</em> to EasyTax
+              Why people switch from <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Coconut</em> to MTD Buddy
             </h2>
 
             <div className="grid sm:grid-cols-2 gap-5">
               {[
                 {
                   title: 'It’s actually free — not a 14-day trial',
-                  body: 'Coconut’s free tier is a 14-day trial. After that you’re on £99.99 – £159.99/year whether you file or not. EasyTax has no subscription and no per-filing fee — nothing to sign up, nothing when you submit to HMRC, and no countdown.',
+                  body: 'Coconut’s free tier is a 14-day trial. After that you’re on £99.99 – £159.99/year whether you file or not. MTD Buddy has no subscription and no per-filing fee — nothing to sign up, nothing when you submit to HMRC, and no countdown.',
                 },
                 {
                   title: 'Quarterly updates and VAT returns in one place',
-                  body: 'If you are VAT-registered, EasyTax files your MTD VAT returns in the same place as your MTD ITSA quarterly updates, at no cost.',
+                  body: 'If you are VAT-registered, MTD Buddy files your MTD VAT returns in the same place as your MTD ITSA quarterly updates, at no cost.',
                 },
                 {
                   title: 'VAT returns are first-class, not missing',
-                  body: 'Coconut focuses on Income Tax. If you’re VAT-registered, EasyTax files MTD VAT returns directly to HMRC.',
+                  body: 'Coconut focuses on Income Tax. If you’re VAT-registered, MTD Buddy files MTD VAT returns directly to HMRC.',
                 },
                 {
                   title: 'AI does the reconciliation, not you',
-                  body: 'EasyTax uses Claude to categorise every transaction and answer questions about your books in plain English. Coconut’s categorisation is rule-based.',
+                  body: 'MTD Buddy uses Claude to categorise every transaction and answer questions about your books in plain English. Coconut’s categorisation is rule-based.',
                 },
               ].map((item) => (
                 <div key={item.title} className="p-6 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E2DA' }}>
@@ -181,8 +181,8 @@ export default async function CoconutAlternative() {
             </p>
             <ul className="space-y-3 mb-6">
               {[
-                'You’re a CIS subcontractor and need CIS-specific tooling today (EasyTax is adding this).',
-                'You want a polished native iOS/Android app (EasyTax is a mobile-optimised web app).',
+                'You’re a CIS subcontractor and need CIS-specific tooling today (MTD Buddy is adding this).',
+                'You want a polished native iOS/Android app (MTD Buddy is a mobile-optimised web app).',
                 'You bank with Zempler — Coconut bundles 2 years free with a Zempler business account.',
                 'Your accountant already uses Coconut’s accountant portal.',
               ].map((item) => (
@@ -193,7 +193,7 @@ export default async function CoconutAlternative() {
               ))}
             </ul>
             <p className="text-sm" style={{ color: '#6B6256' }}>
-              For everyone else — especially sole traders who don’t want to pay £100+/year — EasyTax is the simpler, cheaper choice.
+              For everyone else — especially sole traders who don’t want to pay £100+/year — MTD Buddy is the simpler, cheaper choice.
             </p>
           </div>
         </section>
@@ -206,11 +206,11 @@ export default async function CoconutAlternative() {
             </h2>
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
-                { q: 'How much does EasyTax cost?',                       a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.' },
-                { q: 'Is EasyTax MTD ITSA-ready?',                        a: 'Yes. EasyTax is recognised by HMRC and sends MTD ITSA quarterly updates directly to HMRC through the official API. The year-end final declaration is not available in EasyTax yet.' },
+                { q: 'How much does MTD Buddy cost?',                       a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.' },
+                { q: 'Is MTD Buddy ready for MTD ITSA?',                        a: 'Yes. MTD Buddy is recognised by HMRC and sends MTD ITSA quarterly updates directly to HMRC through the official API. The year-end final declaration is not available in MTD Buddy yet.' },
                 { q: 'Can I migrate from Coconut?',                       a: 'Yes. Sign up free, then import CSV statements downloaded from your bank (or export your transactions from Coconut as CSV) on the Records page.' },
-                { q: 'Does EasyTax support Self Assessment (SA100)?',     a: 'Not yet. EasyTax files MTD ITSA quarterly updates for self-employment and MTD VAT returns. It does not file the annual SA100 return or its supplementary pages yet.' },
-                { q: 'Does EasyTax support limited companies?',           a: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies. It does not file CT600 Corporation Tax or prepare company accounts.' },
+                { q: 'Does MTD Buddy support Self Assessment (SA100)?',     a: 'Not yet. MTD Buddy files MTD ITSA quarterly updates for self-employment and MTD VAT returns. It does not file the annual SA100 return or its supplementary pages yet.' },
+                { q: 'Does MTD Buddy support limited companies?',           a: 'Only for VAT. MTD Buddy files MTD VAT returns for VAT-registered businesses, including limited companies. It does not file CT600 Corporation Tax or prepare company accounts.' },
                 { q: 'Will it stay free?',                                 a: 'That is the intention, and there is no paid tier today. If charges are ever introduced, account holders will be told by email at least 30 days beforehand, and nothing you have already filed would be charged for.' },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>

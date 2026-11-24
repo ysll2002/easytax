@@ -1,4 +1,4 @@
-# SEO Checklist — EasyTax
+# SEO Checklist — MTD Buddy
 
 Practical dated checklist for measuring the effect of the 5 new SEO pages
 (`/sage-alternative`, `/kashflow-alternative`, `/crunch-alternative`,
@@ -12,15 +12,15 @@ SEO is a slow feedback loop. Don't judge results earlier than 2 weeks.
 ## Immediate — today (2026-08-31)
 
 - [ ] **GSC → URL Inspection → Request Indexing** for each new page (~15 min)
-  - https://easytax.vip/sage-alternative
-  - https://easytax.vip/kashflow-alternative
-  - https://easytax.vip/crunch-alternative
-  - https://easytax.vip/taxscouts-alternative
-  - https://easytax.vip/mtd-software
-- [ ] **GSC → Sitemaps** → resubmit `https://easytax.vip/sitemap.xml`
+  - https://mtdbuddy.com/sage-alternative
+  - https://mtdbuddy.com/kashflow-alternative
+  - https://mtdbuddy.com/crunch-alternative
+  - https://mtdbuddy.com/taxscouts-alternative
+  - https://mtdbuddy.com/mtd-software
+- [ ] **GSC → Sitemaps** → resubmit `https://mtdbuddy.com/sitemap.xml`
 - [ ] **Bing Webmaster Tools** → same URL submission + sitemap resubmit
-- [ ] **Rich Results Test** — https://search.google.com/test/rich-results → input `https://easytax.vip` → confirm both **FAQPage** and **SoftwareApplication** are valid
-- [ ] **Sanity check robots.txt** — https://easytax.vip/robots.txt — none of the new paths should be blocked
+- [ ] **Rich Results Test** — https://search.google.com/test/rich-results → input `https://mtdbuddy.com` → confirm both **FAQPage** and **SoftwareApplication** are valid
+- [ ] **Sanity check robots.txt** — https://mtdbuddy.com/robots.txt — none of the new paths should be blocked
 
 ## Week 1 — by 2026-09-07
 
@@ -61,12 +61,12 @@ For each of the 5 new pages, categorise:
 
 ## Month 6 — by 2027-02-28 — Backlinks
 
-- [ ] **Ahrefs / Semrush free tier** → look up `easytax.vip` → count referring domains
+- [ ] **Ahrefs / Semrush free tier** → look up `mtdbuddy.com` → count referring domains
 - [ ] **If referring domains < 10 after 6 months:** links are your bottleneck, not on-page SEO. Ways to fix:
   - Guest post on 2-3 UK finance/accounting blogs
   - Answer honestly (not spammily) in r/UKPersonalFinance, r/UKFreelancers
   - Product Hunt launch when you're happy with polish
-  - Indie Hackers post ("How I built EasyTax…")
+  - Indie Hackers post ("How I built MTD Buddy…")
   - Show HN on Hacker News
 - [ ] Positive signal: 3-5 referring domains from real UK sites → SEO compounding is starting
 

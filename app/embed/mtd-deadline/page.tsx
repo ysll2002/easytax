@@ -36,6 +36,8 @@ function embeddingHost(referer: string | null): string | null {
     const { hostname } = new URL(referer);
     // Our own pages framing the widget — the preview on /tools/embed — are not
     // backlinks and must not be counted as ones.
+    if (hostname === 'mtdbuddy.com' || hostname.endsWith('.mtdbuddy.com')) return null;
+    // The pre-rebrand domain (EasyTax) — still ours, including staging.
     if (hostname === 'easytax.vip' || hostname.endsWith('.easytax.vip')) return null;
     if (hostname === 'localhost' || hostname === '127.0.0.1') return null;
     return hostname.slice(0, 120);
@@ -114,14 +116,14 @@ export default async function MtdDeadlineEmbed() {
           not navigate the host's iframe to our site. */}
       <p style={{ margin: '16px 0 0', fontSize: 13, color: '#6B6256' }}>
         <a
-          href="https://easytax.vip/mtd-deadline-checker?utm_source=embed&utm_medium=widget&utm_campaign=mtd_deadline"
+          href="https://mtdbuddy.com/mtd-deadline-checker?utm_source=embed&utm_medium=widget&utm_campaign=mtd_deadline"
           target="_blank"
           rel="noopener"
           style={{ color: '#A04E1C', fontWeight: 600, textDecoration: 'none' }}
         >
           Check your own MTD deadlines
         </a>{' '}
-        · free, from EasyTax
+        · free, from MTD Buddy
       </p>
     </div>
   );

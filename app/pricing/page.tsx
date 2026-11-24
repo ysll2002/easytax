@@ -10,19 +10,19 @@ import { OFFER_JSONLD, PRICE_DISPLAY, PRICE_MODEL, TYPICAL_ANNUAL_COST } from '@
 
 export const metadata: Metadata = {
   title: pageTitle('Pricing — free, no subscription, no filing fee'),
-  description: 'EasyTax is free. MTD ITSA quarterly updates and VAT returns — no monthly subscription, no per-filing fee, no card needed to sign up.',
-  alternates: { canonical: 'https://easytax.vip/pricing' },
+  description: 'MTD Buddy is free. MTD ITSA quarterly updates and VAT returns — no monthly subscription, no per-filing fee, no card needed to sign up.',
+  alternates: { canonical: 'https://mtdbuddy.com/pricing' },
   openGraph: {
-    title: 'EasyTax Pricing — Free, No Subscription',
+    title: 'MTD Buddy Pricing — Free, No Subscription',
     description: 'File MTD ITSA quarterly updates and VAT returns to HMRC for free. No monthly subscription, no per-filing fee, no card needed to sign up.',
-    url: 'https://easytax.vip/pricing',
+    url: 'https://mtdbuddy.com/pricing',
     type: 'website',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'EasyTax Pricing — Free, No Subscription',
+    title: 'MTD Buddy Pricing — Free, No Subscription',
     description: 'MTD ITSA quarterly updates and VAT returns — free. No monthly fee, no filing fee.',
   },
 };
@@ -33,7 +33,7 @@ type CompRow = { feature: string; included: boolean; note?: string };
 
 const included: CompRow[] = [
   { feature: 'MTD ITSA quarterly updates (self-employment)', included: true },
-  { feature: 'Year-end Self Assessment return / final declaration (SA100, SA105)', included: false, note: 'Not available in EasyTax yet' },
+  { feature: 'Year-end Self Assessment return / final declaration (SA100, SA105)', included: false, note: 'Not available in MTD Buddy yet' },
   { feature: 'MTD VAT returns', included: true },
   { feature: 'CT600 Corporation Tax filing', included: false, note: 'Filed through HMRC\'s Corporation Tax Online service, not the MTD APIs' },
   { feature: 'Limited company P&L and Balance Sheet', included: false, note: 'Not offered at the moment' },
@@ -47,7 +47,7 @@ const included: CompRow[] = [
 type RivalRow = { name: string; model: string; typical: string };
 
 const rivals: RivalRow[] = [
-  { name: 'EasyTax',     model: PRICE_MODEL,                    typical: TYPICAL_ANNUAL_COST },
+  { name: 'MTD Buddy',     model: PRICE_MODEL,                    typical: TYPICAL_ANNUAL_COST },
   { name: 'FreeAgent',   model: '£19–£29 / month subscription',  typical: '£228–£348 / year' },
   { name: 'Xero',        model: '£16–£59 / month subscription',  typical: '£192–£708 / year' },
   { name: 'QuickBooks',  model: '£14–£90 / month subscription',  typical: '£168–£1,080 / year' },
@@ -67,10 +67,10 @@ export default async function PricingPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'EasyTax — MTD ITSA Filing Software',
+    name: 'MTD Buddy — MTD ITSA Filing Software',
     description: 'MTD ITSA quarterly updates and VAT returns for UK sole traders and the self-employed. Free — no subscription, no per-filing fee.',
     brand: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    url: 'https://easytax.vip',
+    url: 'https://mtdbuddy.com',
     // Shares one Offer with the SoftwareApplication node in lib/site-entity.ts.
     // PreOrder, not InStock: the app is usable today but HMRC filing is still
     // waiting on production approval, so the thing this page offers is not yet
@@ -78,7 +78,7 @@ export default async function PricingPage() {
     offers: {
       ...OFFER_JSONLD,
       availability: 'https://schema.org/PreOrder',
-      url: 'https://easytax.vip/register',
+      url: 'https://mtdbuddy.com/register',
     },
   };
 
@@ -88,10 +88,10 @@ export default async function PricingPage() {
     mainEntity: [
       {
         '@type': 'Question',
-        name: 'How much does EasyTax cost?',
+        name: 'How much does MTD Buddy cost?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Nothing. EasyTax is free to use: there is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates pays £0 for the year.',
+          text: 'Nothing. MTD Buddy is free to use: there is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates pays £0 for the year.',
         },
       },
       {
@@ -99,7 +99,7 @@ export default async function PricingPage() {
         name: 'What is included?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Every HMRC submission type we support — quarterly MTD ITSA updates and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier. The year-end Self Assessment return (final declaration) and property income are not available in EasyTax yet. Corporation Tax (CT600) is not supported.',
+          text: 'Every HMRC submission type we support — quarterly MTD ITSA updates and VAT returns — plus CSV statement import, AI expense categorisation and the categorisation chat. There is no paid tier. The year-end Self Assessment return (final declaration) and property income are not available in MTD Buddy yet. Corporation Tax (CT600) is not supported.',
         },
       },
       {
@@ -107,7 +107,7 @@ export default async function PricingPage() {
         name: 'Do I need a credit card to sign up?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'No. There is nothing to pay at any point, so EasyTax never asks for card details.',
+          text: 'No. There is nothing to pay at any point, so MTD Buddy never asks for card details.',
         },
       },
       {
@@ -115,15 +115,15 @@ export default async function PricingPage() {
         name: 'How is it free?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'EasyTax is built by Finance Panda Limited and is not yet monetised. HMRC filing is still going through production approval; getting the software used and the filings right matters more right now than charging for them. If that changes, existing accounts will be told before anything does.',
+          text: 'MTD Buddy is built by Finance Panda Limited and is not yet monetised. HMRC filing is still going through production approval; getting the software used and the filings right matters more right now than charging for them. If that changes, existing accounts will be told before anything does.',
         },
       },
       {
         '@type': 'Question',
-        name: 'Does EasyTax support limited companies?',
+        name: 'Does MTD Buddy support limited companies?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies, free. It does not file Corporation Tax (CT600) or prepare company accounts.',
+          text: 'Only for VAT. MTD Buddy files MTD VAT returns for VAT-registered businesses, including limited companies, free. It does not file Corporation Tax (CT600) or prepare company accounts.',
         },
       },
     ],
@@ -149,7 +149,7 @@ export default async function PricingPage() {
               <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Nothing per filing.</em>
             </h1>
             <p className="text-base sm:text-lg leading-relaxed mb-8 mx-auto" style={{ color: '#4A4035', maxWidth: '560px' }}>
-              EasyTax is <strong style={{ color: '#1C1208' }}>free to use</strong>. No subscription, no charge when you file, no card needed to sign up. CSV statement import and AI categorisation are included.
+              MTD Buddy is <strong style={{ color: '#1C1208' }}>free to use</strong>. No subscription, no charge when you file, no card needed to sign up. CSV statement import and AI categorisation are included.
             </p>
           </div>
         </section>
@@ -213,13 +213,13 @@ export default async function PricingPage() {
             {/* mobile: stacked cards */}
             <div className="block sm:hidden space-y-3">
               {rivals.map((r) => (
-                <div key={r.name} className="p-4 rounded-2xl" style={{ backgroundColor: r.name === 'EasyTax' ? '#1C1208' : '#FFFFFF', border: `1px solid ${r.name === 'EasyTax' ? '#A04E1C' : '#E8E2DA'}` }}>
+                <div key={r.name} className="p-4 rounded-2xl" style={{ backgroundColor: r.name === 'MTD Buddy' ? '#1C1208' : '#FFFFFF', border: `1px solid ${r.name === 'MTD Buddy' ? '#A04E1C' : '#E8E2DA'}` }}>
                   <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-sm" style={{ color: r.name === 'EasyTax' ? '#FDFCF8' : '#1C1208' }}>{r.name}</span>
-                    {r.name === 'EasyTax' && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>Free</span>}
+                    <span className="font-bold text-sm" style={{ color: r.name === 'MTD Buddy' ? '#FDFCF8' : '#1C1208' }}>{r.name}</span>
+                    {r.name === 'MTD Buddy' && <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>Free</span>}
                   </div>
-                  <p className="text-xs mb-0.5" style={{ color: r.name === 'EasyTax' ? '#6B6256' : '#4A4035' }}>{r.model}</p>
-                  <p className="text-sm font-semibold" style={{ color: r.name === 'EasyTax' ? '#4B6A4E' : '#A04E1C' }}>Typical: {r.typical}</p>
+                  <p className="text-xs mb-0.5" style={{ color: r.name === 'MTD Buddy' ? '#6B6256' : '#4A4035' }}>{r.model}</p>
+                  <p className="text-sm font-semibold" style={{ color: r.name === 'MTD Buddy' ? '#4B6A4E' : '#A04E1C' }}>Typical: {r.typical}</p>
                 </div>
               ))}
             </div>
@@ -236,13 +236,13 @@ export default async function PricingPage() {
                 </thead>
                 <tbody>
                   {rivals.map((r, i) => (
-                    <tr key={r.name} style={{ borderBottom: i < rivals.length - 1 ? '1px solid #F0EBE1' : 'none', backgroundColor: r.name === 'EasyTax' ? '#F7F3EE' : 'transparent' }}>
+                    <tr key={r.name} style={{ borderBottom: i < rivals.length - 1 ? '1px solid #F0EBE1' : 'none', backgroundColor: r.name === 'MTD Buddy' ? '#F7F3EE' : 'transparent' }}>
                       <td className="px-6 py-4 font-bold" style={{ color: '#1C1208' }}>
                         {r.name}
-                        {r.name === 'EasyTax' && <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>Free</span>}
+                        {r.name === 'MTD Buddy' && <span className="ml-2 text-xs px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>Free</span>}
                       </td>
                       <td className="px-6 py-4" style={{ color: '#4A4035' }}>{r.model}</td>
-                      <td className="px-6 py-4 font-semibold" style={{ color: r.name === 'EasyTax' ? '#4B6A4E' : '#A04E1C' }}>{r.typical}</td>
+                      <td className="px-6 py-4 font-semibold" style={{ color: r.name === 'MTD Buddy' ? '#4B6A4E' : '#A04E1C' }}>{r.typical}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -261,7 +261,7 @@ export default async function PricingPage() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'How much does EasyTax cost?',
+                  q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription and no per-filing fee. A sole trader filing 4 quarterly MTD ITSA updates pays £0 for the year.',
                 },
                 {
@@ -270,15 +270,15 @@ export default async function PricingPage() {
                 },
                 {
                   q: 'Do I need a credit card to sign up?',
-                  a: 'No. There is nothing to pay at any point, so EasyTax never asks for card details.',
+                  a: 'No. There is nothing to pay at any point, so MTD Buddy never asks for card details.',
                 },
                 {
                   q: 'How is it free? What is the catch?',
-                  a: 'EasyTax is built by Finance Panda Limited and is not monetised. HMRC filing is still going through production approval; getting the software used and the filings right matters more right now than charging for them. Your data is not sold or shared — see /trust and /privacy for exactly what is stored and who it goes to. If the pricing ever changes, existing accounts will be told before it does.',
+                  a: 'MTD Buddy is built by Finance Panda Limited and is not monetised. HMRC filing is still going through production approval; getting the software used and the filings right matters more right now than charging for them. Your data is not sold or shared — see /trust and /privacy for exactly what is stored and who it goes to. If the pricing ever changes, existing accounts will be told before it does.',
                 },
                 {
-                  q: 'Does EasyTax work for limited companies?',
-                  a: 'Only for VAT. EasyTax files MTD VAT returns for VAT-registered businesses, including limited companies, free. It does not file Corporation Tax (CT600) or prepare company accounts.',
+                  q: 'Does MTD Buddy work for limited companies?',
+                  a: 'Only for VAT. MTD Buddy files MTD VAT returns for VAT-registered businesses, including limited companies, free. It does not file Corporation Tax (CT600) or prepare company accounts.',
                 },
                 {
                   q: 'Is there a free trial?',

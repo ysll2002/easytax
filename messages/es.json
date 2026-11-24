@@ -32,8 +32,8 @@
       "title1": "MTD ITSA ya llegó.",
       "title2": "A HMRC cada trimestre",
       "title3": "totalmente gratis.",
-      "subtitle": "Desde abril de 2026, los autónomos que ganan más de 50.000 £ deben enviar actualizaciones trimestrales a HMRC. EasyTax lo hace en minutos y también presenta tus declaraciones de IVA.",
-      "subtitleEmph": "Sin suscripción y sin coste por declaración — EasyTax es gratis.",
+      "subtitle": "Desde abril de 2026, los autónomos que ganan más de 50.000 £ deben enviar actualizaciones trimestrales a HMRC. MTD Buddy lo hace en minutos y también presenta tus declaraciones de IVA.",
+      "subtitleEmph": "Sin suscripción y sin coste por declaración — MTD Buddy es gratis.",
       "badgeFree": "Gratis",
       "badgeNoCard": "Sin tarjeta para registrarte",
       "badgeHmrc": "Basado en las API de HMRC",
@@ -56,7 +56,7 @@
     "services": {
       "title1": "Todo cubierto,",
       "title2": "seas quien seas.",
-      "subtitle": "Tanto si envías actualizaciones trimestrales como autónomo como si presentas el IVA de tu empresa, EasyTax las envía directamente a HMRC.",
+      "subtitle": "Tanto si envías actualizaciones trimestrales como autónomo como si presentas el IVA de tu empresa, MTD Buddy las envía directamente a HMRC.",
       "freelancer": {
         "kicker": "Para freelancers y autónomos",
         "title": "Personal y trabajo autónomo",
@@ -80,14 +80,14 @@
         "f3Label": "Justificante de HMRC",
         "f3Desc": "Cada envío vuelve con la confirmación de HMRC para tus registros.",
         "f4Label": "No incluido: CT600 y cuentas de la empresa",
-        "f4Desc": "EasyTax no presenta el Impuesto de Sociedades (CT600) ni prepara balance ni cuenta de resultados.",
+        "f4Desc": "MTD Buddy no presenta el Impuesto de Sociedades (CT600) ni prepara balance ni cuenta de resultados.",
         "cta": "Empieza una declaración de IVA →"
       }
     },
     "how": {
       "title1": "Presenta en cinco minutos,",
       "title2": "no en cinco horas.",
-      "body": "Conecta tu cuenta de HMRC y añade tus ingresos y gastos: importa un extracto CSV de tu banco o escríbelos a mano. EasyTax lo clasifica todo con IA y presenta tu actualización trimestral o tu declaración de IVA.",
+      "body": "Conecta tu cuenta de HMRC y añade tus ingresos y gastos: importa un extracto CSV de tu banco o escríbelos a mano. MTD Buddy lo clasifica todo con IA y presenta tu actualización trimestral o tu declaración de IVA.",
       "priceLabel": "Gratis",
       "priceCaption": "Sin suscripción ni tarifa por declaración. Conectar HMRC, importar tus registros, la categorización con IA y la presentación ante HMRC son gratis.",
       "cta": "Empezar a presentar →",
@@ -101,18 +101,18 @@
     "faq": {
       "title1": "Preguntas,",
       "title2": "respondidas.",
-      "q1Q": "¿EasyTax soporta sociedades limitadas?",
-      "q1A": "En parte. EasyTax presenta las actualizaciones trimestrales de MTD ITSA para autónomos y las declaraciones de IVA (MTD VAT) para empresas registradas en el IVA, incluidas las sociedades limitadas. Todavía no presenta el Impuesto de Sociedades (CT600), las cuentas anuales ni la declaración anual de Self Assessment. Precio: gratis, sin suscripción mensual ni coste por presentación.",
+      "q1Q": "¿MTD Buddy soporta sociedades limitadas?",
+      "q1A": "En parte. MTD Buddy presenta las actualizaciones trimestrales de MTD ITSA para autónomos y las declaraciones de IVA (MTD VAT) para empresas registradas en el IVA, incluidas las sociedades limitadas. Todavía no presenta el Impuesto de Sociedades (CT600), las cuentas anuales ni la declaración anual de Self Assessment. Precio: gratis, sin suscripción mensual ni coste por presentación.",
       "q2Q": "¿Qué regímenes de IVA soportáis?",
       "q2A": "Soportamos los regímenes Standard, Flat Rate y Annual VAT Accounting, presentados directamente a HMRC vía APIs compatibles con MTD.",
-      "q3Q": "¿Puede EasyTax presentar mi Self Assessment de fin de año?",
-      "q3A": "Todavía no. EasyTax presenta tus actualizaciones trimestrales de MTD. La declaración final de fin de año, la declaración anual SA100 y los ingresos por alquileres aún no están disponibles en EasyTax; para ese paso usa el servicio en línea de HMRC u otro software reconocido por HMRC.",
+      "q3Q": "¿Puede MTD Buddy presentar mi Self Assessment de fin de año?",
+      "q3A": "Todavía no. MTD Buddy presenta tus actualizaciones trimestrales de MTD. La declaración final de fin de año, la declaración anual SA100 y los ingresos por alquileres aún no están disponibles en MTD Buddy; para ese paso usa el servicio en línea de HMRC u otro software reconocido por HMRC.",
       "q4Q": "¿Qué es el CT600 y lo necesito?",
-      "q4A": "El CT600 es la declaración del Impuesto de Sociedades que toda sociedad limitada del Reino Unido debe presentar cada año ante HMRC. EasyTax no lo presenta: usa el servicio en línea de HMRC, un contable u otro software.",
+      "q4A": "El CT600 es la declaración del Impuesto de Sociedades que toda sociedad limitada del Reino Unido debe presentar cada año ante HMRC. MTD Buddy no lo presenta: usa el servicio en línea de HMRC, un contable u otro software.",
       "q5Q": "¿Mis datos HMRC están seguros?",
       "q5A": "Tus credenciales nunca se almacenan. Las usamos para obtener tus registros mediante una conexión cifrada y las descartamos inmediatamente.",
       "q6Q": "¿Cuál es el plazo del Self Assessment?",
-      "q6A": "Las declaraciones de Self Assessment en línea vencen el 31 de enero de cada año. Las declaraciones de IVA vencen un mes y siete días después del final de cada periodo. EasyTax muestra los plazos de tus actualizaciones trimestrales de MTD y del IVA según HMRC."
+      "q6A": "Las declaraciones de Self Assessment en línea vencen el 31 de enero de cada año. Las declaraciones de IVA vencen un mes y siete días después del final de cada periodo. MTD Buddy muestra los plazos de tus actualizaciones trimestrales de MTD y del IVA según HMRC."
     },
     "tips": {
       "kicker": "Actualizado a diario",
@@ -160,7 +160,7 @@
   "auth": {
     "login": {
       "title": "Bienvenido de nuevo",
-      "subtitle": "Inicia sesión en tu cuenta de EasyTax",
+      "subtitle": "Inicia sesión en tu cuenta de MTD Buddy",
       "continueGoogle": "Continuar con Google",
       "redirecting": "Redirigiendo…",
       "or": "o",
@@ -250,7 +250,7 @@
       "gatewayAuth": "Government Gateway autorizado",
       "connectedOn": "Conectado el {date}",
       "reconnect": "Reconectar",
-      "step2Body": "Vincula tu cuenta de Government Gateway para que EasyTax obtenga tus obligaciones fiscales y presente declaraciones en tu nombre.",
+      "step2Body": "Vincula tu cuenta de Government Gateway para que MTD Buddy obtenga tus obligaciones fiscales y presente declaraciones en tu nombre.",
       "connectHmrc": "Conectar HMRC",
       "step3Locked": "Completa los pasos 1 y 2 para desbloquear Self Assessment.",
       "tasksHeader": "Tareas fiscales · año pasado y próximos 12 meses",
@@ -385,9 +385,9 @@
     "aboutUs": "Sobre nosotros",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "vs": "EasyTax frente a {name}",
+    "vs": "MTD Buddy frente a {name}",
     "tagline": "Finance Panda Limited. Hecho en Londres.",
-    "disclaimer": "EasyTax es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no constituyen asesoramiento fiscal. HMRC aprobó nuestro acceso de producción el 11 de noviembre de 2026 para las actualizaciones trimestrales de MTD ITSA y el IVA.",
+    "disclaimer": "MTD Buddy es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no constituyen asesoramiento fiscal. HMRC aprobó nuestro acceso de producción el 11 de noviembre de 2026 para las actualizaciones trimestrales de MTD ITSA y el IVA.",
     "notifyHeading": "Presenta el primero",
     "notifyBlurb": "Te escribiremos el día que se abran las declaraciones MTD; nada más, y puedes darte de baja con un clic.",
     "accessibility": "Accesibilidad"
@@ -403,7 +403,7 @@
     "tabsLabel": "Tipo de cuenta",
     "agentLoginTitle": "Acceso para agentes",
     "agentLoginSubtitle": "Para contables y agentes fiscales que presentan por sus clientes.",
-    "agentNoAccount": "¿Nuevo en EasyTax como agente?",
+    "agentNoAccount": "¿Nuevo en MTD Buddy como agente?",
     "agentCreate": "Crear una cuenta de agente",
     "agentRegisterTitle": "Crear una cuenta de agente",
     "agentRegisterSubtitle": "Para contables y agentes fiscales que presentan actualizaciones de Making Tax Digital por sus clientes. Necesitará su Agent Services Account (ARN).",

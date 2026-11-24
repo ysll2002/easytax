@@ -133,13 +133,13 @@ export async function GET(req: NextRequest) {
 
     try {
       const result = await resend.emails.send({
-        from: 'EasyTax <hello@easytax.vip>',
+        from: 'MTD Buddy <hello@mtdbuddy.com>',
         to: email,
         subject: `Your MTD ITSA ${quarter.key} update is due ${quarter.deadlineLabel}`,
         headers: {
           // One-click unsubscribe, which Gmail and Outlook surface in their own
           // UI. Materially improves deliverability as well as being good practice.
-          'List-Unsubscribe': `<${optOutPostUrl}>, <mailto:hello@easytax.vip?subject=Unsubscribe>`,
+          'List-Unsubscribe': `<${optOutPostUrl}>, <mailto:hello@mtdbuddy.com?subject=Unsubscribe>`,
           'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
         },
         html: reminderHtml({ firstName, quarter, days, optOutUrl }),
@@ -193,7 +193,7 @@ function reminderHtml({
       <table width="560" cellpadding="0" cellspacing="0" style="background:#FDFCF8;border-radius:16px;border:1px solid #DDD5C8;overflow:hidden">
         <tr>
           <td style="background:#1C1208;padding:28px 40px">
-            <p style="margin:0;font-size:22px;font-weight:700;color:#A04E1C;font-family:Georgia,serif">EasyTax</p>
+            <p style="margin:0;font-size:22px;font-weight:700;color:#A04E1C;font-family:Georgia,serif">MTD Buddy</p>
           </td>
         </tr>
         <tr>
@@ -207,9 +207,9 @@ function reminderHtml({
             </p>
             <p style="margin:0 0 24px;font-size:15px;color:#6B6256;line-height:1.6">
               Quarterly updates report your cumulative income and expenses since 6 April.
-              You can check your figures and deadlines in your EasyTax dashboard.
+              You can check your figures and deadlines in your MTD Buddy dashboard.
             </p>
-            <a href="https://easytax.vip/dashboard/individual"
+            <a href="https://mtdbuddy.com/dashboard/individual"
               style="display:inline-block;background:#A04E1C;color:#FDFCF8;text-decoration:none;font-size:14px;font-weight:600;padding:14px 28px;border-radius:50px">
               Open my dashboard →
             </a>
@@ -218,10 +218,10 @@ function reminderHtml({
         <tr>
           <td style="padding:20px 40px;border-top:1px solid #F0EBE1">
             <p style="margin:0 0 6px;font-size:12px;color:#6B6256">
-              EasyTax is a product of Finance Panda Limited · <a href="https://easytax.vip" style="color:#6B6256">easytax.vip</a>
+              MTD Buddy is a product of Finance Panda Limited · <a href="https://mtdbuddy.com" style="color:#6B6256">mtdbuddy.com</a>
             </p>
             <p style="margin:0;font-size:12px;color:#6B6256">
-              You are receiving this because you have an EasyTax account.
+              You are receiving this because you have an MTD Buddy account.
               <a href="${optOutUrl}" style="color:#6B6256;text-decoration:underline">Unsubscribe from deadline reminders</a>.
             </p>
           </td>

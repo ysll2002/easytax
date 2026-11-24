@@ -189,7 +189,7 @@ export default function DeadlineScheduleForm({
 
         <p className="text-xs mt-4" style={{ color: '#6B6256', lineHeight: 1.6 }}>
           We will email you before each of these deadlines, and once when MTD filing opens in
-          EasyTax. Nothing else, and you can unsubscribe from any of it in one click.
+          MTD Buddy. Nothing else, and you can unsubscribe from any of it in one click.
         </p>
       </div>
     );

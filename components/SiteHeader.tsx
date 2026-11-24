@@ -24,7 +24,7 @@ export default function SiteHeader() {
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 flex flex-wrap gap-y-2 justify-between items-center">
         <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#A04E1C', letterSpacing: '-0.01em', textDecoration: 'none' }}>
-          EasyTax
+          MTD Buddy
         </Link>
 
         {/* Desktop nav */}

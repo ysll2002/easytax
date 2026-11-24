@@ -32,8 +32,25 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/:path*',
+        has: [{ type: 'host', value: 'www.mtdbuddy.com' }],
+        destination: 'https://mtdbuddy.com/:path*',
+        permanent: true,
+      },
+      // The product was EasyTax at easytax.vip until the rebrand to MTD Buddy.
+      // Every old URL — pages, articles, the embed widget other sites frame,
+      // OAuth callbacks still registered at HMRC and Google — keeps working by
+      // moving permanently to the same path on the new domain. staging is a
+      // different host and is not matched.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'easytax.vip' }],
+        destination: 'https://mtdbuddy.com/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
         has: [{ type: 'host', value: 'www.easytax.vip' }],
-        destination: 'https://easytax.vip/:path*',
+        destination: 'https://mtdbuddy.com/:path*',
         permanent: true,
       },
       {

@@ -35,7 +35,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
-const FROM = 'EasyTax <hello@easytax.vip>';
+const FROM = 'MTD Buddy <hello@mtdbuddy.com>';
 
 function unauthorised(req: NextRequest): NextResponse | null {
   const expected = process.env.AGENT_METRICS_KEY;
@@ -150,7 +150,7 @@ async function sendOne(
       text: mail.text,
       headers: {
         // Mailbox providers surface this as a one-click unsubscribe button.
-        'List-Unsubscribe': `<${mail.unsubscribeApi}>, <mailto:hello@easytax.vip?subject=unsubscribe>`,
+        'List-Unsubscribe': `<${mail.unsubscribeApi}>, <mailto:hello@mtdbuddy.com?subject=unsubscribe>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
       },
     });
@@ -243,7 +243,7 @@ export async function POST(req: NextRequest) {
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const base = 'https://easytax.vip';
+  const base = 'https://mtdbuddy.com';
   const results = [];
   for (const recipient of target.eligible) {
     results.push(await sendOne(resend, recipient, target.campaign, base));

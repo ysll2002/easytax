@@ -11,14 +11,14 @@ export async function POST(req: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: 'EasyTax <hello@easytax.vip>',
+      from: 'MTD Buddy <hello@mtdbuddy.com>',
       to: 'lilin.gabriel@gmail.com',
       replyTo: email,
-      subject: `New message from ${name} · EasyTax`,
+      subject: `New message from ${name} · MTD Buddy`,
       html: `
         <div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto">
           <div style="background:#1C1208;padding:20px 28px;border-radius:12px 12px 0 0">
-            <p style="margin:0;color:#A04E1C;font-size:18px;font-weight:700;font-family:Georgia,serif">EasyTax</p>
+            <p style="margin:0;color:#A04E1C;font-size:18px;font-weight:700;font-family:Georgia,serif">MTD Buddy</p>
             <p style="margin:4px 0 0;color:#6B6256;font-size:13px">New contact message</p>
           </div>
           <div style="background:#FDFCF8;padding:28px;border:1px solid #E8E2DA;border-top:none;border-radius:0 0 12px 12px">
