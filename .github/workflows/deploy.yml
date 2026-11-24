@@ -129,10 +129,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Add required reviewers to this environment in Settings → Environments
-    # to require an approval click before anything reaches easytax.vip.
+    # to require an approval click before anything reaches mtdbuddy.com.
     environment:
       name: production
-      url: https://easytax.vip
+      url: https://mtdbuddy.com
     steps:
       # Production ships `main`, whatever the dispatcher typed. Failing loudly
       # beats silently deploying something else, so a non-main ref stops the run
@@ -191,7 +191,7 @@ jobs:
           {
             echo "### Deployed to production"
             echo ""
-            echo "- https://easytax.vip"
+            echo "- https://mtdbuddy.com"
             echo "- Deployed ref: \`main\` @ \`${{ github.sha }}\`"
             echo "- ${{ steps.deploy.outputs.url }}"
             echo ""

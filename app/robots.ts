@@ -52,7 +52,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: '*', allow: '/', disallow },
       ...AI_AGENTS.map(userAgent => ({ userAgent, allow: '/', disallow })),
     ],
-    sitemap: 'https://easytax.vip/sitemap.xml',
-    host: 'https://easytax.vip',
+    sitemap: 'https://mtdbuddy.com/sitemap.xml',
+    host: 'https://mtdbuddy.com',
   };
 }

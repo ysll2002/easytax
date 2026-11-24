@@ -9,20 +9,20 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('Crunch Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a Crunch alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee.',
-  alternates: { canonical: 'https://easytax.vip/crunch-alternative' },
+  description: 'Looking for a Crunch alternative? MTD Buddy files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee.',
+  alternates: { canonical: 'https://mtdbuddy.com/crunch-alternative' },
   openGraph: {
     title: 'Crunch Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Crunch charges £35–110+VAT/month for software + accountancy. EasyTax files MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee.',
-    url: 'https://easytax.vip/crunch-alternative',
+    description: 'Crunch charges £35–110+VAT/month for software + accountancy. MTD Buddy files MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee.',
+    url: 'https://mtdbuddy.com/crunch-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Crunch Alternative — MTD ITSA Software, Free',
-    description: 'Crunch charges £420–1320+VAT/year. EasyTax charges nothing, with no subscription.',
+    description: 'Crunch charges £420–1320+VAT/year. MTD Buddy charges nothing, with no subscription.',
   },
 };
 
@@ -31,19 +31,19 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; crunch: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  crunch: 'From £35+VAT/mo',       note: 'Crunch bundles software + accountancy; EasyTax charges nothing' },
-  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            crunch: '£420–1,320+VAT',         note: 'EasyTax is free however many times you file; Crunch Sole Trader to Limited plans' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  crunch: 'From £35+VAT/mo',       note: 'Crunch bundles software + accountancy; MTD Buddy charges nothing' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            crunch: '£420–1,320+VAT',         note: 'MTD Buddy is free however many times you file; Crunch Sole Trader to Limited plans' },
   { feature: 'No card to sign up',                    easytax: true,              crunch: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,              crunch: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,              crunch: true, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,              crunch: true, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,              crunch: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: false,              crunch: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,              crunch: true, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company P&L and Balance Sheet', easytax: false,              crunch: true, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',             easytax: true,              crunch: false,                    note: 'EasyTax uses Claude to categorise and reconcile' },
+  { feature: 'AI expense categorisation',             easytax: true,              crunch: false,                    note: 'MTD Buddy uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,              crunch: false },
-  { feature: 'Dedicated accountant support',          easytax: false,             crunch: true,                    note: 'Crunch includes human accountant support; EasyTax is self-serve software only' },
-  { feature: 'Full double-entry bookkeeping',         easytax: false,             crunch: true,                    note: 'EasyTax focuses on tax filing, not a full accounting ledger' },
-  { feature: 'Built-in invoicing',                    easytax: false,             crunch: true,                    note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
+  { feature: 'Dedicated accountant support',          easytax: false,             crunch: true,                    note: 'Crunch includes human accountant support; MTD Buddy is self-serve software only' },
+  { feature: 'Full double-entry bookkeeping',         easytax: false,             crunch: true,                    note: 'MTD Buddy focuses on tax filing, not a full accounting ledger' },
+  { feature: 'Built-in invoicing',                    easytax: false,             crunch: true,                    note: 'MTD Buddy pairs with GrumpyWhales (free) for invoicing' },
   { feature: 'Payroll and CIS',                       easytax: false,             crunch: true,                    note: 'Available in Crunch Limited and higher plans' },
 ];
 
@@ -61,10 +61,10 @@ export default async function CrunchAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Crunch Alternative — MTD ITSA Software for UK Freelancers',
-    description: 'Side-by-side comparison of EasyTax and Crunch for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Side-by-side comparison of MTD Buddy and Crunch for UK sole traders and the self-employed. MTD Buddy files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/crunch-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/crunch-alternative',
   };
 
   return (
@@ -82,10 +82,10 @@ export default async function CrunchAlternative() {
               <Sparkles size={12} /> The no-subscription Crunch alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£420–1,320/year</em> for Crunch? EasyTax files the same returns for nothing.
+              Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£420–1,320/year</em> for Crunch? MTD Buddy files the same returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Crunch bundles software with accountancy support — a useful combination if you want a human accountant in the loop. But if you are a UK freelancer who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong> yourself, you are paying a significant monthly fee for a service tier you may not need. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
+              Crunch bundles software with accountancy support — a useful combination if you want a human accountant in the loop. But if you are a UK freelancer who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong> yourself, you are paying a significant monthly fee for a service tier you may not need. MTD Buddy covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -97,7 +97,7 @@ export default async function CrunchAlternative() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Crunch%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Crunch%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
               </a>
             </div>
@@ -111,7 +111,7 @@ export default async function CrunchAlternative() {
               MTD ITSA is now mandatory — do you need to pay £420–1,320/year for it?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              From <strong>6 April 2026</strong>, every UK sole trader or landlord with income above <strong>£50,000</strong> must file quarterly updates through MTD-compatible software. The threshold drops to <strong>£30,000</strong> in April 2027. If your main reason for using Crunch is MTD compliance rather than ongoing accountancy advice, EasyTax gives you the same HMRC connectivity at a fraction of the cost.
+              From <strong>6 April 2026</strong>, every UK sole trader or landlord with income above <strong>£50,000</strong> must file quarterly updates through MTD-compatible software. The threshold drops to <strong>£30,000</strong> in April 2027. If your main reason for using Crunch is MTD compliance rather than ongoing accountancy advice, MTD Buddy gives you the same HMRC connectivity at a fraction of the cost.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
@@ -133,7 +133,7 @@ export default async function CrunchAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Crunch</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Crunch</em> vs MTD Buddy
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
@@ -141,7 +141,7 @@ export default async function CrunchAlternative() {
                   Feature
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -179,7 +179,7 @@ export default async function CrunchAlternative() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax wins</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where MTD Buddy wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No subscription — pay only when you actually submit a return to HMRC.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>AI bank reconciliation chat powered by Claude — describe a transaction in plain English and it gets categorised correctly.</span></li>
@@ -199,7 +199,7 @@ export default async function CrunchAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or sole trader who wants to file their own returns without a monthly subscription</strong>, EasyTax is the better fit — especially now that HMRC MTD ITSA is mandatory.
+              If you want a human accountant in the loop, Crunch is a legitimate choice. But if you are a <strong>confident freelancer or sole trader who wants to file their own returns without a monthly subscription</strong>, MTD Buddy is the better fit — especially now that HMRC MTD ITSA is mandatory.
             </p>
           </div>
         </section>
@@ -217,20 +217,20 @@ export default async function CrunchAlternative() {
                   body: 'In Crunch: Reports → Export. Download your transaction history, accounts and filed returns as PDFs for your records before cancelling your plan.',
                 },
                 {
-                  title: 'Create your EasyTax account',
+                  title: 'Create your MTD Buddy account',
                   body: 'Sign up with Google or email in under 60 seconds — no card required.',
                 },
                 {
                   title: 'Add your income and expenses',
-                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and MTD Buddy AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Connect to HMRC',
-                  body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
+                  body: 'Authorise MTD Buddy with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
                   title: 'File your next quarterly update',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt for every submission.',
+                  body: 'MTD Buddy submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt for every submission.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -256,32 +256,32 @@ export default async function CrunchAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'How much does EasyTax cost?',
+                  q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription and no charge when you file, however many returns you send.',
                 },
                 {
-                  q: "I use Crunch for accountancy advice, not just software. Is EasyTax a like-for-like replacement?",
-                  a: "No — EasyTax is self-serve filing software, not an accountancy service. If you rely on Crunch's human accountants for tax planning, year-end review, or advisory conversations, those aren't included in EasyTax. EasyTax is the right fit if you're comfortable filing your own returns and just need a reliable tool to submit them to HMRC.",
+                  q: "I use Crunch for accountancy advice, not just software. Is MTD Buddy a like-for-like replacement?",
+                  a: "No — MTD Buddy is self-serve filing software, not an accountancy service. If you rely on Crunch's human accountants for tax planning, year-end review, or advisory conversations, those aren't included in MTD Buddy. MTD Buddy is the right fit if you're comfortable filing your own returns and just need a reliable tool to submit them to HMRC.",
                 },
                 {
-                  q: 'Does EasyTax handle VAT and CT600 as well as Self Assessment?',
-                  a: 'Partly. EasyTax files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
+                  q: 'Does MTD Buddy handle VAT and CT600 as well as Self Assessment?',
+                  a: 'Partly. MTD Buddy files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. MTD Buddy is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in MTD Buddy yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',
-                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. MTD Buddy does not connect to your bank account.',
                 },
                 {
-                  q: 'Can I try EasyTax before committing?',
+                  q: 'Can I try MTD Buddy before committing?',
                   a: 'Yes — sign up free with no card required, and there is nothing to pay afterwards either. Import your records, review them, file to HMRC and use the dashboard without spending anything.',
                 },
                 {
                   q: 'I use Crunch for invoicing. What do I use instead?',
-                  a: "EasyTax doesn't have a built-in invoicing module. We pair with GrumpyWhales — a free UK invoicing tool — for that. Many freelancers run two lightweight free tools rather than one expensive subscription.",
+                  a: "MTD Buddy doesn't have a built-in invoicing module. We pair with GrumpyWhales — a free UK invoicing tool — for that. Many freelancers run two lightweight free tools rather than one expensive subscription.",
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -301,7 +301,7 @@ export default async function CrunchAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop paying a monthly subscription just to file your taxes.<br />
-              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
+              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>MTD Buddy does it for nothing.</em>
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.
@@ -310,7 +310,7 @@ export default async function CrunchAlternative() {
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Crunch%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Crunch%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Ask us a question
               </a>
             </div>

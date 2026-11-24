@@ -14,7 +14,7 @@ import { asAccountType } from '@/lib/account-type';
 // Default <title> for dashboard pages (WCAG 2.4.2); each route's own layout
 // overrides it.
 export const metadata: Metadata = {
-  title: { default: 'Dashboard', template: '%s | EasyTax' },
+  title: { default: 'Dashboard', template: '%s | MTD Buddy' },
 };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -31,7 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* Sidebar — desktop only */}
       <aside className="hidden md:flex" style={{ width: '240px', flexShrink: 0, backgroundColor: '#1C1208', flexDirection: 'column', padding: '1.5rem 0', position: 'sticky', top: 0, height: '100vh' }}>
         <Link href={accountType === 'agent' ? '/dashboard/agent' : '/dashboard'} style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#E8895A', padding: '0 1.5rem', marginBottom: '1rem', display: 'block' }}>
-          EasyTax
+          MTD Buddy
         </Link>
 
         {/* Language and Homepage live in the sidebar on desktop. They used to
@@ -68,7 +68,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* Mobile top bar */}
       <div className="flex md:hidden" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, backgroundColor: '#1C1208', padding: '0 1rem', height: '52px', alignItems: 'center', justifyContent: 'space-between' }}>
         <Link href="/dashboard" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.1rem', fontWeight: 700, color: '#E8895A', textDecoration: 'none' }}>
-          EasyTax
+          MTD Buddy
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <LanguageSwitcher />

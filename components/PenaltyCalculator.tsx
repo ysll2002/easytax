@@ -418,7 +418,7 @@ function Panel({
       </div>
       <div className="mt-7 pt-6" style={{ borderTop: '1px solid #F0EBE1' }}>
         <p className="text-sm mb-4" style={{ color: '#4A4035' }}>
-          Filing on time is the only way to avoid all of this. EasyTax files MTD
+          Filing on time is the only way to avoid all of this. MTD Buddy files MTD
           quarterly updates free, with no subscription and no per-filing fee. HMRC approved our production
           access on 11 November 2026, so live submissions are open.
         </p>

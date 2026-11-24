@@ -2,9 +2,9 @@ import { Resend } from 'resend';
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
   await getResend().emails.send({
-    from: 'EasyTax <hello@easytax.vip>',
+    from: 'MTD Buddy <hello@mtdbuddy.com>',
     to,
-    subject: 'Reset your EasyTax password',
+    subject: 'Reset your MTD Buddy password',
     html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -14,7 +14,7 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
       <table width="560" cellpadding="0" cellspacing="0" style="background:#FDFCF8;border-radius:16px;border:1px solid #DDD5C8;overflow:hidden">
         <tr>
           <td style="background:#1C1208;padding:28px 40px">
-            <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">EasyTax</p>
+            <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">MTD Buddy</p>
           </td>
         </tr>
         <tr>
@@ -38,8 +38,8 @@ export async function sendPasswordResetEmail(to: string, resetUrl: string) {
         <tr>
           <td style="padding:20px 40px;border-top:1px solid #F0EBE1">
             <p style="margin:0;font-size:12px;color:#9A8F83">
-              EasyTax · Self Assessment, Sorted.<br>
-              <a href="https://easytax.vip" style="color:#9A8F83">easytax.vip</a>
+              MTD Buddy · Self Assessment, Sorted.<br>
+              <a href="https://mtdbuddy.com" style="color:#9A8F83">mtdbuddy.com</a>
             </p>
           </td>
         </tr>
@@ -59,9 +59,9 @@ export async function sendWelcomeEmail(to: string, name: string) {
   const firstName = name.split(' ')[0];
 
   await getResend().emails.send({
-    from: 'EasyTax <hello@easytax.vip>',
+    from: 'MTD Buddy <hello@mtdbuddy.com>',
     to,
-    subject: 'Welcome to EasyTax',
+    subject: 'Welcome to MTD Buddy',
     html: `<!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -73,7 +73,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
         <!-- Header -->
         <tr>
           <td style="background:#1C1208;padding:28px 40px">
-            <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">EasyTax</p>
+            <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">MTD Buddy</p>
           </td>
         </tr>
 
@@ -84,7 +84,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
               Welcome, ${firstName}.
             </p>
             <p style="margin:0 0 24px;font-size:15px;color:#9A8F83;line-height:1.6">
-              Your EasyTax account is ready. Here's what you can do next:
+              Your MTD Buddy account is ready. Here's what you can do next:
             </p>
 
             <table cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:28px">
@@ -108,7 +108,7 @@ export async function sendWelcomeEmail(to: string, name: string) {
               </tr>`).join('')}
             </table>
 
-            <a href="https://easytax.vip/dashboard"
+            <a href="https://mtdbuddy.com/dashboard"
               style="display:inline-block;background:#C4622D;color:#FDFCF8;text-decoration:none;font-size:14px;font-weight:600;padding:14px 28px;border-radius:50px">
               Go to Dashboard →
             </a>
@@ -119,8 +119,8 @@ export async function sendWelcomeEmail(to: string, name: string) {
         <tr>
           <td style="padding:20px 40px;border-top:1px solid #F0EBE1">
             <p style="margin:0;font-size:12px;color:#9A8F83">
-              EasyTax · Self Assessment, Sorted.<br>
-              <a href="https://easytax.vip" style="color:#9A8F83">easytax.vip</a>
+              MTD Buddy · Self Assessment, Sorted.<br>
+              <a href="https://mtdbuddy.com" style="color:#9A8F83">mtdbuddy.com</a>
             </p>
           </td>
         </tr>
@@ -156,7 +156,7 @@ export async function sendInternalNotice(subject: string, html: string): Promise
   }
   try {
     await getResend().emails.send({
-      from: 'EasyTax <hello@easytax.vip>',
+      from: 'MTD Buddy <hello@mtdbuddy.com>',
       to: ownerEmail(),
       subject,
       html,
@@ -227,7 +227,7 @@ export function reviewEmailIsDue(input: ReviewEmailInput): boolean {
 
 function reviewUrl(slug?: string): string {
   const key = process.env.AGENT_METRICS_KEY;
-  const base = 'https://easytax.vip/admin/review';
+  const base = 'https://mtdbuddy.com/admin/review';
   const params = new URLSearchParams();
   // No key configured is not a reason to send a broken link: the page says so
   // itself, and a bare URL is still one click closer than a curl command.
@@ -264,8 +264,8 @@ export async function sendArticleReviewEmail(input: ReviewEmailInput): Promise<b
   // goes in it. "2 drafts awaiting review" was true for five days and told
   // nobody anything was wrong.
   const subject = frozen
-    ? `EasyTax: nothing has been published for ${daysSinceLastPublish} days — ${depth} draft${depth === 1 ? '' : 's'} waiting`
-    : `EasyTax: ${depth} article draft${depth === 1 ? '' : 's'} awaiting review`;
+    ? `MTD Buddy: nothing has been published for ${daysSinceLastPublish} days — ${depth} draft${depth === 1 ? '' : 's'} waiting`
+    : `MTD Buddy: ${depth} article draft${depth === 1 ? '' : 's'} awaiting review`;
 
   const alarm = frozen
     ? `<p style="margin:0 0 18px;padding:14px 16px;border-radius:12px;background:#FBF0E6;border:1px solid #E8C9A8;
@@ -367,13 +367,13 @@ export async function sendDeadlineScheduleEmail(params: {
     .join('');
 
   await getResend().emails.send({
-    from: 'EasyTax <hello@easytax.vip>',
+    from: 'MTD Buddy <hello@mtdbuddy.com>',
     to,
     subject: taxYearLabel
       ? `Your Making Tax Digital deadlines for ${taxYearLabel}`
       : 'Your UK tax filing deadlines',
     headers: {
-      'List-Unsubscribe': `<${unsubscribeApiUrl}>, <mailto:hello@easytax.vip?subject=unsubscribe>`,
+      'List-Unsubscribe': `<${unsubscribeApiUrl}>, <mailto:hello@mtdbuddy.com?subject=unsubscribe>`,
       'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
     },
     html: `<!DOCTYPE html>
@@ -383,7 +383,7 @@ export async function sendDeadlineScheduleEmail(params: {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FDFCF8;border-radius:16px;border:1px solid #DDD5C8;overflow:hidden">
         <tr><td style="background:#1C1208;padding:24px 32px">
-          <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">EasyTax</p>
+          <p style="margin:0;font-size:22px;font-weight:700;color:#C4622D;font-family:Georgia,serif">MTD Buddy</p>
         </td></tr>
 
         <tr><td style="padding:32px">
@@ -410,7 +410,7 @@ export async function sendDeadlineScheduleEmail(params: {
             tax advice, and they do not take account of anything specific to your circumstances.
           </p>
 
-          <a href="https://easytax.vip/tools"
+          <a href="https://mtdbuddy.com/tools"
              style="display:inline-block;background:#C4622D;color:#FDFCF8;text-decoration:none;font-size:14px;font-weight:600;padding:13px 26px;border-radius:50px">
             See our free tax calculators →
           </a>
@@ -418,11 +418,11 @@ export async function sendDeadlineScheduleEmail(params: {
 
         <tr><td style="padding:20px 32px;border-top:1px solid #F0EBE1">
           <p style="margin:0 0 8px;font-size:12px;color:#9A8F83;line-height:1.6">
-            You asked us for these dates at easytax.vip. We will email you before each deadline
-            above, and once when MTD filing opens in EasyTax. Nothing else.
+            You asked us for these dates at mtdbuddy.com. We will email you before each deadline
+            above, and once when MTD filing opens in MTD Buddy. Nothing else.
           </p>
           <p style="margin:0;font-size:12px;color:#9A8F83;line-height:1.6">
-            EasyTax is a product of Finance Panda Limited · ICO reference ZA540758<br>
+            MTD Buddy is a product of Finance Panda Limited · ICO reference ZA540758<br>
             <a href="${unsubscribeUrl}" style="color:#9A8F83">Unsubscribe in one click</a>
           </p>
         </td></tr>

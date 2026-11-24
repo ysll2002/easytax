@@ -32,8 +32,8 @@
       "title1": "MTD ITSA 시대.",
       "title2": "HMRC에 분기 신고",
       "title3": "무료로.",
-      "subtitle": "2026년 4월부터 연 소득 5만 파운드를 넘는 개인사업자는 HMRC에 분기별 업데이트를 보내야 합니다. EasyTax로 몇 분이면 끝나고, VAT 신고도 함께 처리합니다.",
-      "subtitleEmph": "구독료도, 건당 수수료도 없습니다 —— EasyTax는 무료입니다.",
+      "subtitle": "2026년 4월부터 연 소득 5만 파운드를 넘는 개인사업자는 HMRC에 분기별 업데이트를 보내야 합니다. MTD Buddy로 몇 분이면 끝나고, VAT 신고도 함께 처리합니다.",
+      "subtitleEmph": "구독료도, 건당 수수료도 없습니다 —— MTD Buddy는 무료입니다.",
       "badgeFree": "무료",
       "badgeNoCard": "가입 시 카드 불필요",
       "badgeHmrc": "HMRC API 기반",
@@ -56,7 +56,7 @@
     "services": {
       "title1": "모든 것을 지원,",
       "title2": "당신이 누구든.",
-      "subtitle": "개인사업자의 분기별 업데이트든 사업체의 VAT 신고든, EasyTax가 HMRC에 바로 제출합니다.",
+      "subtitle": "개인사업자의 분기별 업데이트든 사업체의 VAT 신고든, MTD Buddy가 HMRC에 바로 제출합니다.",
       "freelancer": {
         "kicker": "프리랜서 및 자영업자용",
         "title": "개인 및 자영 소득",
@@ -80,14 +80,14 @@
         "f3Label": "HMRC 접수 확인",
         "f3Desc": "제출할 때마다 HMRC의 확인을 받아 기록으로 보관할 수 있습니다.",
         "f4Label": "미지원: CT600 및 회사 결산",
-        "f4Desc": "EasyTax는 법인세(CT600) 신고나 대차대조표·손익계산서 작성을 지원하지 않습니다.",
+        "f4Desc": "MTD Buddy는 법인세(CT600) 신고나 대차대조표·손익계산서 작성을 지원하지 않습니다.",
         "cta": "VAT 신고 시작 →"
       }
     },
     "how": {
       "title1": "5분 만에 신고,",
       "title2": "5시간이 아니라.",
-      "body": "HMRC 계정을 연결하고 수입과 지출을 추가하세요 — 은행 CSV 명세서를 가져오거나 직접 입력하면 됩니다. EasyTax가 AI로 분류한 뒤 분기별 업데이트나 VAT 신고를 제출합니다.",
+      "body": "HMRC 계정을 연결하고 수입과 지출을 추가하세요 — 은행 CSV 명세서를 가져오거나 직접 입력하면 됩니다. MTD Buddy가 AI로 분류한 뒤 분기별 업데이트나 VAT 신고를 제출합니다.",
       "priceLabel": "무료",
       "priceCaption": "구독료도 신고 건당 수수료도 없습니다. HMRC 연결, 기록 가져오기, AI 분류, HMRC 신고가 모두 무료입니다.",
       "cta": "신고 시작 →",
@@ -101,18 +101,18 @@
     "faq": {
       "title1": "질문에",
       "title2": "답해드립니다.",
-      "q1Q": "EasyTax는 법인을 지원하나요?",
-      "q1A": "일부 지원합니다. EasyTax는 개인사업자의 MTD ITSA 분기별 업데이트와 VAT 등록 사업체(유한회사 포함)의 MTD VAT 신고를 제출합니다. 법인세(CT600), 회사 결산, 연말 Self Assessment는 아직 지원하지 않습니다. 요금: 무료 — 월 구독료도, 신고당 수수료도 없습니다.",
+      "q1Q": "MTD Buddy는 법인을 지원하나요?",
+      "q1A": "일부 지원합니다. MTD Buddy는 개인사업자의 MTD ITSA 분기별 업데이트와 VAT 등록 사업체(유한회사 포함)의 MTD VAT 신고를 제출합니다. 법인세(CT600), 회사 결산, 연말 Self Assessment는 아직 지원하지 않습니다. 요금: 무료 — 월 구독료도, 신고당 수수료도 없습니다.",
       "q2Q": "지원하는 VAT 제도는?",
       "q2A": "Standard, Flat Rate, Annual VAT Accounting을 지원하며 MTD 호환 API로 HMRC에 직접 제출합니다.",
-      "q3Q": "EasyTax로 연말 Self Assessment를 제출할 수 있나요?",
-      "q3A": "아직은 안 됩니다. EasyTax는 MTD 분기별 업데이트를 제출합니다. 연말 최종 신고(final declaration), 연간 SA100 신고, 부동산 소득은 아직 EasyTax에서 지원하지 않으므로, 이 단계는 HMRC 온라인 서비스나 HMRC가 인정한 다른 소프트웨어를 이용하세요.",
+      "q3Q": "MTD Buddy로 연말 Self Assessment를 제출할 수 있나요?",
+      "q3A": "아직은 안 됩니다. MTD Buddy는 MTD 분기별 업데이트를 제출합니다. 연말 최종 신고(final declaration), 연간 SA100 신고, 부동산 소득은 아직 MTD Buddy에서 지원하지 않으므로, 이 단계는 HMRC 온라인 서비스나 HMRC가 인정한 다른 소프트웨어를 이용하세요.",
       "q4Q": "CT600은 무엇이며 필요한가요?",
-      "q4A": "CT600은 영국의 모든 유한회사가 매년 HMRC에 제출해야 하는 법인세 신고서입니다. EasyTax는 CT600을 제출하지 않습니다 — HMRC 법인세 온라인 서비스, 회계사 또는 다른 소프트웨어를 이용하세요.",
+      "q4A": "CT600은 영국의 모든 유한회사가 매년 HMRC에 제출해야 하는 법인세 신고서입니다. MTD Buddy는 CT600을 제출하지 않습니다 — HMRC 법인세 온라인 서비스, 회계사 또는 다른 소프트웨어를 이용하세요.",
       "q5Q": "HMRC 데이터는 안전한가요?",
       "q5A": "자격 증명은 절대 저장하지 않습니다. 암호화된 연결로 기록을 가져온 후 즉시 폐기합니다.",
       "q6Q": "Self Assessment 마감일은?",
-      "q6A": "Self Assessment 온라인 신고 마감일은 매년 1월 31일입니다. VAT 신고는 각 VAT 기간이 끝나고 1개월 7일 후가 마감입니다. EasyTax는 HMRC에서 받은 MTD 분기별 업데이트와 VAT 마감일을 보여 줍니다."
+      "q6A": "Self Assessment 온라인 신고 마감일은 매년 1월 31일입니다. VAT 신고는 각 VAT 기간이 끝나고 1개월 7일 후가 마감입니다. MTD Buddy는 HMRC에서 받은 MTD 분기별 업데이트와 VAT 마감일을 보여 줍니다."
     },
     "tips": {
       "kicker": "매일 업데이트",
@@ -160,7 +160,7 @@
   "auth": {
     "login": {
       "title": "다시 오신 것을 환영합니다",
-      "subtitle": "EasyTax 계정에 로그인하세요",
+      "subtitle": "MTD Buddy 계정에 로그인하세요",
       "continueGoogle": "Google로 계속",
       "redirecting": "리디렉션 중…",
       "or": "또는",
@@ -250,7 +250,7 @@
       "gatewayAuth": "Government Gateway 승인됨",
       "connectedOn": "{date}에 연결됨",
       "reconnect": "재연결",
-      "step2Body": "Government Gateway 계정을 연결하면 EasyTax가 세무 의무를 가져와 대신 신고합니다.",
+      "step2Body": "Government Gateway 계정을 연결하면 MTD Buddy가 세무 의무를 가져와 대신 신고합니다.",
       "connectHmrc": "HMRC 연결",
       "step3Locked": "단계 1과 2를 완료하여 Self Assessment 신고를 잠금 해제하세요.",
       "tasksHeader": "세무 작업 · 지난 1년 및 향후 12개월",
@@ -385,9 +385,9 @@
     "aboutUs": "회사 소개",
     "privacy": "개인정보",
     "terms": "이용약관",
-    "vs": "EasyTax와 {name} 비교",
+    "vs": "MTD Buddy와 {name} 비교",
     "tagline": "Finance Panda Limited. 런던에서 만들었습니다.",
-    "disclaimer": "EasyTax는 Finance Panda Limited의 제품입니다. 무료 도구는 HMRC가 공개한 규정에 대한 일반 정보를 제공하며 세무 자문이 아닙니다. HMRC는 2026년 11월 11일 MTD ITSA 분기별 업데이트와 VAT에 대한 운영 환경 접근을 승인했습니다.",
+    "disclaimer": "MTD Buddy는 Finance Panda Limited의 제품입니다. 무료 도구는 HMRC가 공개한 규정에 대한 일반 정보를 제공하며 세무 자문이 아닙니다. HMRC는 2026년 11월 11일 MTD ITSA 분기별 업데이트와 VAT에 대한 운영 환경 접근을 승인했습니다.",
     "notifyHeading": "가장 먼저 신고하세요",
     "notifyBlurb": "MTD 신고가 열리는 날 이메일로 알려드립니다. 다른 메일은 보내지 않으며 한 번의 클릭으로 수신을 해지할 수 있습니다.",
     "accessibility": "접근성"
@@ -403,7 +403,7 @@
     "tabsLabel": "계정 유형",
     "agentLoginTitle": "대리인 로그인",
     "agentLoginSubtitle": "고객을 대신해 신고하는 회계사 및 세무 대리인용.",
-    "agentNoAccount": "대리인으로 EasyTax를 처음 사용하시나요?",
+    "agentNoAccount": "대리인으로 MTD Buddy를 처음 사용하시나요?",
     "agentCreate": "대리인 계정 만들기",
     "agentRegisterTitle": "대리인 계정 만들기",
     "agentRegisterSubtitle": "고객의 Making Tax Digital 신고를 제출하는 회계사 및 세무 대리인용입니다. Agent Services Account(ARN)가 필요합니다.",

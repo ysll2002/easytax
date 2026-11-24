@@ -33,7 +33,7 @@ import { selectPublished } from '@/app/tax-tips/_lib/review';
 import { track } from '@/lib/analytics';
 import { botProps } from '@/lib/bot-detection';
 
-export const SITE = 'https://easytax.vip';
+export const SITE = 'https://mtdbuddy.com';
 
 /** Cache hard enough that a crawler polling us cannot turn into a Supabase
  *  bill, loosely enough that the morning's article is there by lunchtime.
@@ -59,7 +59,7 @@ export const FULL_TEXT_LIMIT = 120;
  * who bounces on arrival and trusts us less for it.
  */
 export const SITE_SUMMARY = [
-  'EasyTax is a UK tax filing and record-keeping app for self-employed sole',
+  'MTD Buddy is a UK tax filing and record-keeping app for self-employed sole',
   'traders, built against HMRC Making Tax Digital (MTD) APIs by Finance Panda',
   'Limited. It files MTD ITSA quarterly updates and MTD VAT returns.',
   '',
@@ -211,11 +211,11 @@ export const KEY_PAGES: readonly { url: string; title: string; note: string }[] 
   {
     url: `${SITE}/trust`,
     title: 'Trust and security',
-    note: 'Who operates EasyTax, how HMRC credentials and bank data are handled, and what the current HMRC approval status is.',
+    note: 'Who operates MTD Buddy, how HMRC credentials and bank data are handled, and what the current HMRC approval status is.',
   },
   {
     url: `${SITE}/pricing`,
     title: 'Pricing',
-    note: 'What EasyTax costs: nothing. No subscription, no per-filing fee.',
+    note: 'What MTD Buddy costs: nothing. No subscription, no per-filing fee.',
   },
 ];

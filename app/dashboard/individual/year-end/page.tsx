@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Year-end final declaration',
 };
 
-// Sandbox only until HMRC approves EasyTax for end-of-year functionality —
+// Sandbox only until HMRC approves MTD Buddy for end-of-year functionality —
 // app/api/hmrc/year-end refuses production requests on its own as well.
 export default function YearEndPage() {
   if (IS_HMRC_PRODUCTION) {
@@ -17,7 +17,7 @@ export default function YearEndPage() {
           Year-end final declaration
         </h1>
         <p className="text-sm mb-4" style={{ color: '#4A4035', lineHeight: 1.6 }}>
-          EasyTax does not support end-of-year submission yet. To make your final declaration you will need to use other software —{' '}
+          MTD Buddy does not support end-of-year submission yet. To make your final declaration you will need to use other software —{' '}
           <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
             target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
             find compatible software on GOV.UK

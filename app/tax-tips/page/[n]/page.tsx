@@ -40,7 +40,7 @@ export async function generateMetadata({
     // URL is: an archive slice, not another topic.
     description:
       `Daily UK tax tips, HMRC updates and Self Assessment guidance for freelancers and self-employed professionals. Page ${page} of the archive.`,
-    alternates: { canonical: `https://easytax.vip/tax-tips/page/${page}` },
+    alternates: { canonical: `https://mtdbuddy.com/tax-tips/page/${page}` },
   };
 }
 

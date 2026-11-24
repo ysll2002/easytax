@@ -141,7 +141,7 @@ export default function ResetPassword() {
               Set a new password
             </h1>
             <p style={{ color: '#6B6256', fontSize: '0.95rem' }}>
-              Choose a new password for your EasyTax account.
+              Choose a new password for your MTD Buddy account.
             </p>
           </div>
           <div className="p-8 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>

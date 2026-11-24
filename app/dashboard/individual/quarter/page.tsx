@@ -283,7 +283,7 @@ function QuarterForm() {
             </p>
             <p className="mb-2 text-xs">
               {noRecords
-                ? `There are no records between ${fmtDate(start)} and ${fmtDate(end)} yet. Upload a CSV statement and EasyTax will sort it with AI and fill in the figures.`
+                ? `There are no records between ${fmtDate(start)} and ${fmtDate(end)} yet. Upload a CSV statement and MTD Buddy will sort it with AI and fill in the figures.`
                 : 'You can change any figure below. When you continue, each change is saved to your records as an adjustment, so your records always match what you send to HMRC.'}
             </p>
             <div className="flex items-center gap-2 flex-wrap">

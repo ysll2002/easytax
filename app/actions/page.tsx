@@ -109,13 +109,13 @@ export default function Actions() {
 
         <div className="mb-12">
           <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', color: '#A04E1C', fontWeight: 700, fontSize: '1.25rem', display: 'inline-block', marginBottom: '2rem' }}>
-            EasyTax
+            MTD Buddy
           </Link>
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2.5rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
             Your Action Plan
           </h1>
           <p style={{ color: '#6B6256' }}>
-            A worked example of the action plan EasyTax builds once your account is connected.
+            A worked example of the action plan MTD Buddy builds once your account is connected.
           </p>
         </div>
 

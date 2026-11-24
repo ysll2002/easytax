@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const keyLocation = `https://easytax.vip/${INDEXNOW_KEY}.txt`;
+  const keyLocation = `https://mtdbuddy.com/${INDEXNOW_KEY}.txt`;
 
   if (req.nextUrl.searchParams.get('submit') !== '1') {
     return NextResponse.json({

@@ -1,10 +1,10 @@
-# EasyTax (Project 10k)
+# MTD Buddy (Project 10k)
 
 ## Setup Status
 - **Date:** 2026-03-05
 - **Stack:** Next.js (App Router), Tailwind CSS, TypeScript.
 - **Goal:** File HMRC tax returns in 5 minutes.
-- **Domain:** [https://easytax.vip](https://easytax.vip)
+- **Domain:** [https://mtdbuddy.com](https://mtdbuddy.com)
 - **Repo:** [github.com/linli-clawd/hmrc-tax-assistant](https://github.com/linli-clawd/hmrc-tax-assistant)
 
 ## Features (Status)

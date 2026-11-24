@@ -1,10 +1,11 @@
-# EasyTax — Claude Code Instructions
+# MTD Buddy (formerly EasyTax) — Claude Code Instructions
 
 ## Deployment Rules
 
 **环境说明：**
-- `easytax.vip` — 生产环境，有真实用户。**只从 GitHub `main` 分支部署，没有例外。**
-- `staging.easytax.vip` — 预览/测试环境，跟随 GitHub `staging` 分支（每次 push 自动部署）
+- `mtdbuddy.com` — 生产环境，有真实用户。**只从 GitHub `main` 分支部署，没有例外。**
+  旧域名 `easytax.vip`（品牌改名前）由 `next.config.ts` 301 到 `mtdbuddy.com` 的同一路径。
+- `staging.easytax.vip` — 预览/测试环境（改名后暂留旧域名，等 `staging.mtdbuddy.com` 的 DNS 配好再迁），跟随 GitHub `staging` 分支（每次 push 自动部署）
 - 本地代码克隆在 `/tmp/easytax`
 
 **唯一的上线路径：`分支 → PR → main → production`**
@@ -54,7 +55,7 @@ GitHub Actions 发的是传进去的 ref，两者都可以是任何分支，于�
 
 **重要背景：**
 - 如果 `/tmp/easytax` 目录丢失（例如重启），需重新克隆：`git clone https://github.com/ysll2002/easytax /tmp/easytax && cd /tmp/easytax && git checkout staging`
-- HMRC sandbox 的 staging redirect URI 暂未生效，staging 目前使用 `https://easytax.vip/api/auth/callback/hmrc` 作为 HMRC_REDIRECT_URI 的临时绕过方案
+- HMRC sandbox 的 staging redirect URI 暂未生效，staging 目前使用 `https://mtdbuddy.com/api/auth/callback/hmrc`（改名前是 `https://easytax.vip/...`） 作为 HMRC_REDIRECT_URI 的临时绕过方案
 
 ## Mobile-First Design Rules
 

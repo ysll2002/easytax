@@ -9,20 +9,20 @@ import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('Xero Alternative — MTD ITSA Software for UK Sole Traders'),
-  description: 'Looking for a Xero alternative in the UK? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC. Free — no monthly subscription, no filing fee.',
-  alternates: { canonical: 'https://easytax.vip/xero-alternative' },
+  description: 'Looking for a Xero alternative in the UK? MTD Buddy files MTD ITSA quarterly updates and VAT returns directly to HMRC. Free — no monthly subscription, no filing fee.',
+  alternates: { canonical: 'https://mtdbuddy.com/xero-alternative' },
   openGraph: {
     title: 'Xero Alternative UK — MTD ITSA + Self Assessment + VAT',
-    description: 'Xero charges £16–£47/month. EasyTax files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
-    url: 'https://easytax.vip/xero-alternative',
+    description: 'Xero charges £16–£47/month. MTD Buddy files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
+    url: 'https://mtdbuddy.com/xero-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Xero Alternative UK — MTD ITSA Software',
-    description: 'Switch from Xero to EasyTax — file to HMRC free, no monthly fee.',
+    description: 'Switch from Xero to MTD Buddy — file to HMRC free, no monthly fee.',
   },
 };
 
@@ -31,19 +31,19 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; xero: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Price',                                 easytax: PRICE_TABLE_CELL,   xero: 'From £16/mo+VAT',      note: 'Xero Starter is billed monthly (Standard £33/mo, Premium £47/mo); EasyTax charges nothing' },
-  { feature: 'No monthly subscription',               easytax: true,               xero: false,                  note: 'EasyTax is pay-per-submission, not a recurring fee' },
+  { feature: 'Price',                                 easytax: PRICE_TABLE_CELL,   xero: 'From £16/mo+VAT',      note: 'Xero Starter is billed monthly (Standard £33/mo, Premium £47/mo); MTD Buddy charges nothing' },
+  { feature: 'No monthly subscription',               easytax: true,               xero: false,                  note: 'MTD Buddy is pay-per-submission, not a recurring fee' },
   { feature: 'No card required to sign up',           easytax: true,               xero: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               xero: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               xero: true, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               xero: true, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,               xero: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: false,               xero: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,               xero: true, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company P&L and Balance Sheet', easytax: false,               xero: true, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',             easytax: true,               xero: false,                  note: 'EasyTax uses Claude to categorise and reconcile' },
+  { feature: 'AI expense categorisation',             easytax: true,               xero: false,                  note: 'MTD Buddy uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,               xero: false },
-  { feature: 'Full double-entry bookkeeping',         easytax: false,              xero: true,                   note: 'EasyTax focuses on tax filing, not a full ledger' },
-  { feature: 'Built-in invoicing',                    easytax: false,              xero: true,                   note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
-  { feature: 'Payroll (Xero Payroll)',                easytax: false,              xero: true,                   note: 'Add-on in Xero; not in EasyTax' },
+  { feature: 'Full double-entry bookkeeping',         easytax: false,              xero: true,                   note: 'MTD Buddy focuses on tax filing, not a full ledger' },
+  { feature: 'Built-in invoicing',                    easytax: false,              xero: true,                   note: 'MTD Buddy pairs with GrumpyWhales (free) for invoicing' },
+  { feature: 'Payroll (Xero Payroll)',                easytax: false,              xero: true,                   note: 'Add-on in Xero; not in MTD Buddy' },
   { feature: 'Multi-currency',                        easytax: false,              xero: true,                   note: 'Xero Premium only' },
 ];
 
@@ -61,10 +61,10 @@ export default async function XeroAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Xero Alternative UK — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and Xero for UK sole traders and the self-employed.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Side-by-side comparison of MTD Buddy and Xero for UK sole traders and the self-employed.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/xero-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/xero-alternative',
   };
 
   return (
@@ -84,7 +84,7 @@ export default async function XeroAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£16–£47/month</em> for Xero? Switch to free.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero is a strong product — but for a UK sole trader who needs <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you&apos;re paying £192–£564/year for functionality you may never use. EasyTax is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
+              Xero is a strong product — but for a UK sole trader who needs <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you&apos;re paying £192–£564/year for functionality you may never use. MTD Buddy is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -96,7 +96,7 @@ export default async function XeroAlternative() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started — no subscription →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Xero%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Xero%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
               </a>
             </div>
@@ -110,7 +110,7 @@ export default async function XeroAlternative() {
               What does Xero actually cost a sole trader?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero Starter costs £16/month + VAT but limits you to 20 bank transactions per month — most sole traders quickly move to Standard at £33/month + VAT. That&apos;s <strong>£475/year inc. VAT</strong>. EasyTax charges nothing. Four MTD quarterly updates come to <strong>£0</strong>.
+              Xero Starter costs £16/month + VAT but limits you to 20 bank transactions per month — most sole traders quickly move to Standard at £33/month + VAT. That&apos;s <strong>£475/year inc. VAT</strong>. MTD Buddy charges nothing. Four MTD quarterly updates come to <strong>£0</strong>.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -119,7 +119,7 @@ export default async function XeroAlternative() {
                 <p className="text-sm" style={{ color: '#4A4035' }}>Monthly subscription. Starter tier limits you to 20 bank transactions/month — most sole traders need Standard or above.</p>
               </div>
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#4B6A4E' }}>EasyTax</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#4B6A4E' }}>MTD Buddy</p>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Free</p>
                 <p className="text-sm" style={{ color: '#4A4035' }}>Nothing per month and nothing per filing. Free to connect HMRC and import your records, free to use the dashboard.</p>
               </div>
@@ -131,13 +131,13 @@ export default async function XeroAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Xero</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Xero</em> vs MTD Buddy
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
                 <div className="px-4 sm:px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#6B6256', backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>Feature</div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -172,7 +172,7 @@ export default async function XeroAlternative() {
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '1.5rem' }}>Honest tradeoffs</h2>
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax wins</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where MTD Buddy wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Pay only when you file — no monthly commitment.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>AI bank reconciliation chat — type what the transaction was, it gets categorised.</span></li>
@@ -192,7 +192,7 @@ export default async function XeroAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Xero is worth the subscription if your accountant uses it, if you need multi-currency, or if you have employees to pay. But if you are a <strong>sole trader who mainly needs to file quarterly updates with HMRC</strong>, EasyTax does that job for a fraction of the cost.
+              Xero is worth the subscription if your accountant uses it, if you need multi-currency, or if you have employees to pay. But if you are a <strong>sole trader who mainly needs to file quarterly updates with HMRC</strong>, MTD Buddy does that job for a fraction of the cost.
             </p>
           </div>
         </section>
@@ -204,24 +204,24 @@ export default async function XeroAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'How much does EasyTax cost?',
+                  q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.',
                 },
                 {
-                  q: 'My accountant uses Xero. Can I still use EasyTax?',
-                  a: "If your accountant needs Xero access for year-end work, you may want to keep Xero for that relationship. EasyTax is the right fit if you want to handle your own quarterly MTD updates and VAT returns without paying a monthly subscription — or if you're looking for a simpler tool alongside a Xero-using accountant.",
+                  q: 'My accountant uses Xero. Can I still use MTD Buddy?',
+                  a: "If your accountant needs Xero access for year-end work, you may want to keep Xero for that relationship. MTD Buddy is the right fit if you want to handle your own quarterly MTD updates and VAT returns without paying a monthly subscription — or if you're looking for a simpler tool alongside a Xero-using accountant.",
                 },
                 {
                   q: 'How do I migrate from Xero?',
-                  a: "Export your transaction history from Xero (Accounting → Reports → Account Transactions, export to CSV). Email them to hello@easytax.vip and we'll load them into your account. After that, import CSV statements from your bank or add records by hand.",
+                  a: "Export your transaction history from Xero (Accounting → Reports → Account Transactions, export to CSV). Email them to hello@mtdbuddy.com and we'll load them into your account. After that, import CSV statements from your bank or add records by hand.",
                 },
                 {
                   q: "Xero Starter is £16/month — isn't that almost as cheap?",
-                  a: "Xero Starter limits you to 20 bank transactions per month. Most sole traders have more than that and quickly move to Standard (£33/month + VAT = £475/year). EasyTax has no transaction limits and no charge of any kind.",
+                  a: "Xero Starter limits you to 20 bank transactions per month. Most sole traders have more than that and quickly move to Standard (£33/month + VAT = £475/year). MTD Buddy has no transaction limits and no charge of any kind.",
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',
-                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
+                  a: 'From 6 April 2026 for sole traders and landlords with income over £50,000. From 6 April 2027 for income over £30,000. MTD Buddy is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in MTD Buddy yet.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -248,7 +248,7 @@ export default async function XeroAlternative() {
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started — no subscription →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Xero%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Xero%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Ask us a question
               </a>
             </div>

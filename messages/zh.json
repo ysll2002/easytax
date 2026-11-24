@@ -32,8 +32,8 @@
       "title1": "MTD ITSA 来了。",
       "title2": "向 HMRC 季度申报",
       "title3": "完全免费。",
-      "subtitle": "从 2026 年 4 月起，年收入超过 5 万英镑的个体经营者必须每季度向 HMRC 上报数据。EasyTax 几分钟内搞定，还能帮你申报 VAT。",
-      "subtitleEmph": "无订阅费，也无单次申报费 —— EasyTax 免费使用。",
+      "subtitle": "从 2026 年 4 月起，年收入超过 5 万英镑的个体经营者必须每季度向 HMRC 上报数据。MTD Buddy 几分钟内搞定，还能帮你申报 VAT。",
+      "subtitleEmph": "无订阅费，也无单次申报费 —— MTD Buddy 免费使用。",
       "badgeFree": "免费使用",
       "badgeNoCard": "注册无需信用卡",
       "badgeHmrc": "基于 HMRC 官方 API",
@@ -56,7 +56,7 @@
     "services": {
       "title1": "全面覆盖，",
       "title2": "无论你是谁。",
-      "subtitle": "无论你是个体户要交季度更新，还是企业要报 VAT，EasyTax 都直接提交给 HMRC。",
+      "subtitle": "无论你是个体户要交季度更新，还是企业要报 VAT，MTD Buddy 都直接提交给 HMRC。",
       "freelancer": {
         "kicker": "面向自由职业者和个体户",
         "title": "个人与自雇所得",
@@ -80,14 +80,14 @@
         "f3Label": "HMRC 回执",
         "f3Desc": "每次提交都会收到 HMRC 的确认，方便你留档。",
         "f4Label": "不支持：CT600 和公司账目",
-        "f4Desc": "EasyTax 不申报公司税（CT600），也不编制资产负债表或损益表。",
+        "f4Desc": "MTD Buddy 不申报公司税（CT600），也不编制资产负债表或损益表。",
         "cta": "开始 VAT 申报 →"
       }
     },
     "how": {
       "title1": "5 分钟搞定，",
       "title2": "而不是 5 小时。",
-      "body": "连接你的 HMRC 账户，添加收入和支出 —— 导入银行的 CSV 对账单或手动输入。EasyTax 用 AI 自动分类，然后提交你的季度更新或 VAT 申报。",
+      "body": "连接你的 HMRC 账户，添加收入和支出 —— 导入银行的 CSV 对账单或手动输入。MTD Buddy 用 AI 自动分类，然后提交你的季度更新或 VAT 申报。",
       "priceLabel": "免费",
       "priceCaption": "没有订阅费，也不按次收费。连接 HMRC、导入记录、AI 分类和向 HMRC 申报全部免费。",
       "cta": "开始申报 →",
@@ -101,18 +101,18 @@
     "faq": {
       "title1": "你的疑问，",
       "title2": "我们解答。",
-      "q1Q": "EasyTax 支持有限公司吗？",
-      "q1A": "部分支持。EasyTax 为个体户提交 MTD ITSA 季度更新，并为已注册 VAT 的企业（包括有限公司）提交 MTD VAT 申报。目前不申报公司税（CT600）、公司账目或年终 Self Assessment。价格：免费 —— 无月费，也不按次收费。",
+      "q1Q": "MTD Buddy 支持有限公司吗？",
+      "q1A": "部分支持。MTD Buddy 为个体户提交 MTD ITSA 季度更新，并为已注册 VAT 的企业（包括有限公司）提交 MTD VAT 申报。目前不申报公司税（CT600）、公司账目或年终 Self Assessment。价格：免费 —— 无月费，也不按次收费。",
       "q2Q": "你们支持哪些 VAT 计划？",
       "q2A": "我们支持标准计划、Flat Rate 和年度 VAT 会计计划，通过 MTD 兼容 API 直接提交 HMRC。",
-      "q3Q": "EasyTax 能提交年终 Self Assessment 吗？",
-      "q3A": "暂时不能。EasyTax 提交你的 MTD 季度更新。年终最终申报（final declaration）、年度 SA100 申报和房产收入目前还不支持，这一步请使用 HMRC 官网或其他 HMRC 认可的软件。",
+      "q3Q": "MTD Buddy 能提交年终 Self Assessment 吗？",
+      "q3A": "暂时不能。MTD Buddy 提交你的 MTD 季度更新。年终最终申报（final declaration）、年度 SA100 申报和房产收入目前还不支持，这一步请使用 HMRC 官网或其他 HMRC 认可的软件。",
       "q4Q": "什么是 CT600？我需要吗？",
-      "q4A": "CT600 是每家英国有限公司每年都要向 HMRC 提交的公司税申报表。EasyTax 不提交 CT600 —— 请使用 HMRC 的公司税在线服务、会计师或其他软件。",
+      "q4A": "CT600 是每家英国有限公司每年都要向 HMRC 提交的公司税申报表。MTD Buddy 不提交 CT600 —— 请使用 HMRC 的公司税在线服务、会计师或其他软件。",
       "q5Q": "我的 HMRC 数据安全吗？",
       "q5A": "我们绝不储存你的凭据。仅通过加密连接拉取记录，使用完即时丢弃。",
       "q6Q": "Self Assessment 的截止日期是什么时候？",
-      "q6A": "Self Assessment 网上申报每年 1 月 31 日截止。VAT 申报在每个 VAT 期间结束后一个月零七天内截止。EasyTax 会显示 HMRC 给出的 MTD 季度更新和 VAT 截止日期。"
+      "q6A": "Self Assessment 网上申报每年 1 月 31 日截止。VAT 申报在每个 VAT 期间结束后一个月零七天内截止。MTD Buddy 会显示 HMRC 给出的 MTD 季度更新和 VAT 截止日期。"
     },
     "tips": {
       "kicker": "每日更新",
@@ -160,7 +160,7 @@
   "auth": {
     "login": {
       "title": "欢迎回来",
-      "subtitle": "登录你的 EasyTax 账户",
+      "subtitle": "登录你的 MTD Buddy 账户",
       "continueGoogle": "使用 Google 登录",
       "redirecting": "跳转中…",
       "or": "或",
@@ -250,7 +250,7 @@
       "gatewayAuth": "Government Gateway 已授权",
       "connectedOn": "连接于 {date}",
       "reconnect": "重新连接",
-      "step2Body": "连接你的 Government Gateway 账户，EasyTax 才能获取你的纳税义务并代为申报。",
+      "step2Body": "连接你的 Government Gateway 账户，MTD Buddy 才能获取你的纳税义务并代为申报。",
       "connectHmrc": "连接 HMRC",
       "step3Locked": "完成步骤 1 和 2 解锁 Self Assessment 申报。",
       "tasksHeader": "税务任务 · 过去一年和未来 12 个月",
@@ -385,9 +385,9 @@
     "aboutUs": "关于我们",
     "privacy": "隐私",
     "terms": "条款",
-    "vs": "EasyTax 对比 {name}",
+    "vs": "MTD Buddy 对比 {name}",
     "tagline": "Finance Panda Limited. 伦敦出品。",
-    "disclaimer": "EasyTax 是 Finance Panda Limited 的产品。免费工具仅提供 HMRC 公开规则的一般信息，不构成税务建议。HMRC 已于 2026 年 11 月 11 日批准我们的生产环境接入，覆盖 MTD ITSA 季度更新和 VAT。",
+    "disclaimer": "MTD Buddy 是 Finance Panda Limited 的产品。免费工具仅提供 HMRC 公开规则的一般信息，不构成税务建议。HMRC 已于 2026 年 11 月 11 日批准我们的生产环境接入，覆盖 MTD ITSA 季度更新和 VAT。",
     "notifyHeading": "第一时间开始申报",
     "notifyBlurb": "MTD 申报开放当天我们会发邮件通知你——不发其他内容，一键退订。",
     "accessibility": "无障碍声明"
@@ -403,7 +403,7 @@
     "tabsLabel": "账户类型",
     "agentLoginTitle": "代理登录",
     "agentLoginSubtitle": "供为客户报税的会计师和税务代理使用。",
-    "agentNoAccount": "第一次以代理身份使用 EasyTax？",
+    "agentNoAccount": "第一次以代理身份使用 MTD Buddy？",
     "agentCreate": "创建代理账户",
     "agentRegisterTitle": "创建代理账户",
     "agentRegisterSubtitle": "供为客户提交 Making Tax Digital 申报的会计师和税务代理使用。你需要有 Agent Services Account（ARN）。",

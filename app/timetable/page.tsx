@@ -8,11 +8,11 @@ import CalendarSubscribe from '@/components/CalendarSubscribe';
 export const metadata: Metadata = {
   title: pageTitle('MTD Deadlines 2026–2028 — Making Tax Digital Timetable'),
   description: 'Key Making Tax Digital (MTD ITSA) deadlines for 2026, 2027 and 2028. Quarterly update dates, Self Assessment deadlines and payment dates for UK sole traders and freelancers.',
-  alternates: { canonical: 'https://easytax.vip/timetable' },
+  alternates: { canonical: 'https://mtdbuddy.com/timetable' },
   openGraph: {
     title: 'MTD Deadlines 2026–2028 — Making Tax Digital Timetable',
     description: 'Key Making Tax Digital deadlines for UK freelancers and sole traders.',
-    url: 'https://easytax.vip/timetable',
+    url: 'https://mtdbuddy.com/timetable',
   },
 };
 
@@ -241,7 +241,7 @@ export default function TimetablePage() {
             Ready to get started?
           </p>
           <p className="text-sm mb-4" style={{ color: '#A89D90' }}>
-            EasyTax handles your MTD quarterly updates and Self Assessment filing — all in one place.
+            MTD Buddy handles your MTD quarterly updates and Self Assessment filing — all in one place.
           </p>
           <Link href="/register"
             className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-sm font-semibold"

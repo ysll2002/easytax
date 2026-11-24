@@ -9,20 +9,20 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('TaxScouts Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a TaxScouts alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — software you control, no waiting for an accountant.',
-  alternates: { canonical: 'https://easytax.vip/taxscouts-alternative' },
+  description: 'Looking for a TaxScouts alternative? MTD Buddy files MTD ITSA quarterly updates and VAT returns directly to HMRC free — software you control, no waiting for an accountant.',
+  alternates: { canonical: 'https://mtdbuddy.com/taxscouts-alternative' },
   openGraph: {
     title: 'TaxScouts Alternative — MTD ITSA + Self Assessment, Free',
-    description: 'TaxScouts charges £119–169+ per year and assigns you an accountant. EasyTax lets you file your MTD ITSA quarterly updates yourself, free.',
-    url: 'https://easytax.vip/taxscouts-alternative',
+    description: 'TaxScouts charges £119–169+ per year and assigns you an accountant. MTD Buddy lets you file your MTD ITSA quarterly updates yourself, free.',
+    url: 'https://mtdbuddy.com/taxscouts-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'TaxScouts Alternative — MTD ITSA Software, Free',
-    description: 'TaxScouts uses an accountant. EasyTax is software — file your MTD ITSA quarterly updates yourself, free.',
+    description: 'TaxScouts uses an accountant. MTD Buddy is software — file your MTD ITSA quarterly updates yourself, free.',
   },
 };
 
@@ -31,19 +31,19 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; taxscouts: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  taxscouts: 'From £119/year',      note: 'EasyTax charges nothing; TaxScouts charges a fixed annual fee per return' },
-  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            taxscouts: '£119–169+',           note: 'EasyTax is free however many times you file; TaxScouts: one Self Assessment filing per year' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  taxscouts: 'From £119/year',      note: 'MTD Buddy charges nothing; TaxScouts charges a fixed annual fee per return' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            taxscouts: '£119–169+',           note: 'MTD Buddy is free however many times you file; TaxScouts: one Self Assessment filing per year' },
   { feature: 'No card to sign up',                    easytax: true,               taxscouts: false },
-  { feature: 'MTD ITSA quarterly updates',            easytax: true,               taxscouts: false,                 note: 'TaxScouts focuses on annual Self Assessment; EasyTax is built for the new mandatory quarterly MTD cycle' },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               taxscouts: true, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'MTD ITSA quarterly updates',            easytax: true,               taxscouts: false,                 note: 'TaxScouts focuses on annual Self Assessment; MTD Buddy is built for the new mandatory quarterly MTD cycle' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               taxscouts: true, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,               taxscouts: false },
-  { feature: 'CT600 Corporation Tax filing',          easytax: false,               taxscouts: false, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,               taxscouts: false, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company P&L and Balance Sheet', easytax: false,               taxscouts: false, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',             easytax: true,               taxscouts: false,                 note: 'EasyTax uses Claude AI to categorise and reconcile transactions against HMRC allowable expenses' },
+  { feature: 'AI expense categorisation',             easytax: true,               taxscouts: false,                 note: 'MTD Buddy uses Claude AI to categorise and reconcile transactions against HMRC allowable expenses' },
   { feature: 'AI categorisation chat',                easytax: true,               taxscouts: false },
   { feature: 'File in your own time, instantly',      easytax: true,               taxscouts: false,                 note: 'TaxScouts assigns you an accountant — filing depends on their availability' },
-  { feature: 'Human accountant reviews your return',  easytax: false,              taxscouts: true,                  note: 'EasyTax is self-serve software; TaxScouts provides a qualified accountant' },
-  { feature: 'Tax advice and planning',               easytax: false,              taxscouts: true,                  note: 'TaxScouts accountants can advise on allowances; EasyTax does not give tax advice' },
+  { feature: 'Human accountant reviews your return',  easytax: false,              taxscouts: true,                  note: 'MTD Buddy is self-serve software; TaxScouts provides a qualified accountant' },
+  { feature: 'Tax advice and planning',               easytax: false,              taxscouts: true,                  note: 'TaxScouts accountants can advise on allowances; MTD Buddy does not give tax advice' },
   { feature: 'Complex employment + self-employment',  easytax: 'Basic',            taxscouts: true,                  note: 'TaxScouts handles more complex mixed-income returns with human review' },
 ];
 
@@ -61,10 +61,10 @@ export default async function TaxScoutsAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'TaxScouts Alternative — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and TaxScouts for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free — no waiting for an accountant.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Side-by-side comparison of MTD Buddy and TaxScouts for UK sole traders and the self-employed. MTD Buddy files MTD ITSA quarterly updates and VAT returns free — no waiting for an accountant.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/taxscouts-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/taxscouts-alternative',
   };
 
   return (
@@ -82,10 +82,10 @@ export default async function TaxScoutsAlternative() {
               <Sparkles size={12} /> File MTD ITSA yourself — no accountant queue
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£119+ for TaxScouts</em>? EasyTax files the same returns for nothing — instantly.
+              Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£119+ for TaxScouts</em>? MTD Buddy files the same returns for nothing — instantly.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              TaxScouts is a great service — but from <strong style={{ color: '#1C1208' }}>6 April 2026</strong>, UK sole traders must file <strong style={{ color: '#1C1208' }}>quarterly MTD ITSA updates</strong>, not just one annual return. TaxScouts currently focuses on Self Assessment; EasyTax is built for the new quarterly cycle. File directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong> — no subscription, no filing fee, no waiting for an accountant.
+              TaxScouts is a great service — but from <strong style={{ color: '#1C1208' }}>6 April 2026</strong>, UK sole traders must file <strong style={{ color: '#1C1208' }}>quarterly MTD ITSA updates</strong>, not just one annual return. TaxScouts currently focuses on Self Assessment; MTD Buddy is built for the new quarterly cycle. File directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong> — no subscription, no filing fee, no waiting for an accountant.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -97,7 +97,7 @@ export default async function TaxScoutsAlternative() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=TaxScouts%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=TaxScouts%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
               </a>
             </div>
@@ -111,7 +111,7 @@ export default async function TaxScoutsAlternative() {
               Annual Self Assessment is changing — quarterly MTD filings are now mandatory
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              From <strong>6 April 2026</strong>, UK sole traders and landlords earning over <strong>£50,000</strong> must submit four quarterly updates to HMRC each year, plus a final declaration — replacing the single annual Self Assessment. The threshold drops to <strong>£30,000</strong> in April 2027. TaxScouts currently handles the annual return; EasyTax is built for this new quarterly cycle from day one.
+              From <strong>6 April 2026</strong>, UK sole traders and landlords earning over <strong>£50,000</strong> must submit four quarterly updates to HMRC each year, plus a final declaration — replacing the single annual Self Assessment. The threshold drops to <strong>£30,000</strong> in April 2027. TaxScouts currently handles the annual return; MTD Buddy is built for this new quarterly cycle from day one.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
@@ -133,7 +133,7 @@ export default async function TaxScoutsAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>TaxScouts</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>TaxScouts</em> vs MTD Buddy
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
@@ -141,7 +141,7 @@ export default async function TaxScoutsAlternative() {
                   Feature
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -179,7 +179,7 @@ export default async function TaxScoutsAlternative() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax wins</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where MTD Buddy wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Built for MTD ITSA quarterly updates — the mandatory new filing cycle from April 2026.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>File on your own schedule, any time — no waiting for an accountant to become available.</span></li>
@@ -199,7 +199,7 @@ export default async function TaxScoutsAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If your tax situation is complex — multiple income streams, significant capital gains, or you simply want an expert to check your numbers — TaxScouts or a traditional accountant may be the right call. But if you are a <strong>straightforward sole trader who wants to stay HMRC-compliant at the lowest possible cost and on your own schedule</strong>, EasyTax is built for you.
+              If your tax situation is complex — multiple income streams, significant capital gains, or you simply want an expert to check your numbers — TaxScouts or a traditional accountant may be the right call. But if you are a <strong>straightforward sole trader who wants to stay HMRC-compliant at the lowest possible cost and on your own schedule</strong>, MTD Buddy is built for you.
             </p>
           </div>
         </section>
@@ -217,20 +217,20 @@ export default async function TaxScoutsAlternative() {
                   body: 'Log in to TaxScouts and download PDFs of your previous Self Assessment submissions for your records. HMRC also holds copies in your Government Gateway account.',
                 },
                 {
-                  title: 'Create your EasyTax account',
+                  title: 'Create your MTD Buddy account',
                   body: 'Sign up with Google or email in under 60 seconds — no card required.',
                 },
                 {
                   title: 'Add your income and expenses',
-                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and MTD Buddy AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Connect to HMRC',
-                  body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
+                  body: 'Authorise MTD Buddy with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
                   title: 'File your first quarterly MTD update',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt instantly — no waiting for an accountant to review and submit.',
+                  body: 'MTD Buddy submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt instantly — no waiting for an accountant to review and submit.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -256,32 +256,32 @@ export default async function TaxScoutsAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'How much does EasyTax cost?',
+                  q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription, no annual fee and no charge when you file, however many returns you send.',
                 },
                 {
-                  q: 'Does EasyTax replace a human accountant?',
-                  a: "No — EasyTax is self-serve software, not an accountancy service. If your tax situation is straightforward (self-employment income, standard allowances), EasyTax handles it. If you have complex mixed income, significant capital gains, or want human oversight, you may prefer TaxScouts or a traditional accountant. Both can co-exist: some EasyTax users keep an accountant for advice but file directly.",
+                  q: 'Does MTD Buddy replace a human accountant?',
+                  a: "No — MTD Buddy is self-serve software, not an accountancy service. If your tax situation is straightforward (self-employment income, standard allowances), MTD Buddy handles it. If you have complex mixed income, significant capital gains, or want human oversight, you may prefer TaxScouts or a traditional accountant. Both can co-exist: some MTD Buddy users keep an accountant for advice but file directly.",
                 },
                 {
-                  q: "Can EasyTax handle MTD ITSA quarterly updates as well as annual Self Assessment?",
-                  a: 'Quarterly updates, yes — they are at the core of what EasyTax is built for. You submit four quarterly updates to HMRC each tax year, then a final declaration at year end. EasyTax handles the quarterly updates; the final declaration is not available in EasyTax yet. TaxScouts currently focuses on the annual Self Assessment return.',
+                  q: "Can MTD Buddy handle MTD ITSA quarterly updates as well as annual Self Assessment?",
+                  a: 'Quarterly updates, yes — they are at the core of what MTD Buddy is built for. You submit four quarterly updates to HMRC each tax year, then a final declaration at year end. MTD Buddy handles the quarterly updates; the final declaration is not available in MTD Buddy yet. TaxScouts currently focuses on the annual Self Assessment return.',
                 },
                 {
                   q: 'What if HMRC has a question about my filing?',
-                  a: "EasyTax gives you a submission receipt and a full audit trail of what was sent to HMRC. If HMRC contacts you, EasyTax's support team can help you understand the query. We do not provide tax advice, but we can help with the technical filing side.",
+                  a: "MTD Buddy gives you a submission receipt and a full audit trail of what was sent to HMRC. If HMRC contacts you, MTD Buddy's support team can help you understand the query. We do not provide tax advice, but we can help with the technical filing side.",
                 },
                 {
-                  q: 'Can EasyTax handle VAT and Corporation Tax as well as Self Assessment?',
-                  a: 'Partly. EasyTax files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
+                  q: 'Can MTD Buddy handle VAT and Corporation Tax as well as Self Assessment?',
+                  a: 'Partly. MTD Buddy files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. MTD Buddy is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in MTD Buddy yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',
-                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. MTD Buddy does not connect to your bank account.',
                 },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
@@ -301,7 +301,7 @@ export default async function TaxScoutsAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               MTD ITSA is quarterly now — file yourself, instantly.<br />
-              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
+              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>MTD Buddy does it for nothing.</em>
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.
@@ -310,7 +310,7 @@ export default async function TaxScoutsAlternative() {
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=TaxScouts%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=TaxScouts%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Ask us a question
               </a>
             </div>

@@ -38,7 +38,7 @@ export default function Onboarding() {
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700, color: '#A04E1C', display: 'inline-block', marginBottom: '2rem' }}>
-            EasyTax
+            MTD Buddy
           </Link>
           <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
             Link your HMRC Gateway

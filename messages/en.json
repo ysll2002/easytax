@@ -32,8 +32,8 @@
       "title1": "MTD ITSA is here.",
       "title2": "File quarterly to HMRC",
       "title3": "for free.",
-      "subtitle": "From April 2026, self-employed sole traders earning over £50k must send quarterly updates to HMRC. EasyTax does it in minutes — and files your VAT returns too.",
-      "subtitleEmph": "No subscription, no filing fee — EasyTax is free to use.",
+      "subtitle": "From April 2026, self-employed sole traders earning over £50k must send quarterly updates to HMRC. MTD Buddy does it in minutes — and files your VAT returns too.",
+      "subtitleEmph": "No subscription, no filing fee — MTD Buddy is free to use.",
       "badgeFree": "Free to use",
       "badgeNoCard": "No card to sign up",
       "badgeHmrc": "Built on HMRC APIs",
@@ -56,7 +56,7 @@
     "services": {
       "title1": "Everything covered,",
       "title2": "whoever you are.",
-      "subtitle": "Whether you send quarterly updates as a sole trader or VAT returns for your business, EasyTax files them straight to HMRC.",
+      "subtitle": "Whether you send quarterly updates as a sole trader or VAT returns for your business, MTD Buddy files them straight to HMRC.",
       "freelancer": {
         "kicker": "For Freelancers & Sole Traders",
         "title": "Personal & Self-Employment",
@@ -80,14 +80,14 @@
         "f3Label": "HMRC receipt",
         "f3Desc": "Every submission comes back with HMRC's confirmation for your records.",
         "f4Label": "Not covered: CT600 and company accounts",
-        "f4Desc": "EasyTax does not file Corporation Tax (CT600) or prepare a Balance Sheet or P&L.",
+        "f4Desc": "MTD Buddy does not file Corporation Tax (CT600) or prepare a Balance Sheet or P&L.",
         "cta": "Start a VAT return →"
       }
     },
     "how": {
       "title1": "File in five minutes,",
       "title2": "not five hours.",
-      "body": "Connect your HMRC account and add your income and expenses — import a CSV statement from your bank or type them in. EasyTax categorises everything with AI and files your quarterly update or VAT return.",
+      "body": "Connect your HMRC account and add your income and expenses — import a CSV statement from your bank or type them in. MTD Buddy categorises everything with AI and files your quarterly update or VAT return.",
       "priceLabel": "Free",
       "priceCaption": "No subscription and no per-filing fee. Connecting HMRC, importing your records, AI categorisation and filing to HMRC are all free.",
       "cta": "Start Filing →",
@@ -101,18 +101,18 @@
     "faq": {
       "title1": "Questions,",
       "title2": "answered.",
-      "q1Q": "Does EasyTax support limited companies?",
-      "q1A": "Partly. EasyTax files MTD ITSA quarterly updates for sole traders and MTD VAT returns for VAT-registered businesses, including limited companies. It does not file Corporation Tax (CT600), company accounts or the year-end Self Assessment return yet. Pricing: free — no monthly subscription and no per-filing fee.",
+      "q1Q": "Does MTD Buddy support limited companies?",
+      "q1A": "Partly. MTD Buddy files MTD ITSA quarterly updates for sole traders and MTD VAT returns for VAT-registered businesses, including limited companies. It does not file Corporation Tax (CT600), company accounts or the year-end Self Assessment return yet. Pricing: free — no monthly subscription and no per-filing fee.",
       "q2Q": "What VAT schemes do you support?",
       "q2A": "We support Standard, Flat Rate, and Annual VAT Accounting schemes, filed directly to HMRC via MTD-compliant APIs.",
-      "q3Q": "Can EasyTax file my year-end Self Assessment?",
-      "q3A": "Not yet. EasyTax files your MTD quarterly updates. The year-end final declaration, the annual SA100 return and property income are not available in EasyTax yet, so use HMRC's online service or other HMRC-recognised software for that step.",
+      "q3Q": "Can MTD Buddy file my year-end Self Assessment?",
+      "q3A": "Not yet. MTD Buddy files your MTD quarterly updates. The year-end final declaration, the annual SA100 return and property income are not available in MTD Buddy yet, so use HMRC's online service or other HMRC-recognised software for that step.",
       "q4Q": "What is the CT600 and do I need it?",
-      "q4A": "CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. EasyTax does not file it — use HMRC's Corporation Tax online service, an accountant or other software.",
+      "q4A": "CT600 is the Corporation Tax return every UK limited company must file with HMRC each year. MTD Buddy does not file it — use HMRC's Corporation Tax online service, an accountant or other software.",
       "q5Q": "Is my HMRC data safe?",
       "q5A": "Your credentials are never stored. We use them to fetch your records via a secure, encrypted connection and discard them immediately after.",
       "q6Q": "What's the Self Assessment deadline?",
-      "q6A": "Online Self Assessment returns are due 31 January each year. VAT returns are due one month and seven days after each VAT period ends. EasyTax shows your MTD quarterly update and VAT deadlines from HMRC."
+      "q6A": "Online Self Assessment returns are due 31 January each year. VAT returns are due one month and seven days after each VAT period ends. MTD Buddy shows your MTD quarterly update and VAT deadlines from HMRC."
     },
     "tips": {
       "kicker": "Updated daily",
@@ -160,7 +160,7 @@
   "auth": {
     "login": {
       "title": "Welcome back",
-      "subtitle": "Log in to your EasyTax account",
+      "subtitle": "Log in to your MTD Buddy account",
       "continueGoogle": "Continue with Google",
       "redirecting": "Redirecting…",
       "or": "or",
@@ -250,7 +250,7 @@
       "gatewayAuth": "Government Gateway authorised",
       "connectedOn": "Connected {date}",
       "reconnect": "Reconnect",
-      "step2Body": "Link your Government Gateway account so EasyTax can fetch your tax obligations and submit returns on your behalf.",
+      "step2Body": "Link your Government Gateway account so MTD Buddy can fetch your tax obligations and submit returns on your behalf.",
       "connectHmrc": "Connect HMRC",
       "step3Locked": "Complete Steps 1 and 2 to unlock Self Assessment filing.",
       "tasksHeader": "Tax Tasks · past year & next 12 months",
@@ -385,9 +385,9 @@
     "aboutUs": "About us",
     "privacy": "Privacy",
     "terms": "Terms",
-    "vs": "EasyTax vs {name}",
+    "vs": "MTD Buddy vs {name}",
     "tagline": "Finance Panda Limited. Built in London.",
-    "disclaimer": "EasyTax is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA quarterly updates and VAT.",
+    "disclaimer": "MTD Buddy is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA quarterly updates and VAT.",
     "notifyHeading": "Be first to file",
     "notifyBlurb": "We will email you the day MTD filing opens — nothing else, unsubscribe in one click.",
     "accessibility": "Accessibility"
@@ -403,7 +403,7 @@
     "tabsLabel": "Account type",
     "agentLoginTitle": "Agent sign in",
     "agentLoginSubtitle": "For accountants and tax agents filing for clients.",
-    "agentNoAccount": "New to EasyTax as an agent?",
+    "agentNoAccount": "New to MTD Buddy as an agent?",
     "agentCreate": "Create an agent account",
     "agentRegisterTitle": "Create an agent account",
     "agentRegisterSubtitle": "For accountants and tax agents filing Making Tax Digital updates for clients. You will need your Agent Services Account (ARN).",

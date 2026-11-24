@@ -3,7 +3,7 @@
 // This was `/api/admin/seo-audit` and only that: an endpoint you had to know
 // about, find a secret for, and call by hand. It was written on 2026-09-09
 // and, by 2026-09-14, had never been run. In that window it would have found
-// that 119 of 158 pages ended their title `| EasyTax | EasyTax` and that 150
+// that 119 of 158 pages ended their title `| MTD Buddy | MTD Buddy` and that 150
 // of 158 titles were past the length Google displays — on a site whose entire
 // growth programme was aimed at organic search.
 //
@@ -90,7 +90,7 @@ export function jsonLdTypes(html: string): string[] {
 
 /**
  * The defect found on 2026-09-14: a page title carrying the brand more than
- * once, because a route appended `| EasyTax` to a title the root layout's
+ * once, because a route appended `| MTD Buddy` to a title the root layout's
  * template was already going to suffix.
  *
  * Tested on the rendered tag rather than on the source, which is the only
@@ -100,14 +100,14 @@ export function jsonLdTypes(html: string): string[] {
  */
 export function brandRepeats(title: string | null): number {
   if (!title) return 0;
-  return (title.match(/EasyTax/gi) ?? []).length;
+  return (title.match(/MTD Buddy/gi) ?? []).length;
 }
 
-/** The title with any trailing ` | EasyTax` removed, however many there are. */
+/** The title with any trailing ` | MTD Buddy` removed, however many there are. */
 export function withoutBrandSuffix(title: string): string {
   let out = title.trim();
   for (;;) {
-    const next = out.replace(/\s*[|–—-]\s*EasyTax\s*$/i, '').trim();
+    const next = out.replace(/\s*[|–—-]\s*MTD Buddy\s*$/i, '').trim();
     if (next === out) return out;
     out = next;
   }
@@ -117,7 +117,7 @@ export function withoutBrandSuffix(title: string): string {
  * A title that is only too long because it is carrying the brand.
  *
  * `lib/seo-meta.ts` has done the right thing since 2026-09-14: it appends
- * ` | EasyTax` when the result still fits in the display budget and drops it
+ * ` | MTD Buddy` when the result still fits in the display budget and drops it
  * when it does not. The catch is that a route has to *call* it. Ten routes
  * never did, so the root layout's `title.template` appended the brand for
  * them — unconditionally, budget or no budget — and four public pages went out
@@ -139,7 +139,7 @@ export function brandPushedOverBudget(title: string | null): boolean {
 
 /** The origin the public actually reads. Every canonical, every sitemap entry
  *  and every IndexNow submission on this site names it. */
-export const PUBLIC_ORIGIN = 'https://easytax.vip';
+export const PUBLIC_ORIGIN = 'https://mtdbuddy.com';
 
 /**
  * Which origin a crawl should fetch.
@@ -168,7 +168,7 @@ export function auditBase(requestOrigin: string): string {
  * A login wall, an SSO interstitial or a parked domain answers 200 with
  * perfectly well-formed HTML, so every check in `analyse` runs happily and
  * every count comes back wrong in the same direction. The tell is the
- * canonical: our pages name `easytax.vip` (or, on a preview, their own
+ * canonical: our pages name `mtdbuddy.com` (or, on a preview, their own
  * deployment), and an interstitial names whoever is serving it.
  *
  * Returns a reason when the crawl is looking at somebody else's pages, and
@@ -211,7 +211,7 @@ export async function auditPage(base: string, path: string): Promise<PageAudit> 
   try {
     res = await fetch(`${base}${path}`, {
       cache: 'no-store',
-      headers: { 'user-agent': 'EasyTax-SEO-Audit/1.0 (+https://easytax.vip)' },
+      headers: { 'user-agent': 'MTD Buddy-SEO-Audit/1.0 (+https://mtdbuddy.com)' },
     });
   } catch (err) {
     return { ...empty, error: err instanceof Error ? err.message : String(err) };
@@ -255,7 +255,7 @@ export async function auditPage(base: string, path: string): Promise<PageAudit> 
     canonical,
     // Compared on path, not on origin: an audit run against a preview
     // deployment would otherwise report every canonical as wrong, because they
-    // all correctly point at easytax.vip.
+    // all correctly point at mtdbuddy.com.
     canonicalMatchesSelf: canonical ? new URL(canonical, base).pathname === path : null,
     h1Count: (body.match(/<h1\b/gi) ?? []).length,
     words: visible.split(/\s+/).filter(Boolean).length,

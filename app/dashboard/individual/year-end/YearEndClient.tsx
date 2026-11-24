@@ -226,7 +226,7 @@ export default function YearEndClient() {
         Finish your tax year with HMRC: check your figures, make any final adjustments, review HMRC&apos;s calculation and submit your final declaration.
       </p>
       <p className="text-sm mb-6 p-3 rounded-xl" style={{ backgroundColor: '#FEF3C7', color: '#713F12', border: '1px solid #E5CFA8' }}>
-        <strong>HMRC sandbox only.</strong> This uses HMRC&apos;s test service, so nothing here is a real tax return. EasyTax is not yet approved for end-of-year submission.
+        <strong>HMRC sandbox only.</strong> This uses HMRC&apos;s test service, so nothing here is a real tax return. MTD Buddy is not yet approved for end-of-year submission.
       </p>
 
       <Card>
@@ -345,7 +345,7 @@ export default function YearEndClient() {
           Go to annual adjustments
         </Link>
         <p className="text-xs mt-3" style={{ color: '#6B6256', lineHeight: 1.55 }}>
-          EasyTax does not yet cover employment, pensions, property, foreign income or capital gains. If you have any of these, use{' '}
+          MTD Buddy does not yet cover employment, pensions, property, foreign income or capital gains. If you have any of these, use{' '}
           <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
             target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>other compatible software</a>{' '}
           for your final declaration.

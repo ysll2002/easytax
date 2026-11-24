@@ -76,7 +76,7 @@ async function settle<T>(fn: () => Promise<T>): Promise<{ data?: T; error?: stri
 export async function POST(req: NextRequest) {
   if (IS_HMRC_PRODUCTION) {
     return NextResponse.json(
-      { error: 'YEAR_END_NOT_AVAILABLE', message: 'Year-end submission is not available in EasyTax yet.' },
+      { error: 'YEAR_END_NOT_AVAILABLE', message: 'Year-end submission is not available in MTD Buddy yet.' },
       { status: 403 },
     );
   }

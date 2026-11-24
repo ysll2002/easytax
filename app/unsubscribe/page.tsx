@@ -58,7 +58,7 @@ export default async function UnsubscribePage({
                 further marketing email from us.
               </p>
               <p className="mt-4 text-sm leading-relaxed" style={{ color: '#6B6256' }}>
-                If you still have an EasyTax account, you&apos;ll continue to receive essential
+                If you still have an MTD Buddy account, you&apos;ll continue to receive essential
                 service messages — password resets and submission receipts — because those
                 aren&apos;t marketing and we can&apos;t run your account without them.
               </p>
@@ -85,10 +85,10 @@ export default async function UnsubscribePage({
               <p className="mt-4 text-sm leading-relaxed" style={{ color: '#4A4035' }}>
                 Email{' '}
                 <a
-                  href="mailto:hello@easytax.vip?subject=Unsubscribe"
+                  href="mailto:hello@mtdbuddy.com?subject=Unsubscribe"
                   style={{ color: '#A04E1C', textDecoration: 'underline' }}
                 >
-                  hello@easytax.vip
+                  hello@mtdbuddy.com
                 </a>{' '}
                 and we will remove you by hand within one working day.
               </p>
@@ -100,7 +100,7 @@ export default async function UnsubscribePage({
             className="inline-block mt-8 px-6 py-3 rounded-full text-sm font-medium"
             style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}
           >
-            Back to EasyTax
+            Back to MTD Buddy
           </Link>
         </div>
       </main>

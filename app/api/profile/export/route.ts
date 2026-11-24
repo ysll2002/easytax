@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 
-// GET /api/profile/export — the customer downloads everything EasyTax holds on
+// GET /api/profile/export — the customer downloads everything MTD Buddy holds on
 // them: profile, tax IDs, business records, HMRC filings and any bank
 // connections made before bank linking was removed. Access tokens are
-// redacted (they belong to EasyTax's OAuth session, not the customer's own
+// redacted (they belong to MTD Buddy's OAuth session, not the customer's own
 // records) but every field that represents their business data is included so
 // they can migrate elsewhere. Required by the HMRC MTD-ITSA production checklist
 // item on customer record ownership + export.
@@ -24,9 +24,9 @@ export async function GET() {
 
   const bundle = {
     exported_at:  new Date().toISOString(),
-    exported_by:  'EasyTax (https://easytax.vip)',
+    exported_by:  'MTD Buddy (https://mtdbuddy.com)',
     schema_version: 2,
-    notice: 'This file contains every record EasyTax holds on your behalf. OAuth access tokens are omitted intentionally — they are session credentials, not your business data.',
+    notice: 'This file contains every record MTD Buddy holds on your behalf. OAuth access tokens are omitted intentionally — they are session credentials, not your business data.',
     profile:            profileRes.data ?? null,
     hmrc_connection:    hmrcRes.data ?? null,
     business_records:   recordsRes.data ?? [],
@@ -34,7 +34,7 @@ export async function GET() {
     sa_filings:         filingsRes.data ?? [],
   };
 
-  const filename = `easytax-export-${new Date().toISOString().slice(0, 10)}.json`;
+  const filename = `mtd-buddy-export-${new Date().toISOString().slice(0, 10)}.json`;
   return new NextResponse(JSON.stringify(bundle, null, 2), {
     headers: {
       'Content-Type':        'application/json; charset=utf-8',
