@@ -26,6 +26,8 @@
 
 迁移 `20261124_property_records` 只上了 staging。UI 没在浏览器里验证（staging 有 Vercel 登录墙）。测试计划和 checklist 草拟答案在 `hmrc/2026-11-eoy-subscriptions/TESTING-PLAN.md`。
 
+**staging 注册 500**：18:27:52 有人用 CLI 部署，新建了一个同名 Vercel 项目 `easytax`（prj_zLqach0g…，没有任何环境变量），staging.easytax.vip 被指到它 → MissingSecret + 缺 Supabase 变量。原项目已改名 `mtdbuddy`（prj_hXqav…，变量都在）。owner 同意后把 staging.easytax.vip 指回 mtdbuddy staging 构建 `mtdbuddy-ct5qzzszc`（含 PR #74），/api/auth/session 恢复正常。新项目 `easytax` 没删；谁建的还不知道。**以后不要在没链接项目的目录跑 `vercel` 部署**。
+
 **待 owner**：sandbox 应用订阅 Losses 7.0 + ITLA 1.0 + 其余版本；production 应用加申请 ITLA 1.0；在 staging 用一个测试用户把每张卡都跑一遍（30 天内）；截图两种声明；决定 checklist 里 accruals 怎么答。
 
 ---
