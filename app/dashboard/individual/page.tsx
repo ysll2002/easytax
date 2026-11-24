@@ -3,6 +3,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import Link from 'next/link';
 import { getTranslations, getLocale } from 'next-intl/server';
 import NinoForm from '@/components/NinoForm';
+import { anyEoyApproved } from '@/lib/hmrc-eoy/access';
 import { IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
 import TasksTimeline from '@/components/TasksTimeline';
 import { CheckCircle2, ChevronRight, History, Edit2 } from 'lucide-react';
@@ -94,12 +95,12 @@ export default async function TaxPage() {
                   label="View my tax calculation"
                   desc="Request an in-year Self Assessment calculation from HMRC anytime."
                 />
-                {/* Sandbox only until HMRC approves end-of-year functionality. */}
-                {!IS_HMRC_PRODUCTION && (
+                {/* Against the live API, only once HMRC has approved it (lib/hmrc-eoy/access.ts). */}
+                {anyEoyApproved() && (
                   <ActionLink
                     href="/dashboard/individual/year-end"
-                    label="Year-end final declaration (sandbox)"
-                    desc="Check your figures, make final adjustments and submit your final declaration to the HMRC test service."
+                    label={IS_HMRC_PRODUCTION ? 'Year end, property and other income' : 'Year end, property and other income (sandbox)'}
+                    desc="Property income, accounting adjustments, losses, employment, pensions, benefits and charges, and your final declaration."
                   />
                 )}
                 {hmrc?.vrn && (

@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@/auth';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
 import { resolveBusinessId } from '@/lib/hmrc-business';
+import { eoyContext, EoyError, yearEndApproved } from '@/lib/hmrc-eoy/access';
 import {
-  getValidToken,
   getFinalDeclarationObligations,
   getSelfEmploymentBiss,
   triggerSelfEmploymentBsas,
   getSelfEmploymentBsas,
   submitSelfEmploymentBsasAdjustments,
-  listBroughtForwardLosses,
-  listLossClaims,
+  getLossesAndClaims,
   triggerCalculation,
   getCalculation,
   submitFinalDeclaration,
@@ -20,11 +18,19 @@ import {
 
 // Year-end (final declaration) for MTD Income Tax.
 //
-// SANDBOX ONLY. HMRC's production approval of 2026-11-11 covers in-year
-// quarterly updates; end-of-year functionality has to be approved separately,
-// and BSAS, Individual Losses and BISS are not subscribed in production at
-// all. Until that approval exists this route refuses to run against the live
-// API, whatever the UI does.
+// HMRC's production approval of 2026-11-11 covers in-year quarterly updates;
+// end-of-year functionality is approved separately. Until it is, this route
+// refuses to run against the live API: set 'year-end' in
+// HMRC_PRODUCTION_EOY_APIS once HMRC approves it (lib/hmrc-eoy/access.ts).
+//
+// Works for the signed-in individual, or with ?clientId= for an agent's
+// authorised client. Only a main agent can make a client's final declaration
+// (HMRC: supporting agents cannot submit tax returns or view calculations).
+//
+// Two journeys share the steps:
+//   finalise  intent-to-finalise calculation → final-declaration
+//   amend     after the return is filed: change the figures, then an
+//             intent-to-amend calculation → confirm-amendment
 //
 // One route, dispatched on `action`, because every step needs the same
 // session → NINO → token → businessId resolution.
@@ -53,6 +59,8 @@ type Body = {
   calculationId?: string;
   adjustments?:   BsasAdjustments;
   confirmed?:     boolean;
+  // finalise (default) or amend
+  mode?:          'finalise' | 'amend';
   scenario?:      string;
   // Sandbox only: HMRC's default test calculation always carries error
   // C95005, so the declaration can be sent anyway to exercise the endpoint.
@@ -74,18 +82,29 @@ async function settle<T>(fn: () => Promise<T>): Promise<{ data?: T; error?: stri
 }
 
 export async function POST(req: NextRequest) {
-  if (IS_HMRC_PRODUCTION) {
+  if (!yearEndApproved()) {
     return NextResponse.json(
       { error: 'YEAR_END_NOT_AVAILABLE', message: 'Year-end submission is not available in EasyTax yet.' },
       { status: 403 },
     );
   }
 
-  const session = await auth();
-  if (!session?.user?.profileId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const profileId = session.user.profileId;
+  let ctx;
+  try {
+    ctx = await eoyContext(req.nextUrl.searchParams.get('clientId'));
+  } catch (err) {
+    if (err instanceof EoyError) return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
+    throw err;
+  }
+  if (ctx.agentType === 'supporting') {
+    return NextResponse.json({ error: 'HMRC does not let a supporting agent make a final declaration or see tax calculations. Only the client\'s main agent can.', code: 'SUPPORTING_AGENT' }, { status: 403 });
+  }
+  const profileId = ctx.profileId;
 
   const body = (await req.json().catch(() => ({}))) as Body;
+  const mode = body.mode === 'amend' ? 'amend' : 'finalise';
+  // Never honoured against the live API.
+  const ignoreErrors = !IS_HMRC_PRODUCTION && body.sandboxIgnoreErrors === true;
   const { action, taxYear, calculationId } = body;
   const scenario = body.scenario && SCENARIO_RE.test(body.scenario) ? body.scenario : undefined;
 
@@ -96,25 +115,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid calculation ID.' }, { status: 400 });
   }
 
-  const { data: hmrc } = await supabase
-    .from('hmrc_connections')
-    .select('nino, business_id')
-    .eq('user_id', profileId)
-    .single();
+  const { nino, token } = ctx;
 
-  // Same sandbox fallback as the other HMRC routes. This route never runs in
-  // production (see above), so the test NINO cannot reach the live API.
-  const nino = hmrc?.nino ?? 'GW460330D';
-
-  let token: string;
-  try {
-    token = await getValidToken(profileId);
-  } catch (err) {
-    return NextResponse.json({ error: errorMessage(err) }, { status: 401 });
-  }
-
-  const businessId = async () =>
-    (await resolveBusinessId(profileId, nino, token, hmrc?.business_id)) ?? 'XAIS12345678910';
+  // An agent client's businessId is stored on the client; an individual's on
+  // the connection (resolved and stored on first use). The sandbox test
+  // business is the fallback in the sandbox only.
+  const businessId = async () => {
+    const known = ctx.clientId ? ctx.businessId : await resolveBusinessId(profileId, nino, token, ctx.businessId);
+    if (known) return known;
+    if (IS_HMRC_PRODUCTION) throw new Error('No self-employment business found for this NINO.');
+    return 'XAIS12345678910';
+  };
 
   try {
     switch (action) {
@@ -123,13 +134,12 @@ export async function POST(req: NextRequest) {
       // card, not as a broken page.
       case 'overview': {
         const bid = await businessId();
-        const [obligations, biss, broughtForwardLosses, lossClaims] = await Promise.all([
+        const [obligations, biss, losses] = await Promise.all([
           settle(() => getFinalDeclarationObligations(nino, taxYear, token)),
           settle(() => getSelfEmploymentBiss(nino, taxYear, bid, token)),
-          settle(() => listBroughtForwardLosses(nino, taxYear, token)),
-          settle(() => listLossClaims(nino, taxYear, token)),
+          settle(() => getLossesAndClaims(nino, bid, taxYear, token)),
         ]);
-        return NextResponse.json({ businessId: bid, obligations, biss, broughtForwardLosses, lossClaims });
+        return NextResponse.json({ businessId: bid, who: ctx.label, isAgent: ctx.clientId !== null, obligations, biss, losses });
       }
 
       case 'bsas-trigger': {
@@ -151,7 +161,7 @@ export async function POST(req: NextRequest) {
       }
 
       case 'calc-trigger': {
-        const result = await triggerCalculation(nino, taxYear, token, 'intent-to-finalise', scenario);
+        const result = await triggerCalculation(nino, taxYear, token, mode === 'amend' ? 'intent-to-amend' : 'intent-to-finalise', scenario);
         return NextResponse.json({ calculationId: result?.calculationId });
       }
 
@@ -167,24 +177,37 @@ export async function POST(req: NextRequest) {
         }
 
         // Re-read the calculation rather than trusting the browser: it must be
-        // an intent-to-finalise calculation, and HMRC must not have reported
+        // the right kind of calculation (intent-to-finalise for a declaration,
+        // intent-to-amend for an amendment), and HMRC must not have reported
         // errors against it.
         const calc = await getCalculation(nino, taxYear, calculationId, token);
-        if (calc?.metadata?.intentToSubmitFinalDeclaration !== true && body.sandboxIgnoreErrors !== true) {
-          return NextResponse.json({ error: 'This calculation cannot be used for a final declaration. Run the final calculation again.' }, { status: 409 });
+        const calcType = String(calc?.metadata?.calculationType ?? '');
+        const rightKind = mode === 'amend'
+          ? calcType === 'intent-to-amend'
+          : calc?.metadata?.intentToSubmitFinalDeclaration === true || calcType === 'intent-to-finalise';
+        if (!rightKind && !ignoreErrors) {
+          return NextResponse.json({ error: mode === 'amend'
+            ? 'This calculation cannot be used to confirm an amendment. Run the amendment calculation again.'
+            : 'This calculation cannot be used for a final declaration. Run the final calculation again.' }, { status: 409 });
         }
-        if ((calc?.messages?.errors ?? []).length > 0 && body.sandboxIgnoreErrors !== true) {
+        if ((calc?.messages?.errors ?? []).length > 0 && !ignoreErrors) {
           return NextResponse.json({ error: 'HMRC reported errors on this calculation. Fix them and run the calculation again.' }, { status: 409 });
         }
 
-        await submitFinalDeclaration(nino, taxYear, calculationId, token, scenario);
+        await submitFinalDeclaration(nino, taxYear, calculationId, token, scenario, mode === 'amend' ? 'confirm-amendment' : 'final-declaration');
 
         const totalDue = calc?.calculation?.taxCalculation?.totalIncomeTaxAndNicsDue;
         const { error: insertError } = await supabase.from('sa_filings').insert({
           user_id:       profileId,
+          client_id:     ctx.clientId,
           tax_year:      taxYear,
-          filing_type:   'final_declaration',
-          hmrc_response: { calculationId, totalIncomeTaxAndNicsDue: totalDue ?? null, environment: 'sandbox', ignoredErrors: body.sandboxIgnoreErrors === true },
+          filing_type:   mode === 'amend' ? 'amendment' : 'final_declaration',
+          hmrc_response: {
+            calculationId, totalIncomeTaxAndNicsDue: totalDue ?? null,
+            environment: IS_HMRC_PRODUCTION ? 'production' : 'sandbox',
+            submittedAs: ctx.clientId ? 'agent' : 'individual',
+            ignoredErrors: ignoreErrors,
+          },
         });
         // HMRC has accepted the declaration at this point, so a failed local
         // record must not be reported to the customer as a failed filing.
