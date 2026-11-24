@@ -15,6 +15,21 @@
 
 ---
 
+## 2026-11-24（owner 对话）
+
+**今日执行**：owner 要求把 ULJ714 的所有差距都补上（包括没有代码的 6 个 API）。PR #74 合进 staging `0628843`：
+- 从 HMRC GitHub 上的 OAS 生成 108 个端点的 catalog（12 个 API，含请求 schema 和 Gov-Test-Scenario），`scripts/hmrc/build-eoy-catalog.py` 可重新生成
+- 一个通用路由 `/api/hmrc/eoy`（个人 + 代理客户；supporting agent 按 service guide 限制；production 上每个 API 都要列进 `HMRC_PRODUCTION_EOY_APIS` 才放行）
+- 年终页新增「All year-end data」标签页，表单从 schema 生成，HMRC 错误原样显示
+- 房产收入从 records 生成（records 新增 income_source / property_bucket / property_id，按收入来源锁定已申报季度）
+- 引导流程支持代理客户、intent-to-amend → confirm-amendment、Losses 7.0，个人和代理声明改成 service guide 原文（原来的个人声明措辞不对）
+
+迁移 `20261124_property_records` 只上了 staging。UI 没在浏览器里验证（staging 有 Vercel 登录墙）。测试计划和 checklist 草拟答案在 `hmrc/2026-11-eoy-subscriptions/TESTING-PLAN.md`。
+
+**待 owner**：sandbox 应用订阅 Losses 7.0 + ITLA 1.0 + 其余版本；production 应用加申请 ITLA 1.0；在 staging 用一个测试用户把每张卡都跑一遍（30 天内）；截图两种声明；决定 checklist 里 accruals 怎么答。
+
+---
+
 ## 2026-11-23（owner 对话）
 
 **今日执行**：owner 问注册人数 → production 53 个账号，真实外部约 44 个，10-13 后无外部新注册，0 条记录、0 次申报。owner 要一年内做到 £10k/月的推广计划 → 写了 `agent/GROWTH_PLAN_2027.md`（BACKLOG stg-015，proposed）：代理为主（35 家 × £180）+ 个人（500 × £7.5）；12 月打地基（Stripe、文案、GOV.UK 列表、激活老用户），1–3 月代理试点，4 月扩容潮前上年终申报，8 月第二波。没有改代码。
