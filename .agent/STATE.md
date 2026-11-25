@@ -4,7 +4,12 @@
 
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
-## 2026-11-24 最新
+## 2026-11-25 最新
+- **production 季度申报 2026-27 会失败**（旧 period 端点）。修复在 staging（PR #76 cumulative，PR #77 唯一索引）。上 main 前 production 先跑迁移 20261124_property_records、20261125_sa_filings_unique_per_source。需 owner 明说才发布。
+- sandbox 全量测试 2026-11-25 完成（hmrc/2026-11-eoy-subscriptions/SANDBOX-RUN-2026-11-25.md）：108 个年终端点 105 成功、3 个要等 2027-04-06；agent 声明未测。
+- Vercel 项目已改回 `easytax`（prj_hXqav…）；空项目 `easytax-stray-empty` 待 owner 删除。
+
+## 2026-11-24
 
 - staging = `0628843`（PR #62–#74）；production = `b402c50`（到 PR #72）。PR #74（年终全套 108 个端点 + 房产 records）**只在 staging**，迁移 `20261124_property_records` 只上了 staging。
 - HMRC 2026-ULJ714：年终订阅被退回，需要全量 sandbox 测试 + 新 checklist，计划见 `hmrc/2026-11-eoy-subscriptions/TESTING-PLAN.md`。SDST WFG726 仍在等。

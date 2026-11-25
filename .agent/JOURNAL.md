@@ -15,6 +15,11 @@
 
 ---
 
+## 2026-11-25（owner 会话，修季度申报）
+**PR #76**（已合 staging）：季度申报 2025-26 起改用 SE cumulative PUT，发 6 Apr 到季末的年初至今汇总（records 加总）；复核页显示年初至今数字。staging 实测 Q1/Q2 2026-27 都 204，Q2 发 £5,600/£688 = Q1+Q2。
+**PR #77**（已合 staging）：sa_filings 季度唯一索引加 income_source（迁移 20261125，只上了 staging）——之前同一季度先报了外国房产，SE 那条记录会被静默丢掉、records 没锁。
+**production 仍是旧代码**：2026-27 季度申报会被 HMRC 拒。发布到 main 需要 owner 明说；要先在 production 跑 20261124 + 20261125 两个迁移。
+
 ## 2026-11-25（owner 会话，sandbox 全量测试）
 **做了**：staging 新建测试账号（凭据在 agent/.env.local STAGING_TEST_*），连 HMRC 测试用户 GK649364B，在内置浏览器里跑完 108 个年终端点 + final declaration + confirm-amendment（都 204），截图在 hmrc/2026-11-eoy-subscriptions/evidence/，结果 SANDBOX-RUN-2026-11-25.md。105/108 成功；Losses 7.0 / ITLA / Winter Fuel PUT 在 2027-04-06 前只能拿到 RULE_TAX_YEAR_NOT_ENDED。
 **严重发现**：季度申报 submitQuarterlyUpdate 用旧 period 端点，2026-27 被拒 RULE_TAX_YEAR_NOT_SUPPORTED——production 也一样，真实用户 2026-27 季度申报会失败。当年 HMRC 看到的 in-year 证据来自 sandbox-test 路由。待 owner 决定是否立刻修（改 cumulative + 年初至今汇总）。
