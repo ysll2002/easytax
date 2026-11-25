@@ -10,6 +10,7 @@ export async function submitAsAgent(
   ctx: { client: AgentClient; token: string },
   body: QuarterlyData & { taxYear: string },
   recordIds: string[] = [],
+  figures?: { taxYear: string; cumulative: boolean; send: { periodStartDate: string; periodEndDate: string; turnover: number; expenses: Record<string, number> } },
 ) {
   const { client, token } = ctx;
   if (!client.nino) throw new AgentError('MISSING_NINO', 400, 'This client has no National Insurance number.');
@@ -22,14 +23,16 @@ export async function submitAsAgent(
     await supabase.from('agent_clients').update({ business_id: businessId }).eq('id', client.id).eq('agent_user_id', agentUserId);
   }
 
-  const result = await submitQuarterlyUpdate(client.nino, businessId, body, token);
+  // From 2025-26 HMRC takes the year-to-date totals (records-check.ts).
+  const sent = figures ? { ...figures.send, taxYear: figures.taxYear } : body;
+  const result = await submitQuarterlyUpdate(client.nino, businessId, sent, token);
 
   const round2 = (n: number) => Math.round(n * 100) / 100;
   const totalExpenses = round2(Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0));
   await supabase.from('sa_filings').insert({
     user_id:         agentUserId,
     client_id:       client.id,
-    tax_year:        body.taxYear,
+    tax_year:        figures?.taxYear ?? body.taxYear,
     filing_type:     'quarterly',
     period_start:    body.periodStartDate,
     period_end:      body.periodEndDate,
@@ -37,8 +40,8 @@ export async function submitAsAgent(
     total_expenses:  totalExpenses,
     net_profit:      round2(body.turnover - totalExpenses),
     expenses_detail: body.expenses,
-    hmrc_response:   { result, submittedAs: 'agent' },
+    hmrc_response:   { result, submittedAs: 'agent', cumulative: figures?.cumulative ?? false, sent },
     record_ids:      recordIds,
   });
-  return { success: true, result };
+  return { success: true, result, cumulative: figures?.cumulative ?? false, sent };
 }

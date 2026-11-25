@@ -1,4 +1,6 @@
 import { cookies, headers } from 'next/headers';
+import { isCumulativeTaxYear } from '@/lib/hmrc-cumulative';
+export { isCumulativeTaxYear, CUMULATIVE_FROM_TAX_YEAR } from '@/lib/hmrc-cumulative';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { auth } from '@/auth';
 
@@ -341,41 +343,55 @@ export type QuarterlyData = {
   };
 };
 
+/**
+ * A self-employment quarterly update.
+ *
+ * From 2025-26 HMRC takes a cumulative period summary: one PUT per tax year
+ * with the totals from 6 April to the end of the latest quarter, replacing
+ * what was sent before (Self-Employment Business v5.0, Create or Amend a
+ * Self-Employment Cumulative Period Summary). The caller passes year-to-date
+ * figures and a period that starts on 6 April. The older period summary
+ * (POST .../period) only accepts tax years up to 2024-25, and HMRC answers
+ * RULE_TAX_YEAR_NOT_SUPPORTED for anything later.
+ */
 export async function submitQuarterlyUpdate(
   nino: string,
   businessId: string,
-  data: QuarterlyData,
+  data: QuarterlyData & { taxYear: string },
   token: string,
 ) {
+  const figures = {
+    periodDates: {
+      periodStartDate: data.periodStartDate,
+      periodEndDate:   data.periodEndDate,
+    },
+    periodIncome: {
+      turnover: data.turnover,
+      other:    data.other ?? 0,
+    },
+    // v5.0: expense values are plain numbers (not { amount } objects).
+    periodExpenses: {
+      costOfGoods:          data.expenses.costOfGoods          ?? 0,
+      wagesAndStaffCosts:   data.expenses.staffCosts           ?? 0,
+      carVanTravelExpenses: data.expenses.travelCosts          ?? 0,
+      premisesRunningCosts: data.expenses.premisesRunningCosts ?? 0,
+      adminCosts:           data.expenses.adminCosts           ?? 0,
+      advertisingCosts:     data.expenses.advertisingCosts     ?? 0,
+      professionalFees:     data.expenses.professionalFees     ?? 0,
+      otherExpenses:        data.expenses.otherExpenses        ?? 0,
+    },
+  };
+  if (isCumulativeTaxYear(data.taxYear)) {
+    return hmrcFetch(
+      `/individuals/business/self-employment/${nino}/${businessId}/cumulative/${data.taxYear}`,
+      token,
+      { method: 'PUT', headers: { Accept: 'application/vnd.hmrc.5.0+json' }, body: JSON.stringify(figures) },
+    );
+  }
   return hmrcFetch(
     `/individuals/business/self-employment/${nino}/${businessId}/period`,
     token,
-    {
-      method: 'POST',
-      headers: { Accept: 'application/vnd.hmrc.5.0+json' },
-      // Self-Employment Business (MTD) v5.0: expense values are plain numbers
-      // (not { amount } objects), and field names differ from the older shape.
-      body: JSON.stringify({
-        periodDates: {
-          periodStartDate: data.periodStartDate,
-          periodEndDate:   data.periodEndDate,
-        },
-        periodIncome: {
-          turnover: data.turnover,
-          other:    data.other ?? 0,
-        },
-        periodExpenses: {
-          costOfGoods:          data.expenses.costOfGoods          ?? 0,
-          wagesAndStaffCosts:   data.expenses.staffCosts           ?? 0,
-          carVanTravelExpenses: data.expenses.travelCosts          ?? 0,
-          premisesRunningCosts: data.expenses.premisesRunningCosts ?? 0,
-          adminCosts:           data.expenses.adminCosts           ?? 0,
-          advertisingCosts:     data.expenses.advertisingCosts     ?? 0,
-          professionalFees:     data.expenses.professionalFees     ?? 0,
-          otherExpenses:        data.expenses.otherExpenses        ?? 0,
-        },
-      }),
-    },
+    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.5.0+json' }, body: JSON.stringify(figures) },
   );
 }
 
