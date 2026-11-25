@@ -15,6 +15,11 @@
 
 ---
 
+## 2026-11-25（owner 会话，收尾修复 + agent 声明）
+**PR #78**（已合 staging）：catalog 示例按 schema 匹配税年、场景表按表头解析（429→518）、两个历史删除预选场景、工作区请求体按所选税年；2025-26 年终页 losses 改成说明文字；HMRC 其他欠款用自己的标题。
+**agent 最终申报**已测：staging agent 账号 + sandbox agent CARN0586927 + 客户 LH533882D（模拟接受），HMRC 204，截图 evidence/04、05。凭据在 agent/.env.local。
+**sandbox 测试已全部覆盖**；剩下只是 3 个 PUT 要等 2027-04-06。production 发布仍待 owner。
+
 ## 2026-11-25（owner 会话，修季度申报）
 **PR #76**（已合 staging）：季度申报 2025-26 起改用 SE cumulative PUT，发 6 Apr 到季末的年初至今汇总（records 加总）；复核页显示年初至今数字。staging 实测 Q1/Q2 2026-27 都 204，Q2 发 £5,600/£688 = Q1+Q2。
 **PR #77**（已合 staging）：sa_filings 季度唯一索引加 income_source（迁移 20261125，只上了 staging）——之前同一季度先报了外国房产，SE 那条记录会被静默丢掉、records 没锁。
