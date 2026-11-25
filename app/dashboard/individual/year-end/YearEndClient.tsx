@@ -3,7 +3,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { hmrcFetch } from '@/lib/hmrc-client';
 
-// Year-end final declaration for MTD Income Tax (sandbox only — see page.tsx).
+// Year-end final declaration for MTD Income Tax, for an individual or, with
+// clientId, an agent's authorised client (main agents only — HMRC does not
+// let supporting agents submit a tax return).
 //
 // The steps follow HMRC's end-of-year journey:
 //   1. See what HMRC holds: final declaration obligation, business totals
@@ -13,9 +15,12 @@ import { hmrcFetch } from '@/lib/hmrc-client';
 //   4. The final calculation (intent-to-finalise), shown in full with HMRC's
 //      errors, warnings and information messages.
 //   5. The declaration, then Submit Final Declaration against that calculation.
+//
+// After the return is filed, the same steps amend it: change the figures,
+// then an intent-to-amend calculation and confirm-amendment.
 
 /** The last tax year that has ended. Final declarations can only be made after 5 April. */
-function lastEndedTaxYear(now = new Date()) {
+export function lastEndedTaxYear(now = new Date()) {
   const y = now.getFullYear();
   const afterYearEnd = now.getMonth() > 3 || (now.getMonth() === 3 && now.getDate() >= 6);
   const start = afterYearEnd ? y - 1 : y - 2;
@@ -30,21 +35,36 @@ const SCENARIOS = [
   'BUSINESS_VALIDATION_FAILURE', 'SUBMISSION_FAILED', 'NOT_FOUND',
 ];
 
-// Wording of the declaration an individual makes when submitting their own
-// final declaration, as given in HMRC's MTD Income Tax end-to-end service guide.
+// The declarations exactly as HMRC's MTD Income Tax end-to-end service guide
+// gives them ("Agreeing to the declaration"): the individual's, with its
+// introduction, and the agent's.
+const DECLARATION_INTRO =
+  'Before you can submit the information displayed here in response to your notice to file from HM Revenue & Customs, you must read and agree to the following statement by ticking the box.';
 const DECLARATION =
-  'I declare that the information and self-assessment I have filed are (taken together) correct and complete to the best of my knowledge. ' +
+  'I declare that the information and tax return I have submitted are (taken together) correct and complete to the best of my knowledge. ' +
   'I understand that I may have to pay financial penalties and face prosecution if I give false information.';
+const AGENT_DECLARATION =
+  'I confirm that my client has received a copy of all the information being filed and approved the information as being correct and complete to the best of their knowledge and belief. ' +
+  'My client understands that they may have to pay financial penalties and face prosecution if they give false information.';
 
 type Json = Record<string, unknown>;
 type Settled<T> = { data?: T; error?: string };
 type Overview = {
-  businessId:           string;
-  obligations:          Settled<{ periodStartDate: string; periodEndDate: string; dueDate: string; status: string; receivedDate?: string }[]>;
-  biss:                 Settled<Json>;
-  broughtForwardLosses: Settled<{ lossId: string; typeOfLoss: string; lossAmount: number }[]>;
-  lossClaims:           Settled<{ claimId: string; typeOfLoss: string; typeOfClaim: string }[]>;
+  businessId:   string;
+  who:          string;
+  isAgent:      boolean;
+  obligations:  Settled<{ periodStartDate: string; periodEndDate: string; dueDate: string; status: string; receivedDate?: string }[]>;
+  biss:         Settled<Json>;
+  losses:       Settled<Json | null> & { notCovered?: boolean };
 };
+
+/** Every number in an HMRC response, by its path: { losses: { broughtForwardLosses: 50 } } → ["Losses › brought forward losses", 50]. */
+function numbersIn(obj: unknown, prefix: string[] = []): [string, number][] {
+  if (typeof obj === 'number') return [[prefix.map(p => p.replace(/([a-z])([A-Z])/g, '$1 $2').toLowerCase()).join(' › '), obj]];
+  if (Array.isArray(obj)) return obj.flatMap((x, i) => numbersIn(x, [...prefix, String(i + 1)]));
+  if (obj && typeof obj === 'object') return Object.entries(obj).flatMap(([k, v]) => numbersIn(v, [...prefix, k]));
+  return [];
+}
 type Message = { id: string; text: string };
 
 /** Read a number at a dotted path out of an HMRC response. */
@@ -73,8 +93,11 @@ const ADJUSTABLE_FIELDS: { group: 'income' | 'expenses'; key: string; label: str
   { group: 'expenses', key: 'otherExpenses',        label: 'Other expenses' },
 ];
 
-export default function YearEndClient() {
-  const [taxYear,  setTaxYear]  = useState(lastEndedTaxYear());
+export default function YearEndClient({ taxYear, setTaxYear, clientId, sandbox, onOpenWorkspace }: {
+  taxYear: string; setTaxYear: (y: string) => void; clientId?: string; sandbox: boolean; onOpenWorkspace: () => void;
+}) {
+  const qs = clientId ? `?clientId=${encodeURIComponent(clientId)}` : '';
+  const [mode,     setMode]     = useState<'finalise' | 'amend'>('finalise');
   const [scenario, setScenario] = useState('');
   const [busy,     setBusy]     = useState<string | null>(null);
 
@@ -100,10 +123,10 @@ export default function YearEndClient() {
   const [ignoreErrors, setIgnoreErrors] = useState(false);
 
   async function call(action: string, extra: Json = {}): Promise<Json> {
-    const r = await hmrcFetch('/api/hmrc/year-end', {
+    const r = await hmrcFetch(`/api/hmrc/year-end${qs}`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ action, taxYear, scenario: scenario || undefined, ...extra }),
+      body:    JSON.stringify({ action, taxYear, mode, scenario: scenario || undefined, ...extra }),
     });
     const d = await r.json().catch(() => ({ error: `Unexpected response (${r.status})` }));
     if (!r.ok || d.error) throw new Error(d.message ?? d.error ?? `Request failed (${r.status})`);
@@ -201,11 +224,15 @@ export default function YearEndClient() {
 
   const messages = (calc?.messages ?? {}) as { errors?: Message[]; warnings?: Message[]; info?: Message[] };
   const calcErrors = messages.errors ?? [];
-  const isFinalCalc = !!calc && (calc.metadata as Json | undefined)?.intentToSubmitFinalDeclaration === true;
+  const calcMeta = (calc?.metadata ?? {}) as Json;
+  const isFinalCalc = !!calc && (mode === 'amend'
+    ? calcMeta.calculationType === 'intent-to-amend'
+    : calcMeta.intentToSubmitFinalDeclaration === true || calcMeta.calculationType === 'intent-to-finalise');
   // HMRC's sandbox test calculation is canned: it carries error C95005 and
   // does not always mark itself as a final calculation, even when triggered
   // as intent-to-finalise. The sandbox-only override covers both.
-  const canDeclare = (isFinalCalc && calcErrors.length === 0) || (!!calc && ignoreErrors);
+  const canDeclare = (isFinalCalc && calcErrors.length === 0) || (sandbox && !!calc && ignoreErrors);
+  const isAgent = !!clientId;
   const bsasSummary = (bsas?.adjustedSummaryCalculation ?? bsas?.adjustableSummaryCalculation) as Json | undefined;
   // HMRC's sandbox examples include an adjusted summary even before anything
   // is adjusted, so on this sandbox-only page "adjusted" means the customer
@@ -214,22 +241,21 @@ export default function YearEndClient() {
   const bsasAdjusted = !!adjustDone;
 
   return (
-    <div className="p-4 sm:p-8 max-w-2xl" id="year-end">
-      <Link href="/dashboard/individual" className="text-sm mb-6 inline-block" style={{ color: '#6B6256' }}>
-        ← Back to Self Assessment
-      </Link>
-
-      <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-        Year-end final declaration
-      </h1>
+    <div className="max-w-2xl" id="year-end">
       <p className="text-sm mb-4" style={{ color: '#4A4035', lineHeight: 1.6 }}>
-        Finish your tax year with HMRC: check your figures, make any final adjustments, review HMRC&apos;s calculation and submit your final declaration.
-      </p>
-      <p className="text-sm mb-6 p-3 rounded-xl" style={{ backgroundColor: '#FEF3C7', color: '#713F12', border: '1px solid #E5CFA8' }}>
-        <strong>HMRC sandbox only.</strong> This uses HMRC&apos;s test service, so nothing here is a real tax return. EasyTax is not yet approved for end-of-year submission.
+        {mode === 'amend'
+          ? 'Change a tax return you have already filed: correct the figures, review HMRC’s new calculation and confirm the amendment. You have until 12 months after the 31 January filing deadline.'
+          : 'Finish your tax year with HMRC: check your figures, make any final adjustments, review HMRC’s calculation and submit your final declaration.'}
       </p>
 
       <Card>
+        <fieldset className="mb-4">
+          <legend className="text-sm font-medium mb-2" style={{ color: '#4A4035' }}>What do you want to do?</legend>
+          <div className="flex flex-wrap gap-4 text-sm" style={{ color: '#1C1208' }}>
+            <label className="flex items-center gap-2"><input type="radio" name="ye-mode" checked={mode === 'finalise'} onChange={() => { setMode('finalise'); resetFrom('calc'); }} /> Make the final declaration</label>
+            <label className="flex items-center gap-2"><input type="radio" name="ye-mode" checked={mode === 'amend'} onChange={() => { setMode('amend'); resetFrom('calc'); }} /> Amend a return already filed</label>
+          </div>
+        </fieldset>
         <div className="flex flex-wrap items-end gap-4">
           <div>
             <label htmlFor="ye-tax-year" className="block text-sm font-medium mb-1" style={{ color: '#4A4035' }}>Tax year</label>
@@ -238,13 +264,13 @@ export default function YearEndClient() {
               style={{ border: '1px solid #8A7F72', backgroundColor: '#FFFFFF', padding: '0.4rem 0.75rem', borderRadius: '0.5rem', fontSize: '0.875rem', width: '7rem' }} />
             <p id="ye-tax-year-hint" className="text-xs mt-1" style={{ color: '#6B6256' }}>For example 2025-26</p>
           </div>
-          <div>
+          {sandbox && <div>
             <label htmlFor="ye-scenario" className="block text-sm font-medium mb-1" style={{ color: '#4A4035' }}>Sandbox test scenario</label>
             <select id="ye-scenario" value={scenario} onChange={e => setScenario(e.target.value)}
               style={{ border: '1px solid #8A7F72', backgroundColor: '#FFFFFF', padding: '0.4rem 0.5rem', borderRadius: '0.5rem', fontSize: '0.875rem' }}>
               {SCENARIOS.map(s => <option key={s} value={s}>{s || 'Default (success)'}</option>)}
             </select>
-          </div>
+          </div>}
         </div>
       </Card>
 
@@ -274,15 +300,13 @@ export default function YearEndClient() {
                 </>
               )}
             </Part>
-            <Part title="Losses brought forward" error={overview.broughtForwardLosses.error}>
-              {overview.broughtForwardLosses.data?.length
-                ? overview.broughtForwardLosses.data.map(l => <Row key={l.lossId} label={l.typeOfLoss} value={gbp(l.lossAmount)} />)
-                : <Note>None recorded.</Note>}
-            </Part>
-            <Part title="Loss claims" error={overview.lossClaims.error}>
-              {overview.lossClaims.data?.length
-                ? overview.lossClaims.data.map(c => <Row key={c.claimId} label={c.typeOfLoss} value={c.typeOfClaim.replace(/-/g, ' ')} />)
-                : <Note>None recorded.</Note>}
+            <Part title="Losses and claims" error={overview.losses.error}>
+              {overview.losses.notCovered
+                ? <Note>EasyTax covers losses and loss claims from the 2026-27 tax year. If you have losses brought forward or want to claim a loss for {taxYear}, report them through HMRC online services or other compatible software before the final declaration.</Note>
+                : overview.losses.data
+                ? numbersIn({ losses: (overview.losses.data as Json).losses, claims: (overview.losses.data as Json).claims })
+                    .map(([label, value]) => <Row key={label} label={label.charAt(0).toUpperCase() + label.slice(1)} value={gbp(value)} />)
+                : <Note>None recorded. Add losses brought forward and claims under Losses and claims in All year-end data.</Note>}
             </Part>
           </div>
         )}
@@ -337,25 +361,37 @@ export default function YearEndClient() {
 
       {/* 3 — Allowances and other income */}
       <Card>
-        <StepHeading n={3} title="Add allowances and other income" />
+        <StepHeading n={3} title="Add everything else for the year" />
         <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.6 }}>
-          Capital allowances, private use, savings interest, dividends and Gift Aid are entered on the annual adjustments page. Do this before the final calculation.
+          Before the final calculation, make sure HMRC has all your income for the year. Capital allowances, private use, savings interest, dividends and Gift Aid are on the annual adjustments page.
+          Property income, employment, pensions, state benefits, charges, expenses, losses and tax liability adjustments are in <strong>All year-end data</strong>.
         </p>
-        <Link href={`/dashboard/individual/adjustments?taxYear=${encodeURIComponent(taxYear)}&from=year-end`} className="text-sm font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
-          Go to annual adjustments
-        </Link>
+        <div className="flex flex-wrap gap-4">
+          {!isAgent && (
+            <Link href={`/dashboard/individual/adjustments?taxYear=${encodeURIComponent(taxYear)}&from=year-end`} className="text-sm font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline' }}>
+              Go to annual adjustments
+            </Link>
+          )}
+          <button type="button" onClick={onOpenWorkspace} className="text-sm font-semibold" style={{ color: '#A04E1C', textDecoration: 'underline', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+            Open all year-end data
+          </button>
+        </div>
         <p className="text-xs mt-3" style={{ color: '#6B6256', lineHeight: 1.55 }}>
-          EasyTax does not yet cover employment, pensions, property, foreign income or capital gains. If you have any of these, use{' '}
+          EasyTax does not cover capital gains, foreign income other than property, or other income not listed here. If you have any, report it through{' '}
+          <a href="https://www.gov.uk/log-in-file-self-assessment-tax-return" target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>HMRC online services</a> or{' '}
           <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
             target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>other compatible software</a>{' '}
-          for your final declaration.
+          before the final declaration.
         </p>
       </Card>
 
       {/* 4 — Final calculation */}
       <Card>
         <StepHeading n={4} title="Get your final tax calculation" />
-        <Button onClick={runCalculation} busy={busy === 'calc'} disabled={!!busy}>Calculate my tax for {taxYear}</Button>
+        <p className="text-xs mb-3" style={{ color: '#6B6256', lineHeight: 1.55 }}>
+          This calculation is based only on the information HMRC has received about {isAgent ? 'your client’s' : 'your'} income and expenses for {taxYear}. It may change if HMRC receives further information.
+        </p>
+        <Button onClick={runCalculation} busy={busy === 'calc'} disabled={!!busy}>{mode === 'amend' ? 'Calculate the amended tax' : `Calculate the tax for ${taxYear}`}</Button>
         <ErrorBox text={calcErr} />
         {calc && (
           <div className="mt-5">
@@ -376,10 +412,10 @@ export default function YearEndClient() {
 
       {/* 5 — Declaration */}
       <Card>
-        <StepHeading n={5} title="Make your final declaration" />
+        <StepHeading n={5} title={mode === 'amend' ? 'Confirm the amendment' : 'Make the final declaration'} />
         {declared ? (
           <div role="status" className="p-4 rounded-xl text-sm" style={{ backgroundColor: '#E7F0E8', color: '#2F4A31', lineHeight: 1.6 }}>
-            <p className="font-semibold mb-1">Final declaration submitted to the HMRC sandbox.</p>
+            <p className="font-semibold mb-1">{mode === 'amend' ? 'Amendment confirmed with HMRC' : 'Final declaration submitted to HMRC'}{sandbox ? ' (sandbox)' : ''}.</p>
             <p>Submitted {new Date(declared.submittedAt).toLocaleString('en-GB')}. Calculation ID {declared.calculationId}.</p>
           </div>
         ) : !calc ? (
@@ -387,7 +423,7 @@ export default function YearEndClient() {
         ) : !canDeclare ? (
           <>
             <Note>You cannot declare yet: HMRC reported errors on this calculation, or it is not a final calculation. Fix the errors and calculate again.</Note>
-            {!!calc && (
+            {sandbox && !!calc && (
               <div className="flex gap-3 items-start p-4 rounded-xl mt-3" style={{ backgroundColor: '#FFF4D6', border: '1px solid #E8D29A' }}>
                 <input id="ye-ignore" type="checkbox" checked={ignoreErrors} onChange={e => setIgnoreErrors(e.target.checked)}
                   style={{ width: '1.1rem', height: '1.1rem', marginTop: '0.2rem', flexShrink: 0 }} />
@@ -399,12 +435,13 @@ export default function YearEndClient() {
           </>
         ) : (
           <>
+            {!isAgent && <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.6 }}>{DECLARATION_INTRO}</p>}
             <div className="flex gap-3 items-start p-4 rounded-xl mb-4" style={{ backgroundColor: '#F7F2E8', border: '1px solid #DDD5C8' }}>
               <input id="ye-declare" type="checkbox" checked={agreed} onChange={e => setAgreed(e.target.checked)}
                 style={{ width: '1.25rem', height: '1.25rem', marginTop: '0.15rem', flexShrink: 0 }} />
-              <label htmlFor="ye-declare" className="text-sm" style={{ color: '#1C1208', lineHeight: 1.6 }}>{DECLARATION}</label>
+              <label htmlFor="ye-declare" className="text-sm" style={{ color: '#1C1208', lineHeight: 1.6 }}>{isAgent ? AGENT_DECLARATION : DECLARATION}</label>
             </div>
-            <Button onClick={declare} busy={busy === 'declare'} disabled={!!busy || !agreed}>Submit final declaration to HMRC</Button>
+            <Button onClick={declare} busy={busy === 'declare'} disabled={!!busy || !agreed}>{mode === 'amend' ? 'Confirm the amendment with HMRC' : 'Submit final declaration to HMRC'}</Button>
           </>
         )}
         <ErrorBox text={declareErr} />

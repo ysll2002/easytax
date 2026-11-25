@@ -1,16 +1,25 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
-import YearEndClient from './YearEndClient';
+import { yearEndApproved, anyEoyApproved } from '@/lib/hmrc-eoy/access';
+import YearEndShell from './YearEndShell';
 
 export const metadata: Metadata = {
-  title: 'Year-end final declaration',
+  title: 'Year-end and other income',
 };
 
-// Sandbox only until HMRC approves EasyTax for end-of-year functionality —
-// app/api/hmrc/year-end refuses production requests on its own as well.
-export default function YearEndPage() {
-  if (IS_HMRC_PRODUCTION) {
+// Year end for MTD Income Tax: the guided final declaration (and amendments),
+// and every other end-of-year submission — property, employment, pensions,
+// benefits, charges, expenses, losses and adjustments.
+//
+// Against the live API, each part works only once HMRC has approved EasyTax
+// for it (lib/hmrc-eoy/access.ts); the APIs refuse unapproved calls on their
+// own as well. ?clientId= is an agent working on a client's return.
+export default async function YearEndPage({ searchParams }: { searchParams: Promise<{ clientId?: string }> }) {
+  const { clientId } = await searchParams;
+  const backHref = clientId ? `/dashboard/agent/clients/${encodeURIComponent(clientId)}` : '/dashboard/individual';
+
+  if (!anyEoyApproved()) {
     return (
       <div className="p-4 sm:p-8 max-w-2xl">
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '2rem', fontWeight: 700, color: '#1C1208', marginBottom: '0.75rem' }}>
@@ -23,11 +32,11 @@ export default function YearEndPage() {
             find compatible software on GOV.UK
           </a>.
         </p>
-        <Link href="/dashboard/individual" className="text-sm" style={{ color: '#6B6256' }}>
-          ← Back to Self Assessment
+        <Link href={backHref} className="text-sm" style={{ color: '#6B6256' }}>
+          ← Back
         </Link>
       </div>
     );
   }
-  return <YearEndClient />;
+  return <YearEndShell clientId={clientId} sandbox={!IS_HMRC_PRODUCTION} declarationAvailable={yearEndApproved()} backHref={backHref} />;
 }

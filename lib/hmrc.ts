@@ -1,8 +1,11 @@
 import { cookies, headers } from 'next/headers';
+import { isCumulativeTaxYear } from '@/lib/hmrc-cumulative';
+export { isCumulativeTaxYear, CUMULATIVE_FROM_TAX_YEAR } from '@/lib/hmrc-cumulative';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { auth } from '@/auth';
 
 import { HMRC_API_BASE as BASE, IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
+import { matchEndpoint } from '@/lib/hmrc-eoy/catalog';
 
 // Cache server outbound IP for 10 minutes to avoid fetching on every request
 let cachedVendorIp = { ip: '', expiresAt: 0 };
@@ -147,7 +150,7 @@ function describeCall(method: string, path: string): { api: string; endpoint: st
   const p = masked.split('?')[0];
   const rules: [string, RegExp, string, string][] = [
     ['POST', /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/trigger\//, 'Individual Calculations', 'Trigger a Self Assessment Tax Calculation'],
-    ['POST', /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/[^/]+\/final-declaration$/, 'Individual Calculations', 'Submit a Self Assessment Final Declaration'],
+    ['POST', /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/[^/]+\/(final-declaration|confirm-amendment)$/, 'Individual Calculations', 'Submit a Self Assessment Final Declaration'],
     ['GET',  /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+\/[^/]+$/, 'Individual Calculations', 'Retrieve a Self Assessment Tax Calculation'],
     ['GET',  /^\/individuals\/calculations\/\{nino\}\/self-assessment\/[^/]+$/, 'Individual Calculations', 'List Self Assessment Tax Calculations'],
     ['GET',  /^\/obligations\/details\/\{nino\}\/crystallisation$/, 'Obligations', 'Retrieve Final Declaration Obligations'],
@@ -156,11 +159,12 @@ function describeCall(method: string, path: string): { api: string; endpoint: st
     ['POST', /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/trigger$/, 'Business Source Adjustable Summary', 'Trigger a Business Source Adjustable Summary'],
     ['POST', /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/self-employment\/[^/]+\/adjust\//, 'Business Source Adjustable Summary', 'Submit Self-Employment Accounting Adjustments'],
     ['GET',  /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/self-employment\//, 'Business Source Adjustable Summary', 'Retrieve a Self-Employment BSAS'],
-    ['GET',  /^\/individuals\/losses\/\{nino\}\/brought-forward-losses\//, 'Individual Losses', 'List Brought Forward Losses'],
-    ['GET',  /^\/individuals\/losses\/\{nino\}\/loss-claims\//, 'Individual Losses', 'List Loss Claims'],
     ['GET',  /^\/individuals\/business\/details\/\{nino\}\/list$/, 'Business Details', 'List All Businesses'],
+    ['GET',  /^\/accounts\/self-assessment\/\{nino\}\/balance-and-transactions$/, 'Self Assessment Accounts', 'Retrieve Self Assessment Balance and Transactions'],
   ];
   for (const [m, re, api, endpoint] of rules) if (m === method && re.test(p)) return { api, endpoint, masked };
+  const known = matchEndpoint(method, p);
+  if (known) return { api: known.api, endpoint: known.summary, masked };
   return { api: '', endpoint: `${method} ${p}`, masked };
 }
 
@@ -220,6 +224,50 @@ async function hmrcFetch(path: string, token: string, opts: RequestInit = {}) {
   // turn a successful filing into an error, so read the text first.
   const text = await res.text();
   return text ? JSON.parse(text) : null;
+}
+
+/**
+ * HMRC's answer to a call made from the year-end workspace: the status and
+ * body whatever they are, so HMRC's own error codes and messages can be shown
+ * to the customer as HMRC sent them.
+ */
+export type HmrcResult = { status: number; ok: boolean; correlationId: string | null; body: unknown };
+
+export async function hmrcRequest(
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  path: string,
+  token: string,
+  opts: { version: string; body?: unknown; scenario?: string },
+): Promise<HmrcResult> {
+  const fh = await fraudHeaders();
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${token}`,
+    Accept:        `application/vnd.hmrc.${opts.version}+json`,
+    ...fh,
+    ...testScenarioHeader(opts.scenario),
+  };
+  // Bodiless POSTs (Ignore Employment, Disapply Late Accounting Date Rule,
+  // the calculation triggers) go without a body.
+  let body: string | undefined;
+  if (method === 'POST' || method === 'PUT') {
+    headers['Content-Type'] = 'application/json';
+    body = opts.body === undefined ? undefined : JSON.stringify(opts.body);
+  }
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`, { method, headers, body });
+  } catch (err) {
+    await logHmrcCall(method, path, null, null);
+    throw err;
+  }
+  const correlationId = res.headers.get('x-correlationid') ?? res.headers.get('x-correlation-id');
+  await logHmrcCall(method, path, res.status, correlationId);
+  const text = await res.text().catch(() => '');
+  let parsed: unknown = null;
+  if (text) {
+    try { parsed = JSON.parse(text); } catch { parsed = text; }
+  }
+  return { status: res.status, ok: res.ok, correlationId, body: parsed };
 }
 
 /**
@@ -295,41 +343,55 @@ export type QuarterlyData = {
   };
 };
 
+/**
+ * A self-employment quarterly update.
+ *
+ * From 2025-26 HMRC takes a cumulative period summary: one PUT per tax year
+ * with the totals from 6 April to the end of the latest quarter, replacing
+ * what was sent before (Self-Employment Business v5.0, Create or Amend a
+ * Self-Employment Cumulative Period Summary). The caller passes year-to-date
+ * figures and a period that starts on 6 April. The older period summary
+ * (POST .../period) only accepts tax years up to 2024-25, and HMRC answers
+ * RULE_TAX_YEAR_NOT_SUPPORTED for anything later.
+ */
 export async function submitQuarterlyUpdate(
   nino: string,
   businessId: string,
-  data: QuarterlyData,
+  data: QuarterlyData & { taxYear: string },
   token: string,
 ) {
+  const figures = {
+    periodDates: {
+      periodStartDate: data.periodStartDate,
+      periodEndDate:   data.periodEndDate,
+    },
+    periodIncome: {
+      turnover: data.turnover,
+      other:    data.other ?? 0,
+    },
+    // v5.0: expense values are plain numbers (not { amount } objects).
+    periodExpenses: {
+      costOfGoods:          data.expenses.costOfGoods          ?? 0,
+      wagesAndStaffCosts:   data.expenses.staffCosts           ?? 0,
+      carVanTravelExpenses: data.expenses.travelCosts          ?? 0,
+      premisesRunningCosts: data.expenses.premisesRunningCosts ?? 0,
+      adminCosts:           data.expenses.adminCosts           ?? 0,
+      advertisingCosts:     data.expenses.advertisingCosts     ?? 0,
+      professionalFees:     data.expenses.professionalFees     ?? 0,
+      otherExpenses:        data.expenses.otherExpenses        ?? 0,
+    },
+  };
+  if (isCumulativeTaxYear(data.taxYear)) {
+    return hmrcFetch(
+      `/individuals/business/self-employment/${nino}/${businessId}/cumulative/${data.taxYear}`,
+      token,
+      { method: 'PUT', headers: { Accept: 'application/vnd.hmrc.5.0+json' }, body: JSON.stringify(figures) },
+    );
+  }
   return hmrcFetch(
     `/individuals/business/self-employment/${nino}/${businessId}/period`,
     token,
-    {
-      method: 'POST',
-      headers: { Accept: 'application/vnd.hmrc.5.0+json' },
-      // Self-Employment Business (MTD) v5.0: expense values are plain numbers
-      // (not { amount } objects), and field names differ from the older shape.
-      body: JSON.stringify({
-        periodDates: {
-          periodStartDate: data.periodStartDate,
-          periodEndDate:   data.periodEndDate,
-        },
-        periodIncome: {
-          turnover: data.turnover,
-          other:    data.other ?? 0,
-        },
-        periodExpenses: {
-          costOfGoods:          data.expenses.costOfGoods          ?? 0,
-          wagesAndStaffCosts:   data.expenses.staffCosts           ?? 0,
-          carVanTravelExpenses: data.expenses.travelCosts          ?? 0,
-          premisesRunningCosts: data.expenses.premisesRunningCosts ?? 0,
-          adminCosts:           data.expenses.adminCosts           ?? 0,
-          advertisingCosts:     data.expenses.advertisingCosts     ?? 0,
-          professionalFees:     data.expenses.professionalFees     ?? 0,
-          otherExpenses:        data.expenses.otherExpenses        ?? 0,
-        },
-      }),
-    },
+    { method: 'POST', headers: { Accept: 'application/vnd.hmrc.5.0+json' }, body: JSON.stringify(figures) },
   );
 }
 
@@ -376,15 +438,18 @@ export async function getCalculation(
 // at step 1 and recorded the trigger as a filed final declaration.
 //
 // HMRC answers 204 No Content on success.
+// confirm-amendment is the same call for an amendment after the return has
+// been filed, against an intent-to-amend calculation.
 export async function submitFinalDeclaration(
   nino: string,
   taxYear: string,
   calculationId: string,
   token: string,
   scenario?: string,
+  calculationType: 'final-declaration' | 'confirm-amendment' = 'final-declaration',
 ) {
   return hmrcFetch(
-    `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}/final-declaration`,
+    `/individuals/calculations/${nino}/self-assessment/${taxYear}/${calculationId}/${calculationType}`,
     token,
     { method: 'POST', headers: { Accept: 'application/vnd.hmrc.8.0+json', ...testScenarioHeader(scenario) } },
   );
@@ -511,65 +576,67 @@ export async function submitSelfEmploymentBsasAdjustments(
   );
 }
 
-// ─── Losses ───────────────────────────────────────────────────────────────────
+// ─── Self Assessment Accounts ─────────────────────────────────────────────────
 
-// Individual Losses (MTD) v6.0. Both list endpoints answer 404
-// MATCHING_RESOURCE_NOT_FOUND rather than an empty list when there is nothing
-// to show, so a 404 is reported as "none" here.
-function isNotFound(err: unknown) {
-  return err instanceof Error && err.message.startsWith('HMRC 404');
-}
-
-export type BroughtForwardLoss = {
-  lossId:                    string;
-  businessId:                string;
-  typeOfLoss:                string;
-  lossAmount:                number;
-  taxYearBroughtForwardFrom: string;
+/**
+ * Self Assessment Accounts (MTD) v4.0: what the customer owes HMRC. Open
+ * items only — each charge (balancing payment, payments on account,
+ * penalties, interest) with its outstanding amount and due date. HMRC
+ * answers 404 NOT_FOUND when there is nothing; that is returned as null.
+ */
+export type SaDocument = {
+  taxYear?: string;
+  documentId?: string;
+  documentDescription?: string;
+  documentText?: string;
+  documentDueDate?: string;
+  originalAmount?: number;
+  outstandingAmount?: number;
+};
+export type SaBalance = {
+  balanceDetails?: { payableAmount?: number; payableDueDate?: string; pendingChargeDueAmount?: number; overdueAmount?: number; totalBalance?: number };
+  documentDetails?: SaDocument[];
 };
 
-export async function listBroughtForwardLosses(
-  nino: string,
-  taxYear: string,
-  token: string,
-  scenario?: string,
-): Promise<BroughtForwardLoss[]> {
+export async function getSaBalanceAndTransactions(nino: string, token: string): Promise<SaBalance | null> {
   try {
-    const data = await hmrcFetch(
-      `/individuals/losses/${nino}/brought-forward-losses/tax-year/${taxYear}`,
+    return await hmrcFetch(
+      `/accounts/self-assessment/${nino}/balance-and-transactions?onlyOpenItems=true&includeLocks=false&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=false&includeEstimatedCharges=false`,
       token,
-      { headers: { Accept: 'application/vnd.hmrc.6.0+json', ...testScenarioHeader(scenario) } },
+      { headers: { Accept: 'application/vnd.hmrc.4.0+json' } },
     );
-    return data?.losses ?? [];
   } catch (err) {
-    if (isNotFound(err)) return [];
+    if (err instanceof Error && err.message.startsWith('HMRC 404')) return null;
     throw err;
   }
 }
 
-export type LossClaim = {
-  claimId:           string;
-  businessId:        string;
-  typeOfLoss:        string;
-  typeOfClaim:       string;
-  taxYearClaimedFor: string;
-};
+// ─── Losses ───────────────────────────────────────────────────────────────────
 
-export async function listLossClaims(
+// Individual Losses (MTD) v7.0 — required for tax year 2026-27 onwards. One
+// resource per business and tax year holds both the losses brought forward
+// and the claims for how losses are used. Retrieve answers 404
+// MATCHING_RESOURCE_NOT_FOUND when nothing has been submitted, which is
+// reported here as null.
+function isNotFound(err: unknown) {
+  return err instanceof Error && err.message.startsWith('HMRC 404');
+}
+
+export async function getLossesAndClaims(
   nino: string,
+  businessId: string,
   taxYear: string,
   token: string,
   scenario?: string,
-): Promise<LossClaim[]> {
+): Promise<Record<string, unknown> | null> {
   try {
-    const data = await hmrcFetch(
-      `/individuals/losses/${nino}/loss-claims/tax-year/${taxYear}`,
+    return await hmrcFetch(
+      `/individuals/losses/${nino}/businesses/${businessId}/loss-claims/${taxYear}`,
       token,
-      { headers: { Accept: 'application/vnd.hmrc.6.0+json', ...testScenarioHeader(scenario) } },
+      { headers: { Accept: 'application/vnd.hmrc.7.0+json', ...testScenarioHeader(scenario) } },
     );
-    return data?.claims ?? [];
   } catch (err) {
-    if (isNotFound(err)) return [];
+    if (isNotFound(err)) return null;
     throw err;
   }
 }

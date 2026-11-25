@@ -32,6 +32,7 @@ const TYPE_ICON: Record<TaskType, React.ElementType> = {
   payment_balancing: CreditCard,
   payment_poa1:      CreditCard,
   payment_poa2:      CreditCard,
+  payment_other:     CreditCard,
   vat_return:        Receipt,
 };
 
@@ -41,6 +42,7 @@ const TYPE_COLOR: Record<TaskType, string> = {
   payment_balancing: '#7C3AED',
   payment_poa1:      '#7C3AED',
   payment_poa2:      '#7C3AED',
+  payment_other:     '#7C3AED',
   vat_return:        '#059669',
 };
 
@@ -65,6 +67,7 @@ const TITLE_KEY: Record<TaskType, string> = {
   payment_poa1:      'titlePoa1',
   payment_poa2:      'titlePoa2',
   payment_balancing: 'titleBalancing',
+  payment_other:     'titleOtherCharge',
 };
 
 function daysUntil(dateStr: string): number {
@@ -79,6 +82,10 @@ function intlLocale(locale: string): string {
 
 type T = ReturnType<typeof useTranslations>;
 
+function gbp(n: number, locale: string): string {
+  return n.toLocaleString(intlLocale(locale), { style: 'currency', currency: 'GBP' });
+}
+
 function fmtDate(iso: string, locale: string, withYear = true): string {
   return new Date(iso).toLocaleDateString(intlLocale(locale), {
     day: 'numeric', month: 'short', ...(withYear ? { year: 'numeric' } : {}),
@@ -87,6 +94,8 @@ function fmtDate(iso: string, locale: string, withYear = true): string {
 
 function taskTitle(task: Task, t: T, locale: string): string {
   const key = TITLE_KEY[task.type];
+  // Penalties, interest and other charges: HMRC's own description.
+  if (task.type === 'payment_other') return task.title || t(key);
   if (task.type === 'quarterly_mtd' || task.type === 'vat_return') {
     const period = task.periodStart && task.periodEnd
       ? `${fmtDate(task.periodStart, locale, false)} – ${fmtDate(task.periodEnd, locale)}`
@@ -102,7 +111,9 @@ function taskSubtitle(task: Task, t: T, locale: string): string | null {
     case 'quarterly_mtd': return task.taxYear ? t('subQuarterly', { taxYear: task.taxYear }) : null;
     case 'sa_filing':     return task.taxYear ? t('subSaFiling', { taxYear: task.taxYear, date }) : null;
     case 'vat_return':    return t('subVat', { date });
-    default:              return task.taxYear ? t('subPayment', { taxYear: task.taxYear, date }) : null;
+    default:
+      if (task.source === 'hmrc' && task.amount !== undefined) return t('subPaymentOwed', { taxYear: task.taxYear ?? '', amount: gbp(task.amount, locale) });
+      return task.taxYear ? t('subPayment', { taxYear: task.taxYear, date }) : null;
   }
 }
 
@@ -114,6 +125,9 @@ function TaskCard({ task }: { task: Task }) {
   const st = STATUS_STYLE[task.status];
   const days = daysUntil(task.dueDate);
   const isPayment = task.type.startsWith('payment');
+  // A payment HMRC says is owed gets "Pay £x"; a date reminder (EasyTax
+  // cannot see the account) only links to the HMRC account to check.
+  const owed = isPayment && task.source === 'hmrc';
   const subtitle = taskSubtitle(task, t, locale);
 
   const timing = task.completedDate
@@ -160,8 +174,12 @@ function TaskCard({ task }: { task: Task }) {
           isPayment
             ? <span className="text-xs" style={{ color: '#6B6256' }}>{t('paid')}</span>
             : <ChevronRight size={14} color="#6B6256" />
+        ) : owed ? (
+          <span className="text-xs px-3 py-1.5 rounded-full font-semibold" style={{ backgroundColor: '#7C3AED', color: '#FFFFFF' }}>
+            {task.amount !== undefined ? t('payAmount', { amount: gbp(task.amount, locale) }) : t('pay')}
+          </span>
         ) : isPayment ? (
-          <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ backgroundColor: '#7C3AED15', color: '#7C3AED', border: '1px solid #7C3AED30' }}>{t('pay')}</span>
+          <span className="text-xs px-3 py-1.5 rounded-full font-medium" style={{ backgroundColor: 'transparent', color: '#6B6256', border: '1px solid #DDD5C8' }}>{t('checkOwed')}</span>
         ) : (
           <span className="text-xs px-3 py-1.5 rounded-full font-semibold" style={{ backgroundColor: task.status === 'overdue' ? '#EF4444' : '#1C1208', color: '#FDFCF8' }}>
             {task.status === 'overdue' ? t('fixNow') : t('start')}
@@ -171,8 +189,11 @@ function TaskCard({ task }: { task: Task }) {
     </div>
   );
 
-  if (isPayment && task.status !== 'completed') {
+  if (owed && task.status !== 'completed') {
     return <a href="https://www.gov.uk/pay-self-assessment-tax-bill" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>{card}</a>;
+  }
+  if (isPayment && task.status !== 'completed') {
+    return <a href="https://www.gov.uk/personal-tax-account" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>{card}</a>;
   }
   if (task.actionHref) {
     return <Link href={task.actionHref} style={{ textDecoration: 'none', display: 'block' }}>{card}</Link>;
@@ -203,6 +224,7 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [paymentsFromHmrc, setPaymentsFromHmrc] = useState(false);
 
   useEffect(() => {
     // `hmrcFetch`, not bare `fetch`. This route reaches HMRC — it calls
@@ -219,7 +241,7 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
     // taking that path.
     hmrcFetch('/api/hmrc/tasks')
       .then(r => r.json())
-      .then(d => { if (d.error) setError(d.error); else setTasks(d.tasks ?? []); })
+      .then(d => { if (d.error) setError(d.error); else { setTasks(d.tasks ?? []); setPaymentsFromHmrc(d.payments === 'hmrc'); } })
       .catch(() => setError('UNREACHABLE'))
       .finally(() => setLoading(false));
   }, []);
@@ -328,6 +350,11 @@ export default function TasksTimeline({ showStats = true }: { showStats?: boolea
             <p style={{ fontSize: '0.65rem', color: '#6B6256' }}>{t('statUpcoming')}</p>
           </div>
         </div>
+      )}
+      {paymentsFromHmrc && !tasks.some(x => x.type.startsWith('payment')) && (
+        <p className="text-xs mb-3 flex items-center gap-1.5" style={{ color: '#4B6A4E' }}>
+          <CheckCircle2 size={14} color="#4B6A4E" /> {t('nothingToPay')}
+        </p>
       )}
       <Group title={t('groupOverdue')}  icon={<AlertCircle   size={14} color="#EF4444" />} tasks={overdue}   />
       <Group title={t('groupDueSoon')}  icon={<Clock         size={14} color="#F59E0B" />} tasks={dueSoon}   />

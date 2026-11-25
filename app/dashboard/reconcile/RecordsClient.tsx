@@ -4,7 +4,8 @@ import ReconcileChat from '@/components/ReconcileChat';
 import type { ReconcileAction, Tx } from '@/app/api/ai/reconcile/route';
 import {
   EXPENSE_BUCKETS, suggestBucket, bucketOf,
-  type BusinessRecord, type RecordCategory, type ExpenseBucket,
+  INCOME_SOURCES, PROPERTY_INCOME_BUCKETS, PROPERTY_EXPENSE_BUCKETS, propertyBucketOf,
+  type BusinessRecord, type RecordCategory, type ExpenseBucket, type IncomeSource, type PropertyBucket,
 } from '@/lib/records';
 import { parseCsv, guessColumns, extractRows, type ColumnMap, type StatementRow } from '@/lib/csv-statement';
 import { recordsUrl, aiSortIds } from '@/lib/records-client';
@@ -42,7 +43,7 @@ async function send(url: string, method: 'PATCH' | 'DELETE', body: object) {
 }
 
 // PATCH in chunks, grouped by the value being set.
-async function patchGroups(url: string, groups: Map<string, string[]>, field: 'category' | 'expenseBucket') {
+async function patchGroups(url: string, groups: Map<string, string[]>, field: 'category' | 'expenseBucket' | 'incomeSource' | 'propertyBucket') {
   for (const [value, ids] of groups) {
     for (let i = 0; i < ids.length; i += ID_CHUNK) {
       await send(url, 'PATCH', { ids: ids.slice(i, i + ID_CHUNK), [field]: value === '' ? null : value });
@@ -122,6 +123,27 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
     if (lockedIds.has(id)) return;
     const next = records.map(r => r.id === id ? { ...r, expense_bucket: bucket, ai_categorised: false } : r);
     commit(next, () => patchGroups(url, new Map([[bucket, [id]]]), 'expenseBucket'));
+  };
+
+  // Which income source a record counts towards, and for property records
+  // the HMRC property category. Self-employment is the default.
+  const setSource = (id: string, source: IncomeSource) => {
+    if (lockedIds.has(id)) return;
+    const next = records.map(r => r.id === id ? { ...r, income_source: source, property_bucket: source === 'self-employment' ? null : r.property_bucket, property_id: source === 'foreign-property' ? r.property_id : null } : r);
+    commit(next, () => patchGroups(url, new Map([[source, [id]]]), 'incomeSource'));
+  };
+  const setPropertyBucket = (id: string, bucket: PropertyBucket) => {
+    if (lockedIds.has(id)) return;
+    const next = records.map(r => r.id === id ? { ...r, property_bucket: bucket } : r);
+    commit(next, () => patchGroups(url, new Map([[bucket, [id]]]), 'propertyBucket'));
+  };
+  const setPropertyId = (id: string, propertyId: string) => {
+    if (lockedIds.has(id)) return;
+    const raw = propertyId.trim();
+    const value = raw ? (/^[a-z]{3}$/i.test(raw) ? raw.toUpperCase() : raw.toLowerCase()) : null;
+    if (value && !/^([0-9a-f-]{36}|[A-Z]{3})$/.test(value)) { setError('Enter the ID HMRC gave the property (from 2026-27, for example 8e8b8450-dc1b-4360-8109-7067337b42cb) or, for earlier years, its country code (for example FRA).'); return; }
+    const next = records.map(r => r.id === id ? { ...r, property_id: value } : r);
+    commit(next, () => send(url, 'PATCH', { ids: [id], propertyId: value }));
   };
 
   const remove = (id: string) => {
@@ -314,7 +336,32 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
                         </button>
                       ))}
                     </div>
-                    {r.category === 'business_expense' && (
+                    {(r.category === 'business_income' || r.category === 'business_expense') && (
+                      <label className="flex items-center gap-1 text-xs" style={{ color: '#4A4035' }}>
+                        <span className="sr-only">Income source for {r.description}</span>
+                        <select value={r.income_source ?? 'self-employment'} disabled={r.locked} onChange={e => setSource(r.id, e.target.value as IncomeSource)} style={{ ...input, width: 'auto', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
+                          {INCOME_SOURCES.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+                        </select>
+                      </label>
+                    )}
+                    {(r.category === 'business_income' || r.category === 'business_expense') && (r.income_source ?? 'self-employment') !== 'self-employment' && (
+                      <label className="flex items-center gap-1 text-xs" style={{ color: '#4A4035' }}>
+                        <span className="sr-only">HMRC property category for {r.description}</span>
+                        <select value={propertyBucketOf(r)} disabled={r.locked} onChange={e => setPropertyBucket(r.id, e.target.value as PropertyBucket)} style={{ ...input, width: 'auto', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
+                          {(r.category === 'business_income' ? PROPERTY_INCOME_BUCKETS.filter(b => !(b.ukOnly && r.income_source === 'foreign-property')) : PROPERTY_EXPENSE_BUCKETS)
+                            .map(b => <option key={b.key} value={b.key}>{b.label}</option>)}
+                        </select>
+                      </label>
+                    )}
+                    {(r.category === 'business_income' || r.category === 'business_expense') && r.income_source === 'foreign-property' && (
+                      <label className="flex items-center gap-1 text-xs" style={{ color: '#4A4035' }}>
+                        <span>Property ID or country</span>
+                        <input type="text" defaultValue={r.property_id ?? ''} disabled={r.locked} placeholder="HMRC property ID, or e.g. FRA"
+                          onBlur={e => { if ((e.target.value.trim() || null) !== (r.property_id ?? null)) setPropertyId(r.id, e.target.value); }}
+                          style={{ ...input, width: '18rem', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }} />
+                      </label>
+                    )}
+                    {r.category === 'business_expense' && (r.income_source ?? 'self-employment') === 'self-employment' && (
                       <label className="flex items-center gap-1 text-xs" style={{ color: '#4A4035' }}>
                         <span className="sr-only">HMRC expense category for {r.description}</span>
                         <select value={bucketOf(r)} disabled={r.locked} onChange={e => setBucket(r.id, e.target.value as ExpenseBucket)} style={{ ...input, width: 'auto', padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}>
@@ -373,6 +420,8 @@ function AddRecordForm({ url, onDone, onCancel }: { url: string; onDone: (msg: s
   const [kind, setKind] = useState<'business_income' | 'business_expense' | 'personal'>('business_expense');
   const [direction, setDirection] = useState<'in' | 'out'>('out');
   const [bucket, setBucket] = useState<ExpenseBucket | ''>('');
+  const [source, setSource] = useState<IncomeSource>('self-employment');
+  const [propertyBucket, setPropertyBucket] = useState<PropertyBucket | ''>('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -390,7 +439,9 @@ function AddRecordForm({ url, onDone, onCancel }: { url: string; onDone: (msg: s
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ source: 'manual', records: [{
           date, description: description.trim(), amount: moneyIn ? value : -value, category: kind,
-          expenseBucket: kind === 'business_expense' ? (bucket || suggestBucket(description)) : undefined,
+          expenseBucket: kind === 'business_expense' && source === 'self-employment' ? (bucket || suggestBucket(description)) : undefined,
+          incomeSource: kind === 'personal' ? undefined : source,
+          propertyBucket: kind !== 'personal' && source !== 'self-employment' ? (propertyBucket || (kind === 'business_income' ? 'rent' : 'other')) : undefined,
         }] }),
       });
       if (!res.ok) {
@@ -423,7 +474,22 @@ function AddRecordForm({ url, onDone, onCancel }: { url: string; onDone: (msg: s
         <label><span style={labelStyle}>Date</span><input type="date" required value={date} max={today()} onChange={e => setDate(e.target.value)} style={input} /></label>
         <label className="sm:col-span-2"><span style={labelStyle}>Description</span><input type="text" required maxLength={200} value={description} onChange={e => setDescription(e.target.value)} placeholder={kind === 'business_income' ? 'e.g. Invoice 104 — Acme Ltd' : 'e.g. Train to client meeting'} style={input} /></label>
         <label><span style={labelStyle}>Amount (£)</span><input type="number" required min="0.01" step="0.01" inputMode="decimal" value={amount} onChange={e => setAmount(e.target.value)} style={input} /></label>
-        {kind === 'business_expense' && (
+        {kind !== 'personal' && (
+          <label><span style={labelStyle}>Income source</span>
+            <select value={source} onChange={e => { setSource(e.target.value as IncomeSource); setPropertyBucket(''); }} style={input}>
+              {INCOME_SOURCES.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+            </select>
+          </label>
+        )}
+        {kind !== 'personal' && source !== 'self-employment' && (
+          <label className="sm:col-span-2"><span style={labelStyle}>HMRC property category</span>
+            <select value={propertyBucket || (kind === 'business_income' ? 'rent' : 'other')} onChange={e => setPropertyBucket(e.target.value as PropertyBucket)} style={input}>
+              {(kind === 'business_income' ? PROPERTY_INCOME_BUCKETS.filter(b => !(b.ukOnly && source === 'foreign-property')) : PROPERTY_EXPENSE_BUCKETS)
+                .map(b => <option key={b.key} value={b.key}>{b.label}</option>)}
+            </select>
+          </label>
+        )}
+        {kind === 'business_expense' && source === 'self-employment' && (
           <label className="sm:col-span-2"><span style={labelStyle}>HMRC expense category</span>
             <select value={bucket || suggestBucket(description)} onChange={e => setBucket(e.target.value as ExpenseBucket)} style={input}>
               {EXPENSE_BUCKETS.map(b => <option key={b.key} value={b.key}>{b.label}</option>)}
@@ -456,6 +522,7 @@ export function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg
   const [rows, setRows] = useState<string[][]>([]);
   const [map, setMap] = useState<ColumnMap | null>(null);
   const [mode, setMode] = useState<'single' | 'split'>('single');
+  const [incomeSource, setIncomeSource] = useState<IncomeSource>('self-employment');
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState('');
 
@@ -491,7 +558,7 @@ export function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg
       for (let i = 0; i < parsed.ok.length; i += 2000) {
         const res = await fetch(url, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source: 'csv', records: parsed.ok.slice(i, i + 2000) }),
+          body: JSON.stringify({ source: 'csv', incomeSource, records: parsed.ok.slice(i, i + 2000) }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
@@ -545,6 +612,12 @@ export function CsvImport({ url, onDone, onCancel }: { url: string; onDone: (msg
               <label className="flex items-center gap-1.5"><input type="radio" name="mode" checked={mode === 'split'} onChange={() => setMode('split')} /> Separate money in and money out columns</label>
             </div>
           </fieldset>
+          <label className="block mb-3" style={{ maxWidth: '20rem' }}>
+            <span style={labelStyle}>Import into</span>
+            <select value={incomeSource} onChange={e => setIncomeSource(e.target.value as IncomeSource)} style={input}>
+              {INCOME_SOURCES.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
+            </select>
+          </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             {colSelect('Date', 'date')}
             {colSelect('Description', 'description')}

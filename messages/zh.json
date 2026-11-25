@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · 税年 {taxYear}",
       "subSaFiling": "税年 {taxYear} · {date} 到期",
       "subVat": "Making Tax Digital · VAT · {date} 到期",
-      "subPayment": "Self Assessment {taxYear} · 截止 {date} · 提醒——仅在你有税款要缴时适用",
+      "subPayment": "自我评估 {taxYear} · {date} 到期 · 仅在你有账单时才需支付——请在 HMRC 账户中查看",
       "errNotAuthorisedTitle": "HMRC 未授权访问此记录",
       "errNotAuthorisedIntro": "HMRC 拒绝了请求，但没有说明原因。常见原因如下，按可能性排序：",
       "errNotAuthorisedCause1": "你尚未注册 Making Tax Digital for Income Tax。有 HMRC 账号和国民保险号，与已登记 MTD 是两回事 —— MTD 需要单独注册。",
@@ -361,7 +361,12 @@
       "errNotAuthorisedCause3": "你的自雇或房产收入来源尚未在 HMRC 账户中登记进 MTD。这和连接软件是两件事。",
       "errNotAuthorisedCause4": "系统中保存的国民保险号，与你连接时使用的 Government Gateway 账号不属于同一个人。",
       "errNotAuthorisedCause4Cta": "去检查 NINO →",
-      "errNotAuthorisedCode": "HMRC 错误码：{code}"
+      "errNotAuthorisedCode": "HMRC 错误码：{code}",
+      "payAmount": "支付 {amount} →",
+      "checkOwed": "查看 →",
+      "subPaymentOwed": "自我评估 {taxYear} · HMRC 显示应付 {amount}",
+      "titleOtherCharge": "自我评估费用",
+      "nothingToPay": "HMRC 显示你目前没有需要支付的款项。"
     }
   },
   "footer": {
