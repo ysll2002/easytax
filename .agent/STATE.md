@@ -7,7 +7,7 @@
 ## 2026-11-25 最新
 - **Production = main = staging = `e240b82`**（2026-11-25 14:50 UTC 上线，owner 授权；PR #74–#78 经 #79 发布）。production 库已先跑 20261124_property_records、20261125_sa_filings_unique_per_source。冒烟通过（首页/登录/注册/session 200，dashboard 跳登录，无错误日志）。年终和 SA Accounts 在 production 被 HMRC_PRODUCTION_EOY_APIS（未设）挡住。季度申报 2026-27 已改 cumulative。
 - sandbox 全量测试 2026-11-25 完成（hmrc/2026-11-eoy-subscriptions/SANDBOX-RUN-2026-11-25.md）：108 个年终端点 105 成功、3 个要等 2027-04-06；agent 声明未测。
-- Vercel 项目已改回 `easytax`（prj_hXqav…）；空项目 `easytax-stray-empty` 待 owner 删除。
+- Vercel 项目已改回 `easytax`（prj_hXqav…）；空项目 `easytax-stray-empty` 已于 2026-11-25 删除（owner 同意）。
 
 ## 2026-11-24
 
