@@ -15,6 +15,12 @@
 
 ---
 
+## 2026-11-25（owner 会话，HMRC 两个工单）
+**WFG726** 16:24 Rekha Sharma 回复：只需填 checklist 的 General + End of year；重点 Losses / ITLA / BSAS + 已有 API 里的年终端点；FPH 非正式检查；要持续测试保持日志新鲜。
+**ULJ714**：owner 15:00 已发出回复（附 5 张截图），但正文说附了 checklist 实际没附。
+**已做**：填好 checklist（hmrc/2026-11-eoy-subscriptions/Software-Approvals-Production-Checklist-EasyTax-VIP-2026-11-25.docx，Accruals 填 No，迭代构建填 Yes/End of year，声明勾选框留给 owner）。Gmail 草稿两封：ULJ714 补发 checklist 的短邮件；WFG726 完整回复 + checklist + 截图，两边互相引用。已删除空 Vercel 项目 easytax-stray-empty。
+**待 owner**：Developer Hub 申请 ITLA 1.0（两封邮件都说已申请）；勾选 checklist 声明框；发送两封草稿。30 天内要持续在 sandbox 测试。
+
 ## 2026-11-25（owner 会话，发布 production + HMRC 回信草稿）
 **发布**：owner 说 "Yes, release to prod"。production 库先跑 20261124 + 20261125 迁移，再合 PR #79（staging→main），Vercel 自动构建，easytax.vip = e240b82。冒烟通过。
 **HMRC 回信**：Gmail 草稿已建（回复 ULJ714 线程，附 5 张截图），列出测试用户 GK649364B / CARN0586927 + LH533882D、测过的端点、3 个 PUT 要等 2027-04-06。**发送前 owner 要做**：在 Developer Hub 给 production 应用申请 ITLA 1.0；填好 checklist docx 并附上（会计方式 accruals 待 owner 定）。
