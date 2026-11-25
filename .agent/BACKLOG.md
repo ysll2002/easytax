@@ -32,6 +32,8 @@
 
 - **申报页数字可以改，但不能脱离 records**（2026-11-15）：owner 要求季度申报页可上传 CSV、预填、每个数字可改；问过合规取舍后，owner 选「改动自动存成调整记录」。不要做「提交页随意改数字、不留记录」的方案（违反 MTD In-Year #6 数字链接要求，影响 HMRC 审批）。submit-quarter 已在服务端校验提交数字 = records 汇总（PR #52），不要去掉。2026-11-21 起已申报季度的记录被锁定（PR #68，API + 数据库触发器），更正放到当前季度，不要解锁或绕过。
 
+- **改名 MTD Buddy / mtdbuddy**（2026-11-25）：owner 说 "forget about mtdbuddy"，品牌和 Vercel 项目都回到 EasyTax / `easytax`。未合并分支 `claude/rebrand-mtdbuddy`（a72a00a）不要合、不要再推荐改名；Vercel 项目名不能改（deploy workflow 靠名字链接，11-24 改名导致新建空项目、staging 500）。
+
 ## 说明：stg-001 —— 发现另一套自动化增长系统
 
 2026-09-18 首次真实运行时发现，repo 里存在**另一套独立运作的自动化系统**（并非本 RUNBOOK

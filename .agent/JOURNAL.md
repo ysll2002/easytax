@@ -15,6 +15,12 @@
 
 ---
 
+## 2026-11-25（owner 会话，Vercel 项目改回 easytax）
+**根因**：11-24 有人把原 Vercel 项目 `easytax`（prj_hXqav…，3 月建，域名和 39 个变量都在）改名成 `mtdbuddy`（配合未合并的品牌重塑分支 `claude/rebrand-mtdbuddy`，那个分支没进 staging/main）。`.github/workflows/deploy.yml` 没设 VERCEL_PROJECT_ID 时按名字 `easytax` 去 `vercel link --yes`，名字找不到就新建了空项目 `easytax`（prj_zLqach0g…，18:27:52），之后每次 push staging 都部署到空项目并把 staging.easytax.vip 指过去 → MissingSecret 500。11-25 00:03 又发生一次。
+**已做**：owner 说"forget about mtdbuddy, revert back to easytax"。空项目改名 `easytax-stray-empty`（没删），`mtdbuddy` 改回 `easytax`。production easytax.vip 一直正常（200）。
+**未做**：把 staging.easytax.vip 指回真项目构建 `mtdbuddy-i45hhbwsj`（含 PR #75）被 auto mode 权限检查拦了，等 owner。下次 push staging 时 workflow 会按名字链到真项目，自动恢复。
+**学到**：Vercel 项目名就是 deploy workflow 的链接键，不能改名；建议在 GitHub secrets 设 VERCEL_ORG_ID / VERCEL_PROJECT_ID 固定下来。`easytax-stray-empty` 建议 owner 删掉。
+
 ## 2026-11-25（owner 对话）
 
 **今日执行**：owner 问任务列表为什么有 3 个「Pay」→ 那是写死的自我评估付款日期提醒，对所有人都显示。PR #75 合进 staging `e92ad23`：付款改从 Self Assessment Accounts 4.0（balance-and-transactions，只取未结清项）读取，只有 HMRC 显示有欠款的才显示「Pay £x」（含罚款/利息）；没有欠款显示「HMRC 显示你目前没有需要支付的款项」；读不到账户时（或 production 还没批这个 API）只显示日期提醒 + 「Check →」链到 HMRC 账户，不再有 Pay。7 种语言。production 要把 `self-assessment-accounts-api` 加进 `HMRC_PRODUCTION_EOY_APIS` 并通过 HMRC 审批才会生效。UI 未在浏览器验证。
