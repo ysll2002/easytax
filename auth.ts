@@ -4,6 +4,8 @@ import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import { cookies } from 'next/headers';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
+import { track, EVENTS } from '@/lib/analytics';
+import { NEW_SIGNUP_COOKIE } from '@/lib/signup-beacon';
 import {
   ACCOUNT_TYPE_COOKIE, LOGIN_PATH, WRONG_TYPE_ERROR, asAccountType, type AccountType,
 } from '@/lib/account-type';
@@ -78,12 +80,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .single();
 
         if (!existing) {
-          await supabase.from('profiles').insert({
+          const accountType = wanted ?? 'individual';
+          const { data: created, error } = await supabase.from('profiles').insert({
             email: user.email,
             name:  user.name,
             avatar_url: user.image,
-            account_type: wanted ?? 'individual',
-          });
+            account_type: accountType,
+          }).select('id').single();
+          // A Google sign-up is a registration too. It used to create the
+          // profile without any event, so these sign-ups were missing from
+          // the funnel in /api/admin/daily-metrics and from GA.
+          const path = accountType === 'agent' ? '/agent/register' : '/register';
+          if (error) {
+            console.error('[auth] google sign-up insert failed', { code: error.code, message: error.message });
+            await track({ name: EVENTS.registerFailed, path, props: { method: 'google', code: error.code || 'db_error', accountType } });
+          } else {
+            await track({ name: EVENTS.registerCompleted, userId: created?.id ?? null, path, props: { method: 'google', accountType } });
+            // Read once by components/SignupBeacon.tsx on the dashboard, which
+            // sends GA its register_success; GA never sees the server.
+            try {
+              (await cookies()).set(NEW_SIGNUP_COOKIE, 'google', { path: '/', maxAge: 600, sameSite: 'lax', secure: true, httpOnly: false });
+            } catch { /* not settable here: GA misses this one, our own event has it */ }
+          }
         } else if (wanted && asAccountType(existing.account_type) !== wanted) {
           return `${LOGIN_PATH[wanted]}?error=${WRONG_TYPE_ERROR[wanted]}`;
         }

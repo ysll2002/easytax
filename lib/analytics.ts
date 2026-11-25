@@ -24,6 +24,9 @@ export const EVENTS = {
   pageView:            'page_view',
   registerStarted:     'register_started',
   registerCompleted:   'register_completed',
+  // Server-side only: a sign-up the server refused, with props.code saying why
+  // (email_exists, pwd_too_short, a Postgres code, server_error…).
+  registerFailed:      'register_failed',
   launchSubscribed:    'launch_subscribed',
   trustViewed:         'trust_viewed',
   activationCtaClick:  'activation_cta_click',

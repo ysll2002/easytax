@@ -1167,6 +1167,9 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
           page_views:          events7d['page_view']            ?? 0,
           register_started:    events7d['register_started']     ?? 0,
           register_completed:  events7d['register_completed']   ?? 0,
+          // Sign-ups the server refused (any reason, any method); the reasons
+          // are in analytics_events.props.code.
+          register_failed:     events7d['register_failed']      ?? 0,
           launch_subscribed:   events7d['launch_subscribed']    ?? 0,
           // The deadline-schedule capture that replaced the launch waitlist as
           // the primary ask. Counted separately because the two are different
