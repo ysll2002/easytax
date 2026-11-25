@@ -15,6 +15,9 @@
 
 ---
 
+## 2026-11-25（owner 会话，HMRC 回信已发）
+WFG726 完整回复（checklist 已勾声明 + 5 张截图）owner 已发出。ULJ714 补发 checklist 的短邮件截至记录时仍是草稿，提醒 owner 发。之后等 HMRC 审核；30 天日志窗口约到 2026-12-24，12 月中旬未批准就重跑 sandbox 测试。
+
 ## 2026-11-25（owner 会话，HMRC 两个工单）
 **WFG726** 16:24 Rekha Sharma 回复：只需填 checklist 的 General + End of year；重点 Losses / ITLA / BSAS + 已有 API 里的年终端点；FPH 非正式检查；要持续测试保持日志新鲜。
 **ULJ714**：owner 15:00 已发出回复（附 5 张截图），但正文说附了 checklist 实际没附。
