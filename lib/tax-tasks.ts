@@ -76,8 +76,11 @@ export function paymentTasksFromHmrc(balance: SaBalance | null, now: Date = new 
     out.push({
       id:       `charge-${d.documentId ?? `${type}-${due}`}`,
       type,
-      title:    type === 'payment_other' ? description : '',
-      subtitle: `Self Assessment ${d.taxYear ?? ''} · £${amount.toFixed(2)} to pay`,
+      // The title is EasyTax's own, translated (TasksTimeline). HMRC's
+      // description is free text that can be a code or, in the sandbox, a
+      // placeholder ("document Description"), so it goes in the detail line.
+      title:    '',
+      subtitle: `Self Assessment ${d.taxYear ?? ''}${type === 'payment_other' && description ? ` · ${description}` : ''} · £${amount.toFixed(2)} to pay`,
       dueDate:  due,
       status:   taskStatus(due, now),
       taxYear:  d.taxYear,

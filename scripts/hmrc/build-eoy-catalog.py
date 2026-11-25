@@ -98,6 +98,80 @@ def slim(s):
     return keep
   if isinstance(s,list): return [slim(v) for v in s]
   return s
+NEG=float('-inf')
+def fit(ex,sch):
+  """How well an example matches a schema: -inf if it cannot be valid, else
+  the number of fields it fills. Used to pair HMRC's examples with the body
+  variant (tax year) they belong to; HMRC lists them in a different order and
+  usually more examples than variants."""
+  if not isinstance(sch,dict) or not sch: return 0
+  alts=sch.get('oneOf') or sch.get('anyOf')
+  if alts and 'properties' not in sch: return max([fit(ex,a) for a in alts] or [NEG])
+  t=sch.get('type'); t=t[0] if isinstance(t,list) else t
+  if isinstance(ex,dict):
+    props=sch.get('properties')
+    if t not in (None,'object') or props is None: return NEG if t not in (None,'object') else 0
+    score=0
+    for k,v in ex.items():
+      if k not in props: return NEG
+      f=fit(v,props[k])
+      if f==NEG: return NEG
+      score+=1+f
+    for r in sch.get('required') or []:
+      if r not in ex: return NEG
+    return score
+  if isinstance(ex,list):
+    if t not in (None,'array'): return NEG
+    items=sch.get('items') or {}
+    total=0
+    for v in ex:
+      f=fit(v,items)
+      if f==NEG: return NEG
+      total+=f
+    return total
+  if isinstance(ex,bool): return 0 if t in (None,'boolean') else NEG
+  if isinstance(ex,(int,float)): return 0 if t in (None,'number','integer') else NEG
+  if isinstance(ex,str): return 0 if t in (None,'string') else NEG
+  return 0
+def best_example(exlist,sch):
+  scored=[(fit(e,sch),i) for i,e in enumerate(exlist)]
+  scored=[x for x in scored if x[0]!=NEG]
+  if not scored: return None
+  return exlist[max(scored,key=lambda x:(x[0],-x[1]))[1]]
+def scenarios(desc):
+  """Gov-Test-Scenario values from the endpoint's test data tables. A header
+  row is the one followed by a |---| separator; some tables have a tax year
+  column before the header value, so columns are found from that row.
+  Scenarios HMRC marks as no longer available are left out."""
+  out=[];seen=set()
+  if 'Gov-Test-Scenario' not in desc: return out, True
+  rows=[l.strip() for l in desc.splitlines()]
+  cells_of=lambda l:[re.sub(r'<[^>]+>','',c).strip() for c in l.strip().strip('|').split('|')]
+  is_sep=lambda l:l.startswith('|') and set(l.replace('|',''))<=set('-: ')
+  cols=None; has_default=False
+  for i,l in enumerate(rows):
+    if not l.startswith('|'): cols=None if not l else cols; continue
+    if is_sep(l): continue
+    cells=cells_of(l)
+    if i+1<len(rows) and is_sep(rows[i+1]):
+      hv=next((j for j,c in enumerate(cells) if 'Gov-Test-Scenario' in c or 'Header Value' in c),None)
+      ty=next((j for j,c in enumerate(cells) if re.search(r'tax year',c,re.I)),None)
+      cols=None if hv is None else (hv,ty,len(cells)-1 if len(cells)-1!=hv else None)
+      continue
+    if cols is None: continue
+    hv,ty,dc=cols
+    if hv>=len(cells): continue
+    if 'DEFAULT' in cells[hv].upper(): has_default=True
+    m=re.match(r'^([A-Z][A-Z0-9_]{2,})$',cells[hv])
+    if not m or m.group(1) in seen: continue
+    d=cells[dc] if dc is not None and dc<len(cells) else ''
+    if re.search(r'no longer available',d,re.I): continue
+    seen.add(m.group(1))
+    if ty is not None and ty<len(cells) and cells[ty] and cells[ty].lower()!='all': d=f"{d} (tax year: {cells[ty]})"
+    out.append({'value':m.group(1),'desc':re.sub(r'\s+',' ',d)[:200]})
+  # No "N/A - DEFAULT" row: the sandbox answers RULE_INCORRECT_GOV_TEST_SCENARIO
+  # unless one of the listed scenarios is sent.
+  return out, has_default or not out
 cat=[]
 for api,(name,ver) in APIS.items():
   app=load(f"{root}/{api}/application.yaml")
@@ -122,23 +196,20 @@ for api,(name,ver) in APIS.items():
         if exs: exlist=[resolve(v,of).get('value',resolve(v,of)) if isinstance(v,dict) else v for v in exs.values()]
         elif ex is not None: exlist=[ex]
         for i,v in enumerate(variants):
-          bodies.append({'title':(v.get('title') or v.get('description','')[:80] or f'Variant {i+1}'),'schema':slim(v),'example':exlist[i] if i<len(exlist) else (exlist[0] if exlist else None)})
+          bodies.append({'title':(v.get('title') or v.get('description','')[:80] or f'Variant {i+1}'),'schema':slim(v),'example':best_example(exlist,v)})
       summ=op.get('summary') or ''
       ep_id=re.sub(r'[^a-z0-9]+','-',f"{api.replace('-api','')} {m} {summ}".lower()).strip('-')
       desc=op.get('description') or ''
       head=desc.split('### Test data')[0].strip()
       head=re.sub(r'\s+',' ',re.sub(r'<[^>]+>','',head))[:700]
-      scen=[]
-      if 'Gov-Test-Scenario' in desc:
-        for row in re.findall(r'^\|\s*(?:<p>)?([A-Z][A-Z0-9_]{2,})(?:</p>)?\s*\|\s*(.*?)\s*\|\s*$',desc.split('Gov-Test-Scenario',1)[1],re.M):
-          scen.append({'value':row[0],'desc':re.sub(r'<[^>]+>','',row[1])[:200]})
+      scen,scen_default=scenarios(desc)
       query=[]
       for prm in (op.get('parameters') or []) if not op.get('_broken') else []:
         prm=resolve(prm,of) if isinstance(prm,dict) else {}
         if prm.get('in')=='query':
           sc=prm.get('schema') or {}
           query.append({'name':prm.get('name'),'required':bool(prm.get('required')),'enum':sc.get('enum'),'description':re.sub(r'\s+',' ',re.sub(r'<[^>]+>','',str(prm.get('description') or '')))[:300]})
-      cat.append({'query':query,'description':head,'scenarios':scen,'id':ep_id,'apiKey':api,'api':name,'version':ver,'method':m.upper(),'path':path,'summary':summ,'bodies':bodies})
+      cat.append({'query':query,'description':head,'scenarios':scen,'scenarioRequired':not scen_default,'id':ep_id,'apiKey':api,'api':name,'version':ver,'method':m.upper(),'path':path,'summary':summ,'bodies':bodies})
 ids=[c['id'] for c in cat]; dup={i for i in ids if ids.count(i)>1}
 for c in cat:
   if c['id'] in dup: c['id']+= '-'+re.sub(r'[^a-z0-9]+','-',c['path'].lower()).strip('-')[-40:]

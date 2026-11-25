@@ -55,7 +55,7 @@ type Overview = {
   isAgent:      boolean;
   obligations:  Settled<{ periodStartDate: string; periodEndDate: string; dueDate: string; status: string; receivedDate?: string }[]>;
   biss:         Settled<Json>;
-  losses:       Settled<Json | null>;
+  losses:       Settled<Json | null> & { notCovered?: boolean };
 };
 
 /** Every number in an HMRC response, by its path: { losses: { broughtForwardLosses: 50 } } → ["Losses › brought forward losses", 50]. */
@@ -301,7 +301,9 @@ export default function YearEndClient({ taxYear, setTaxYear, clientId, sandbox, 
               )}
             </Part>
             <Part title="Losses and claims" error={overview.losses.error}>
-              {overview.losses.data
+              {overview.losses.notCovered
+                ? <Note>EasyTax covers losses and loss claims from the 2026-27 tax year. If you have losses brought forward or want to claim a loss for {taxYear}, report them through HMRC online services or other compatible software before the final declaration.</Note>
+                : overview.losses.data
                 ? numbersIn({ losses: (overview.losses.data as Json).losses, claims: (overview.losses.data as Json).claims })
                     .map(([label, value]) => <Row key={label} label={label.charAt(0).toUpperCase() + label.slice(1)} value={gbp(value)} />)
                 : <Note>None recorded. Add losses brought forward and claims under Losses and claims in All year-end data.</Note>}
