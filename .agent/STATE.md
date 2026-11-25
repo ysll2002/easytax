@@ -5,7 +5,7 @@
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
 ## 2026-11-25 最新
-- **production 季度申报 2026-27 会失败**（旧 period 端点）。修复在 staging（PR #76 cumulative，PR #77 唯一索引）。上 main 前 production 先跑迁移 20261124_property_records、20261125_sa_filings_unique_per_source。需 owner 明说才发布。
+- **Production = main = staging = `e240b82`**（2026-11-25 14:50 UTC 上线，owner 授权；PR #74–#78 经 #79 发布）。production 库已先跑 20261124_property_records、20261125_sa_filings_unique_per_source。冒烟通过（首页/登录/注册/session 200，dashboard 跳登录，无错误日志）。年终和 SA Accounts 在 production 被 HMRC_PRODUCTION_EOY_APIS（未设）挡住。季度申报 2026-27 已改 cumulative。
 - sandbox 全量测试 2026-11-25 完成（hmrc/2026-11-eoy-subscriptions/SANDBOX-RUN-2026-11-25.md）：108 个年终端点 105 成功、3 个要等 2027-04-06；agent 声明未测。
 - Vercel 项目已改回 `easytax`（prj_hXqav…）；空项目 `easytax-stray-empty` 待 owner 删除。
 
@@ -69,6 +69,8 @@
   schedule_sent 缺服务端 track()（stg-002b）。
 
 ## Deployment 状态
+
+- **最新：Production = main = staging = `e240b82`（2026-11-25，见顶部）。** 下面是旧记录。
 
 - **staging = `40df790`**（比 production 多 PR #62；**上线前 production 库要先建 hmrc_api_log**）。
 - **Production = main = `5695c33`**（2026-11-16 15:00 UTC 上线 PR #61，owner 授权；冒烟通过）。

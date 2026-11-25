@@ -15,6 +15,10 @@
 
 ---
 
+## 2026-11-25（owner 会话，发布 production + HMRC 回信草稿）
+**发布**：owner 说 "Yes, release to prod"。production 库先跑 20261124 + 20261125 迁移，再合 PR #79（staging→main），Vercel 自动构建，easytax.vip = e240b82。冒烟通过。
+**HMRC 回信**：Gmail 草稿已建（回复 ULJ714 线程，附 5 张截图），列出测试用户 GK649364B / CARN0586927 + LH533882D、测过的端点、3 个 PUT 要等 2027-04-06。**发送前 owner 要做**：在 Developer Hub 给 production 应用申请 ITLA 1.0；填好 checklist docx 并附上（会计方式 accruals 待 owner 定）。
+
 ## 2026-11-25（owner 会话，收尾修复 + agent 声明）
 **PR #78**（已合 staging）：catalog 示例按 schema 匹配税年、场景表按表头解析（429→518）、两个历史删除预选场景、工作区请求体按所选税年；2025-26 年终页 losses 改成说明文字；HMRC 其他欠款用自己的标题。
 **agent 最终申报**已测：staging agent 账号 + sandbox agent CARN0586927 + 客户 LH533882D（模拟接受），HMRC 204，截图 evidence/04、05。凭据在 agent/.env.local。
