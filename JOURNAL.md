@@ -1,0 +1,510 @@
+# EasyTax Agent — 日志
+
+> **最新在最上面。只追加，不改写历史。**
+> 每日条目模板：
+>
+> ```
+> ## YYYY-MM-DD
+> **HMRC**：…
+> **指标**：注册 X(+d) · HMRC 连接 X(+d, 转化 Y%) · 申报 X(+d)
+> **今日执行**：…（分支 / PR，或说明为什么没实现）
+> **Top 5**：1. … 2. … 3. … 4. … 5. …
+> **学到 / 决定**：…（跨天有效的结论也要同步进 memory 目录）
+> **失败**：…
+> ```
+
+---
+
+## 2026-11-25（owner 会话，GA4 两周分析 11-11→11-24）
+**数据源**：GA4 走 Windsor.ai（property EasyTax-ab480）；生产 Supabase profiles / analytics_events 交叉核对。
+**指标**：GA 151 sessions / 110 users。真实英国流量约 40 人（UK desktop 31 + mobile 12）；11-21~23 的峰值是 20+ 国家 direct、零互动，判断为爬虫。Organic：google 15 人 / 28 sessions，平均 4.5 分钟，质量最好；落地页多为首页 + SA302 文章。~25 篇 tax-tips 和 competitor-alternative 页各 1–2 sessions、多数 <10 秒，没起作用，且有同题重复（trading allowance ×4、"MTD 还要报 SA 吗" ×3）。
+**注册**：生产新 profile 7 个，其中 11-21 两个 agent 是 owner 测试；**11-24 一天 5 个真实个人注册，4 个已连 HMRC**，其中 1 个已录 105 条记录，0 申报。来源都是 direct/无 referrer，原因未知（待查 GOV.UK 软件列表等）。
+**问题**：11-24 20:06–20:23 UTC 一个 Google 搜索来的英国访客邮箱注册失败 5 次（/api/register 返回非 2xx，原因无法查：Vercel 日志已过保留期，失败原因只发到 GA 的事件参数里且未注册为自定义维度）。可能 21:46 改用 Google 登录成功（ace***），未证实。
+**跟踪缺口**：GA 无 key event（conversions=0）；Google OAuth 注册不触发 register_success；GA 时区是 UTC+1 不是 Europe/London；register_failed 原因未落库。
+
+## 2026-11-25（owner 会话，HMRC 回信已发）
+WFG726 完整回复（checklist 已勾声明 + 5 张截图）owner 已发出。ULJ714 补发 checklist 的短邮件截至记录时仍是草稿，提醒 owner 发。之后等 HMRC 审核；30 天日志窗口约到 2026-12-24，12 月中旬未批准就重跑 sandbox 测试。
+
+## 2026-11-25（owner 会话，HMRC 两个工单）
+**WFG726** 16:24 Rekha Sharma 回复：只需填 checklist 的 General + End of year；重点 Losses / ITLA / BSAS + 已有 API 里的年终端点；FPH 非正式检查；要持续测试保持日志新鲜。
+**ULJ714**：owner 15:00 已发出回复（附 5 张截图），但正文说附了 checklist 实际没附。
+**已做**：填好 checklist（hmrc/2026-11-eoy-subscriptions/Software-Approvals-Production-Checklist-EasyTax-VIP-2026-11-25.docx，Accruals 填 No，迭代构建填 Yes/End of year，声明勾选框留给 owner）。Gmail 草稿两封：ULJ714 补发 checklist 的短邮件；WFG726 完整回复 + checklist + 截图，两边互相引用。已删除空 Vercel 项目 easytax-stray-empty。
+**待 owner**：Developer Hub 申请 ITLA 1.0（两封邮件都说已申请）；勾选 checklist 声明框；发送两封草稿。30 天内要持续在 sandbox 测试。
+
+## 2026-11-25（owner 会话，发布 production + HMRC 回信草稿）
+**发布**：owner 说 "Yes, release to prod"。production 库先跑 20261124 + 20261125 迁移，再合 PR #79（staging→main），Vercel 自动构建，easytax.vip = e240b82。冒烟通过。
+**HMRC 回信**：Gmail 草稿已建（回复 ULJ714 线程，附 5 张截图），列出测试用户 GK649364B / CARN0586927 + LH533882D、测过的端点、3 个 PUT 要等 2027-04-06。**发送前 owner 要做**：在 Developer Hub 给 production 应用申请 ITLA 1.0；填好 checklist docx 并附上（会计方式 accruals 待 owner 定）。
+
+## 2026-11-25（owner 会话，收尾修复 + agent 声明）
+**PR #78**（已合 staging）：catalog 示例按 schema 匹配税年、场景表按表头解析（429→518）、两个历史删除预选场景、工作区请求体按所选税年；2025-26 年终页 losses 改成说明文字；HMRC 其他欠款用自己的标题。
+**agent 最终申报**已测：staging agent 账号 + sandbox agent CARN0586927 + 客户 LH533882D（模拟接受），HMRC 204，截图 evidence/04、05。凭据在 agent/.env.local。
+**sandbox 测试已全部覆盖**；剩下只是 3 个 PUT 要等 2027-04-06。production 发布仍待 owner。
+
+## 2026-11-25（owner 会话，修季度申报）
+**PR #76**（已合 staging）：季度申报 2025-26 起改用 SE cumulative PUT，发 6 Apr 到季末的年初至今汇总（records 加总）；复核页显示年初至今数字。staging 实测 Q1/Q2 2026-27 都 204，Q2 发 £5,600/£688 = Q1+Q2。
+**PR #77**（已合 staging）：sa_filings 季度唯一索引加 income_source（迁移 20261125，只上了 staging）——之前同一季度先报了外国房产，SE 那条记录会被静默丢掉、records 没锁。
+**production 仍是旧代码**：2026-27 季度申报会被 HMRC 拒。发布到 main 需要 owner 明说；要先在 production 跑 20261124 + 20261125 两个迁移。
+
+## 2026-11-25（owner 会话，sandbox 全量测试）
+**做了**：staging 新建测试账号（凭据在 agent/.env.local STAGING_TEST_*），连 HMRC 测试用户 GK649364B，在内置浏览器里跑完 108 个年终端点 + final declaration + confirm-amendment（都 204），截图在 hmrc/2026-11-eoy-subscriptions/evidence/，结果 SANDBOX-RUN-2026-11-25.md。105/108 成功；Losses 7.0 / ITLA / Winter Fuel PUT 在 2027-04-06 前只能拿到 RULE_TAX_YEAR_NOT_ENDED。
+**严重发现**：季度申报 submitQuarterlyUpdate 用旧 period 端点，2026-27 被拒 RULE_TAX_YEAR_NOT_SUPPORTED——production 也一样，真实用户 2026-27 季度申报会失败。当年 HMRC 看到的 in-year 证据来自 sandbox-test 路由。待 owner 决定是否立刻修（改 cumulative + 年初至今汇总）。
+**其他**：2025-26 年终页 Losses 7.0 报 400；catalog 示例和变体错配、带 Tax Year 列的场景表解析错；agent 声明未测。
+
+## 2026-11-25（owner 会话，Vercel 项目改回 easytax）
+**根因**：11-24 有人把原 Vercel 项目 `easytax`（prj_hXqav…，3 月建，域名和 39 个变量都在）改名成 `mtdbuddy`（配合未合并的品牌重塑分支 `claude/rebrand-mtdbuddy`，那个分支没进 staging/main）。`.github/workflows/deploy.yml` 没设 VERCEL_PROJECT_ID 时按名字 `easytax` 去 `vercel link --yes`，名字找不到就新建了空项目 `easytax`（prj_zLqach0g…，18:27:52），之后每次 push staging 都部署到空项目并把 staging.easytax.vip 指过去 → MissingSecret 500。11-25 00:03 又发生一次。
+**已做**：owner 说"forget about mtdbuddy, revert back to easytax"。空项目改名 `easytax-stray-empty`（没删），`mtdbuddy` 改回 `easytax`。production easytax.vip 一直正常（200）。
+**未做**：把 staging.easytax.vip 指回真项目构建 `mtdbuddy-i45hhbwsj`（含 PR #75）被 auto mode 权限检查拦了，等 owner。下次 push staging 时 workflow 会按名字链到真项目，自动恢复。
+**学到**：Vercel 项目名就是 deploy workflow 的链接键，不能改名；建议在 GitHub secrets 设 VERCEL_ORG_ID / VERCEL_PROJECT_ID 固定下来。`easytax-stray-empty` 建议 owner 删掉。
+
+## 2026-11-25（owner 对话）
+
+**今日执行**：owner 问任务列表为什么有 3 个「Pay」→ 那是写死的自我评估付款日期提醒，对所有人都显示。PR #75 合进 staging `e92ad23`：付款改从 Self Assessment Accounts 4.0（balance-and-transactions，只取未结清项）读取，只有 HMRC 显示有欠款的才显示「Pay £x」（含罚款/利息）；没有欠款显示「HMRC 显示你目前没有需要支付的款项」；读不到账户时（或 production 还没批这个 API）只显示日期提醒 + 「Check →」链到 HMRC 账户，不再有 Pay。7 种语言。production 要把 `self-assessment-accounts-api` 加进 `HMRC_PRODUCTION_EOY_APIS` 并通过 HMRC 审批才会生效。UI 未在浏览器验证。
+
+注意：多出来的 Vercel 项目 `easytax`（prj_zLqach0g…）已经接上 GitHub，每次 push 都会构建 preview；staging 域名这次自动跟着 mtdbuddy 新构建走了，没被抢。建议 owner 删掉这个项目。
+
+---
+
+## 2026-11-24（owner 对话）
+
+**今日执行**：owner 要求把 ULJ714 的所有差距都补上（包括没有代码的 6 个 API）。PR #74 合进 staging `0628843`：
+- 从 HMRC GitHub 上的 OAS 生成 108 个端点的 catalog（12 个 API，含请求 schema 和 Gov-Test-Scenario），`scripts/hmrc/build-eoy-catalog.py` 可重新生成
+- 一个通用路由 `/api/hmrc/eoy`（个人 + 代理客户；supporting agent 按 service guide 限制；production 上每个 API 都要列进 `HMRC_PRODUCTION_EOY_APIS` 才放行）
+- 年终页新增「All year-end data」标签页，表单从 schema 生成，HMRC 错误原样显示
+- 房产收入从 records 生成（records 新增 income_source / property_bucket / property_id，按收入来源锁定已申报季度）
+- 引导流程支持代理客户、intent-to-amend → confirm-amendment、Losses 7.0，个人和代理声明改成 service guide 原文（原来的个人声明措辞不对）
+
+迁移 `20261124_property_records` 只上了 staging。UI 没在浏览器里验证（staging 有 Vercel 登录墙）。测试计划和 checklist 草拟答案在 `hmrc/2026-11-eoy-subscriptions/TESTING-PLAN.md`。
+
+**staging 注册 500**：18:27:52 有人用 CLI 部署，新建了一个同名 Vercel 项目 `easytax`（prj_zLqach0g…，没有任何环境变量），staging.easytax.vip 被指到它 → MissingSecret + 缺 Supabase 变量。原项目已改名 `mtdbuddy`（prj_hXqav…，变量都在）。owner 同意后把 staging.easytax.vip 指回 mtdbuddy staging 构建 `mtdbuddy-ct5qzzszc`（含 PR #74），/api/auth/session 恢复正常。新项目 `easytax` 没删；谁建的还不知道。**以后不要在没链接项目的目录跑 `vercel` 部署**。
+
+**待 owner**：sandbox 应用订阅 Losses 7.0 + ITLA 1.0 + 其余版本；production 应用加申请 ITLA 1.0；在 staging 用一个测试用户把每张卡都跑一遍（30 天内）；截图两种声明；决定 checklist 里 accruals 怎么答。
+
+---
+
+## 2026-11-23（owner 对话）
+
+**今日执行**：owner 问注册人数 → production 53 个账号，真实外部约 44 个，10-13 后无外部新注册，0 条记录、0 次申报。owner 要一年内做到 £10k/月的推广计划 → 写了 `agent/GROWTH_PLAN_2027.md`（BACKLOG stg-015，proposed）：代理为主（35 家 × £180）+ 个人（500 × £7.5）；12 月打地基（Stripe、文案、GOV.UK 列表、激活老用户），1–3 月代理试点，4 月扩容潮前上年终申报，8 月第二波。没有改代码。
+**HMRC 2026-ULJ714**（Jacob Barker，11-23 13:13 UTC）：11-14 申请的 9 个年终 API 订阅被退回——测试不满足 service guide 要求。要求：每个 API 都在 sandbox 测完（附 NINO / Sandbox ID）、Losses 7.0 必须连带订阅并测试 Individual Tax Liability Adjustments 1.0、in-year API 重测、填新 checklist；HMRC 只看最近 30 天调用。差距分析在 `hmrc/2026-11-eoy-subscriptions/GAP-ANALYSIS.md`：代码没有 Property / Employments / Pensions / State Benefits / Charges / Expenses（建议撤回），缺 Losses 7.0 全部端点、ITLA 1.0、BSAS List、BISS 调用、Periods of Account / Late Accounting Date Rule / Accounting Type、intent-to-amend / confirm-amendment、代理版 final declaration 声明。等 owner 决定范围。
+
+**学到 / 决定**：等 owner 决定定价、域名、每周销售时间、广告预算。
+
+---
+
+## 2026-11-21（owner 对话）
+
+**今日执行**：owner 问 MTD 季度申报报的是总数还是明细 → 只报 turnover + 8 个费用类别合计，明细留在 business_records。发现缺口：已申报季度的记录仍可改/删、申报不记录用了哪些记录、删代理客户会级联删记录。owner 批准锁定 → PR #68 合进 staging `aff2356`：已申报季度内的记录不能改/删/新增（API 409 + 数据库触发器兜底），CSV 中已申报季度的行跳过并提示，sa_filings.record_ids 存每次申报用到的记录，business_records.client_id 改 ON DELETE RESTRICT，Records 页显示「🔒 Filed」。迁移 `20261121_lock_filed_records` 已上 staging 并验证（改已申报记录被拒）。**未上 production**。
+
+**发布 production**（owner 明说）：production 库先建 hmrc_api_log、再跑 `20261121_lock_filed_records`（验证：表、触发器、record_ids、FK=restrict 均就位）→ main 快进 `5695c33..aff2356`（PR #62–#68）→ 部署 p9huhofra Ready（09:46 UTC）。冒烟：公开页 200，dashboard/agent、year-end 未登录 307 到 /login，/api/agent/setup 401。代理模式已在 production 打开；年终页在 production 仍被拦。
+
+**个人 / 代理账号分开**（owner 要求两个入口、互相隔离）：owner 选「一个邮箱只能一种类型」、staging 的 gabriel@gmail.com 设为 agent。PR #69 合进 staging `d1684ac`：profiles.account_type（注册时定，不能改）；入口 /login /register（个人）和 /agent/login /agent/register（代理），互相有链接；在错的入口登录会被拒并指向正确入口（密码登录用 CredentialsSignin code，Google 用 cookie + 回跳）；middleware 按类型分流（代理只能带 ?clientId= 打开报税页）；导航分开；代理 API、records、submit-quarter 都检查类型。迁移已上 staging。staging 页面没能在浏览器里验证（pane 卡在 Vercel 登录）。**未上 production**。
+
+**代理入口更显眼**（owner：代理注册入口不明显、首页要加两个入口）→ PR #70 合进 staging `463f5e1`：登录/注册页顶部加「个人 / 会计师·代理」切换；页头加「For agents」按钮、手机菜单加代理区；首页 hero 下加「Who are you filing for?」两张卡（为自己 / 为客户，各有注册+登录），hero 加代理注册链接；新文案 7 种语言。本地 dev 验证四个入口页 200、切换和卡片渲染正常。**未上 production**。
+
+**发布 production**（owner 明说）：production 库加 profiles.account_type（51 个账号全部 individual）→ main 快进 `aff2356..463f5e1`（PR #69 #70）→ 部署 8mqj0jnt4 Ready。冒烟：/、/login、/register、/agent/login、/agent/register、/pricing 200；首页有「Who are you filing for?」和「For agents」；未登录 /dashboard → /login，/dashboard/agent → /agent/login；/api/auth/session 200。真实登录未测。
+
+MTD 状态条之前在 /login /register 被故意隐藏、代理页却显示 → owner 要两边都显示 → PR #71 合进 staging `3f1ae08`（从 HIDDEN_ON 去掉两项）→ owner 明说发布，main 快进 `463f5e1..3f1ae08`，部署 q1ddfhywc Ready，/login /register /agent/login 均 200 且有状态条。
+
+代理注册要采集会计事务所名称（owner）→ PR #72 合进 staging `b402c50`：profiles.firm_name；/agent/register 必填「Accounting firm name」（前后端都校验）；Google 注册的代理在代理首页补填；7 语言。迁移已上 staging。本地验证字段只出现在代理注册页。→ owner 明说发布：production 库加 firm_name → main 快进 `3f1ae08..b402c50`，部署 d7w620dii Ready；/agent/register 有事务所字段，缺事务所名的代理注册被 API 拒（400 missing_firm_name）。
+
+## 2026-11-18（owner 对话）
+
+**今日执行**：核对 HMRC 工单：RTI609 Bulk Data File List 已批准（11-17），年终 WFG726 等待中，ASA CRJ844 **11-18 已批准**（Agent Authorisation 2.0 订阅到 EasyTax VIP production）。owner 批准打开 production 代理模式 → PR #67 合进 staging `3a6430a`（`AGENT_MODE_AVAILABLE = true`；sandbox 测试用户、横幅、create-test-user 路由、模拟客户同意/拒绝仍只在 sandbox）。复用同一个 OAuth 回调，不需要新 redirect URI。**未上 production**：发布前要在 production 库建 hmrc_api_log，并由 owner 明说发布。
+
+## 2026-11-16（owner 会话）
+**今日执行**：HMRC 回信要 Agent Authorisation 2.0 六个端点的 sandbox 测试时间戳。发现「Get all requests (30 天)」没实现、调用时间没留痕 → PR #57（list 接口 + agent_api_log 表）合进 staging `1fe64fb`。等 owner 在 staging 按步骤点一遍，再从日志出表、起草回信（只 create_draft）。owner 点完：6 个端点 13:55–13:57 UTC 全部成功，回信草稿已建（未发送）。owner 重新授权卡在客户接受 → 我替 Alex 接受，并做 PR #58（sandbox 模拟客户同意/拒绝按钮）合进 staging `d2871ad`。owner 反馈按钮没反应：实为 ~10 秒无提示（Iona 实际已授权）+ Alex 遇 HMRC relationships 500 → PR #59 合进 staging `d5dcba1`。HMRC 代理 API 证据邮件草稿已更新（加重新授权测试）。Paul 回信：周五上 Software Choices，问无障碍标注 → 起草回信（Yes）。owner 批准修 stg-010 → PR #60 合进 staging `3d085d6`（公开页面去掉 SA/CT600/房产/公司账目的夸大声明，7 语言首页，landlord 页重写）。owner 授权上线：production 库建 agent_api_log → main 快进到 `3d085d6`，部署 1vli2yd86 Ready，9 个公开页 200 且无夸大声明。owner 问任务列表来源 → 发现税年和预缴款两个 bug → owner 批准修 → PR #61 合进 staging `5695c33`（税年从 4/6 起算；预缴款只显示未来 12 个月的提醒、不标逾期、税年标签改正）。owner 授权上线：main 快进到 `5695c33`，部署 2eo00o2wt Ready，冒烟通过。owner 要申请年终 API（SDST）→ PR #62（HMRC 调用日志）合进 staging `40df790`，等 owner 在 staging 跑年终流程。HMRC 发来 Bulk Data File List API checklist（工单 RTI609）→ 判断为误申请，起草撤回回信（未发）；随后 owner 决定继续申请 → sandbox 调通 3 个端点（18:46 UTC），表格已填（缺 3 项待 owner 补）。owner 补齐地址/Companies House/sandbox 应用名 → 表格填完，提交回信草稿 r4324883775115802728（带附件，未发），撤回草稿已删。Paul 回信：年终功能须走 SDST 并提交测试证据，问能否 2027-04 前支持年终申报（才能列为 in development）→ 起草回信 r5454416146971119693（答 Yes、说明年终流程已在 sandbox 测试、将走 SDST），未发，需 owner 确认承诺。owner 已发（承诺 2027-04）→ stg-014。owner 在 staging 跑年终流程：Losses 403（sandbox 应用未订阅 Individual Losses 6.0，List 端点只在 6.0，7.0 没有）、BSAS retrieve 404（sandbox 默认就是「无数据」）、计算带 C95005（sandbox 默认桩数据）→ PR #63 合进 staging `ed16322`：BSAS retrieve 用 SELF_EMPLOYMENT_PROFIT 场景、场景下拉只发给计算/申报调用、sandbox 专用「仍然申报」、日志改读 X-CorrelationId（之前一直为空）。等 owner 订阅 Losses 6.0 后重跑。owner 订阅 6.0 并重跑；又修 3 处 sandbox 桩数据问题：PR #64（BSAS 未调整示例）、#65（「仍然申报」勾选框不出现：sandbox 计算未标 intent）、#66（BSAS 示例总带 adjusted，表单一直隐藏）→ staging `fee43cf`。20:45–20:48 UTC 全部 11 个年终端点成功（Final Declaration 204、Adjustments 200），带 correlation id。证据 `hmrc/2026-11-year-end-sdst/year-end-sandbox-evidence.csv`，SDST 申请草稿 r-203315455819601518（带附件，未发）。
+
+## 2026-11-15（owner 会话，下午）
+**今日执行**：代理模式 sandbox 测试——发邀请报 RESOURCE_FORBIDDEN，原因是 sandbox app 只订阅了 Agent Authorisation 3.0、代码调 2.0；owner 加订 2.0、重新登录后给 Alex Lawrence 发 ITSA 邀请成功。owner 要求客户表加操作列 → [PR #45](https://github.com/ysll2002/easytax/pull/45)，授权合进 staging `c8d922d`，staging 已部署。
+之后：客户授权链接在 sandbox 404 → 查到 Test Support API，替 Alex 接受邀请成功（204）。PR #46（dashboard 去 Quick access）合进 staging `2ac2071`；PR #47（CSV Choose file 按钮样式）也合进 staging `d6a3a53`，确认样式已进 staging 的 CSS。
+owner 要求 CSV 导入后 AI 自动分类 → PR #48，owner 授权合进 staging `bf14009` 并已部署，staging 库已加 ai_categorised 列；owner 实测 AI 分类可用（514 条分了 283 条）。Alex 授权生效后 What's due 为空 → 查出 obligations 大小写 bug → PR #49 合进 staging `ea28c1f`。owner 授权上线：production 库加 ai_categorised 列 → main 快进到 `ea28c1f`，部署 m2y5qh2hx Ready，冒烟通过。sandbox 季度是 2018 年，给 Alex 补了 6 条 2018 测试记录。owner 要求客户页分已完成/未完成 → PR #50 合进 staging `83140cb`。Alex 2018-19 Q2 代理提交成功。PR #51（Done 可查看提交明细）合进 staging `cb22084`。owner 授权：以后 owner 对话里的改动直接合 staging 不用问（已写 memory）。owner 要求申报页上传文件+预填+可改 → 问了合规取舍，owner 选「改动存成调整记录」→ PR #52 合进 staging `8cf4cc7`，并加了提交前服务端校验数字=records。PR #53（View submission 蓝色按钮）合进 staging `9b87ecd`；随后 #54（滚轮不改数字，全站）和 #55（按钮改绿色、同 Prepare update 大小）合进 staging `15adce9`。PR #56（客户页去掉 records 区块）合进 staging `db03e3c`。
+**学到 / 决定**：隐私政策承诺 AI 分类要呈现给用户审核，所以自动分类保留「AI」标记，不能静默生效；隐私政策没列 Anthropic 为处理方（AI 助手早就在发交易描述），待 owner 决定是否补。HMRC sandbox 的代理登录也会出 IV stub；sandbox 没有客户接受授权的网页，要用 Test Support API。Agent Authorisation 有 3.0，上线前要评估是否迁移。
+
+## 2026-11-15（owner 会话）
+**今日执行**：owner 要求先藏起 Company Tax → [PR #44](https://github.com/ysll2002/easytax/pull/44)（侧边栏、手机底栏、dashboard 卡片，`SHOW_COMPANY_TAX` 开关），owner 授权合进 staging `f25b383`，staging 已部署。随后 owner 授权上线：main 快进到 `f25b383`，production 部署 nz0thv3ix Ready，首页/登录 200。
+**学到 / 决定**：Company Tax 暂不对用户展示（owner 决定，页面代码保留）。
+
+## 2026-11-14（追加 · staging 全部上线 production）
+**今日执行**：owner 授权「把 staging 的改动都发布到 production」。main 上有另一会话直接合的 PR #39、#41，不在 staging；先在本地把 main 合进 staging，`app/dashboard/layout.tsx` 冲突：保留 main 的 #41（语言/Homepage 放侧边栏，已在线）+ staging 的 Agent 导航，丢掉我 #42 的做法。build 通过。先在 production 库跑两个 migration（records、agent），再把合并提交 `1a2afdd` 普通 push 到 staging 和 main（两边都是快进，无 force）。production 部署 lqbrr2pk6 Ready；线上冒烟：主要页面 200、无 Open Banking/Plaid 文案、/api/records 和 /api/agent/setup 未登录 401、/api/plaid 404、/dashboard/banking 跳登录、条款第 7 节已更新；production 的 HMRC_ENV 在，代理模式和旧横幅都被挡住。
+**没做 / 没验证**：没有在 production 登录测试（避免在生产库建测试账号）；production 现有 bank_connections 数据未处理；数据库里的博客文章没查 Open Banking 说法。
+**注意**：PR #39 去掉了 dashboard footer 的「不支持的收入类型 / 不支持年终申报」提示，那是之前按 HMRC production 清单加的，值得 owner 确认是否有意。
+
+---
+
+## 2026-11-14（追加 · 导航去掉 Records，PR #43）
+**今日执行**：owner 要求导航栏去掉 Bookkeeping → Records。侧边栏和手机底栏都去掉，owner 授权合进 staging（`5743589`）。
+
+---
+
+## 2026-11-14（追加 · 顶部控件遮挡，PR #42）
+**今日执行**：owner 反馈 Records 页语言切换和 Homepage 按钮遮住页面按钮。原因是桌面端这两个控件 absolute 浮在每页右上角。改为单独一行；本地 8 个页面在 1280/820px 检查无重叠。owner 授权合进 staging（`a873fd0`）。
+
+---
+
+## 2026-11-14（追加 · dashboard 清理，PR #40）
+**今日执行**：owner 要求 dashboard 去掉设置清单，订阅邮件后不再显示「Filing to HMRC is not open yet」。顺带发现该横幅在 production 也显示（与 11-11 已获批矛盾），一并在 production 隐藏。本地测过，owner 授权合进 staging（`c486474`）。
+
+---
+
+## 2026-11-14（追加 · redirect URI 修好、PR #37/#38 合进 staging）
+**今日执行**：owner 在 Developer Hub 给 sandbox app 加了 staging redirect URI（HMRC 约 15 分钟后生效），并删了 production URI；我把 staging 的 HMRC_REDIRECT_URI 改成 staging 域名并重新部署。owner 授权把 PR #37（代理模式）合进 staging（`720bf8d`）。owner 在 staging 导入 514 行 CSV 失败 → 查日志是 POST /api/records 500：去重查询把所有 hash 塞进 URL 太长；另外错误提示在屏幕外、Revolut 导出误选 Orig amount（无符号）。修复为 PR #38，本地 600 行导入/重复导入通过，owner 授权合进 staging（`98a3ae8`）。
+**学到 / 决定**：本地测试数据量太小漏掉了 URL 长度问题；以后导入类功能要用几百行测。
+
+---
+
+## 2026-11-14（追加 · 代理模式，PR #37）
+**今日执行**：owner 已在 sandbox 订阅 Agent Authorisation API，要求搭建代理报税逻辑。owner 选：代理替客户录数据、ITSA + VAT、同一账号开代理模式。做了 PR #37（对 staging，未合）：agent_connections / agent_clients 表、ARN + 代理 OAuth（共用已登记 callback，用 state + cookie 区分）、邀请/查状态/取消/解除授权、客户页（授权状态、待办 obligations、客户记录、提交历史）、季度更新和 VAT 页面支持 ?clientId=、sandbox 测试用户生成。本地连 staging 库测了验证、权限、记录隔离、客户模式汇总。
+**失败 / 卡住**：sandbox app 只允许 easytax.vip 的 redirect URI，staging 的 HMRC_REDIRECT_URI 也指向 production 域名 → staging 和本地都无法完成 sandbox HMRC 登录（也影响 owner 之前要做的年终测试）。需要 owner 在 Developer Hub 加 staging 的 redirect URI。
+**学到 / 决定**：staging 的 HMRC 登录一直会落到 production，这个之前没人发现。
+
+---
+
+## 2026-11-14（追加 · 移除银行连接，PR #36）
+**今日执行**：owner 说没有 AISP 牌照，要求移除 connect bank。发现季度申报的数字只能从 Plaid 银行流水来，单纯删按钮会让用户无法申报，于是问 owner：选了「手动录入 + CSV 导入」，并且测完后上 production。做了：`business_records` 表 + `/api/records` + 记录页（手动录入、CSV 导入带列映射和去重、分类保存、撤销、AI 聊天也会保存）；季度汇总和公司报表改读记录；删 Plaid 代码和依赖；/dashboard/banking 重定向；7 种语言 + 营销页 + 条款/隐私/trust/无障碍声明去掉 Open Banking 说法；数据导出加记录。本地连 staging 库登录测试全部通过，测试账号已删。owner 授权后合进 staging（`f8dcd08`，一次性授权），staging 部署成功，冒烟测试通过（/api/records 未登录 401、/dashboard/banking 跳登录、营销页和条款无 Open Banking）。还没进 main。
+**学到 / 决定**：没有 AISP 牌照 → 不连银行（已写进 BACKLOG 禁区和 memory）。production 合并前要先在 production 库跑 migration。
+
+---
+
+## 2026-11-14（追加 · staging 独立数据库）
+**今日执行**：owner 在 staging 注册报 500。原因：staging 的 Vercel 变量还指向 production 的 Supabase，PR #35 的护栏拒绝连接（staging 构建也因此失败，staging.easytax.vip 一直停在早上的版本）。owner 授权后：恢复 `EasyTax-Staging` 项目（owner 先暂停了另一个免费项目）→ 用只增不删的 migration 把表结构对齐 production → 用 Vercel CLI 把 staging 分支的 3 个 Supabase 变量换成 staging 项目的（service_role key 由 supabase CLI 直接管道进 Vercel，没出现在输出里）→ 重新部署 → 用 example.com 测试账号注册成功，确认只写进 staging 库、production 库无此账号；production 页面正常。
+**下一步**：owner 在 staging 上测年终申报流程（BSAS/Losses/BISS 已订阅）。
+**学到 / 决定**：production 新增表/列后要同步到 staging 库。
+
+---
+
+## 2026-11-14（追加 · PR #34 上线，owner 授权）
+**今日执行**：owner 明确要求「合 PR #34 进 staging，再把 staging 合进 main」。这是一次性授权，不改护栏。
+- **合并前发现冲突**：另一个会话今天直接往 main 合了 PR #33（存款利息改走 Savings Income 2.0 的 UK 账户流程、Gift Aid 改用 Reliefs 3.0、hmrcFetch 接受空响应体）和 PR #35（staging/production 数据库隔离、注册页不再卡住）。PR #33 和我 PR #34 第二个 commit 做的是同一件事。
+- **处理**：先把 main 合进 PR 分支，冲突统一用 main 的实现，丢掉我自己那版存款利息重写（commit `4120cbb`）。只保留 PR #34 独有的部分：年终流程、调整页从 year-end 页接收 `?taxYear=`、调整路由校验税年。合并后的分支和 main 相比只多这些。tsc 和 build 通过，Vercel 检查通过。
+- PR #34 → staging（`bce76a3`），然后 main 快进到 `bce76a3`。Vercel production 部署成功。
+- **线上检查**：
+  - /、/login、/accessibility、/pricing 都返回 200。
+  - `/api/hmrc/year-end` 返回 403 YEAR_END_NOT_AVAILABLE。
+  - 年终页未登录时跳到 /login。
+  - 旧的 `/api/hmrc/final-declaration` 返回 404。
+
+staging 和 main 现在一致（都是 `bce76a3`）。
+**还没做**：年终流程和存款利息都还没有在 sandbox 端到端测过（owner 要先订阅 BSAS/Losses/BISS）。
+**学到 / 决定**：
+- 另一个会话会直接往 main 合东西。以后合并或部署前，**先对比 origin/main 和 staging**，不要假设 main 还停在上次的位置。
+- 存款利息用的账户名是 PR #33 的「Savings」，不是我那版的「EasyTax savings interest」。
+
+## 2026-11-14（owner 实时对话 · 年终 final declaration sandbox）
+**今日执行**：owner 要求「build in sandbox now」。分支 `agent/2026-11-14-year-end-sandbox` → [PR #34](https://github.com/ysll2002/easytax/pull/34)（对 staging，未合）。新页面 `/dashboard/individual/year-end`，按 HMRC 年终流程分 5 步：
+1. 读取 HMRC 现有数据：Obligations 3.0、BISS 3.0、Losses 6.0。
+2. BSAS 7.0 会计调整。
+3. 链到现有的年度调整页。
+4. Calculations 8.0 跑 intent-to-finalise，显示 errors/warnings/info。
+5. 声明勾选后提交 final declaration。
+
+API 路由 `/api/hmrc/year-end` 在 HMRC_ENV=production 时一律 403；生产环境页面显示「请用其他软件」；dashboard 入口只在非生产环境出现。
+**修了一个真 bug**：原来的 `submitFinalDeclaration` 只触发 intent-to-finalise，旧路由还把它当已提交写进 sa_filings。现在改成调用 `…/{calculationId}/final-declaration`（返回 204）；`hmrcFetch` 现在接受空的 2xx 响应体。旧路由已删除（没有调用方）。
+**验证**：
+- tsc 和 next build 通过。
+- 10 个新调用用脚本对过 HMRC 的 OAS 文件。
+- 用临时路由渲染页面：axe 0 违规，375px 不横向滚动。
+- **没有在 sandbox 端到端跑过**：本地 clone 没有 AUTH_SECRET，所以登录后的页面在本地都跑不了。要在 PR 的 Vercel preview（sandbox）上测。
+
+**owner 要做**：
+- 在 Developer Hub 给 sandbox app 订阅 BSAS 7.0、Individual Losses 6.0、BISS 3.0。
+- 在 preview 上用 sandbox 测试用户走一遍。
+
+**学到 / 决定**：
+- 发现另一个已有 bug：`submitSavingsIncome` 用的路径 `/individuals/income-received/savings/...` 不在 Savings Income API 2.0 里。**owner 同日让修，已修**（PR #34 第二个 commit `900d421`）：
+  - 改成 UK 账户流程：按名字找 EasyTax 自己的账户，没有就新建，然后按税年 PUT `untaxedUkInterest`。
+  - 年度调整页现在从 year-end 页接收 `?taxYear=`（原来固定用当前税年，会写错年份）。
+  - 这个修复对 production 也生效：调整页是线上页面，Savings API 也已获批。
+  - 同样还没在 sandbox 端到端测过。
+- HMRC API 现状：Calculations 9.0、Losses 7.0、BSAS 7.0 都是 beta，我们继续用 8.0 / 6.0 / 7.0。
+- 年终的 production 审批要等 Paul 的回复，问的是算 extension 还是新申请。
+
+## 2026-11-13（追加 · staging 同步）
+**今日执行**：owner 明确授权，把 `staging` 快进到 `main`（`04ba5ae`→`a2d8b4c`，staging 上没有 main 缺的 commit，直接 fast-forward，没有 force）。Vercel preview 构建成功，staging.easytax.vip 已指向新部署 `dpl_GW9PGz8y…`。staging 有 Vercel 登录保护，curl 看不到页面内容。本地 clone 在 staging，干净，和 origin 一致。
+**学到 / 决定**：这是一次性授权，不改护栏，以后 push staging 仍需 owner 点头。
+
+## 2026-11-13 晚（owner 实时对话：无障碍修复）
+
+**今日执行**：owner 让我修掉 WCAG 表里记下的问题，并写一份无障碍声明。已开 [PR #32](https://github.com/ysll2002/easytax/pull/32)（分支 `agent/2026-11-13-accessibility`，从 main 切，**base=main**，按 repo CLAUDE.md 的流程；没有合并）。130 个文件。
+改动：
+- 全站配色换成达标色：灰 `#9A8F83→#6B6256`、橙 `#C4622D→#A04E1C`、绿 `#6B8E6E→#4B6A4E`；深色区域用浅色版。**品牌橙明显变深，要 owner 看预览。**
+- 加了全局 :focus-visible 焦点框和 7 种语言的「跳到主要内容」链接；每个页面都有 `<main id="main-content">`。
+- 登录、注册、找回密码和每个 dashboard 页面都有了自己的标题。
+- 加了 autocomplete；正文链接加下划线；320px 宽度下不再横向滚动。
+- 键盘和 ARIA：P&L 展开改成 button，两个菜单加了 aria-expanded，费用提示可以点开，只读字段加了 label。
+- **季度申报加了提交前核对步骤**：第一次点显示汇总，第二次点才发给 HMRC。
+- 支持 reduced-motion；新页面 `/accessibility`（按 GOV.UK 模板，写的是 partially compliant），已加进页脚和 sitemap。
+
+验证：tsc 和 build 通过；本地 34 个公开页面 axe 0 违规。**dashboard 没有在本地渲染过**（缺 auth env），季度申报的核对步骤要在 preview 上点一遍。
+**合并上线后要做**：① Software Choices 表 D28 改成 https://easytax.vip/accessibility ② WCAG 表里已修好的项从 Partially 改成 Supports ③ Paul 回信里「还没有无障碍声明」那段改掉。
+**上线（同日）**：owner 明确说「merge it an go live」。CI（Vercel preview）通过后合并了 PR #32 → main `a2d8b4c`。Vercel 的 Git 集成自动部署了 production（没有手动跑 deploy workflow），部署成功。线上验证：/accessibility 返回 200；登录页标题是「Log in | EasyTax」，有跳过链接；/、/login、/pricing、/accessibility、/trust 五个页面 axe 0 违规。这是针对这一个 PR 的一次性授权，下次合并或部署仍要先问。staging 没有同步，仍落后 main（护栏禁止 push staging）。
+已同步更新：Software Choices 表 D28 改成 https://easytax.vip/accessibility；WCAG 表现在是 37 Supports / 3 Partially（1.4.11、3.3.4 的 VAT 部分、4.1.2）/ 8 N/A；Paul 回信草稿的无障碍段落也改了。**dashboard 的季度申报核对步骤还没有人在线上点过。**
+**发现（不在本 PR）**：`app/onboarding/page.tsx` 有一个让用户输入 HMRC Gateway 密码的表单，看起来是遗留页面，值得 owner 确认是否还在用。HMRC 不允许第三方软件收集 Gateway 凭证。
+
+---
+
+## 2026-11-13 下午（owner 实时对话）
+
+**HMRC**：owner 给了 Paul Anderson（11-11）邮件的三个附件让我填。已填好，放在 `hmrc/2026-11-software-choices/`：
+① Software Choices 表：EasyTax / Finance Panda Limited / Individual / 不支持 agent / Quarterly submissions / Standard 期间（日历季度没测过，写进备注）/ Sole trader / 不支持多个 SE 业务（代码只取第一个 self-employment）/ Record keeping / 浏览器 / VAT=Yes / 语言只写 English（申报页面没完整翻译）/ 无障碍声明 Not yet available / Free version available。主页 URL 用首页，因为 /mtd-software 仍有 stg-010 的不实声明。
+② WCAG 2.1 AA 表：用 axe-core 测了 7 个公开页面，并做了代码检查：28 项 Supports、11 项 Partially、8 项 N/A、1 项 Does Not Support（1.3.5 autocomplete）。dashboard 需要登录，没跑自动测试，也没用屏幕阅读器测。
+③「Complete Initial Set-up Process」只是 Developer Hub 操作说明，没有要填的内容。
+用 XML 直接写单元格，保留了下拉框（openpyxl 会删掉 x14 数据验证）。填表人姓名留空。
+**发现**：main 从 10-14 起**完全免费**（PR #31），但 11-13 上午的 CMQAA-712 草稿写的是「非免费 £20+VAT」，发之前必须改。memory 里两处过时的定价已更正。
+**失败**：内置浏览器登录的 Gmail 不是 HMRC 那个账号，没法直接读邮件。
+**补充**：owner 想申请 final declaration、房东收入（SA105）和 CT600。整理了对应的 API：Property Business、BSAS、Individual Losses、各类 Individuals 收入 API。CT600 不在 MTD API 里，要走 GovTalk/Transaction Engine 加 iXBRL，并经过 SDST 认可。给 Paul Anderson 的回信草稿写在 `hmrc/2026-11-software-choices/reply-to-paul-anderson.md`（这次会话没有 Gmail connector，所以没存进 Gmail）。草稿附上两张表，说明网站改好之后再上列表，并问年终功能和 property 现在能不能申请、CT600 该找谁。
+
+---
+
+## 2026-11-13（owner 实时对话）
+
+**HMRC**：🎉 **production 已批准（2026-11-11）**。John Morris 在 CMQAA-923 / 2026-NQM717 线程确认：ITSA 的 FPH 评估通过，`EasyTax VIP` production 应用（ID 50b9bae2-…）已批准 11 个 ITSA API，外加 VAT (MTD) API。另一个重复的应用 `EasyTax.VIP` 被拒（我们本来就要求关掉它）。
+没批的只有 Check a UK VAT Number 2.0。同一天 Ciaran 在 CMQAA-712 / 2026-DTG878 线程说：这个 API 要交 checklist + 测试提交；另外想上 VAT 兼容软件列表，需要先做一次 live VAT 提交，14 天内报 VRN。
+同日还有：Developer Hub 的验证邮件（之后 owner 在 production 应用加了 client secret，说明已验证）；Paul Anderson（HMRC）发来 ITSA Software Choices 和无障碍 checklist 的邮件，**还没处理**。
+**今日执行**：在 CMQAA-712 线程里用 `create_draft` 存了回复草稿（未发送）：① 撤回 Check a UK VAT Number 2.0（grep 过代码，没有调用它）；② VAT 列表信息：名称 EasyTax、URL、使用者=Businesses、非 bridging、5 个 VAT 端点都用、非免费（£20+VAT 每次）；live VRN 等有 VAT 客户提交后再报；③ ITSA 列表另找 makingtaxdigital-softwarevendors。
+**学到 / 决定**：Gmail connector 有时连的是 lilin.gabriel.uk@（hello@easytax.vip 转到这里），HMRC 邮件在 lilin.gabriel@，查不到时先看连的是哪个账号。另外 11-12 owner 还让我做了一份求职简历（与 EasyTax 无关），以及 11-11 提出要把网站文案从 test 改成可以真实报税（被打断，**还没做**，见 STATE）。
+**失败**：无。
+
+---
+
+## 2026-10-10（第二次定时触发，08:28 UTC）
+
+**HMRC**：Gmail 连接器**仍然**报「requires additional permissions」，还是查不了 HMRC 邮件。状态同上一条：等 FPH 团队对 9-25 回信的答复。
+**指标**（08:28 UTC）：和 08:23 的快照完全一样：注册 50 · HMRC 连接 18（转化 36%）· 申报 0 · MRR £0 · never_fired 11。Production 仍是 `c8e7104`（构建 5 天）。
+repo：staging `04ba5ae` 没有新提交，本地工作区干净，开着的 PR 还是 #21–#25。GA4 没有重拉（和上一条只隔 5 分钟）。
+**今日执行**：**没有实现**。Top 1 还是 stg-010（Risk=MEDIUM，要 owner 授权），按护栏不顺延。
+**Top 5**：沿用上一条：1. stg-010 2. stg-013 3. stg-008 4. stg-002b 5. stg-009
+**学到 / 决定**：同一天被触发了两次，第二次不重复分析，只补一条短记录。
+**失败**：① Gmail MCP 仍需重新授权（search_threads / create_draft 都用不了），日报只在会话里输出。
+**补充（owner 实时对话）**：owner 转来 Vercel「Preview deployment failed」邮件（`agent/journal` @ `ca3566d`）。原因：orphan 分支没有应用代码，每次镜像 push 都会触发预览构建并失败（09-18 起一直如此）。经 owner 同意（「do it」），在 `agent/journal` 根目录加了 `vercel.json`（`git.deploymentEnabled: false`），commit `1b363cf`。只改 journal 分支，没碰 main/staging。下次镜像 push 后应该不会再收到失败邮件。
+**补充 2（owner 实时对话）**：owner 让我修 sandbox test 的 429。改 `app/api/hmrc/sandbox-test/route.ts`（加 429 重试）的操作被权限检查拦下，**没改代码**。owner 改为单标签页重跑：**64/65**，429 全部消失，唯一失败是预期的 VAT `DUPLICATE_SUBMISSION`。证实 56/65 是同一个 token 上同时跑了两轮造成的限流，集成本身没问题。stg-013 的代码重试降为可选加固；剩下要做的是 HMRC 要求的多设备/多用户重测（owner 亲自做）和 stg-012（新建 VAT 测试用户）。
+
+---
+
+## 2026-10-10（定时运行，上次定时运行是 2026-09-23）
+
+**HMRC**：⚠️ **Gmail 连接器今天报权限不足，没能查邮件**，HMRC 有没有新回信不知道。最后已知状态：9-29 HMRC 已把我们的 FPH 回信转给 fraud headers team，在等结果。
+运行中 owner 贴来新一轮 sandbox 覆盖测试：**56/65**。其中 8 个是 `429 MESSAGE_THROTTLED_OUT`（SE Period Summary POST、Dividends 的 4 个调用、Directorship Retrieve、Reliefs investment/other Create），1 个是预期的 VAT `DUPLICATE_SUBMISSION`。
+诊断（只读，没改代码）：`app/api/hmrc/sandbox-test/route.ts` 本来就是串行调用，每次间隔 900ms（约 1.1 次/秒），10-04 同一份代码跑出 64/65。
+所以更可能是有两轮测试同时在跑（比如点了两次，或者开着两个标签页），或者 HMRC sandbox 那边临时限流，不是我们的集成坏了。建议：等 2–3 分钟，只开一个标签页，点一次再跑。
+如果想让测试页遇到 429 自动等待后重试，要改 `app/api/hmrc/**`，属于合规禁区，需要 owner 明确批准（新建 stg-013）。
+**指标**（08:23 UTC，对比 09-23）：注册 50(+2) · HMRC 连接 18(+0, 转化 36%) · 申报 0(+0) · MRR £0。7d 注册 0，30d 注册 5。
+7d human visitors 32（持平），human_share 90.7%。**GA4 7d：google organic 17 用户 / 18 sessions（09-23 是 6）**，direct 14，bing 这周没出现。
+Production = main `c8e7104`（PR #27），构建于 10-04。PR #21/#22/#23（另一系统）和 #24/#25（本 agent）都还没合。
+**今日执行**：**没有实现**。Top 1（stg-010 修正营销页里的不实声明）Risk=MEDIUM，而且和另一系统负责的页面重叠，需要 owner 授权，不满足自主实现条件，按护栏不顺延到 Top 2。
+**Top 5**：1. stg-010 营销页不实声明 2. stg-013 sandbox 测试 429 + HMRC 要求的多设备/多用户重测 3. stg-008 把 PR #24 送上 production 4. stg-002b schedule_sent 埋点 5. stg-009 会计师外联（14 封草稿是否已发，今天查不到）
+**学到 / 决定**：sandbox 测试的 429 不是集成问题，是限流，单线程重跑即可。Google organic 一周从 6 涨到 17，是近期最大的流量变化，下次看 landing page 分布。
+**失败**：① Gmail MCP：`search_threads` 报「This connector requires additional permissions」，需要 owner 在 claude.ai 连接器设置里重新连接 Gmail；所以 HMRC 邮件监控和日报草稿都没做，日报只写在这里和会话里。② GA4 第一次请求字段名写错（session_source），改成 source/medium 后成功。
+
+---
+
+## 2026-10-05（owner 实时对话）
+
+**今日执行**：owner 想新增面向会计师事务所的功能，并让我找英国事务所的邮箱，打算发邮件说「我们可以给你们定制 MTD 报税流程」。
+用 WebSearch 找候选，再用 WebFetch 逐家在官网核实，整理出 14 家（Manchester / Bristol / Leeds / London / Lancaster 等），
+存在 `/Users/linli/Documents/EasyTax/outreach/uk-accountancy-firms-2026-10-05.csv`，每行都有来源 URL 和核实日期。
+只收通用邮箱（info@ / help@ / enquiries@），搜索结果里出现的个人邮箱一律没收。未能核实的（Elite Financial、DWilkinson
+返回 403；Gondal 的邮箱被混淆；76 Chartered、Jack Ross 页面没有邮箱）都没放进清单。
+**提醒 owner 的风险**：① 文案准确性：现在不能向 HMRC 正式提交，也没有 agent 授权，不能承诺「代提交」；和 HMRC ToU 的
+「accurate representation」是同一个问题。② PECR：发给 Ltd/LLP 的 B2B 冷邮件可以不事先取得同意，但要表明身份并提供退订方式；
+Kirk Newsholme 的法律形式没写，发之前要查 Companies House。③ 这些事务所大多已经是 Xero/QuickBooks 合作伙伴，需要明确的差异点。
+**补充**：owner 给了一封英文邮件模板，让我「发邮件」。按护栏只做了 `create_draft`：14 封个性化草稿都已在 Gmail 里，
+主题是「Customising the MTD in-year workflow for <firm>」。对模板改了几处：① 删掉「thanks for registering with us the other day」，
+因为这些事务所从没注册过，这句话不属实；② 把模板里遗留的「accountantplus」换成各家的名字；③ 加上公司主体和退订语句（PECR 要求）；
+④ 小语法修正（「the multi-client dashboard and document collection」）。另查了 Companies House：Kirk Newsholme 是 KIRK NEWSHOLME LTD
+（03492421，存续）。14 家都是公司主体。
+**学到 / 决定**：外联只起草不发送（护栏不变）。
+
+---
+
+## 2026-10-04（owner 实时对话，非定时运行）
+
+**HMRC**：owner 转来 HMRC Louise Tarpy（Head of External Software Integration）的正式说明：2026-08-10 起暂停新的 MTD ITSA
+production 申请；2026–27 只继续审 8-10 之前提交的申请（以及季度已获批产品的年终功能申请）；不达标的会被拒；2027–28 的流程
+预计 2027 年初公布。我们 7-08 提交 checklist，**在范围内**，stg-007 结案。另外查到 owner 已在 9-25 16:01 UTC 发出 FPH 回信，
+HMRC 9-29 回复「已转 fraud headers team」。
+**发现**：被拒的代价可能是「等到 2027–28」（推断，owner 追问原文后已更正：信里只说不达标会 refused、2026–27 不收新申请、2027–28 信息 2027 年初公布，没说被拒后能否在原申请内重提），所以 readiness 标准成了关键。核对后发现营销页（alternative 页、mtd-software、
+self-assessment-software）公开声称能提交 CT600、final declaration、Self Assessment，以及能处理 landlord 收入，但代码里都没有
+（没有 CT600 提交代码，没有 final declaration 端点，没有 property API）。这和给 HMRC 的「仅年内、仅 self-employment」声明，
+以及 dashboard 页脚的说明直接矛盾，有违反 ToU「accurate representation」的风险。新建 stg-010，排 #1。
+**补充（同日，sandbox 测试 + production 申请表核对）**：
+- owner 的 sandbox test 62/65 通过。VAT Submit 是 `DUPLICATE_SUBMISSION`（正常）。SA Assist 两个是 `INVALID_SCOPE`：根据 HMRC
+  官方 OAS，Produce 要 `read:self-assessment-assist`，Acknowledge 要 `write:self-assessment-assist`，而
+  `app/dashboard/individual/hmrc/page.tsx` 的 scope 列表只有 read（确定的 bug）。这次 read 也失败，怀疑是重新授权后 sandbox 应用
+  没有订阅 SA Assist，待 owner 去 Developer Hub 查。改 scope 要等 owner 说「改 scope」。
+- 两个 production 申请里，`EasyTax VIP` 是主申请（7-08 邮件里请 HMRC 关掉 `EasyTax.VIP`，但它还在列表里），订阅了 14 个 API，含 VAT、SA Assist、BSAS。
+- 申请表里有几处回答和仓库现状可能对不上：「servers in the UK」（vercel.json 没设 region，Vercel 默认是 US iad1，要去 Vercel 控制台确认）；
+  「do not advertise my software」（实际有大量营销页）；pen test「Yes」（需要有报告可以拿出来）。网站文案上：privacy/trust 页说
+  「HMRC access tokens are stored encrypted」，但代码直接写进 Supabase 列，只有平台的静态加密；onboarding 页说「never stored permanently」，
+  和数字记录保存的要求矛盾。都归入 stg-010。
+- owner 说「先把 sandbox api test 的问题修复好」，已实现：[PR #26](https://github.com/ysll2002/easytax/pull/26)
+  （分支 `agent/2026-10-04-fix-sandbox-api-test`，对 staging，**从 main 切出**，因为 staging 落后 main 33 个提交，而 production 从 main 构建）。
+  改动：scope 加上 write:self-assessment-assist；sandbox-test 页面只改显示（跳过的调用显示成灰色、去掉「GET GET」、错误代码直接显示）。
+  没碰 app/api/hmrc/**、lib/hmrc*、fraud headers、auth。tsc 通过。
+- owner 让我合并 PR。我指出这和「绝不 merge PR / 绝不部署」护栏冲突，并问要不要破例；owner 选了「只合到 staging」。
+  已合并 PR #26 进 staging（2026-10-04 19:20 UTC），并开了 [PR #27](https://github.com/ysll2002/easytax/pull/27)（staging→main，
+  只含 #26 的改动），由 owner 来合，合进 main 才会上线 production。确认 sandbox 应用 EasyTax 订阅了 SA Assist 1.0，所以 Produce 报
+  INVALID_SCOPE 的原因还没定，等上线并重新授权后再验证。
+- 随后 owner 明确要求「合并 PR 并上线」。已合并 [PR #27](https://github.com/ysll2002/easytax/pull/27) 进 main（2026-10-04 19:24 UTC，
+  merge commit `c8e7104`，只含 #26 的 2 个文件）。没有跑 `vercel deploy`，production 由 Vercel 从 main 自动构建。
+- 上线后 owner 重新授权 HMRC（新 token）并重跑：**64/65**。SA Assist 两个都通过（200 / 204），stg-011 已验证。剩下的
+  VAT Submit `DUPLICATE_SUBMISSION` 是预期错误，新的页面直接显示了错误代码。这说明 Produce 之前报 INVALID_SCOPE 是旧 token 的问题，
+  重新授权就解决了。后续：新建 VAT 测试机构用户（stg-012），以及按 HMRC 要求换设备、换用户各跑一次。
+**学到 / 决定**：护栏的边界：owner 明确要求时，可以合进 staging（这次 owner 授权的）；合进 main 等于部署 production，owner 第二次明确要求后才做。两次都是针对单个 PR 的一次性授权，
+不能当作以后可以自己合 PR 或部署的许可，下次仍要先问。HMRC 新标准里有 AI 条款，要求 AI 生成的内容必须经过人工审核，未经核实的通用内容会被拒。营销页和给 HMRC
+的邮件都应该按这个标准自查。memory `easytax-hmrc-itsa-cutoff` 已覆盖更新。
+
+---
+
+## 2026-09-25（owner 实时对话，非定时运行）
+
+**HMRC**：owner 贴来 2026-09-24 12:25 UTC 的 FPH 回信（CMQAA-923 / 2026-NQM717，Aleesah Sher）。审的是 9-23 12:16 UTC
+那批 sandbox 流量。`Gov-Client-Multi-Factor`：HMRC 接受省略。`Gov-Vendor-License-IDs`：「Header required」——但 8 月 VAT 工单
+CMQAA-712 把我们发的 userId 哈希判为 dummy 值，所以才删掉，两次反馈互相矛盾。HMRC 规范（web-app-via-server）对该头的描述是
+「hashed license keys」，没有许可证时属于「missing data」，要按缺失数据指引处理。代码现状（main `lib/hmrc.ts` fraudHeaders）两个头都省略，只读未改。
+**今日执行**：owner 在 A（先回信解释）/ B（实现真实的每用户许可证 ID）/ A+B 中选了 **A**。已在 HMRC 线程里用 `create_draft`
+存了英文回信草稿（未发送），抄送 makingtaxdigital-softwarevendors：确认继续省略 MFA；按 missing-header-data 指引正式通知没有许可证密钥、
+引用 CMQAA-712 的 dummy 值结论、请求像 MFA 一样记录，或告诉我们应该发什么值；承诺用不同设备和用户重测；问截止令是否影响我们 7 月提交的申请。
+没有改代码。
+**学到 / 决定**：9-15 截止之后 HMRC 仍在审我们的申请，stg-007 的风险降低但还没有正式答复。License-IDs 的
+处理方式要等 HMRC 回复；如果对方坚持要，方案 B 需要 owner 另外批准（合规禁区 + DB schema）。
+**更正（同日）**：owner 指出网站已经不是免费的了（/pricing：£20+VAT 每次申报，无订阅）。第一版草稿写了「EasyTax is free」，
+已改成「按次收费，不以许可证形式销售，不发许可证密钥或订阅；按次付款的支付凭证标识的是交易，不是软件许可证」。
+用 update_draft 修改时草稿脱离了原 HMRC 线程，所以在线程里重新建了一份（id r9140492644388941147）；
+脱离线程的旧草稿（r-6678069759678272716）要 owner 手动删掉，agent 不删除。另外注意：`lib/hmrc.ts` 注释和
+2026-08-22 给 HMRC 的邮件里都写了「free to all users」，已经过时。`app/payment/page.tsx` 仍是模拟支付（没接 Stripe）。
+**补充（同日）**：owner 跑 sandbox test 时 5 个 VAT 调用显示红 ✕、状态码「—」。诊断：这个 HMRC 连接上没有存 VRN，
+所以被 PR #17 的逻辑跳过了（不是失败）。owner 在 Profile 填了 VRN 后已经跑通。页面把「跳过」画成失败、路径显示
+「GET GET」是显示 bug，已向 owner 提议只改 `app/dashboard/individual/sandbox-test/page.tsx`，owner 尚未批准。
+**待 owner**：①审阅并发送草稿 ②亲自用 ≥2 台设备、≥2 个用户在浏览器里重跑一轮 sandbox 覆盖测试，并用 Test API
+validation-feedback 验证。
+
+---
+
+## 2026-09-23
+
+**HMRC**：⚠️ **重大外部变化**。HMRC 开发者指南 *Income Tax MTD end-to-end service guide*（页面标注
+「Updated 15 September 2026」）Overview 顶部新增横幅：HMRC「no longer accepting production credential
+access requests for new 2026–27 quarterly update products」，理由是 market window 已关闭。页面**没有说**
+已在审中的申请如何处理、也没有说 2027–28 何时重开。线索来源：owner 今天 12:12 UTC 发给自己的一封
+「tax mtd chatgpt分析」邮件提到这点，本 agent 用 WebFetch 直接读 HMRC 原页面核实过。EasyTax 的 ITSA
+production 审批仍 PENDING（FPH review，Aleesah Sher / Ciaran McLaughlin），**必须由 owner 向 HMRC 书面确认
+我们的在审申请是否受影响**。VAT 路径（app 也调用 `/organisations/vat/`）不在该横幅范围内。
+24h 内无 HMRC 官方来信。其他命中：另一系统「4 天没发文章，1 篇草稿待审」告警（09:04 UTC）、
+Coconut 营销邮件、Vercel `agent/journal` 预览部署失败（预期内）。
+**指标**（18:34 UTC）：注册 48(+0) · HMRC 连接 18(+0, 转化 37.5%) · 申报 0(+0) · MRR £0。
+**7d 注册 0、7d HMRC 连接 0**（上次 7d 各为 1）——现在已经连续 ≥7 天零新增注册。
+7d human visitors 32（上次 30），human_share 72.9%。GA4 7d：Direct 19 用户 / Organic 13（**Bing 7 > Google 6**）/
+Referral 2（`test-www.tax.service.gov.uk` 7 sessions，是 HMRC sandbox 回跳，不是真实流量）/ chatgpt.com 1。
+Production 构建已 7 天（commit 7bf7bde），main 无新合并；PR #21/#22/#23（另一系统）+ #24/#25（本 agent）全部未合。
+**今日执行**：**没有实现**。Top 1（stg-007，确认 HMRC 截止令对在审申请的影响）Category=compliance、
+Action=BLOCKED（只有 owner 能联系 HMRC），不满足自主实现门槛；按护栏不顺延到 Top 2（stg-002b 本来符合条件）。
+**Top 5**：1. stg-007 向 HMRC 书面确认在审 ITSA 申请是否受 2026-09-15 截止令影响 2. stg-008 把 PR #24 送上
+production（它目前只对 staging，而 production 只从 main 构建——合进 staging 并不会让埋点在线上生效）
+3. stg-002b 补 schedule_sent 埋点 4. stg-009 会计师渠道探索（PROPOSE-ONLY，取决于 stg-007 结果）
+5. stg-001 两套自动化系统分工（仍 BLOCKED）
+**学到 / 决定**：
+- HMRC 已对新的 2026–27 ITSA 季度更新产品关闭 production 凭证申请（2026-09-15 起）。这是跨天有效的外部约束，
+  已写入 memory（easytax-hmrc-itsa-cutoff）。在 owner 拿到 HMRC 答复前，任何「等审批通过就开收费」的收入假设都要打问号。
+- 发现部署链路上的一个坑：本 agent 的 PR 都对 `staging`，但 production 只从 `main` 构建（`deployment.built_from_main`）。
+  所以 PR #24 合进 staging 后，线上 `never_fired` 不会变化，直到 staging→main 再合一次。复盘日期要按此顺延。
+- Bing organic 已经和 Google 持平甚至略多（7 vs 6 用户）——IndexNow（另一系统在推）可能在起作用，只记录不动手。
+**失败**：无（git、指标接口、Gmail、GA4、WebFetch 均正常）。
+
+---
+
+## 2026-09-22
+
+**HMRC**：PENDING，过去 4 天（newer_than:4d）无相关邮件。找到另一系统自己的「11 天没发文章」
+告警邮件（2026-09-19 09:04 UTC, hello@easytax.vip）和 3 封 Vercel `agent/journal` 分支预览部署
+失败邮件（2026-09-18，预期内——orphan 分支没有应用代码，Vercel 仍会尝试构建）。
+**指标**：注册 48(+0) · HMRC 连接 18(+0, 转化 37.5%) · 申报 0(+0) —— 相比 2026-09-18 14:43 快照，
+**total 完全没有变化**，4 天零新增注册。7d human visitors 30（上次 ≈35，口径有过调整不做强趋势判断）。
+Production 部署与 main HEAD 一致（commit 7bf7bde）但已 5 天没有新合并；另一系统在 main 上还有
+3 个 PR（#21/#22/#23）挂起 4–6 天未合，仅记录不处理。
+**今日执行**：**实现了 1 项**（stg-002 诊断出的真 bug）。分支
+`agent/2026-09-22-fix-schedule-event-tracking`，[PR #24](https://github.com/ysll2002/easytax/pull/24)
+（对 `staging`，待 owner 合并）。改了 2 个文件：`components/DeadlineScheduleForm.tsx`
+（`trackClient('schedule_started', …)` → `trackClient('schedule_requested', …)`，和
+`lib/analytics.ts`/`daily-metrics` 用的规范事件名对齐）、`app/api/track/route.ts`（把
+`schedule_requested` 和 `editorial_standards_viewed` 加进 `ALLOWED` allowlist——这两个事件此前
+无论叫什么名字都会被服务端静默丢弃，204 无报错）。验收方式：PR 合并部署后观察
+`funnel.reality_check.never_fired` 里这两个事件是否消失。`npx tsc --noEmit` 通过，无 `lint` 脚本。
+满足 Risk=LOW + Confidence=HIGH + 非 compliance + IMPLEMENT-NOW 门槛：只改了一个字符串常量的
+拼写和一个 Set 的成员，不碰 HMRC/auth/middleware 相关文件。
+**Top 5**：1. stg-002 CTA/checker 埋点诊断（今日已实现修复其中 2 项，见上）2. stg-001 查清两套
+自动化系统分工（仍 BLOCKED，需 owner 决定）3. stg-002b 补 schedule_sent 的服务端埋点（今天用掉了
+当日 1 项实现额度，留到之后）4. stg-005 alternative 对比页流量（/freeagent-alternative 首次出现
+1 UV，其余 8 个仍 0，继续只监控）5. stg-004 内容深度（另一系统职责，只监控）
+**学到 / 决定**：
+- `article_cta_click` / `checker_started` / `checker_completed` / `tool_cta_click` 的埋点代码本身
+  没问题（名字对得上、allowlist 里也有），`never_fired` 纯粹是因为到达这些页面/组件的真实流量
+  太小——不要把这几个当作"埋点坏了"的候选再去改代码。
+- `calendar_cta_click` / `reactivation_sent` / `share_click` / `share_copy` 在代码库里完全没有
+  调用点，是未建的功能而不是 bug，不要误判成可以"修"的埋点问题。
+- `launch_subscribed` 所属的旧 launch waitlist 功能已经被 `DeadlineScheduleForm` 取代
+  （见该文件顶部注释：9 个访客一周内没人填过旧表单）。
+- 两套自动化系统的分工问题（stg-001）本次运行没有新证据出现，owner 仍未给出书面决定，继续
+  按现有护栏刻意避开 SEO/editorial/RSS 领域。
+**失败**：无（Gmail 搜索、指标接口、git fetch/pull/push、gh pr create、tsc 均正常）。
+
+**补充（同日，owner 实时对话）**：owner 反馈 easytax.vip 首页视觉太像 AI 生成的网站。诊断后认为
+问题不在配色本身（暖白+赤陶+鼠尾草+serif 其实已有辨识度），而在版式套路——处处 rounded-full 药丸、
+rounded-2xl 卡片、统一三栏网格，是 Tailwind/v0/Cursor 这类工具的默认"形状语言"。用 Design canvas
+artifact 出了 3 个方向的首页 hero 设计稿（A 大色块斜切、B 车票邮戳感、C 粗描边扁平 friendly-flat），
+owner 选中 C（蓝色系）。随后 owner 明确要求把 C 应用到真实代码并推到 staging 预览。
+
+**第二项实现（今日第 2 项，超出日常"每天最多 1 项"护栏 —— 例外原因：owner 在对话中实时明确要求，
+不是本 agent 自主选择的 backlog 条目，因此判断不适用该护栏，但记录在案以备复盘）**：
+分支 `agent/2026-09-22-hero-friendly-flat-preview`，
+[PR #25](https://github.com/ysll2002/easytax/pull/25)（对 `staging`，待 owner 审核）。
+只改了首页 hero + 顶部公告条（`app/page.tsx`）和新增一个 additive 的 Space Grotesk 字体变量
+（`app/layout.tsx`，不影响其他任何页面）：粗描边（2.5–3px ink）替代圆角药丸和模糊投影，新增
+cobalt `#1D4ED8` + yellow `#FFD23F` 两个强调色（逐一做了 WCAG AA 对比度检查，深色公告条上
+cobalt 对比度不够改用浅色调 `#8FB0FF`），删掉了首页最明显的"AI 味"装饰元素——hero 背后那个
+径向渐变光斑。**刻意没有动** `SiteHeader`（全站共用）和首页 hero 以下的所有板块，保持这是一次
+可回退的定向预览，不是全站重设计。所有文案保持不变（沿用相同的 next-intl key）。
+`npx tsc --noEmit` 通过。本次运行处于非交互/定时任务会话，无法本地起 dev server 预览
+（unattended session 限制），验收要靠 PR 的 Vercel preview 部署。
+**学到 / 决定**：owner 明确要求的改动，即使当天已经用掉「自主实现 1 项」的额度，也应该去做，
+不应该以护栏为由拒绝执行owner的直接指令——护栏管的是本 agent 自主判断要不要动手，不是 owner
+本人明确要求时的执行边界。以后遇到owner在对话里直接要求实现的情况，按此判断，仅在记录里注明
+"超出当日常规额度、因 owner 明确要求而做"即可，不需要因为已经实现过 1 项就拒绝。
+
+---
+
+## 2026-09-18（首次真实运行）
+
+**HMRC**：PENDING，24h 内无相关邮件。
+**指标**：注册 48(+0) · HMRC 连接 18(+0, 转化 37.5%) · 申报 0(+0) —— 距今早搭建时的快照仅
+隔 5.5 小时，delta 全为 0 属正常。7d 真实人类访客约 35（新采用的北极星指标，见 STATE）。
+**今日执行**：没有开分支实现代码。Top 1（stg-001，两套自动化系统分工）是治理问题，
+Action=BLOCKED，不满足「Risk=LOW+Confidence=HIGH+非compliance+IMPLEMENT-NOW」的自主实现
+门槛；按护栏「Top1 不满足就不顺延到 Top2」，今天只出报告不写代码。stg-003（流量北极星
+口径切换）不算代码实现，是本 agent 自己记忆/报告方式的调整，已直接生效。
+**Top 5**：1. stg-001 查清两套自动化系统分工 2. stg-002 诊断 CTA/checker 埋点为何 never_fired
+3. stg-003 human visitors 作为流量北极星（已生效）4. stg-004 内容深度补课（另一系统职责，只监控）
+5. stg-005 alternative 对比页 0 流量，考虑站外获客
+**学到 / 决定**：
+- 发现 repo 里有另一套不受本 RUNBOOK 治理的自动化增长系统，直接 push `main`、开 PR #17–#23、
+  今天还真发过邮件（`send_message` 而非 draft）。这是本次运行最大的发现，已写入
+  `BACKLOG.md` stg-001 的详细说明，**需要 owner 明确分工**，否则本 agent 会持续刻意避开
+  SEO/editorial/RSS 相关方向以防冲突。
+- 9 个 alternative 对比页 0 流量已确认不是内链缺失（footer 已全站互链），是整体流量太小的
+  症状，不是可以站内修复的 bug —— 排除了一个原本可能被误判为"实现机会"的方向。
+**失败**：无（Gmail 搜索、指标接口、git fetch/pull 均正常）。
+
+---
+
+## 2026-09-18
+
+**搭建日 —— 非常规条目。**
+
+Claude 在 `~/Documents/EasyTax` 建立了本地每日 agent，替代原先每天新建对话的云端 routine：
+
+- 记忆现在存在磁盘上（`agent/` 四个文件 + `~/.claude/projects/.../memory/`），
+  每日运行和 owner 在 Claude 里的对话**共享同一份**。
+- 云端 routine `trig_01CgBkUpX636ZxSXrBGb54n7` 已暂停，保留做兜底。
+- 自主权限：可以实现 + 推 `agent/` 分支 + 开 PR，**不部署、不合并、不发邮件（只存草稿）**。
+- 初始状态快照见 `STATE.md`（注册 48 / HMRC 连接 18 / 申报 0 / MRR £0）。
+
+**明天的第一次真实运行需要做的**：读完四个记忆文件 → 拉 repo → 查 HMRC 邮件 →
+拉指标 → 排 Top 5 并写进 `BACKLOG.md` → 最多实现 1 项 → 写回记忆 → 存日报草稿。
