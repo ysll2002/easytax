@@ -15,6 +15,11 @@
 
 ---
 
+## 2026-11-25（owner 会话，一年推广计划：每月 1 万人报税）
+**已做**：写了 `agent/GROWTH_PLAN_10K_FILERS.md`（stg-016，proposed）。目标按「每个申报季 ≥1 万个不同的人」，在 2027-11 窗口达成：5,000 代理客户 + 5,000 个人。日历上每个月都 1 万，要约 2.5–3 万活跃客户，放到 2028。
+**事实核对**：生产 58 注册 / 23 连 HMRC / **0 次真实申报** / 1 人有记录。GOV.UK 软件查找器已上架：185 个产品，44 个免费，我们的条目是「Free / Sole trader / 只有 Quarterly updates」。28 个免费竞品支持年终申报，23 个同时支持自雇+房产+年终（FreeAgent/NatWest、Sage Free、Monzo、Coconut、Pandle、ANNA…）。11-24 的 5 个注册很可能来自查找器（11-20 上架），未证实。
+**下一步（等 owner 拍板）**：查找器链接加 `utm_source=gov-finder` + 勾 VAT compatible；跟进年终申报和房产审批；2 月 7 日窗口拿到首批真实申报。
+
 ## 2026-11-25（owner 会话，注册跟踪修复 PR #80）
 **已做**：[PR #80](https://github.com/ysll2002/easytax/pull/80) 合进 staging（5222ca5），owner 授权后经 [PR #81](https://github.com/ysll2002/easytax/pull/81) 上线 production（2d7486e，冒烟通过；生产上 pwd_too_short 测试事件入库正确，已删掉那条测试行）。/api/register 每次拒绝都写 analytics_events `register_failed`（props.code：email_exists / pwd_too_short / missing_fields / Postgres code / server_error / bad_request，不存邮箱）；异常和坏 JSON 不再是裸 500。Google 登录新建账号现在记 `register_completed`（method google），插入失败记 `register_failed`；dashboard 上的 SignupBeacon 通过 10 分钟 cookie 给 GA 补发 register_success。daily-metrics last_7d 加 register_failed。
 **验证**：staging 上 3 种拒绝都已入库，code 正确；beacon 读取并清除了 cookie。GA 在 staging 不加载，GA 事件要上 production 后才能确认。Google 新账号路径没有实测（需要一个真的新 Google 账号）。
