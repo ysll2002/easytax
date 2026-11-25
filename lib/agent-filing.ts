@@ -29,7 +29,7 @@ export async function submitAsAgent(
 
   const round2 = (n: number) => Math.round(n * 100) / 100;
   const totalExpenses = round2(Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0));
-  await supabase.from('sa_filings').insert({
+  const { error: saveError } = await supabase.from('sa_filings').insert({
     user_id:         agentUserId,
     client_id:       client.id,
     tax_year:        figures?.taxYear ?? body.taxYear,
@@ -43,5 +43,6 @@ export async function submitAsAgent(
     hmrc_response:   { result, submittedAs: 'agent', cumulative: figures?.cumulative ?? false, sent },
     record_ids:      recordIds,
   });
+  if (saveError && saveError.code !== '23505') console.warn('[agent-filing] sa_filings insert failed:', saveError.message);
   return { success: true, result, cumulative: figures?.cumulative ?? false, sent };
 }

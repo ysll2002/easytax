@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     const result = await submitQuarterlyUpdate(nino, businessId, { ...figures.send, taxYear: figures.taxYear }, token);
 
     const totalExpenses = Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0);
-    await supabase.from('sa_filings').insert({
+    const { error: saveError } = await supabase.from('sa_filings').insert({
       user_id:         profileId,
       tax_year:        figures.taxYear,
       filing_type:     'quarterly',
@@ -90,6 +90,10 @@ export async function POST(req: NextRequest) {
       hmrc_response:   { result, cumulative: figures.cumulative, sent: figures.send },
       record_ids:      check.recordIds,
     });
+    // HMRC has the update, so a failed local record must not read as a failed
+    // filing. A resubmission of a quarter already filed is refused by the
+    // unique index (23505) and changes nothing: its records are locked.
+    if (saveError && saveError.code !== '23505') console.warn('[submit-quarter] sa_filings insert failed:', saveError.message);
 
     return NextResponse.json({ success: true, result, cumulative: figures.cumulative, sent: figures.send });
   } catch (err) {
