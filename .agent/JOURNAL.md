@@ -15,6 +15,14 @@
 
 ---
 
+## 2026-11-25（owner 对话）
+
+**今日执行**：owner 问任务列表为什么有 3 个「Pay」→ 那是写死的自我评估付款日期提醒，对所有人都显示。PR #75 合进 staging `e92ad23`：付款改从 Self Assessment Accounts 4.0（balance-and-transactions，只取未结清项）读取，只有 HMRC 显示有欠款的才显示「Pay £x」（含罚款/利息）；没有欠款显示「HMRC 显示你目前没有需要支付的款项」；读不到账户时（或 production 还没批这个 API）只显示日期提醒 + 「Check →」链到 HMRC 账户，不再有 Pay。7 种语言。production 要把 `self-assessment-accounts-api` 加进 `HMRC_PRODUCTION_EOY_APIS` 并通过 HMRC 审批才会生效。UI 未在浏览器验证。
+
+注意：多出来的 Vercel 项目 `easytax`（prj_zLqach0g…）已经接上 GitHub，每次 push 都会构建 preview；staging 域名这次自动跟着 mtdbuddy 新构建走了，没被抢。建议 owner 删掉这个项目。
+
+---
+
 ## 2026-11-24（owner 对话）
 
 **今日执行**：owner 要求把 ULJ714 的所有差距都补上（包括没有代码的 6 个 API）。PR #74 合进 staging `0628843`：
