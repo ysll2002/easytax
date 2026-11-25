@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import DeviceDataCollector from '@/components/DeviceDataCollector';
+import SignupBeacon from '@/components/SignupBeacon';
 import SidebarNav from '@/components/SidebarNav';
 import LogoutButton from '@/components/LogoutButton';
 import MobileNav from '@/components/MobileNav';
@@ -81,6 +82,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         {/* Mobile top spacer */}
         <div className="md:hidden" style={{ height: '52px' }} />
         <DeviceDataCollector />
+        <SignupBeacon />
         {children}
         {/* The site-wide scope notices that used to sit here (unsupported income
             types; end-of-year not supported) were removed on request. The
