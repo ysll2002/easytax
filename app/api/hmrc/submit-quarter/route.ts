@@ -5,7 +5,7 @@ import { getValidToken, submitQuarterlyUpdate, type QuarterlyData } from '@/lib/
 import { resolveBusinessId } from '@/lib/hmrc-business';
 import { clientFilingContext, AgentError } from '@/lib/agent';
 import { submitAsAgent } from '@/lib/agent-filing';
-import { figuresMatchRecords } from '@/lib/records-check';
+import { figuresMatchRecords, quarterlyFigures } from '@/lib/records-check';
 
 const mismatch = (reason: string) => NextResponse.json({
   error: `${reason} Refill the figures from your records and try again.`,
@@ -32,7 +32,9 @@ export async function POST(req: NextRequest) {
       const ctx = await clientFilingContext(profileId, clientId, 'itsa');
       const check = await figuresMatchRecords(profileId, ctx.client.id, body);
       if (!check.ok) return mismatch(check.reason);
-      return NextResponse.json(await submitAsAgent(profileId, ctx, body, check.recordIds));
+      const figures = await quarterlyFigures(profileId, ctx.client.id, body.periodStartDate, body.periodEndDate);
+      if (!figures.ok) return mismatch(figures.reason);
+      return NextResponse.json(await submitAsAgent(profileId, ctx, body, check.recordIds, figures));
     } catch (err) {
       if (err instanceof AgentError) return NextResponse.json({ error: err.message, code: err.code }, { status: err.status });
       return NextResponse.json({ error: err instanceof Error ? err.message : String(err) }, { status: 502 });
@@ -52,6 +54,10 @@ export async function POST(req: NextRequest) {
 
   const check = await figuresMatchRecords(profileId, null, body);
   if (!check.ok) return mismatch(check.reason);
+  // What HMRC receives: from 2025-26 the year-to-date totals from the
+  // records (6 April to the end of this quarter), otherwise this quarter.
+  const figures = await quarterlyFigures(profileId, null, body.periodStartDate, body.periodEndDate);
+  if (!figures.ok) return mismatch(figures.reason);
 
   try {
     const token = await getValidToken(profileId);
@@ -68,12 +74,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'businessId missing' }, { status: 400 });
     }
 
-    const result = await submitQuarterlyUpdate(nino, businessId, body, token);
+    const result = await submitQuarterlyUpdate(nino, businessId, { ...figures.send, taxYear: figures.taxYear }, token);
 
     const totalExpenses = Object.values(body.expenses ?? {}).reduce((s, v) => s + (v ?? 0), 0);
     await supabase.from('sa_filings').insert({
       user_id:         profileId,
-      tax_year:        body.taxYear,
+      tax_year:        figures.taxYear,
       filing_type:     'quarterly',
       period_start:    body.periodStartDate,
       period_end:      body.periodEndDate,
@@ -81,11 +87,11 @@ export async function POST(req: NextRequest) {
       total_expenses:  totalExpenses,
       net_profit:      body.turnover - totalExpenses,
       expenses_detail: body.expenses,
-      hmrc_response:   result,
+      hmrc_response:   { result, cumulative: figures.cumulative, sent: figures.send },
       record_ids:      check.recordIds,
     });
 
-    return NextResponse.json({ success: true, result });
+    return NextResponse.json({ success: true, result, cumulative: figures.cumulative, sent: figures.send });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return NextResponse.json({ error: msg }, { status: 502 });

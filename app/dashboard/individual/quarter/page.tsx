@@ -66,6 +66,9 @@ function QuarterForm() {
   // What the records currently add up to. Any figure the customer changes is
   // compared against this and saved to their records as an adjustment.
   const [baseline,   setBaseline]   = useState<Figures | null>(null);
+  // From 2025-26 HMRC takes a cumulative summary: the records from 6 April
+  // to the end of this quarter, added up. Shown before submitting.
+  const [yearToDate, setYearToDate] = useState<{ periodStartDate: string; periodEndDate: string; turnover: number; expenses: Record<string, number> } | null>(null);
   const [noRecords,  setNoRecords]  = useState(false);
   const [showImport, setShowImport] = useState(false);
   const [notice,     setNotice]     = useState('');
@@ -110,6 +113,7 @@ function QuarterForm() {
       setTurnover(String(fig.turnover));
       setExpenses(next);
       setBaseline(fig);
+      setYearToDate(data.yearToDate ?? null);
       setUnreviewed(Number(data.unreviewed) || 0);
       setPulledAt(new Date().toISOString());
       return fig;
@@ -399,8 +403,19 @@ function QuarterForm() {
                   <div className="flex justify-between gap-4"><dt>Turnover</dt><dd style={{ fontWeight: 600 }}>£{income.toFixed(2)}</dd></div>
                   <div className="flex justify-between gap-4"><dt>Total expenses</dt><dd style={{ fontWeight: 600 }}>£{totalExpenses.toFixed(2)}</dd></div>
                 </dl>
+                {yearToDate && (
+                  <div className="text-sm mb-3 p-3 rounded-xl" style={{ backgroundColor: '#F5F0E8', color: '#1C1208' }}>
+                    <p className="text-xs mb-2" style={{ color: '#4A4035', lineHeight: 1.55 }}>
+                      From the 2025-26 tax year HMRC takes your totals for the year so far, not just this quarter. EasyTax adds up your records from {fmtDate(yearToDate.periodStartDate)} to {fmtDate(yearToDate.periodEndDate)} and sends:
+                    </p>
+                    <dl className="space-y-1">
+                      <div className="flex justify-between gap-4"><dt>Turnover, year to date</dt><dd style={{ fontWeight: 600 }}>£{yearToDate.turnover.toFixed(2)}</dd></div>
+                      <div className="flex justify-between gap-4"><dt>Expenses, year to date</dt><dd style={{ fontWeight: 600 }}>£{Object.values(yearToDate.expenses).reduce((a, b) => a + (Number(b) || 0), 0).toFixed(2)}</dd></div>
+                    </dl>
+                  </div>
+                )}
                 <p className="text-xs mb-4" style={{ color: '#4A4035', lineHeight: 1.55 }}>
-                  These figures will be sent to HMRC as your quarterly update.{adjSaved > 0 ? ` ${adjSaved} change${adjSaved === 1 ? ' was' : 's were'} saved to your records as adjustment${adjSaved === 1 ? '' : 's'}.` : ''} If something is wrong, go back and change it. You can also correct a quarterly update later by submitting it again.
+                  {yearToDate ? 'These totals will be sent to HMRC as your quarterly update.' : 'These figures will be sent to HMRC as your quarterly update.'}{adjSaved > 0 ? ` ${adjSaved} change${adjSaved === 1 ? ' was' : 's were'} saved to your records as adjustment${adjSaved === 1 ? '' : 's'}.` : ''} If something is wrong, go back and change it. You can also correct a quarterly update later by submitting it again.
                 </p>
                 <button type="button" onClick={() => setConfirming(false)} className="text-sm font-semibold" style={{ background: 'none', border: 'none', padding: 0, color: '#A04E1C', textDecoration: 'underline', cursor: 'pointer' }}>
                   Go back and edit
