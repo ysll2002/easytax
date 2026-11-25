@@ -158,6 +158,7 @@ function describeCall(method: string, path: string): { api: string; endpoint: st
     ['POST', /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/self-employment\/[^/]+\/adjust\//, 'Business Source Adjustable Summary', 'Submit Self-Employment Accounting Adjustments'],
     ['GET',  /^\/individuals\/self-assessment\/adjustable-summary\/\{nino\}\/self-employment\//, 'Business Source Adjustable Summary', 'Retrieve a Self-Employment BSAS'],
     ['GET',  /^\/individuals\/business\/details\/\{nino\}\/list$/, 'Business Details', 'List All Businesses'],
+    ['GET',  /^\/accounts\/self-assessment\/\{nino\}\/balance-and-transactions$/, 'Self Assessment Accounts', 'Retrieve Self Assessment Balance and Transactions'],
   ];
   for (const [m, re, api, endpoint] of rules) if (m === method && re.test(p)) return { api, endpoint, masked };
   const known = matchEndpoint(method, p);
@@ -557,6 +558,41 @@ export async function submitSelfEmploymentBsasAdjustments(
       body:    JSON.stringify(adjustments),
     },
   );
+}
+
+// ─── Self Assessment Accounts ─────────────────────────────────────────────────
+
+/**
+ * Self Assessment Accounts (MTD) v4.0: what the customer owes HMRC. Open
+ * items only — each charge (balancing payment, payments on account,
+ * penalties, interest) with its outstanding amount and due date. HMRC
+ * answers 404 NOT_FOUND when there is nothing; that is returned as null.
+ */
+export type SaDocument = {
+  taxYear?: string;
+  documentId?: string;
+  documentDescription?: string;
+  documentText?: string;
+  documentDueDate?: string;
+  originalAmount?: number;
+  outstandingAmount?: number;
+};
+export type SaBalance = {
+  balanceDetails?: { payableAmount?: number; payableDueDate?: string; pendingChargeDueAmount?: number; overdueAmount?: number; totalBalance?: number };
+  documentDetails?: SaDocument[];
+};
+
+export async function getSaBalanceAndTransactions(nino: string, token: string): Promise<SaBalance | null> {
+  try {
+    return await hmrcFetch(
+      `/accounts/self-assessment/${nino}/balance-and-transactions?onlyOpenItems=true&includeLocks=false&calculateAccruedInterest=true&removePOA=false&customerPaymentInformation=false&includeEstimatedCharges=false`,
+      token,
+      { headers: { Accept: 'application/vnd.hmrc.4.0+json' } },
+    );
+  } catch (err) {
+    if (err instanceof Error && err.message.startsWith('HMRC 404')) return null;
+    throw err;
+  }
 }
 
 // ─── Losses ───────────────────────────────────────────────────────────────────

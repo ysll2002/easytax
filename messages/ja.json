@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · 課税年度 {taxYear}",
       "subSaFiling": "課税年度 {taxYear} · 期限 {date}",
       "subVat": "Making Tax Digital · VAT · 期限 {date}",
-      "subPayment": "Self Assessment {taxYear} · 期限 {date} · リマインダー — 納税額がある場合のみ",
+      "subPayment": "Self Assessment {taxYear} · 期限 {date} · 請求がある場合のみ — HMRC アカウントで確認してください",
       "errNotAuthorisedTitle": "HMRC がこの記録へのアクセスを許可していません",
       "errNotAuthorisedIntro": "HMRC は理由を示さずにリクエストを拒否しました。よくある原因は次のとおりです（可能性の高い順）：",
       "errNotAuthorisedCause1": "Making Tax Digital for Income Tax に登録されていません。HMRC アカウントと国民保険番号があることと、MTD に登録済みであることは別です —— MTD は別途登録が必要です。",
@@ -361,7 +361,12 @@
       "errNotAuthorisedCause3": "自営業または不動産の所得源が HMRC アカウント内で MTD に登録されていません。これはソフトウェアの接続とは別の手続きです。",
       "errNotAuthorisedCause4": "登録されている国民保険番号が、接続に使用した Government Gateway アカウントとは別人のものです。",
       "errNotAuthorisedCause4Cta": "NINO を確認する →",
-      "errNotAuthorisedCode": "HMRC エラーコード：{code}"
+      "errNotAuthorisedCode": "HMRC エラーコード：{code}",
+      "payAmount": "{amount} を支払う →",
+      "checkOwed": "確認 →",
+      "subPaymentOwed": "Self Assessment {taxYear} · HMRC によると {amount} の支払いがあります",
+      "titleOtherCharge": "Self Assessment の請求",
+      "nothingToPay": "HMRC によると、現在お支払いいただくものはありません。"
     }
   },
   "footer": {

@@ -352,7 +352,7 @@
       "subQuarterly": "MTD ITSA · Año fiscal {taxYear}",
       "subSaFiling": "Año fiscal {taxYear} · Vence el {date}",
       "subVat": "Making Tax Digital · IVA · Vence el {date}",
-      "subPayment": "Self Assessment {taxYear} · Vence {date} · Recordatorio: solo si tienes un importe a pagar",
+      "subPayment": "Self Assessment {taxYear} · Vence {date} · Solo si tienes una factura: consulta tu cuenta de HMRC",
       "errNotAuthorisedTitle": "HMRC no ha autorizado el acceso a este registro",
       "errNotAuthorisedIntro": "HMRC rechazó la solicitud sin indicar el motivo. Estas son las causas habituales, de más a menos probable:",
       "errNotAuthorisedCause1": "No estás dado de alta en Making Tax Digital for Income Tax. Tener una cuenta de HMRC y un número de seguridad social no es lo mismo: MTD requiere un alta aparte.",
@@ -361,7 +361,12 @@
       "errNotAuthorisedCause3": "Tu fuente de ingresos por autoempleo o alquiler no está registrada en MTD dentro de tu cuenta de HMRC. Eso es independiente de conectar el software.",
       "errNotAuthorisedCause4": "El número de seguridad social registrado pertenece a una persona distinta de la cuenta de Government Gateway con la que te conectaste.",
       "errNotAuthorisedCause4Cta": "Revisar mi NINO →",
-      "errNotAuthorisedCode": "Código de error de HMRC: {code}"
+      "errNotAuthorisedCode": "Código de error de HMRC: {code}",
+      "payAmount": "Pagar {amount} →",
+      "checkOwed": "Consultar →",
+      "subPaymentOwed": "Self Assessment {taxYear} · {amount} pendiente según HMRC",
+      "titleOtherCharge": "Cargo de Self Assessment",
+      "nothingToPay": "Según HMRC, ahora mismo no tienes nada que pagar."
     }
   },
   "footer": {
