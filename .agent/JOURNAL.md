@@ -15,6 +15,11 @@
 
 ---
 
+## 2026-11-25（owner 会话，sandbox 全量测试）
+**做了**：staging 新建测试账号（凭据在 agent/.env.local STAGING_TEST_*），连 HMRC 测试用户 GK649364B，在内置浏览器里跑完 108 个年终端点 + final declaration + confirm-amendment（都 204），截图在 hmrc/2026-11-eoy-subscriptions/evidence/，结果 SANDBOX-RUN-2026-11-25.md。105/108 成功；Losses 7.0 / ITLA / Winter Fuel PUT 在 2027-04-06 前只能拿到 RULE_TAX_YEAR_NOT_ENDED。
+**严重发现**：季度申报 submitQuarterlyUpdate 用旧 period 端点，2026-27 被拒 RULE_TAX_YEAR_NOT_SUPPORTED——production 也一样，真实用户 2026-27 季度申报会失败。当年 HMRC 看到的 in-year 证据来自 sandbox-test 路由。待 owner 决定是否立刻修（改 cumulative + 年初至今汇总）。
+**其他**：2025-26 年终页 Losses 7.0 报 400；catalog 示例和变体错配、带 Tax Year 列的场景表解析错；agent 声明未测。
+
 ## 2026-11-25（owner 会话，Vercel 项目改回 easytax）
 **根因**：11-24 有人把原 Vercel 项目 `easytax`（prj_hXqav…，3 月建，域名和 39 个变量都在）改名成 `mtdbuddy`（配合未合并的品牌重塑分支 `claude/rebrand-mtdbuddy`，那个分支没进 staging/main）。`.github/workflows/deploy.yml` 没设 VERCEL_PROJECT_ID 时按名字 `easytax` 去 `vercel link --yes`，名字找不到就新建了空项目 `easytax`（prj_zLqach0g…，18:27:52），之后每次 push staging 都部署到空项目并把 staging.easytax.vip 指过去 → MissingSecret 500。11-25 00:03 又发生一次。
 **已做**：owner 说"forget about mtdbuddy, revert back to easytax"。空项目改名 `easytax-stray-empty`（没删），`mtdbuddy` 改回 `easytax`。production easytax.vip 一直正常（200）。
