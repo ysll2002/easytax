@@ -16,9 +16,9 @@
 ---
 
 ## 2026-11-25（owner 会话，注册跟踪修复 PR #80）
-**已做**：[PR #80](https://github.com/ysll2002/easytax/pull/80) 合进 staging（5222ca5），未上 production。/api/register 每次拒绝都写 analytics_events `register_failed`（props.code：email_exists / pwd_too_short / missing_fields / Postgres code / server_error / bad_request，不存邮箱）；异常和坏 JSON 不再是裸 500。Google 登录新建账号现在记 `register_completed`（method google），插入失败记 `register_failed`；dashboard 上的 SignupBeacon 通过 10 分钟 cookie 给 GA 补发 register_success。daily-metrics last_7d 加 register_failed。
+**已做**：[PR #80](https://github.com/ysll2002/easytax/pull/80) 合进 staging（5222ca5），owner 授权后经 [PR #81](https://github.com/ysll2002/easytax/pull/81) 上线 production（2d7486e，冒烟通过；生产上 pwd_too_short 测试事件入库正确，已删掉那条测试行）。/api/register 每次拒绝都写 analytics_events `register_failed`（props.code：email_exists / pwd_too_short / missing_fields / Postgres code / server_error / bad_request，不存邮箱）；异常和坏 JSON 不再是裸 500。Google 登录新建账号现在记 `register_completed`（method google），插入失败记 `register_failed`；dashboard 上的 SignupBeacon 通过 10 分钟 cookie 给 GA 补发 register_success。daily-metrics last_7d 加 register_failed。
 **验证**：staging 上 3 种拒绝都已入库，code 正确；beacon 读取并清除了 cookie。GA 在 staging 不加载，GA 事件要上 production 后才能确认。Google 新账号路径没有实测（需要一个真的新 Google 账号）。
-**待 owner**：GA 后台：① 把 register_success 标成 key event；② 把 reason 注册为事件级自定义维度；③ 时区改 Europe/London。另外 PR #80 要 owner 说上 production 才上。
+**待 owner**：GA 后台：① 把 register_success 标成 key event；② 把 reason 注册为事件级自定义维度；③ 时区改 Europe/London。
 **注意**：profiles.email 唯一索引区分大小写，注册和登录都按原样匹配；生产有 2 个邮箱含大写。还没改，只记一下。
 
 ## 2026-11-25（owner 会话，GA4 两周分析 11-11→11-24）
