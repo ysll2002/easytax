@@ -16,6 +16,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "individual-losses-get-retrieve-losses-and-claims",
   "apiKey": "individual-losses-api",
   "api": "Individual Losses",
@@ -46,6 +47,7 @@
     "desc": "Performs a stateful create or update."
    }
   ],
+  "scenarioRequired": false,
   "id": "individual-losses-put-create-or-amend-losses-and-claims",
   "apiKey": "individual-losses-api",
   "api": "Individual Losses",
@@ -188,7 +190,21 @@
  {
   "query": [],
   "description": "This endpoint allows a developer to delete a claim or a brought-forward-loss for a specified individual and business for a given tax year. A National Insurance number, business ID and tax year are required.",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "NOT_FOUND",
+    "desc": "Simulates the scenario where no data is found."
+   },
+   {
+    "value": "OUTSIDE_AMENDMENT_WINDOW",
+    "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful delete."
+   }
+  ],
+  "scenarioRequired": false,
   "id": "individual-losses-delete-delete-losses-and-claims",
   "apiKey": "individual-losses-api",
   "api": "Individual Losses",
@@ -211,6 +227,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-tax-liability-adjustments-get-retrieve-tax-liability-adjustments",
   "apiKey": "individuals-tax-liability-adjustments-api",
   "api": "Individuals Tax Liability Adjustments",
@@ -233,6 +250,7 @@
     "desc": "Performs a stateful create or update."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-tax-liability-adjustments-put-create-or-amend-tax-liability-adjustments",
   "apiKey": "individuals-tax-liability-adjustments-api",
   "api": "Individuals Tax Liability Adjustments",
@@ -322,6 +340,7 @@
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-tax-liability-adjustments-delete-delete-tax-liability-adjustments",
   "apiKey": "individuals-tax-liability-adjustments-api",
   "api": "Individuals Tax Liability Adjustments",
@@ -355,38 +374,43 @@
   "description": "This endpoint allows the user to generate a list of Business Source Adjustable Summaries for a given tax year. A filter can be set to return the summaries for a single business or business type. The National Insurance number must be provided.",
   "scenarios": [
    {
-    "value": "ALL",
-    "desc": "N/A - DEFAULT                    | Simulate a successful response containing multiple business types."
+    "value": "SELF_EMPLOYMENT",
+    "desc": "Simulate a successful response containing a self-employment business."
    },
    {
-    "value": "ALL",
-    "desc": "SELF_EMPLOYMENT                  | Simulate a successful response containing a self-employment business."
+    "value": "UK_PROPERTY",
+    "desc": "Simulate a successful response containing a UK property business."
    },
    {
-    "value": "ALL",
-    "desc": "UK_PROPERTY                      | Simulate a successful response containing a UK property business."
+    "value": "UK_PROPERTY_FHL",
+    "desc": "Simulate a successful response containing UK FHL property businesses. (tax year: Before 2025-26)"
    },
    {
-    "value": "ALL",
-    "desc": "FOREIGN_PROPERTY                 | Simulate a successful response containing a foreign property business."
+    "value": "FOREIGN_PROPERTY",
+    "desc": "Simulate a successful response containing a foreign property business."
    },
    {
-    "value": "ALL",
-    "desc": "NOT_FOUND                        | Simulates the scenario where no data is found."
+    "value": "FOREIGN_PROPERTY_FHL",
+    "desc": "Simulate a successful response containing EEA FHL foreign property businesses. (tax year: Before 2025-26)"
    },
    {
-    "value": "ALL",
-    "desc": "REQUEST_CANNOT_BE_FULFILLED      | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
+    "value": "NOT_FOUND",
+    "desc": "Simulates the scenario where no data is found."
    },
    {
-    "value": "ALL",
-    "desc": "DYNAMIC                          | The following response values will change to correspond to the values submitted in the request: \u2022 businessID \u2022 typeOfBusiness \u2022 accountingPeriod.startdate \u2022 accounti"
+    "value": "REQUEST_CANNOT_BE_FULFILLED",
+    "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    },
    {
-    "value": "ALL",
-    "desc": "STATEFUL                         | Performs a stateful list."
+    "value": "DYNAMIC",
+    "desc": "The following response values will change to correspond to the values submitted in the request: \u2022 businessID \u2022 typeOfBusiness \u2022 accountingPeriod.startdate \u2022 accountingPeriod.enddate \u2022 taxYear \u2022 reques"
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful list."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-get-list-business-source-adjustable-summaries",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -401,38 +425,39 @@
   "description": "This endpoint allows a developer to generate an end of accounting period Business Source Adjustable Summary of the income and expenditure for a specified business for a given accounting period. A Business Source Adjustable Summary must be generated before accounting adjustments are to be entered. A National Insurance number must be provided. Note: For tax years before 2025-26, data can be submitted for UK FHL or Non-FHL, Foreign EEA-FHL or Non-FHL property business types. From tax year 2025-26 onwards, the UK FHL, UK Non-FHL, Foreign EEA-FHL and Non-FHL property types are no longer valid and you must use the UK Property or Foreign Property type. ",
   "scenarios": [
    {
-    "value": "ALL",
-    "desc": "N/A - DEFAULT                    | Simulates success response."
+    "value": "NO_ACCOUNTING_PERIOD",
+    "desc": "Simulates the scenario where the supplied accounting period does not exist."
    },
    {
-    "value": "ALL",
-    "desc": "NO_ACCOUNTING_PERIOD             | Simulates the scenario where the supplied accounting period does not exist."
+    "value": "OBLIGATIONS_NOT_MET",
+    "desc": "Simulates the scenario where obligations for the business have not been met."
    },
    {
-    "value": "ALL",
-    "desc": "OBLIGATIONS_NOT_MET              | Simulates the scenario where obligations for the business have not been met."
+    "value": "ACCOUNTING_PERIOD_NOT_ENDED",
+    "desc": "Simulates the scenario where the supplied accounting period has not ended."
    },
    {
-    "value": "ALL",
-    "desc": "ACCOUNTING_PERIOD_NOT_ENDED      | Simulates the scenario where the supplied accounting period has not ended."
+    "value": "OUTSIDE_AMENDMENT_WINDOW",
+    "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window. (tax year: 2025-26 onwards)"
    },
    {
-    "value": "ALL",
-    "desc": "NOT_FOUND                        | Simulates the scenario where no data is found."
+    "value": "NOT_FOUND",
+    "desc": "Simulates the scenario where no data is found."
    },
    {
-    "value": "ALL",
-    "desc": "TAX_YEAR_NOT_SUPPORTED           | Simulates the scenario where the tax year is not supported."
+    "value": "TAX_YEAR_NOT_SUPPORTED",
+    "desc": "Simulates the scenario where the tax year is not supported."
    },
    {
-    "value": "ALL",
-    "desc": "REQUEST_CANNOT_BE_FULFILLED      | Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
+    "value": "REQUEST_CANNOT_BE_FULFILLED",
+    "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    },
    {
-    "value": "ALL",
-    "desc": "STATEFUL                         | Performs a stateful trigger."
+    "value": "STATEFUL",
+    "desc": "Performs a stateful trigger."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-post-trigger-a-business-source-adjustable-summary",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -562,8 +587,8 @@
     },
     "example": {
      "accountingPeriod": {
-      "startDate": "2025-04-06",
-      "endDate": "2026-04-05"
+      "startDate": "2019-04-06",
+      "endDate": "2020-04-05"
      },
      "typeOfBusiness": "self-employment",
      "businessId": "X9IS98470026982"
@@ -581,7 +606,7 @@
    },
    {
     "value": "DYNAMIC_SELF_EMPLOYMENT_PROFIT",
-    "desc": "Simulates success response with all fields and netProfit.                    See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with all fields and netProfit. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "SELF_EMPLOYMENT_LOSS",
@@ -589,7 +614,7 @@
    },
    {
     "value": "DYNAMIC_SELF_EMPLOYMENT_LOSS",
-    "desc": "Simulates success response with all fields and netLoss.                      See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with all fields and netLoss. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "SELF_EMPLOYMENT_CONSOLIDATED",
@@ -597,7 +622,7 @@
    },
    {
     "value": "DYNAMIC_SELF_EMPLOYMENT_CONSOLIDATED",
-    "desc": "Simulates success response with adjusted summary and consolidated expenses.  See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with adjusted summary and consolidated expenses. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "TRADING_ALLOWANCE",
@@ -605,7 +630,7 @@
    },
    {
     "value": "DYNAMIC_TRADING_ALLOWANCE",
-    "desc": "Simulates success response with adjusted summary and trading allowance.      See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with adjusted summary and trading allowance. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "SELF_EMPLOYMENT_UNADJUSTED",
@@ -613,7 +638,7 @@
    },
    {
     "value": "DYNAMIC_SELF_EMPLOYMENT_UNADJUSTED",
-    "desc": "Simulates success response with unadjusted summary.                          See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with unadjusted summary. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "SELF_EMPLOYMENT_STATUS_INVALID",
@@ -621,7 +646,7 @@
    },
    {
     "value": "DYNAMIC_SELF_EMPLOYMENT_STATUS_INVALID",
-    "desc": "Simulates success response with summary status invalid.                      See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with summary status invalid. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "SELF_EMPLOYMENT_STATUS_SUPERSEDED",
@@ -629,7 +654,7 @@
    },
    {
     "value": "DYNAMIC_SELF_EMPLOYMENT_STATUS_SUPERSEDED",
-    "desc": "Simulates success response with summary status superseded.                   See below for details about DYNAMIC scenarios."
+    "desc": "Simulates success response with summary status superseded. See below for details about DYNAMIC scenarios."
    },
    {
     "value": "NOT_SELF_EMPLOYMENT",
@@ -652,6 +677,7 @@
     "desc": "Simulates the scenario where all income, expenses and additions have zero adjustments."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-get-retrieve-a-self-employment-business-source-adjustable-summary",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -714,6 +740,7 @@
     "desc": "Performs a stateful submit."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-post-submit-self-employment-accounting-adjustments",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -1358,7 +1385,38 @@
       "other": 454544.59
      },
      "expenses": {
-      "consolidatedExpenses": 45645.23
+      "costOfGoods": 3353.39,
+      "paymentsToSubcontractors": 35353.19,
+      "wagesAndStaffCosts": 24232.23,
+      "carVanTravelExpenses": 3563.77,
+      "premisesRunningCosts": 35635.34,
+      "maintenanceCosts": 35333.22,
+      "adminCosts": 24242.45,
+      "interestOnBankOtherLoans": 34535.34,
+      "financeCharges": 42342.56,
+      "irrecoverableDebts": 54353.23,
+      "professionalFees": 23421.23,
+      "depreciation": 24222.56,
+      "otherExpenses": 35435.23,
+      "advertisingCosts": 34223.33,
+      "businessEntertainmentCosts": 3543.78
+     },
+     "additions": {
+      "costOfGoodsDisallowable": 5464.56,
+      "paymentsToSubcontractorsDisallowable": 5643.23,
+      "wagesAndStaffCostsDisallowable": 3453.78,
+      "carVanTravelExpensesDisallowable": 53533.23,
+      "premisesRunningCostsDisallowable": 2433.23,
+      "maintenanceCostsDisallowable": 2342.53,
+      "adminCostsDisallowable": 42342.34,
+      "interestOnBankOtherLoansDisallowable": 2342.34,
+      "financeChargesDisallowable": 23424.34,
+      "irrecoverableDebtsDisallowable": 23424.23,
+      "professionalFeesDisallowable": 34222.23,
+      "depreciationDisallowable": 2342.54,
+      "otherExpensesDisallowable": 24232.34,
+      "advertisingCostsDisallowable": 23121.23,
+      "businessEntertainmentCostsDisallowable": 6575.56
      }
     }
    }
@@ -1367,7 +1425,109 @@
  {
   "query": [],
   "description": "This endpoint allows the user to request a specific Business Source Adjustable Summary for a UK property business Furnished Holiday Letting (FHL) or a UK property. A National Insurance number and Calculation id must be provided.",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "TAX_YEAR_NOT_SUPPORTED",
+    "desc": "Simulates the scenario where the tax year is not supported."
+   },
+   {
+    "value": "REQUEST_CANNOT_BE_FULFILLED",
+    "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors"
+   },
+   {
+    "value": "UK_PROPERTY_STATUS_INVALID",
+    "desc": "Simulates success response with summary status invalid."
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_STATUS_INVALID",
+    "desc": "Simulates success response with summary status invalid. See below for details about dynamic scenarios."
+   },
+   {
+    "value": "UK_PROPERTY_STATUS_SUPERSEDED",
+    "desc": "Simulates success response with summary status superseded."
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_STATUS_SUPERSEDED",
+    "desc": "Simulates success response with summary status superseded. See below for details about dynamic scenarios."
+   },
+   {
+    "value": "NOT_UK_PROPERTY",
+    "desc": "Simulates the scenario where the calculationId is not a UK property."
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful retrieve."
+   },
+   {
+    "value": "UK_PROPERTY_PROFIT",
+    "desc": "Simulates success response with uk property and profit."
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_PROFIT",
+    "desc": "Simulates success response with uk property and profit. onwards See below for details about dynamic scenarios."
+   },
+   {
+    "value": "UK_PROPERTY_LOSS",
+    "desc": "Simulates success response with uk property and loss."
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_LOSS",
+    "desc": "Simulates success response with uk property and loss. onwards See below for details about dynamic scenarios."
+   },
+   {
+    "value": "UK_PROPERTY_CONSOLIDATED",
+    "desc": "Simulates success response with adjusted summary and consolidated expenses."
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_CONSOLIDATED",
+    "desc": "Simulates success response with adjusted summary and consolidated expenses. onwards See below for details about dynamic scenarios."
+   },
+   {
+    "value": "UK_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response with adjusted summary and propertyAllowance."
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response with adjusted summary and propertyAllowance. onwards See below for details about dynamic scenarios."
+   },
+   {
+    "value": "UK_PROPERTY_FHL_PROFIT",
+    "desc": "Simulates success response with uk property FHL and profit. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_FHL_PROFIT",
+    "desc": "Simulates success response with uk property FHL and profit. See below for details about dynamic scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "UK_PROPERTY_FHL_LOSS",
+    "desc": "Simulates success response with uk property FHL and loss. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_FHL_LOSS",
+    "desc": "Simulates success response with uk property FHL and loss. See below for details about dynamic scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "UK_PROPERTY_FHL_CONSOLIDATED",
+    "desc": "Simulates success response with FHL adjusted summary and consolidated expenses. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_UK_PROPERTY_FHL_CONSOLIDATED",
+    "desc": "Simulates success response with FHL adjusted summary and consolidated expenses.See below for details about dynamic scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "UK_FHL_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response with FHL adjusted summary and propertyAllowance. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_UK_FHL_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response with FHL adjusted summary and propertyAllowance. See below for details about dynamic scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "UK_PROPERTY_ZERO_ADJUSTMENTS",
+    "desc": "Simulates the scenario where all income and expenses have zero adjustments. (tax year: 2024-25 Onwards)"
+   }
+  ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-get-retrieve-a-uk-property-business-source-adjustable-summary",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -1430,6 +1590,7 @@
     "desc": "Performs a stateful submit."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-post-submit-uk-property-accounting-adjustments",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -1910,7 +2071,14 @@
        "otherPropertyIncome": 1000.45
       },
       "expenses": {
-       "consolidatedExpenses": 1000.45
+       "premisesRunningCosts": 1000.45,
+       "repairsAndMaintenance": 1000.45,
+       "financialCosts": 1000.45,
+       "professionalFees": 1000.45,
+       "costOfServices": 1000.45,
+       "residentialFinancialCost": 1000.45,
+       "other": 1000.45,
+       "travelCosts": 1000.45
       }
      }
     }
@@ -2151,9 +2319,12 @@
      }
     },
     "example": {
-     "furnishedHolidayLet": {
+     "ukProperty": {
       "income": {
-       "totalRentsReceived": 1000.45
+       "totalRentsReceived": 1000.45,
+       "premiumsOfLeaseGrant": 1000.45,
+       "reversePremiums": 1000.45,
+       "otherPropertyIncome": 1000.45
       },
       "expenses": {
        "premisesRunningCosts": 1000.45,
@@ -2161,6 +2332,7 @@
        "financialCosts": 1000.45,
        "professionalFees": 1000.45,
        "costOfServices": 1000.45,
+       "residentialFinancialCost": 1000.45,
        "other": 1000.45,
        "travelCosts": 1000.45
       }
@@ -2306,12 +2478,22 @@
      }
     },
     "example": {
-     "furnishedHolidayLet": {
+     "ukProperty": {
       "income": {
-       "totalRentsReceived": 1000.45
+       "totalRentsReceived": 1000.45,
+       "premiumsOfLeaseGrant": 1000.45,
+       "reversePremiums": 1000.45,
+       "otherPropertyIncome": 1000.45
       },
       "expenses": {
-       "consolidatedExpenses": 1000.45
+       "premisesRunningCosts": 1000.45,
+       "repairsAndMaintenance": 1000.45,
+       "financialCosts": 1000.45,
+       "professionalFees": 1000.45,
+       "costOfServices": 1000.45,
+       "residentialFinancialCost": 1000.45,
+       "other": 1000.45,
+       "travelCosts": 1000.45
       }
      }
     }
@@ -2480,7 +2662,101 @@
  {
   "query": [],
   "description": "This endpoint enables you to request a specific Business Source Adjustable Summary for a foreign property business EEA Furnished Holiday Letting (FHL) or a non-FHL foreign property business. A National Insurance number and calculation ID must be provided. Please note that the expense items 'residentialFinancialCost' and 'broughtFwdResidentialFinancialCost' under 'adjustableSummaryCalculation' and 'adjustedSummaryCalculation' are not currently in use and will not be returned in a live environment. These fields will be removed in the near future.",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "FOREIGN_PROPERTY_STATUS_INVALID",
+    "desc": "Simulates success response with summary status invalid."
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_STATUS_INVALID",
+    "desc": "Simulates success response with summary status invalid. See below for details on DYNAMIC scenarios."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_STATUS_SUPERSEDED",
+    "desc": "Simulates success response with summary status superseded."
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_STATUS_SUPERSEDED",
+    "desc": "Simulates success response with summary status superseded. See below for details on DYNAMIC scenarios."
+   },
+   {
+    "value": "REQUEST_CANNOT_BE_FULFILLED",
+    "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful retrieve."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_PROFIT",
+    "desc": "Simulates success response foreign property and profit."
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_PROFIT",
+    "desc": "Simulates success response foreign property and profit. See below for details on DYNAMIC scenarios."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_LOSS",
+    "desc": "Simulates success response FHL foreign property and loss."
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_LOSS",
+    "desc": "Simulates success response foreign property and loss. See below for details on DYNAMIC scenarios."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_CONSOLIDATED",
+    "desc": "Simulates success response adjusted summary and consolidated expenses."
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_CONSOLIDATED",
+    "desc": "Simulates success response adjusted summary and consolidated expenses. See below for details on DYNAMIC scenarios."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response adjusted summary and propertyAllowance."
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response adjusted summary and propertyAllowance. See below for details on DYNAMIC scenarios."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_FHL_PROFIT",
+    "desc": "Simulates success response with FHL foreign property and profit. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_FHL_PROFIT",
+    "desc": "Simulates success response with FHL foreign property and profit. See below for details on DYNAMIC scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "FOREIGN_PROPERTY_FHL_LOSS",
+    "desc": "Simulates success response with FHL foreign property and loss. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_FHL_LOSS",
+    "desc": "Simulates success response with FHL foreign property and loss. See below for details on DYNAMIC scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "FOREIGN_PROPERTY_FHL_CONSOLIDATED",
+    "desc": "Simulates success response with FHL adjusted summary and consolidated expenses. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_PROPERTY_FHL_CONSOLIDATED",
+    "desc": "Simulates success response with FHL adjusted summary and consolidated expenses. See below for details on DYNAMIC scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "FOREIGN_FHL_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response with FHL adjusted summary and propertyAllowance. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "DYNAMIC_FOREIGN_FHL_PROPERTY_ALLOWANCE",
+    "desc": "Simulates success response with FHL adjusted summary and propertyAllowance. See below for details on DYNAMIC scenarios. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "FOREIGN_PROPERTY_ZERO_ADJUSTMENTS",
+    "desc": "Simulates the scenario where all income, expenses and additions have zero adjustments. (tax year: 2024-25 onwards)"
+   }
+  ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-get-retrieve-a-foreign-property-business-source-adjustable-summary",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -2547,6 +2823,7 @@
     "desc": "Performs a stateful submit."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-bsas-post-submit-foreign-property-accounting-adjustments",
   "apiKey": "self-assessment-bsas-api",
   "api": "Business Source Adjustable Summary",
@@ -2759,20 +3036,26 @@
      }
     },
     "example": {
-     "foreignFhlEea": {
-      "income": {
-       "totalRentsReceived": 1000.45
-      },
-      "expenses": {
-       "premisesRunningCosts": 1001.0,
-       "repairsAndMaintenance": -99999.99,
-       "financialCosts": 200.5,
-       "professionalFees": -99999.99,
-       "costOfServices": -1000.45,
-       "other": 500.0,
-       "travelCosts": 100.0
+     "foreignProperty": [
+      {
+       "countryCode": "FRA",
+       "income": {
+        "totalRentsReceived": 1000.45,
+        "premiumsOfLeaseGrant": -99.99,
+        "otherPropertyIncome": 1000.0
+       },
+       "expenses": {
+        "premisesRunningCosts": 1000.45,
+        "repairsAndMaintenance": -99999.99,
+        "financialCosts": 5000.45,
+        "professionalFees": 300.99,
+        "costOfServices": 500.0,
+        "residentialFinancialCost": -9000.0,
+        "other": 1000.0,
+        "travelCosts": 99.99
+       }
       }
-     }
+     ]
     }
    },
    {
@@ -2999,13 +3282,27 @@
      }
     },
     "example": {
-     "foreignFhlEea": {
-      "income": {
-       "totalRentsReceived": 1000.45
-      },
-      "expenses": {
-       "consolidatedExpenses": 1000.45
-      }
+     "foreignProperty": {
+      "countryLevelDetail": [
+       {
+        "countryCode": "FRA",
+        "income": {
+         "totalRentsReceived": 1000.45,
+         "premiumsOfLeaseGrant": -99.99,
+         "otherPropertyIncome": 1000.0
+        },
+        "expenses": {
+         "premisesRunningCosts": 1000.45,
+         "repairsAndMaintenance": -99999.99,
+         "financialCosts": 5000.45,
+         "professionalFees": 300.99,
+         "costOfServices": 500.0,
+         "residentialFinancialCost": 9000.0,
+         "other": 1000.0,
+         "travelCosts": 99.99
+        }
+       }
+      ]
      }
     }
    },
@@ -3145,26 +3442,28 @@
      }
     },
     "example": {
-     "foreignProperty": [
-      {
-       "countryCode": "FRA",
-       "income": {
-        "totalRentsReceived": 1000.45,
-        "premiumsOfLeaseGrant": -99.99,
-        "otherPropertyIncome": 1000.0
-       },
-       "expenses": {
-        "premisesRunningCosts": 1000.45,
-        "repairsAndMaintenance": -99999.99,
-        "financialCosts": 5000.45,
-        "professionalFees": 300.99,
-        "costOfServices": 500.0,
-        "residentialFinancialCost": -9000.0,
-        "other": 1000.0,
-        "travelCosts": 99.99
+     "foreignProperty": {
+      "countryLevelDetail": [
+       {
+        "countryCode": "FRA",
+        "income": {
+         "totalRentsReceived": 1000.45,
+         "premiumsOfLeaseGrant": -99.99,
+         "otherPropertyIncome": 1000.0
+        },
+        "expenses": {
+         "premisesRunningCosts": 1000.45,
+         "repairsAndMaintenance": -99999.99,
+         "financialCosts": 5000.45,
+         "professionalFees": 300.99,
+         "costOfServices": 500.0,
+         "residentialFinancialCost": 9000.0,
+         "other": 1000.0,
+         "travelCosts": 99.99
+        }
        }
-      }
-     ]
+      ]
+     }
     }
    },
    {
@@ -3303,20 +3602,27 @@
      }
     },
     "example": {
-     "foreignProperty": [
-      {
-       "countryCode": "FRA",
-       "income": {
-        "totalRentsReceived": 1000.45,
-        "premiumsOfLeaseGrant": -99.99,
-        "otherPropertyIncome": 1000.0
-       },
-       "expenses": {
-        "consolidatedExpenses": 999.99,
-        "residentialFinancialCost": 999.99
+     "foreignProperty": {
+      "propertyLevelDetail": [
+       {
+        "propertyId": "717f3a7a-db8e-11e9-8a34-2a2ae2dbcce4",
+        "income": {
+         "totalRentsReceived": 1000.45,
+         "premiumsOfLeaseGrant": -99.99,
+         "otherPropertyIncome": 1000.0
+        },
+        "expenses": {
+         "premisesRunningCosts": 1000.45,
+         "repairsAndMaintenance": -99999.99,
+         "financialCosts": 5000.45,
+         "professionalFees": 300.99,
+         "costOfServices": 500.0,
+         "other": 1000.0,
+         "travelCosts": 99.99
+        }
        }
-      }
-     ]
+      ]
+     }
     }
    }
   ]
@@ -3334,6 +3640,7 @@
     "desc": "Simulates the scenario where no income submissions exist."
    }
   ],
+  "scenarioRequired": false,
   "id": "self-assessment-biss-get-retrieve-a-business-income-source-summary-biss",
   "apiKey": "self-assessment-biss-api",
   "api": "Business Income Source Summary",
@@ -3353,7 +3660,7 @@
    },
    {
     "value": "FOREIGN_PROPERTY",
-    "desc": "Simulate a successful response with a foreign-property business.                                 |"
+    "desc": "Simulate a successful response with a foreign-property business."
    },
    {
     "value": "BUSINESS_AND_PROPERTY",
@@ -3372,6 +3679,7 @@
     "desc": "Performs a stateful list."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-get-list-all-businesses",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3387,15 +3695,15 @@
   "scenarios": [
    {
     "value": "PROPERTY",
-    "desc": "Simulate a successful response with a uk-property business.  Use the following businessId for this scenario:  - XPIS12345678901"
+    "desc": "Simulate a successful response with a uk-property business. Use the following businessId for this scenario: - XPIS12345678901"
    },
    {
     "value": "FOREIGN_PROPERTY",
-    "desc": "Simulate a successful response with a foreign-property business.  Use the following businessId for this scenario:  - XFIS12345678901"
+    "desc": "Simulate a successful response with a foreign-property business. Use the following businessId for this scenario: - XFIS12345678901"
    },
    {
     "value": "UNSPECIFIED",
-    "desc": "Simulate a successful response with a property-unspecified business.  Use the following businessId for this scenario:  - XAIS12345678901"
+    "desc": "Simulate a successful response with a property-unspecified business. Use the following businessId for this scenario: - XAIS12345678901"
    },
    {
     "value": "NOT_FOUND",
@@ -3403,13 +3711,14 @@
    },
    {
     "value": "DYNAMIC",
-    "desc": "Returns a dynamic response where the type of response will change corresponding to the businessId provided in the request:  - For a response with a self-employment business, use businessId:    -- XBIS"
+    "desc": "Returns a dynamic response where the type of response will change corresponding to the businessId provided in the request: - For a response with a self-employment business, use businessId: -- XBIS1234"
    },
    {
     "value": "STATEFUL",
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-get-retrieve-business-details",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3440,6 +3749,7 @@
     "desc": "Performs a stateful create and update."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-put-create-and-amend-quarterly-period-type-for-a-business",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3488,6 +3798,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-get-retrieve-accounting-type",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3514,6 +3825,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-put-update-accounting-type",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3564,6 +3876,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-get-retrieve-periods-of-account",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3594,6 +3907,7 @@
     "desc": "Performs a stateful create or update."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-put-create-or-update-periods-of-account",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3669,6 +3983,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-get-retrieve-late-accounting-date-rule-election",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3707,6 +4022,7 @@
     "desc": "Performs a stateful disapplication."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-post-disapply-late-accounting-date-rule",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3737,6 +4053,7 @@
     "desc": "Performs a stateful withdrawal."
    }
   ],
+  "scenarioRequired": false,
   "id": "business-details-delete-withdraw-late-accounting-date-rule",
   "apiKey": "business-details-api",
   "api": "Business Details",
@@ -3783,6 +4100,7 @@
     "desc": "Simulates the scenario where a triggering for a final declaration is performed before the tax year has ended."
    }
   ],
+  "scenarioRequired": false,
   "id": "individual-calculations-post-trigger-a-self-assessment-tax-calculation",
   "apiKey": "individual-calculations-api",
   "api": "Individual Calculations",
@@ -3809,9 +4127,10 @@
    },
    {
     "value": "DYNAMIC",
-    "desc": "The following response parameters will be based on the data submitted in the request:  &bull; taxYear  &bull; calculationTimestamp  &bull; finalDeclarationTimestamp"
+    "desc": "The following response parameters will be based on the data submitted in the request: &bull; taxYear &bull; calculationTimestamp &bull; finalDeclarationTimestamp"
    }
   ],
+  "scenarioRequired": false,
   "id": "individual-calculations-get-list-self-assessment-tax-calculations",
   "apiKey": "individual-calculations-api",
   "api": "Individual Calculations",
@@ -3866,6 +4185,7 @@
     "desc": "The date fields in the response are made dynamic based on the tax year passed within the request. The dynamic response will work for tax years (taxYear) starting 2023-24 onwards. For any previous tax "
    }
   ],
+  "scenarioRequired": false,
   "id": "individual-calculations-get-retrieve-a-self-assessment-tax-calculation",
   "apiKey": "individual-calculations-api",
   "api": "Individual Calculations",
@@ -3924,6 +4244,7 @@
     "desc": "Simulates the scenario where the supplied income source could not be found."
    }
   ],
+  "scenarioRequired": false,
   "id": "individual-calculations-post-submit-a-self-assessment-final-declaration",
   "apiKey": "individual-calculations-api",
   "api": "Individual Calculations",
@@ -3966,6 +4287,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -4000,6 +4322,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-create-and-amend-a-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -4409,9 +4732,14 @@
     "example": {
      "ukFhlProperty": {
       "allowances": {
-       "propertyIncomeAllowance": 123.45
+       "annualInvestmentAllowance": 123.45,
+       "businessPremisesRenovationAllowance": 345.56,
+       "otherCapitalAllowance": 345.34,
+       "electricChargePointAllowance": 453.34,
+       "zeroEmissionsCarAllowance": 123.12
       },
       "adjustments": {
+       "privateUseAdjustment": 454.45,
        "balancingCharge": 231.45,
        "periodOfGraceAdjustment": true,
        "businessPremisesRenovationAllowanceBalancingCharges": 567.67,
@@ -4423,10 +4751,45 @@
      },
      "ukProperty": {
       "allowances": {
-       "propertyIncomeAllowance": 678.45
+       "annualInvestmentAllowance": 678.45,
+       "zeroEmissionsGoodsVehicleAllowance": 456.34,
+       "businessPremisesRenovationAllowance": 573.45,
+       "otherCapitalAllowance": 452.34,
+       "costOfReplacingDomesticItems": 567.34,
+       "electricChargePointAllowance": 454.34,
+       "structuredBuildingAllowance": [
+        {
+         "amount": 234.34,
+         "firstYear": {
+          "qualifyingDate": "2020-03-29",
+          "qualifyingAmountExpenditure": 3434.45
+         },
+         "building": {
+          "name": "Red Oaks",
+          "number": "1",
+          "postcode": "SW1A 2AA"
+         }
+        }
+       ],
+       "enhancedStructuredBuildingAllowance": [
+        {
+         "amount": 234.45,
+         "firstYear": {
+          "qualifyingDate": "2020-05-29",
+          "qualifyingAmountExpenditure": 453.34
+         },
+         "building": {
+          "name": "Green Oaks",
+          "number": "2",
+          "postcode": "SW1A 2AB"
+         }
+        }
+       ],
+       "zeroEmissionsCarAllowance": 454.34
       },
       "adjustments": {
        "balancingCharge": 565.34,
+       "privateUseAdjustment": 533.54,
        "businessPremisesRenovationAllowanceBalancingCharges": 563.34,
        "nonResidentLandlord": true,
        "rentARoom": {
@@ -4704,33 +5067,12 @@
      ]
     },
     "example": {
-     "ukFhlProperty": {
-      "allowances": {
-       "annualInvestmentAllowance": 123.45,
-       "businessPremisesRenovationAllowance": 345.56,
-       "otherCapitalAllowance": 345.34,
-       "electricChargePointAllowance": 453.34,
-       "zeroEmissionsCarAllowance": 123.12
-      },
-      "adjustments": {
-       "privateUseAdjustment": 454.45,
-       "balancingCharge": 231.45,
-       "periodOfGraceAdjustment": true,
-       "businessPremisesRenovationAllowanceBalancingCharges": 567.67,
-       "nonResidentLandlord": true,
-       "rentARoom": {
-        "jointlyLet": true
-       }
-      }
-     },
      "ukProperty": {
       "allowances": {
        "annualInvestmentAllowance": 678.45,
-       "zeroEmissionsGoodsVehicleAllowance": 456.34,
        "businessPremisesRenovationAllowance": 573.45,
        "otherCapitalAllowance": 452.34,
        "costOfReplacingDomesticItems": 567.34,
-       "electricChargePointAllowance": 454.34,
        "structuredBuildingAllowance": [
         {
          "amount": 234.34,
@@ -4739,9 +5081,9 @@
           "qualifyingAmountExpenditure": 3434.45
          },
          "building": {
-          "name": "Red Oaks",
+          "name": "Plaza",
           "number": "1",
-          "postcode": "SW1A 2AA"
+          "postcode": "TF3 4EH"
          }
         }
        ],
@@ -4753,9 +5095,9 @@
           "qualifyingAmountExpenditure": 453.34
          },
          "building": {
-          "name": "Green Oaks",
+          "name": "Plaza 2",
           "number": "2",
-          "postcode": "SW1A 2AB"
+          "postcode": "TF3 4ER"
          }
         }
        ],
@@ -5051,10 +5393,44 @@
     "example": {
      "ukProperty": {
       "allowances": {
-       "propertyIncomeAllowance": 678.45
+       "annualInvestmentAllowance": 678.45,
+       "businessPremisesRenovationAllowance": 573.45,
+       "otherCapitalAllowance": 452.34,
+       "costOfReplacingDomesticItems": 567.34,
+       "structuredBuildingAllowance": [
+        {
+         "amount": 234.34,
+         "firstYear": {
+          "qualifyingDate": "2020-03-29",
+          "qualifyingAmountExpenditure": 3434.45
+         },
+         "building": {
+          "name": "Plaza",
+          "number": "1",
+          "postcode": "TF3 4EH"
+         }
+        }
+       ],
+       "enhancedStructuredBuildingAllowance": [
+        {
+         "amount": 234.45,
+         "firstYear": {
+          "qualifyingDate": "2020-05-29",
+          "qualifyingAmountExpenditure": 453.34
+         },
+         "building": {
+          "name": "Plaza 2",
+          "number": "2",
+          "postcode": "TF3 4ER"
+         }
+        }
+       ],
+       "zeroEmissionsCarAllowance": 454.34,
+       "firstYearAllowanceOnPlantAndMachinery": 678.45
       },
       "adjustments": {
        "balancingCharge": 565.34,
+       "privateUseAdjustment": 533.54,
        "businessPremisesRenovationAllowanceBalancingCharges": 563.34,
        "nonResidentLandlord": true,
        "rentARoom": {
@@ -5099,6 +5475,7 @@
     "desc": "Performs a stateful create."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-post-create-a-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -5805,7 +6182,16 @@
        }
       },
       "expenses": {
-       "consolidatedExpenses": 988.18
+       "premisesRunningCosts": 3123.21,
+       "repairsAndMaintenance": 928.42,
+       "financialCosts": 842.99,
+       "professionalFees": 8831.12,
+       "costOfServices": 484.12,
+       "other": 99282,
+       "travelCosts": 974.47,
+       "rentARoom": {
+        "amountClaimed": 8842.43
+       }
       }
      },
      "ukNonFhlProperty": {
@@ -5820,7 +6206,18 @@
        }
       },
       "expenses": {
-       "consolidatedExpenses": 988.18
+       "premisesRunningCosts": 4141.21,
+       "repairsAndMaintenance": 582.21,
+       "financialCosts": 829.39,
+       "professionalFees": 4992.31,
+       "costOfServices": 98.21,
+       "other": 29.48,
+       "residentialFinancialCost": 2884.99,
+       "travelCosts": 48.93,
+       "residentialFinancialCostsCarriedForward": 483.91,
+       "rentARoom": {
+        "amountClaimed": 88.21
+       }
       }
      }
     }
@@ -5864,6 +6261,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -5890,6 +6288,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-amend-a-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -6558,7 +6957,16 @@
        }
       },
       "expenses": {
-       "consolidatedExpenses": 988.18
+       "premisesRunningCosts": 3123.21,
+       "repairsAndMaintenance": 928.42,
+       "financialCosts": 842.99,
+       "professionalFees": 8831.12,
+       "costOfServices": 484.12,
+       "other": 99282,
+       "travelCosts": 974.47,
+       "rentARoom": {
+        "amountClaimed": 8842.43
+       }
       }
      },
      "ukNonFhlProperty": {
@@ -6573,7 +6981,18 @@
        }
       },
       "expenses": {
-       "consolidatedExpenses": 988.18
+       "premisesRunningCosts": 4141.21,
+       "repairsAndMaintenance": 582.21,
+       "financialCosts": 829.39,
+       "professionalFees": 4992.31,
+       "costOfServices": 98.21,
+       "other": 29.48,
+       "residentialFinancialCost": 2884.99,
+       "travelCosts": 48.93,
+       "residentialFinancialCostsCarriedForward": 483.91,
+       "rentARoom": {
+        "amountClaimed": 88.21
+       }
       }
      }
     }
@@ -6609,6 +7028,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-uk-property-cumulative-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -6671,6 +7091,7 @@
     "desc": "Simulates the scenario where the start date does not align with the reporting type."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-create-or-amend-a-uk-property-cumulative-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -6914,6 +7335,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-historic-fhl-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -6936,6 +7358,7 @@
     "desc": "Performs a stateful create or update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-create-and-amend-a-historic-fhl-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7092,14 +7515,11 @@
     "desc": "Simulates the scenario where no data is found."
    },
    {
-    "value": "STATEFUL_DELETE",
-    "desc": "Performs a stateful delete. This Gov-Test-Scenario is no longer available in this version. It has been replaced by the STATEFUL Gov-Test-Scenario."
-   },
-   {
     "value": "STATEFUL",
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": true,
   "id": "property-business-delete-delete-a-historic-fhl-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7122,6 +7542,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-historic-non-fhl-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7144,6 +7565,7 @@
     "desc": "Performs a stateful create or update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-create-and-amend-a-historic-non-fhl-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7311,14 +7733,11 @@
     "desc": "Simulates the scenario where no data is found."
    },
    {
-    "value": "STATEFUL_DELETE",
-    "desc": "Performs a stateful delete. This Gov-Test-Scenario is no longer available in this version. It has been replaced by the STATEFUL Gov-Test-Scenario."
-   },
-   {
     "value": "STATEFUL",
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": true,
   "id": "property-business-delete-delete-a-historic-non-fhl-uk-property-business-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7341,6 +7760,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-list-historic-fhl-uk-property-income-expenses-period-summaries",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7383,6 +7803,7 @@
     "desc": "Performs a stateful create."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-post-create-a-historic-fhl-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7575,6 +7996,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-historic-fhl-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7597,6 +8019,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-amend-a-historic-fhl-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7770,6 +8193,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-list-historic-non-fhl-uk-property-income-expenses-period-summaries",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -7812,6 +8236,7 @@
     "desc": "Performs a stateful create."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-post-create-a-historic-non-fhl-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -8052,6 +8477,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-historic-non-fhl-uk-property-income-and-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -8074,6 +8500,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-amend-a-historic-non-fhl-uk-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -8330,6 +8757,7 @@
     "desc": "Performs a stateful create."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-post-create-a-foreign-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -8965,7 +9393,13 @@
        "rentAmount": 5000.99
       },
       "expenses": {
-       "consolidatedExpenses": 5000.99
+       "premisesRunningCosts": 5000.99,
+       "repairsAndMaintenance": 5000.99,
+       "financialCosts": 5000.99,
+       "professionalFees": 5000.99,
+       "costOfServices": 5000.99,
+       "travelCosts": 5000.99,
+       "other": 5000.99
       }
      },
      "foreignNonFhlProperty": [
@@ -8982,9 +9416,15 @@
         "specialWithholdingTaxOrUkTaxPaid": 5000.99
        },
        "expenses": {
-        "residentialFinancialCost": 200.25,
-        "broughtFwdResidentialFinancialCost": 100.25,
-        "consolidatedExpenses": 100.25
+        "premisesRunningCosts": 5000.99,
+        "repairsAndMaintenance": 5000.99,
+        "financialCosts": 5000.99,
+        "professionalFees": 5000.99,
+        "costOfServices": 5000.99,
+        "travelCosts": 5000.99,
+        "residentialFinancialCost": 5000.99,
+        "broughtFwdResidentialFinancialCost": 5000.99,
+        "other": 5000.99
        }
       }
      ]
@@ -9025,6 +9465,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-foreign-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -9051,6 +9492,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-amend-a-foreign-property-income-expenses-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -9640,7 +10082,13 @@
        "rentAmount": 1123.89
       },
       "expenses": {
-       "consolidatedExpenses": 334.64
+       "premisesRunningCosts": 332.78,
+       "repairsAndMaintenance": 231.45,
+       "financialCosts": 345.23,
+       "professionalFees": 232.45,
+       "costOfServices": 231.56,
+       "travelCosts": 234.67,
+       "other": 3457.9
       }
      },
      "foreignNonFhlProperty": [
@@ -9657,9 +10105,15 @@
         "specialWithholdingTaxOrUkTaxPaid": 85.47
        },
        "expenses": {
-        "residentialFinancialCost": 200.25,
-        "broughtFwdResidentialFinancialCost": 100.25,
-        "consolidatedExpenses": 3992.93
+        "premisesRunningCosts": 129.35,
+        "repairsAndMaintenance": 7490.32,
+        "financialCosts": 5000.99,
+        "professionalFees": 847.9,
+        "travelCosts": 69.2,
+        "costOfServices": 478.23,
+        "residentialFinancialCost": 879.28,
+        "broughtFwdResidentialFinancialCost": 846.13,
+        "other": 138.92
        }
       }
      ]
@@ -9678,6 +10132,7 @@
   ],
   "description": "This endpoint enables you to retrieve the cumulative period income and expenses for a foreign property business. A National Insurance number, business ID, and tax year are required. Please note that this endpoint is only available for tax years starting from 2025-26.",
   "scenarios": [],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-foreign-property-cumulative-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -9690,7 +10145,61 @@
  {
   "query": [],
   "description": "This endpoint enables you to submit the cumulative period income and expenses between two dates for a foreign property business. A National Insurance number, tax year and business ID are required. Please note that this endpoint is only available for tax years starting from 2025-26.",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "NOT_FOUND",
+    "desc": "Simulates the scenario where no data is found. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "TAX_YEAR_NOT_SUPPORTED",
+    "desc": "Simulates the scenario where the tax year is not supported. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful create or update based on a user\u2019s ITSA status and income source. Both standard and calendar updates are supported.For these submissions, a foreign test business must be created us"
+   },
+   {
+    "value": "START_DATE_NOT_ALIGNED_TO_COMMENCEMENT_DATE",
+    "desc": "Simulates the scenario where the start date does not align to the commencement date. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "END_DATE_NOT_ALIGNED_WITH_REPORTING_TYPE",
+    "desc": "Simulates the scenario where the end date does not align to the reporting type. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "MISSING_SUBMISSION_DATES",
+    "desc": "Simulates the scenario where the submission start/end date not provided. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "START_AND_END_DATE_NOT_ALLOWED",
+    "desc": "Simulates the scenario where the start/end date not accepted for annual/latent submission. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "EARLY_DATA_SUBMISSION_NOT_ACCEPTED",
+    "desc": "Simulates the scenario where individuals cannot submit data more than 10 days before end of period. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "OUTSIDE_AMENDMENT_WINDOW",
+    "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "ADVANCE_SUBMISSION_REQUIRES_PERIOD_END_DATE",
+    "desc": "Simulates the scenario for advance submission where the end date must be the end of the period. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "SUBMISSION_END_DATE_CANNOT_MOVE_BACKWARDS",
+    "desc": "Simulates the scenario where the submission end date cannot be earlier than existing submission. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "START_DATE_NOT_ALIGNED_WITH_REPORTING_TYPE",
+    "desc": "Simulates the scenario where the start date does not align with the reporting type. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "PROPERTY_ID_MISMATCH",
+    "desc": "Simulates the scenario where the supplied property ID is not associated with the income source on record. (tax year: 2026-27 onwards)"
+   }
+  ],
+  "scenarioRequired": false,
   "id": "property-business-put-create-or-amend-a-foreign-property-cumulative-period-summary",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -9885,11 +10394,11 @@
      ]
     },
     "example": {
-     "fromDate": "2026-04-06",
-     "toDate": "2026-07-05",
+     "fromDate": "2025-04-06",
+     "toDate": "2025-07-05",
      "foreignProperty": [
       {
-       "propertyId": "8e8b8450-dc1b-4360-8109-7067337b42cb",
+       "countryCode": "FRA",
        "income": {
         "rentIncome": {
          "rentAmount": 4882.23
@@ -10117,9 +10626,15 @@
         "specialWithholdingTaxOrUkTaxPaid": 847.72
        },
        "expenses": {
-        "consolidatedExpenses": 3992.93,
+        "premisesRunningCosts": 129.35,
+        "repairsAndMaintenance": 7490.32,
+        "financialCosts": 5000.99,
+        "professionalFees": 847.9,
+        "travelCosts": 69.2,
+        "costOfServices": 478.23,
         "residentialFinancialCost": 879.28,
-        "broughtFwdResidentialFinancialCost": 846.13
+        "broughtFwdResidentialFinancialCost": 846.13,
+        "other": 138.92
        }
       }
      ]
@@ -10137,7 +10652,37 @@
    }
   ],
   "description": "This endpoint enables you to retrieve adjustments and allowances for a foreign property business, for either or both of Furnished Holiday Letting (FHL) in the European Economic Area (EEA) and Non-FHL Foreign property submissions. A National Insurance number, business ID and tax year are required. Note: For tax years before 2025-26, data can be submitted for either a Foreign FHL-EEA or Non-FHL property. From tax year 2025-26 onwards, the Foreign FHL-EEA and Non-FHL property types are no longer valid and you must use the Foreign property type.",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "FOREIGN_PROPERTY",
+    "desc": "Simulates the scenario with Foreign properties."
+   },
+   {
+    "value": "FOREIGN_ALL_OTHER_ALLOWANCES",
+    "desc": "Simulates the scenario of a Foreign property with all other allowances."
+   },
+   {
+    "value": "FOREIGN_PROPERTY_ALLOWANCE",
+    "desc": "Simulates the scenario of a Foreign property with property allowance."
+   },
+   {
+    "value": "FOREIGN_FHL_ALL_OTHER_ALLOWANCES",
+    "desc": "Simulates the scenario of a FHL property with all other allowances. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "FOREIGN_FHL_PROPERTY_ALLOWANCE",
+    "desc": "Simulates the scenario of a FHL property with property allowance. (tax year: Before 2025-26)"
+   },
+   {
+    "value": "UK_PROPERTY",
+    "desc": "Simulates the scenario where the type of business is incorrect. (tax year: Before 2026-27)"
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful retrieve."
+   }
+  ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-a-foreign-property-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -10150,7 +10695,33 @@
  {
   "query": [],
   "description": "This endpoint enables you to re-submit adjustments and allowances for a foreign property business. This submission is for either or both of Furnished Holiday Letting (FHL) in the European Economic Area (EEA) and Non-FHL Foreign Property submissions. A National Insurance number, business ID and tax year must be provided. Note: For tax years before 2025-26, data can be submitted for either a Foreign FHL-EEA or Non-FHL property. From tax year 2025-26 onwards, the Foreign FHL-EEA and Non-FHL property types are no longer valid and you must use the Foreign property type.",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "NOT_FOUND",
+    "desc": "Simulates the scenario where no data is found. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "TYPE_OF_BUSINESS_INCORRECT",
+    "desc": "Simulates the scenario where a businessId for something other than a foreign property is supplied. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "PROPERTY_INCOME_ALLOWANCE",
+    "desc": "Simulates the scenario where the propertyIncomeAllowance is submitted when privateUseAdjustment is supplied (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful create or update. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "OUTSIDE_AMENDMENT_WINDOW",
+    "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window. (tax year: 2025-26 onwards)"
+   },
+   {
+    "value": "PROPERTY_ID_MISMATCH",
+    "desc": "Simulates the scenario where the supplied property ID is not associated with the income source on record. (tax year: 2026-27 onwards)"
+   }
+  ],
+  "scenarioRequired": false,
   "id": "property-business-put-create-and-amend-a-foreign-property-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -10640,23 +11211,32 @@
      ]
     },
     "example": {
-     "foreignFhlEea": {
-      "adjustments": {
-       "balancingCharge": 53543.23,
-       "periodOfGraceAdjustment": true
-      },
-      "allowances": {
-       "propertyIncomeAllowance": 100.25
-      }
-     },
      "foreignProperty": [
       {
        "countryCode": "LBN",
        "adjustments": {
+        "privateUseAdjustment": 4553.34,
         "balancingCharge": 3453.34
        },
        "allowances": {
-        "propertyIncomeAllowance": 200.25
+        "annualInvestmentAllowance": 38330.95,
+        "costOfReplacingDomesticItems": 41985.17,
+        "otherCapitalAllowance": 1049.21,
+        "zeroEmissionsCarAllowance": 1000.99,
+        "structuredBuildingAllowance": [
+         {
+          "amount": 3545.12,
+          "firstYear": {
+           "qualifyingDate": "2020-03-29",
+           "qualifyingAmountExpenditure": 3453.34
+          },
+          "building": {
+           "name": "Green Oaks",
+           "number": "12",
+           "postcode": "TF3 4GH"
+          }
+         }
+        ]
        }
       }
      ]
@@ -10833,7 +11413,7 @@
     "example": {
      "foreignProperty": [
       {
-       "countryCode": "LBN",
+       "propertyId": "8e8b8450-dc1b-4360-8109-7067337b42cb",
        "adjustments": {
         "privateUseAdjustment": 4553.34,
         "balancingCharge": 3453.34
@@ -10881,6 +11461,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-delete-delete-a-property-annual-submission",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -10903,6 +11484,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-list-property-income-and-expenses-period-summaries",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -10932,6 +11514,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-get-retrieve-foreign-property-details",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -10970,6 +11553,7 @@
     "desc": "Performs a stateful create."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-post-create-foreign-property-details",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -11055,6 +11639,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "property-business-put-update-foreign-property-details",
   "apiKey": "property-business-api",
   "api": "Property Business",
@@ -11121,6 +11706,7 @@
     "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-get-list-employments",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11147,6 +11733,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-post-add-a-custom-employment",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11238,6 +11825,7 @@
     "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-get-retrieve-an-employment",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11272,6 +11860,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-put-amend-a-custom-employment",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11363,6 +11952,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-delete-delete-a-custom-employment",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11393,6 +11983,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-post-ignore-employment",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11423,6 +12014,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-post-unignore-employment",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11453,13 +12045,14 @@
    },
    {
     "value": "STATEFUL",
-    "desc": "Performs a stateful retrieve.  Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrcHeld\u2019 will result in the expected HTTP 404 (matching resource not fo"
+    "desc": "Performs a stateful retrieve. Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrcHeld\u2019 will result in the expected HTTP 404 (matching resource not fou"
    },
    {
     "value": "REQUEST_CANNOT_BE_FULFILLED",
     "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-get-retrieve-an-employment-and-its-financial-details",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -11483,7 +12076,7 @@
    },
    {
     "value": "STATEFUL",
-    "desc": "Performs a stateful create or update.  Note: this endpoint relies on the prior creation of a STATEFUL custom employment. If a relevant STATEFUL custom employment has not been created, a 404 MATCHING_R"
+    "desc": "Performs a stateful create or update. Note: this endpoint relies on the prior creation of a STATEFUL custom employment. If a relevant STATEFUL custom employment has not been created, a 404 MATCHING_RE"
    },
    {
     "value": "REQUEST_CANNOT_BE_FULFILLED",
@@ -11494,6 +12087,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-put-create-and-amend-employment-financial-details",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12232,6 +12826,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-delete-delete-employment-financial-details",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12262,13 +12857,14 @@
    },
    {
     "value": "STATEFUL",
-    "desc": "Performs a stateful retrieve.  Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrcHeld\u2019 will result in the expected HTTP 404 (matching resource not fo"
+    "desc": "Performs a stateful retrieve. Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrcHeld\u2019 will result in the expected HTTP 404 (matching resource not fou"
    },
    {
     "value": "REQUEST_CANNOT_BE_FULFILLED",
     "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-get-retrieve-non-paye-employment-income",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12299,6 +12895,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-put-create-and-amend-non-paye-employment-income",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12351,6 +12948,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-delete-delete-non-paye-employment-income",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12377,6 +12975,7 @@
     "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-get-retrieve-other-employment-income",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12403,6 +13002,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-put-create-and-amend-other-employment-income",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12948,6 +13548,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-delete-delete-other-employment-income",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12970,6 +13571,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-get-retrieve-student-loan-benefits-in-kind",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -12992,6 +13594,7 @@
     "desc": "Performs a stateful create or update."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-put-create-or-amend-student-loan-benefits-in-kind",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -13043,6 +13646,7 @@
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-employments-income-delete-delete-student-loan-benefits-in-kind",
   "apiKey": "individuals-employments-income-api",
   "api": "Individuals Employments Income",
@@ -13069,6 +13673,7 @@
     "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-pensions-income-get-retrieve-pensions-income",
   "apiKey": "individuals-pensions-income-api",
   "api": "Individuals Pensions Income",
@@ -13095,6 +13700,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-pensions-income-put-create-and-amend-pensions-income",
   "apiKey": "individuals-pensions-income-api",
   "api": "Individuals Pensions Income",
@@ -13278,6 +13884,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-pensions-income-delete-delete-pensions-income",
   "apiKey": "individuals-pensions-income-api",
   "api": "Individuals Pensions Income",
@@ -13315,6 +13922,7 @@
     "desc": "Performs a stateful list."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-get-list-state-benefits",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13341,6 +13949,7 @@
     "desc": "Performs a stateful create."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-post-create-state-benefit",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13416,6 +14025,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-put-amend-state-benefit",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13476,6 +14086,7 @@
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-delete-delete-state-benefit",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13506,6 +14117,7 @@
     "desc": "Performs a stateful update."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-put-amend-state-benefit-amounts",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13566,6 +14178,7 @@
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-delete-delete-state-benefit-amounts",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13592,6 +14205,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-post-ignore-state-benefit",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13618,6 +14232,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-state-benefits-post-unignore-state-benefit",
   "apiKey": "individuals-state-benefits-api",
   "api": "Individuals State Benefits",
@@ -13640,6 +14255,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-charges-get-retrieve-pension-charges",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -13662,6 +14278,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-charges-put-create-and-amend-pension-charges",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14583,6 +15200,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-charges-delete-delete-pension-charges",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14595,7 +15213,25 @@
  {
   "query": [],
   "description": "This endpoint allows a customer to retrieve the information used to calculate a charge from High Income Child Benefit earners. A National Insurance number and tax year must be provided. ### Test data Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment. | Header Value (Gov-Test-Scenario) | Scenario | |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------| | N/A - DEFAULT | Simulates success response. | | NOT_FOUND | Simulates the scenario where no data is found. | | TAX_YEAR_NOT_SUPPORTED | Simulates the scenario where the tax year is not su",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "NOT_FOUND",
+    "desc": "Simulates the scenario where no data is found."
+   },
+   {
+    "value": "TAX_YEAR_NOT_SUPPORTED",
+    "desc": "Simulates the scenario where the tax year is not supported."
+   },
+   {
+    "value": "REQUEST_CANNOT_BE_FULFILLED",
+    "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful retrieve."
+   }
+  ],
+  "scenarioRequired": false,
   "id": "individuals-charges-get-retrieve-high-income-child-benefit-charge-submission",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14608,7 +15244,25 @@
  {
   "query": [],
   "description": "This endpoint provides the ability to create or update the relevant information used to calculate a charge from High Income Child Benefit earners. A National Insurance number and tax year must be provided. ### Test data Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment. | Header Value (Gov-Test-Scenario) | Scenario | |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------| | N/A - DEFAULT | Simulates success response. | | TAX_YEAR_NOT_SUPPORTED | Simulates the scenario where the tax year is not supported. | | OUTSIDE_AMENDMENT_WINDOW | Sim",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "TAX_YEAR_NOT_SUPPORTED",
+    "desc": "Simulates the scenario where the tax year is not supported."
+   },
+   {
+    "value": "OUTSIDE_AMENDMENT_WINDOW",
+    "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
+   },
+   {
+    "value": "REQUEST_CANNOT_BE_FULFILLED",
+    "desc": "Simulates the scenario where the request cannot be fulfilled for various reasons other than the ones triggering other errors."
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful create or update."
+   }
+  ],
+  "scenarioRequired": false,
   "id": "individuals-charges-put-create-or-amend-high-income-child-benefit-charge-submission",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14684,6 +15338,7 @@
     "desc": "Performs a stateful delete."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-charges-delete-delete-high-income-child-benefit-charge-submission",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14714,9 +15369,10 @@
    },
    {
     "value": "STATEFUL",
-    "desc": "Performs a stateful retrieve.  Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrc-held\u2019 will result in the expected HTTP 404 (matching resource not f"
+    "desc": "Performs a stateful retrieve. Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrc-held\u2019 will result in the expected HTTP 404 (matching resource not fo"
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-charges-get-retrieve-winter-fuel-payment",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14729,7 +15385,25 @@
  {
   "query": [],
   "description": "This endpoint allows a developer to submit or amend the Winter Fuel Payment amount for a tax year. A National Insurance number, tax year and the Winter Fuel Payment amount must be provided. The amount submitted must be either the minimum or maximum payment for that tax year, or zero if no payment was received. This endpoint can only be used for tax years from 2026\u201327 onwards. **This endpoint can only be used after the tax year has ended.** ### Test data Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment. | Header Value (Gov-Test-Scenario) | Scenario | |----------------------------------|------------------------------------------------------------",
-  "scenarios": [],
+  "scenarios": [
+   {
+    "value": "WFP_AMOUNT_ABOVE_MAXIMUM",
+    "desc": "Simulates the scenario where the submitted amount exceeds the maximum Winter Fuel Payment for the tax year."
+   },
+   {
+    "value": "WFP_AMOUNT_BELOW_MINIMUM",
+    "desc": "Simulates the scenario where the submitted amount is below the minimum Winter Fuel Payment for the tax year."
+   },
+   {
+    "value": "OUTSIDE_AMENDMENT_WINDOW",
+    "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful create or update. It uses fixed winter fuel payment amounts where 100 is the minimum and 300 is the maximum across all supported tax years for testing purposes."
+   }
+  ],
+  "scenarioRequired": false,
   "id": "individuals-charges-put-create-or-amend-winter-fuel-payment",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14781,6 +15455,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-charges-delete-delete-winter-fuel-payment",
   "apiKey": "individuals-charges-api",
   "api": "Individuals Charges",
@@ -14811,9 +15486,14 @@
    },
    {
     "value": "DYNAMIC",
-    "desc": "The following response values will change to correspond to the values submitted in the request:  &bull; source  &bull; submittedOn  &bull; dateIgnored"
+    "desc": "The following response values will change to correspond to the values submitted in the request: &bull; source &bull; submittedOn &bull; dateIgnored"
+   },
+   {
+    "value": "STATEFUL",
+    "desc": "Performs a stateful retrieve. Information and data held by HMRC is not available in the sandbox environment. Providing \u2018source=hmrcHeld\u2019 will result in the expected HTTP 404 (matching resource not fou"
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-get-retrieve-employment-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",
@@ -14844,6 +15524,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-put-create-and-amend-employment-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",
@@ -14966,6 +15647,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-delete-delete-employment-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",
@@ -14988,6 +15670,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-post-ignore-employment-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",
@@ -15010,6 +15693,7 @@
     "desc": "Performs a stateful retrieve."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-get-retrieve-other-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",
@@ -15032,6 +15716,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-put-create-and-amend-other-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",
@@ -15125,6 +15810,7 @@
     "desc": "Simulates the scenario where request cannot be completed as it is outside the amendment window."
    }
   ],
+  "scenarioRequired": false,
   "id": "individuals-expenses-delete-delete-other-expenses",
   "apiKey": "individuals-expenses-api",
   "api": "Individuals Expenses",

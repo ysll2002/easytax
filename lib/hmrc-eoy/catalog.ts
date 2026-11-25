@@ -47,6 +47,8 @@ export type Endpoint = {
   summary: string;
   description: string;
   scenarios: { value: string; desc: string }[];
+  /** The sandbox has no default response: a Gov-Test-Scenario must be sent. */
+  scenarioRequired?: boolean;
   query: { name: string; required: boolean; enum: string[] | null; description: string }[];
   bodies: EndpointBody[];
 };
@@ -144,7 +146,7 @@ export const SECTIONS: Section[] = [
     intro: 'The year\'s totals HMRC holds for one business.',
     match: e => e.apiKey === 'self-assessment-biss-api' },
   { key: 'losses', title: 'Losses and claims',
-    intro: 'Losses brought forward from earlier years and how this year\'s losses are used: carried back, sideways or forward.',
+    intro: 'Losses brought forward from earlier years and how this year\'s losses are used: carried back, sideways or forward. HMRC takes these for 2026-27 onwards, once the tax year has ended.',
     match: e => e.apiKey === 'individual-losses-api' },
   { key: 'employment', title: 'Employment income',
     intro: 'Employments HMRC knows about from PAYE, employments you add, their pay and tax, non-PAYE income and other employment income.',
@@ -162,7 +164,7 @@ export const SECTIONS: Section[] = [
     intro: 'Pension charges, the High Income Child Benefit Charge and the Winter Fuel Payment charge.',
     match: e => e.apiKey === 'individuals-charges-api' },
   { key: 'liability', title: 'Tax liability adjustments',
-    intro: 'Adjustments to the year\'s tax liability, for example from carrying back this year\'s losses. Submit carry-back losses before the final declaration.',
+    intro: 'Adjustments to the year\'s tax liability, for example from carrying back this year\'s losses. Submit carry-back losses before the final declaration. HMRC takes these for 2026-27 onwards, once the tax year has ended.',
     match: e => e.apiKey === 'individuals-tax-liability-adjustments-api' },
   { key: 'calculations', title: 'Tax calculations',
     intro: 'List, trigger and retrieve tax calculations. The final declaration and amendments are made from the guided steps.',
@@ -173,6 +175,11 @@ export const SECTIONS: Section[] = [
 export function sectionOf(e: Endpoint): Section | undefined {
   return SECTIONS.find(s => s.match(e));
 }
+
+// Individual Losses 7.0 and Individuals Tax Liability Adjustments 1.0 accept
+// tax years from 2026-27 only (HMRC answers RULE_TAX_YEAR_NOT_SUPPORTED for
+// earlier years), and only once the tax year has ended.
+export const LOSSES_FROM_TAX_YEAR = '2026-27';
 
 // The two calculation types that file something with HMRC. They are only
 // sent from the guided declaration, after the declaration has been agreed.

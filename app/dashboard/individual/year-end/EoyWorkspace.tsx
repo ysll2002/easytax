@@ -50,6 +50,32 @@ const ID_PARAMS: Record<string, string[]> = {
 };
 const ID_KEYS = new Set(Object.values(ID_PARAMS).flat());
 
+
+/**
+ * The request body variant for a tax year, from HMRC's variant titles:
+ * "For TY 2025-26", "For TY 2026-27 and after", "TY 2023-24 onwards",
+ * "For TY 2020-21 to TY 2023-24", "For Before TY 2020-21",
+ * "For TY 2023-24 and before". Falls back to the latest variant.
+ */
+export function variantFor(titles: string[], taxYear: string): number {
+  const y = Number(taxYear.slice(0, 4));
+  const yr = (t: string) => [...t.matchAll(/(\d{4})-\d{2}/g)].map(m => Number(m[1]));
+  const matches = (t: string) => {
+    const ys = yr(t);
+    if (ys.length === 0 || !y) return false;
+    if (/and before/i.test(t)) return y <= ys[0];
+    if (/\bbefore\b/i.test(t)) return y < ys[0];
+    if (/onwards|and after/i.test(t)) return y >= ys[0];
+    if (ys.length >= 2) return y >= ys[0] && y <= ys[1];
+    return y === ys[0];
+  };
+  const i = titles.findIndex(matches);
+  if (i >= 0) return i;
+  // A year outside every variant: the latest one if it is later, else the first.
+  const latest = Math.max(0, ...titles.flatMap(yr));
+  return y > latest ? titles.length - 1 : 0;
+}
+
 function harvest(body: unknown, found: Record<string, Set<string>>) {
   const walk = (v: unknown, parentKey = '') => {
     if (Array.isArray(v)) { v.forEach(x => walk(x, parentKey)); return; }
@@ -180,12 +206,12 @@ function EndpointCard({ e, taxYear, qs, sandbox, ids, businesses, lastGet, onRes
   const params = useMemo(() => [...e.path.matchAll(/\{([A-Za-z]+)\}/g)].map(m => m[1]).filter(p => p !== 'nino'), [e.path]);
   const [values, setValues] = useState<Record<string, string>>({});
   const [query, setQuery] = useState<Record<string, string>>({});
-  const [scenario, setScenario] = useState('');
-  const [variant, setVariant] = useState(() => {
-    // The variant for the chosen tax year where HMRC titles them that way.
-    const i = e.bodies.findIndex(b => /onwards|and after/i.test(b.title));
-    return i >= 0 ? i : 0;
-  });
+  // A few sandbox endpoints have no default response: HMRC refuses the call
+  // unless one of their test scenarios is sent, so the first one is chosen.
+  const [scenario, setScenario] = useState(() => (sandbox && e.scenarioRequired && e.scenarios[0]?.value) || '');
+  const [variant, setVariant] = useState(() => variantFor(e.bodies.map(b => b.title), taxYear));
+  // HMRC's body differs by tax year; follow the year chosen at the top.
+  useEffect(() => { setVariant(variantFor(e.bodies.map(b => b.title), taxYear)); }, [taxYear, e.bodies]);
   const [body, setBody] = useState<unknown>(undefined);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<CallResult | null>(null);
@@ -278,7 +304,7 @@ function EndpointCard({ e, taxYear, qs, sandbox, ids, businesses, lastGet, onRes
                 <label>
                   <span style={lbl}>Sandbox test scenario</span>
                   <select value={scenario} onChange={ev => setScenario(ev.target.value)} style={input}>
-                    <option value="">Default (success)</option>
+                    {!e.scenarioRequired && <option value="">Default (success)</option>}
                     {scenarios.map(s => <option key={s.value} value={s.value} title={s.desc}>{s.value}</option>)}
                   </select>
                 </label>

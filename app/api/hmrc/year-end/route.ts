@@ -1,3 +1,4 @@
+import { LOSSES_FROM_TAX_YEAR } from '@/lib/hmrc-eoy/catalog';
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { IS_HMRC_PRODUCTION } from '@/lib/hmrc-env';
@@ -137,7 +138,11 @@ export async function POST(req: NextRequest) {
         const [obligations, biss, losses] = await Promise.all([
           settle(() => getFinalDeclarationObligations(nino, taxYear, token)),
           settle(() => getSelfEmploymentBiss(nino, taxYear, bid, token)),
-          settle(() => getLossesAndClaims(nino, bid, taxYear, token)),
+          // Losses 7.0 starts at 2026-27: for earlier years there is nothing
+          // to ask HMRC, and the page says so instead of showing HMRC's 400.
+          taxYear >= LOSSES_FROM_TAX_YEAR
+            ? settle(() => getLossesAndClaims(nino, bid, taxYear, token))
+            : Promise.resolve({ notCovered: true as const }),
         ]);
         return NextResponse.json({ businessId: bid, who: ctx.label, isAgent: ctx.clientId !== null, obligations, biss, losses });
       }
