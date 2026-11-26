@@ -15,6 +15,15 @@
 
 ---
 
+## 2026-11-26（owner 会话，12 月第一批推广工作）
+**已做**：
+- **HMRC 查找器**：发现 11-24 owner 跟 Kelly Woods 说要改名 MTD Buddy、改 production 应用名，Kelly 在等确认，但改名已经撤回。已起草回 Kelly 的邮件（草稿 r7915699038709906066）：不改名；链接加 `?utm_source=gov-finder`；已支持代理（11-21 上线）；确认 VAT compatible 过滤。**待 owner 发**。
+- **[PR #82](https://github.com/ysll2002/easytax/pull/82)**（staging）：daily-metrics 加 `filing_window`（本申报窗口内不同报税人数，ITSA 按个人/代理客户，VAT 按 VRN）。staging 实测 4 人，和 SQL 一致。
+- **[PR #83](https://github.com/ysll2002/easytax/pull/83)**（staging）：已有的 reactivation 活动改文案（报税已开通、免费、3 步 + 登录按钮、回信求助），名单排除测试域名和 14 天内的新注册。**不会自动发**；发要 owner 用 confirm token POST。
+- **代理所名单**：Companies House 抓了 2,265 家活跃 Ltd（`outreach/uk-accountancy-firms-companies-house-2026-11-26.csv`，还没有邮箱和网站，需要逐家补）。模板和规则在 `outreach/firm-outreach-template.md`。10 月那 14 家有核实邮箱，从来没发过：给其中 10 家建了 Gmail 草稿；3 家做房产的、1 家法律形式不明（PECR）先不发。
+**发现**：app 没有波兰语和罗马尼亚语界面，已写进计划前置条件第 8 条。ULJ714 补发 checklist 的草稿还没发。
+**待 owner**：发 Kelly 回信；发 10 封事务所邮件；发 ULJ714 草稿；PR #82/#83 上 production 要 owner 说。
+
 ## 2026-11-26（owner 会话，推广计划拍板）
 owner 批准 stg-016（`GROWTH_PLAN_10K_FILERS.md`）：① 目标按每个申报季 ≥1 万个不同的人；② 先批 £5k，只用于 12–2 月测试，2 月窗口后再定全年预算；③ 个人永久免费，代理所前 5 个客户免费、之后每客户每月 £2–3；④ owner 每周 ≥10 小时做代理销售 + 中文社区；⑤ 先请波兰语、罗马尼亚语兼职。stg-015 被 stg-016 取代。
 **12 月第一批事（agent 可做）**：查找器链接加 utm + 勾 VAT compatible（起草给 HMRC 的邮件）；代理所名单 1,500 家 + 第一批外联邮件；激活 23 个已连 HMRC 的用户；daily-metrics 加「本窗口申报人数」。
