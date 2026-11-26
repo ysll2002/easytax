@@ -5,6 +5,7 @@ import { deploymentInfo } from '@/lib/deployment';
 import { readQueue } from '@/lib/review-queue';
 import { existingArticleRun } from '@/lib/editorial-run';
 import { coverage } from '@/lib/search-queries';
+import { filingWindowMetrics } from '@/lib/filing-window';
 
 // Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
@@ -1053,6 +1054,9 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
     if (filerErr) throw new Error(`sa_filings user_ids: ${filerErr.message}`);
     const uniqueFilers = new Set((filerRows ?? []).map(r => r.user_id)).size;
 
+    // North star of the growth plan (stg-016): distinct filers this window.
+    const filingWindow = await filingWindowMetrics(now).catch(() => null);
+
     // Behavioural funnel. All of these degrade to empty/null when the
     // 20260903 migration has not been applied, so the endpoint never 500s
     // just because instrumentation is not live yet.
@@ -1129,6 +1133,7 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
         last_30d_final:     filings30dFinal,
         unique_filers:      uniqueFilers,
       },
+      filing_window: filingWindow,
       // Behavioural funnel from analytics_events. `instrumented: false` means
       // the migration has not been run — treat every field below as unknown
       // rather than as zero.
