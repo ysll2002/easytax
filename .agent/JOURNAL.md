@@ -18,7 +18,7 @@
 ## 2026-11-26（owner 会话，流量来源复盘）
 **已做**：GA4 + 自有埋点对比 finder 收录（11-20）前后。去爬虫后英国访问 27 → 36，增长在 Direct；确认 GOV.UK 详情页链接是 `rel="noopener noreferrer"`，所以 finder 流量显示为 Direct。
 **学到**：收录后 6 个注册里 3 个是 owner 找人注册的（owner 11-26 说明），真实自然注册 3 个，都在 11-24、都连了 HMRC、都没申报。排除名单记在本地 memory，不进镜像。
-**真实用户 1（garage door 小生意）漏斗**：11-24 注册 → 连 HMRC（前 4 次 obligations 403，重连后 200）→ CSV 导入 104 条（4–11 月）→ 算税失败（trigger 202，retrieve 404×8，页面 ~20s 放弃）→ 季度页进了 4 次没点提交 → 再没回来。若当时提交也会被旧 period 端点拒（#76 于 11-25 才上 production）。已起草个人跟进邮件（Gmail 草稿 r-2661747255435976911），**待 owner 发**。
+**真实用户 1（garage door 小生意）漏斗**：11-24 注册 → 连 HMRC（前 4 次 obligations 403，重连后 200）→ CSV 导入 104 条（4–11 月）→ 算税失败（trigger 202，retrieve 404×8，页面 ~20s 放弃）→ 季度页进了 4 次没点提交 → 再没回来。若当时提交也会被旧 period 端点拒（#76 于 11-25 才上 production）。已起草个人跟进邮件（Gmail 草稿 r-2661747255435976911，owner 要约视频通话一起报：建议 11-30 18:00 / 12-1 08:00 / 12-2 18:00，时间待 owner 确认），**待 owner 发**。通话前要确认：他是 sole trader 还是 Ltd（Ltd 不适用 MTD ITSA）；11-06 一笔 £10,000「Bob Wages」被记成费用（若是 sole trader 本人提款应为 drawings，不能抵扣，属 Q3）。
 **待查**：in-year 计算 retrieve 404 时页面直接放弃（等待时间是否太短）；季度页没记录 query，看不出打开的是哪个季度。
 **待办**：另外 2 个真实用户的跟进（激活邮件对 <14 天账号不发）；finder 链接加 utm 仍等 Kelly 回信。
 
