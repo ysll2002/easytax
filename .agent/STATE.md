@@ -4,8 +4,14 @@
 
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
+## 2026-11-26 流量与注册（GOV.UK finder 11-20 收录后）
+- 英国真实访问（去爬虫、去 HMRC 回跳）：收录前一周 27 → 收录后一周 36；有效访问 15 → 25；搜索 17 → 19 基本没变，增长在 Direct（finder 链接 rel=noreferrer，点进来显示为 Direct）。
+- **真实自然注册：3 个**（全在 11-24，无来源、落地 /，都连了 HMRC，0 申报）。另有 3 个是 owner 找人注册的，统计必须排除（名单只在本地 memory `easytax-owner-invited-test-signups`，不进 git）。11-21 两个 agent 号是 owner 自测。
+- PR #83 的激活邮件跳过 <14 天新号，这 3 个真实用户目前没人跟进。
+
 ## 2026-11-25 最新
-- **Production = main = staging = `e240b82`**（2026-11-25 14:50 UTC 上线，owner 授权；PR #74–#78 经 #79 发布）。production 库已先跑 20261124_property_records、20261125_sa_filings_unique_per_source。冒烟通过（首页/登录/注册/session 200，dashboard 跳登录，无错误日志）。年终和 SA Accounts 在 production 被 HMRC_PRODUCTION_EOY_APIS（未设）挡住。季度申报 2026-27 已改 cumulative。
+- **Production = main = staging = `2d7486e`**（2026-11-25 21:4x UTC 上线，owner 授权；PR #80 经 #81 发布：注册拒绝原因入库 register_failed、Google 注册计入 register_completed + GA beacon；无迁移；冒烟通过）。
+- 上一版 production：`e240b82`（2026-11-25 14:50 UTC 上线，owner 授权；PR #74–#78 经 #79 发布）。production 库已先跑 20261124_property_records、20261125_sa_filings_unique_per_source。冒烟通过（首页/登录/注册/session 200，dashboard 跳登录，无错误日志）。年终和 SA Accounts 在 production 被 HMRC_PRODUCTION_EOY_APIS（未设）挡住。季度申报 2026-27 已改 cumulative。
 - sandbox 全量测试 2026-11-25 完成（hmrc/2026-11-eoy-subscriptions/SANDBOX-RUN-2026-11-25.md）：108 个年终端点 105 成功、3 个要等 2027-04-06；agent 声明未测。
 - Vercel 项目已改回 `easytax`（prj_hXqav…）；空项目 `easytax-stray-empty` 已于 2026-11-25 删除（owner 同意）。
 

@@ -15,6 +15,42 @@
 
 ---
 
+## 2026-11-26（owner 会话，流量来源复盘）
+**已做**：GA4 + 自有埋点对比 finder 收录（11-20）前后。去爬虫后英国访问 27 → 36，增长在 Direct；确认 GOV.UK 详情页链接是 `rel="noopener noreferrer"`，所以 finder 流量显示为 Direct。
+**学到**：收录后 6 个注册里 3 个是 owner 找人注册的（owner 11-26 说明），真实自然注册 3 个，都在 11-24、都连了 HMRC、都没申报。排除名单记在本地 memory，不进镜像。
+**待办**：给 3 个真实用户的跟进（激活邮件对 <14 天账号不发）；finder 链接加 utm 仍等 Kelly 回信。
+
+## 2026-11-26（owner 会话，12 月第一批推广工作）
+**已做**：
+- **HMRC 查找器**：发现 11-24 owner 跟 Kelly Woods 说要改名 MTD Buddy、改 production 应用名，Kelly 在等确认，但改名已经撤回。已起草回 Kelly 的邮件（草稿 r7915699038709906066）：不改名；链接加 `?utm_source=gov-finder`；已支持代理（11-21 上线）；确认 VAT compatible 过滤。**待 owner 发**。
+- **[PR #82](https://github.com/ysll2002/easytax/pull/82)**（staging）：daily-metrics 加 `filing_window`（本申报窗口内不同报税人数，ITSA 按个人/代理客户，VAT 按 VRN）。staging 实测 4 人，和 SQL 一致。
+- **[PR #83](https://github.com/ysll2002/easytax/pull/83)**（staging）：已有的 reactivation 活动改文案（报税已开通、免费、3 步 + 登录按钮、回信求助），名单排除测试域名和 14 天内的新注册。**不会自动发**；发要 owner 用 confirm token POST。
+- **代理所名单**：Companies House 抓了 2,265 家活跃 Ltd（`outreach/uk-accountancy-firms-companies-house-2026-11-26.csv`，还没有邮箱和网站，需要逐家补）。模板和规则在 `outreach/firm-outreach-template.md`。10 月那 14 家有核实邮箱，从来没发过：给其中 10 家建了 Gmail 草稿；3 家做房产的、1 家法律形式不明（PECR）先不发。
+**发现**：app 没有波兰语和罗马尼亚语界面，已写进计划前置条件第 8 条。ULJ714 补发 checklist 的草稿还没发。
+**待 owner**：发 Kelly 回信；发 10 封事务所邮件；发 ULJ714 草稿；PR #82/#83 上 production 要 owner 说。
+
+## 2026-11-26（owner 会话，推广计划拍板）
+owner 批准 stg-016（`GROWTH_PLAN_10K_FILERS.md`）：① 目标按每个申报季 ≥1 万个不同的人；② 先批 £5k，只用于 12–2 月测试，2 月窗口后再定全年预算；③ 个人永久免费，代理所前 5 个客户免费、之后每客户每月 £2–3；④ owner 每周 ≥10 小时做代理销售 + 中文社区；⑤ 先请波兰语、罗马尼亚语兼职。stg-015 被 stg-016 取代。
+**12 月第一批事（agent 可做）**：查找器链接加 utm + 勾 VAT compatible（起草给 HMRC 的邮件）；代理所名单 1,500 家 + 第一批外联邮件；激活 23 个已连 HMRC 的用户；daily-metrics 加「本窗口申报人数」。
+
+## 2026-11-25（owner 会话，一年推广计划：每月 1 万人报税）
+**已做**：写了 `agent/GROWTH_PLAN_10K_FILERS.md`（stg-016，proposed）。目标按「每个申报季 ≥1 万个不同的人」，在 2027-11 窗口达成：5,000 代理客户 + 5,000 个人。日历上每个月都 1 万，要约 2.5–3 万活跃客户，放到 2028。
+**事实核对**：生产 58 注册 / 23 连 HMRC / **0 次真实申报** / 1 人有记录。GOV.UK 软件查找器已上架：185 个产品，44 个免费，我们的条目是「Free / Sole trader / 只有 Quarterly updates」。28 个免费竞品支持年终申报，23 个同时支持自雇+房产+年终（FreeAgent/NatWest、Sage Free、Monzo、Coconut、Pandle、ANNA…）。11-24 的 5 个注册很可能来自查找器（11-20 上架），未证实。
+**下一步（等 owner 拍板）**：查找器链接加 `utm_source=gov-finder` + 勾 VAT compatible；跟进年终申报和房产审批；2 月 7 日窗口拿到首批真实申报。
+
+## 2026-11-25（owner 会话，注册跟踪修复 PR #80）
+**已做**：[PR #80](https://github.com/ysll2002/easytax/pull/80) 合进 staging（5222ca5），owner 授权后经 [PR #81](https://github.com/ysll2002/easytax/pull/81) 上线 production（2d7486e，冒烟通过；生产上 pwd_too_short 测试事件入库正确，已删掉那条测试行）。/api/register 每次拒绝都写 analytics_events `register_failed`（props.code：email_exists / pwd_too_short / missing_fields / Postgres code / server_error / bad_request，不存邮箱）；异常和坏 JSON 不再是裸 500。Google 登录新建账号现在记 `register_completed`（method google），插入失败记 `register_failed`；dashboard 上的 SignupBeacon 通过 10 分钟 cookie 给 GA 补发 register_success。daily-metrics last_7d 加 register_failed。
+**验证**：staging 上 3 种拒绝都已入库，code 正确；beacon 读取并清除了 cookie。GA 在 staging 不加载，GA 事件要上 production 后才能确认。Google 新账号路径没有实测（需要一个真的新 Google 账号）。
+**待 owner**：GA 后台：① 把 register_success 标成 key event；② 把 reason 注册为事件级自定义维度；③ 时区改 Europe/London。
+**注意**：profiles.email 唯一索引区分大小写，注册和登录都按原样匹配；生产有 2 个邮箱含大写。还没改，只记一下。
+
+## 2026-11-25（owner 会话，GA4 两周分析 11-11→11-24）
+**数据源**：GA4 走 Windsor.ai（property EasyTax-ab480）；生产 Supabase profiles / analytics_events 交叉核对。
+**指标**：GA 151 sessions / 110 users。真实英国流量约 40 人（UK desktop 31 + mobile 12）；11-21~23 的峰值是 20+ 国家 direct、零互动，判断为爬虫。Organic：google 15 人 / 28 sessions，平均 4.5 分钟，质量最好；落地页多为首页 + SA302 文章。~25 篇 tax-tips 和 competitor-alternative 页各 1–2 sessions、多数 <10 秒，没起作用，且有同题重复（trading allowance ×4、"MTD 还要报 SA 吗" ×3）。
+**注册**：生产新 profile 7 个，其中 11-21 两个 agent 是 owner 测试；**11-24 一天 5 个真实个人注册，4 个已连 HMRC**，其中 1 个已录 105 条记录，0 申报。来源都是 direct/无 referrer，原因未知（待查 GOV.UK 软件列表等）。
+**问题**：11-24 20:06–20:23 UTC 一个 Google 搜索来的英国访客邮箱注册失败 5 次（/api/register 返回非 2xx，原因无法查：Vercel 日志已过保留期，失败原因只发到 GA 的事件参数里且未注册为自定义维度）。可能 21:46 改用 Google 登录成功（ace***），未证实。
+**跟踪缺口**：GA 无 key event（conversions=0）；Google OAuth 注册不触发 register_success；GA 时区是 UTC+1 不是 Europe/London；register_failed 原因未落库。
+
 ## 2026-11-25（owner 会话，HMRC 回信已发）
 WFG726 完整回复（checklist 已勾声明 + 5 张截图）owner 已发出。ULJ714 补发 checklist 的短邮件截至记录时仍是草稿，提醒 owner 发。之后等 HMRC 审核；30 天日志窗口约到 2026-12-24，12 月中旬未批准就重跑 sandbox 测试。
 
