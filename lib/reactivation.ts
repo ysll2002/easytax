@@ -115,8 +115,16 @@ export async function planCampaign(): Promise<{
   const optedOut = { connected_never_filed: 0, never_connected: 0 };
   const candidates: Recipient[] = [];
 
+  // Test and throwaway addresses never get campaign mail, and nor does anyone
+  // who signed up in the last fortnight: they are still onboarding, and an
+  // email that opens with "you never came back" is wrong for them.
+  const TEST_DOMAINS = /@(.+\.)?(easytax\.test|example\.(com|org|net)|mail-tester\.com|yopmail\.com|mailinator\.com)$/i;
+  const recentCutoff = Date.now() - 14 * 24 * 60 * 60 * 1000;
+
   for (const p of profiles) {
     if (!p.email || !p.email.includes('@')) continue;
+    if (TEST_DOMAINS.test(p.email.trim())) continue;
+    if (new Date(p.created_at).getTime() > recentCutoff) continue;
     // Someone who has filed does not need reactivating; they need the product
     // to keep working. Both segments exclude them.
     if (filed.has(p.id)) continue;
@@ -227,14 +235,17 @@ export function renderEmail(recipient: Recipient, base = 'https://easytax.vip'):
   const body =
     recipient.segment === 'connected_never_filed'
       ? `<p style="margin:0 0 16px">${greeting}</p>
-         <p style="margin:0 0 16px">You connected your HMRC account to EasyTax and then we went quiet. That was our mistake, and this is the one thing worth telling you.</p>
+         <p style="margin:0 0 16px">You connected your HMRC account to EasyTax a while ago. Since then HMRC has approved EasyTax for live filing (11 November 2026), so you can now send your quarterly updates to HMRC from EasyTax, free.</p>
          <p style="margin:0 0 16px">${deadline}</p>
-         <p style="margin:0 0 16px">The thing you were waiting for has happened: HMRC approved our production access on 11 November 2026, so you can now file through EasyTax. You do need to be signed up for Making Tax Digital for Income Tax with HMRC yourself — that is a separate step on GOV.UK, and without it HMRC will not release your obligations to any software. These also still work, free and without an account:</p>
-         <ul style="margin:0 0 16px;padding-left:20px">
-           <li style="margin:0 0 8px">Your own deadline dates, as a calendar you can subscribe to: <a href="${base}/timetable">${base}/timetable</a></li>
-           <li style="margin:0 0 8px">A check of which quarters apply to you: <a href="${base}/mtd-deadline-checker">${base}/mtd-deadline-checker</a></li>
-         </ul>
-         <p style="margin:0 0 16px">That is the one email we said we would send. Nothing else.</p>`
+         <p style="margin:0 0 8px"><strong>Filing takes three steps:</strong></p>
+         <ol style="margin:0 0 16px;padding-left:20px">
+           <li style="margin:0 0 8px">Sign in and add your income and expenses for the quarter, by hand or by uploading a CSV from your bank or spreadsheet.</li>
+           <li style="margin:0 0 8px">Check the totals on the review screen.</li>
+           <li style="margin:0 0 8px">Send them to HMRC. You get HMRC's confirmation straight away.</li>
+         </ol>
+         <p style="margin:0 0 20px"><a href="${base}/login" style="display:inline-block;background:#E8895A;color:#1C1208;font-weight:700;text-decoration:none;padding:12px 20px;border-radius:10px">Sign in to EasyTax</a></p>
+         <p style="margin:0 0 16px">You need to be signed up for Making Tax Digital for Income Tax with HMRC; without it HMRC will not show your quarters to any software. If you missed an earlier quarter this tax year, you can still send it.</p>
+         <p style="margin:0 0 16px">Stuck on anything? Just reply to this email and we will help.</p>`
       : `<p style="margin:0 0 16px">${greeting}</p>
          <p style="margin:0 0 16px">You created an EasyTax account and never came back. Fair enough. Here is the part that may have changed since.</p>
          <p style="margin:0 0 16px">Making Tax Digital for Income Tax started on 6 April 2026. If your 2024/25 return showed qualifying income over £50,000, you are in it — and since September 2026 HMRC has been signing people up automatically whether or not they asked. ${deadline}</p>
