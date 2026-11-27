@@ -4,12 +4,17 @@
 
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
-## 2026-11-27 改名 MTD Buddy（进行中）
-- owner 批准改名为 MTD Buddy / mtdbuddy.com（Kelly 已同意）。[PR #84](https://github.com/ysll2002/easytax/pull/84) 已合进 **staging `573d293`**，冒烟检查通过；**production（main）还是 EasyTax**。
-- Vercel 项目 `easytax` 已加 mtdbuddy.com、www.mtdbuddy.com（DNS 还没配）；`MAIL_FROM_DOMAIN=easytax.vip`（prod + staging）。
-- 11-27：阿里云 DNS 已配好（Vercel A/CNAME，mtdbuddy.com 的 HTTPS 已生效但内容仍是旧版）；企业邮箱用 **Zoho Mail EU**（lin@ 管理员，hello@/privacy@/support@ 都是别名），MX/SPF/DKIM 已通过 Zoho 验证。
-- 等 owner 做完 `agent/REBRAND_MTDBUDDY_CHECKLIST.md` 第 2、4、5 步（阿里云 DNS、Resend、ImprovMX、HMRC redirect URI、Google OAuth），再按第 6 步发布。
-- 给 Kelly 的草稿已改写成「改名已完成」，上线后再发。
+## 2026-11-27 改名 MTD Buddy ✅ 已上线
+- **Production = main = staging = `70c4c05`**（2026-11-27 owner 说「发布」；PR #85 = #82 filing-window 指标、#83 激活邮件修正、#84 改名 MTD Buddy；无迁移）。
+- 网站是 **https://mtdbuddy.com**。easytax.vip 和 www.* 都 308 跳转到这里（保留路径和参数）。staging 仍是 staging.easytax.vip。
+- production 环境变量：`NEXTAUTH_URL=https://mtdbuddy.com`，`HMRC_REDIRECT_URI=https://mtdbuddy.com/api/auth/callback/hmrc`，`REDIRECT_OLD_DOMAIN=1`；`RESEND_API_KEY` 换成新 Resend 账号（lilin.gabriel+mtdbuddy@gmail.com，mtdbuddy.com 已验证）的 key。preview 还剩一个无害的 `MAIL_FROM_DOMAIN=easytax.vip`，因为删除 API 要交互确认。
+- 邮件：收信用 Zoho Mail EU（lin@mtdbuddy.com，别名 hello@、privacy@、support@），发信用 Resend。DNS 在阿里云。
+- 冒烟测试通过：7 个页面都没有 EasyTax 字样；Google 登录端到端能进 dashboard；HMRC authorize 接受了新 redirect URI（没有点继续）；重置密码邮件 Delivered。生产库 22 篇 tax_articles 已改名。
+- **待 owner**：
+  - Developer Hub 里 production 应用名还是「EasyTax VIP」（HMRC 授权页会显示），要改成 MTD Buddy；
+  - 发 Kelly 草稿 r7915699038709906066（改名已完成 + finder 链接加 utm + 勾 VAT）；
+  - Search Console 做 Change of address；GA4 数据流网址改成新域名；
+  - 注册 mtdbuddy.co.uk；查 UKIPO 商标。
 
 ## 2026-11-26 流量与注册（GOV.UK finder 11-20 收录后）
 - 英国真实访问（去爬虫、去 HMRC 回跳）：收录前一周 27 → 收录后一周 36；有效访问 15 → 25；搜索 17 → 19 基本没变，增长在 Direct（finder 链接 rel=noreferrer，点进来显示为 Direct）。

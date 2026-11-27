@@ -15,6 +15,18 @@
 
 ---
 
+## 2026-11-27（续，owner 会话：MTD Buddy 上线）
+**已做**：
+- 阿里云 DNS：Vercel A/CNAME、Zoho MX/SPF/DKIM/验证、Resend DKIM 和 2 条 CNAME、DMARC。mtdbuddy.com 的 HTTPS 证书手动签发。
+- Zoho：域名验证，lin@ 为管理员，hello@/privacy@/support@ 设为别名。
+- Resend 新账号：mtdbuddy.com 已 Verified；key 由 owner 自己填进 Vercel（Claude 不经手密钥）。
+- Google OAuth「EasyTax web」客户端加了 mtdbuddy.com 回调；HMRC production 回调由 owner 添加。
+- production 环境变量切换，PR #85 发布到 `70c4c05`，冒烟测试全部通过，22 篇文章已改名。
+**学到**：
+- `vercel env rm/add` 在这个项目上经常报 branch_not_found，用 `vercel api` PATCH env id 才可靠；DELETE 需要交互确认。
+- 阿里云解析的优先级下拉框用自动化点不动，MX 优先级保持 1。
+**待 owner**：Developer Hub 应用改名；发 Kelly 草稿；Search Console / GA4；注册 .co.uk。
+
 ## 2026-11-27（owner 会话，改名 MTD Buddy）
 **决定**：owner 确认 mtdbuddy.com 是自己的（阿里云，11-24 注册），Kelly 已同意改名 → 全部改成 MTD Buddy / mtdbuddy.com。推翻 11-25 的否决（BACKLOG 和 memory 已更新）。
 **已做**：PR #84（139 个文件：品牌名、域名、7 种语言、邮件；`lib/brand.ts` 的 MAIL_FROM；FPH 头 `MTD%20Buddy`；`REDIRECT_OLD_DOMAIN=1` 时 easytax.vip 308 跳转到新域名）。tsc 和 build 通过，合进 staging `573d293`，冒烟 4 个页面都没有残留 EasyTax。Vercel 加了新域名，设了 MAIL_FROM_DOMAIN。Kelly 草稿改写成「改名已完成」。
