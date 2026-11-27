@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Make the final declaration or confirm an amendment from the guided steps, after agreeing to the declaration.', code: 'USE_DECLARATION' }, { status: 400 });
   }
   if (!productionAllows(e, params.calculationType)) {
-    return NextResponse.json({ error: 'MTD Buddy is not approved by HMRC for this yet.', code: 'NOT_APPROVED' }, { status: 403 });
+    return NextResponse.json({ error: 'HMRC has not yet granted MTD Buddy access to this.', code: 'NOT_APPROVED' }, { status: 403 });
   }
 
   const built = buildPath(e, params);

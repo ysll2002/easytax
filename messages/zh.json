@@ -36,10 +36,12 @@
       "subtitleEmph": "无订阅费，也无单次申报费 —— MTD Buddy 免费使用。",
       "badgeFree": "免费使用",
       "badgeNoCard": "注册无需信用卡",
-      "badgeHmrc": "HMRC 认可的软件",
+      "badgeHmrc": "HMRC 认可",
       "ctaPrimary": "开始 MTD 申报 →",
       "ctaChecker": "查询我的 MTD 截止日期 →",
-      "ctaSecondary": "查看支持范围 →"
+      "ctaSecondary": "查看支持范围 →",
+      "badgeHmrcSub": "已列入 GOV.UK · 所得税 Making Tax Digital",
+      "badgeHmrcNewTab": "GOV.UK，在新标签页打开"
     },
     "trust": {
       "hmrc": "HMRC MTD 接口",
@@ -392,7 +394,7 @@
     "terms": "条款",
     "vs": "MTD Buddy 对比 {name}",
     "tagline": "Finance Panda Limited. 伦敦出品。",
-    "disclaimer": "MTD Buddy 是 Finance Panda Limited 的产品。免费工具仅提供 HMRC 公开规则的一般信息，不构成税务建议。HMRC 已于 2026 年 11 月 11 日批准我们的生产环境接入，覆盖 MTD ITSA 季度更新和 VAT。",
+    "disclaimer": "MTD Buddy 是 Finance Panda Limited 的产品。免费工具仅提供 HMRC 公开规则的一般信息，不构成税务建议。HMRC 已于 2026 年 11 月 11 日授予我们生产环境接入权限，覆盖 MTD ITSA 季度更新和 VAT。",
     "notifyHeading": "第一时间开始申报",
     "notifyBlurb": "MTD 申报开放当天我们会发邮件通知你——不发其他内容，一键退订。",
     "accessibility": "无障碍声明",

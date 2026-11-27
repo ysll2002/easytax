@@ -12,7 +12,7 @@ import { hasSupabaseEnv } from '@/app/tax-tips/_lib/articles';
 import { selectPublished } from '@/app/tax-tips/_lib/review';
 import { answeredQuestions } from '@/lib/answered-questions';
 import { getTranslations } from 'next-intl/server';
-import { HMRC_LISTING_URL } from '@/lib/brand';
+import HmrcRecognisedBadge from '@/components/HmrcRecognisedBadge';
 import { nextQuarterDeadline, daysUntil } from '@/lib/mtd-dates';
 import SiteFooter from '@/components/SiteFooter';
 import CalendarSubscribe from '@/components/CalendarSubscribe';
@@ -157,6 +157,14 @@ export default async function Home() {
                   {t('hero.subtitle')} <strong style={{ color: '#1C1208' }}>{t('hero.subtitleEmph')}</strong>
                 </p>
 
+                <div className="mb-5">
+                  <HmrcRecognisedBadge
+                    title={t('hero.badgeHmrc')}
+                    subtitle={t('hero.badgeHmrcSub')}
+                    newTabLabel={t('hero.badgeHmrcNewTab')}
+                  />
+                </div>
+
                 <div className="flex items-center gap-3 mb-7 flex-wrap">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>
                     {t('hero.badgeFree')}
@@ -164,17 +172,6 @@ export default async function Home() {
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F0EBE1', color: '#4A4035', border: '1px solid #DDD5C8' }}>
                     {t('hero.badgeNoCard')}
                   </span>
-                  <a
-                    href={HMRC_LISTING_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-                    style={{ backgroundColor: '#FDFCF8', color: '#2F4A32', border: '1px solid #4B6A4E', textDecoration: 'none' }}
-                  >
-                    <ShieldCheck size={14} aria-hidden />
-                    {t('hero.badgeHmrc')}
-                    <span className="sr-only"> (GOV.UK, opens in a new tab)</span>
-                  </a>
                 </div>
 
                 {/* ── Hero CTAs ──
