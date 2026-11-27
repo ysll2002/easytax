@@ -5,7 +5,7 @@
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
 ## 2026-11-27 改名 MTD Buddy ✅ 已上线
-- **Vercel 项目已改名 `mtdbuddy`**（同一个 ID prj_hXqav…）。deploy.yml 按 ID 链接（PR #92，staging `bf2c307`），改名后 staging 部署成功。API 调用一律用项目 ID。Google 登录页的应用名已改成 MTD Buddy，主页、隐私、条款链接都指向 mtdbuddy.com。Supabase 项目显示名还没改（需要 owner 登录 Supabase）。
+- **Vercel 项目已改名 `mtdbuddy`**（同一个 ID prj_hXqav…）。deploy.yml 按 ID 链接（PR #92，staging `bf2c307`），改名后 staging 部署成功。API 调用一律用项目 ID。Google 登录页的应用名已改成 MTD Buddy，主页、隐私、条款链接都指向 mtdbuddy.com。Supabase 项目显示名已改成「MTD Buddy」和「MTD Buddy Staging」（ID、连接地址都没变；组织名还是 EasyTax）。
 - **Production = main = staging = `3387944`**（2026-11-27 PR #90 发布 #88 大号「HMRC recognised」徽章、全站不再用「approved」，#89 顶部横幅改成「MTD Buddy is HMRC recognised」；owner 授权）。更早一版 `712add7`（2026-11-27 PR #87 发布 #86：首页「HMRC-recognised software」徽章、页脚一行和 FAQ，都链接到 GOV.UK finder，owner 授权）。上一版 `70c4c05`（2026-11-27 owner 说「发布」；PR #85 = #82 filing-window 指标、#83 激活邮件修正、#84 改名 MTD Buddy；无迁移）。
 - 网站是 **https://mtdbuddy.com**。easytax.vip 和 www.* 都 308 跳转到这里（保留路径和参数）。**staging 是 https://staging.mtdbuddy.com**（PR #91，`395b83e`）：staging.easytax.vip 308 跳转过来，deploy.yml 每次把两个域名都指向新部署；preview 的 NEXTAUTH_URL 已改。staging 的 HMRC_REDIRECT_URI 已改成 `https://staging.mtdbuddy.com/api/auth/callback/hmrc`（owner 已在 sandbox 应用加好，HMRC 授权页已验证接受）。⚠️ sandbox 应用名还是「EasyTax Sandbox」。
 - production 环境变量：`NEXTAUTH_URL=https://mtdbuddy.com`，`HMRC_REDIRECT_URI=https://mtdbuddy.com/api/auth/callback/hmrc`，`REDIRECT_OLD_DOMAIN=1`；`RESEND_API_KEY` 换成新 Resend 账号（lilin.gabriel+mtdbuddy@gmail.com，mtdbuddy.com 已验证）的 key。preview 还剩一个无害的 `MAIL_FROM_DOMAIN=easytax.vip`，因为删除 API 要交互确认。

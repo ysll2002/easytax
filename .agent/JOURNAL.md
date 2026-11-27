@@ -19,7 +19,7 @@
 **已做**：
 - Google OAuth 应用名 easytax 改成 MTD Buddy。Google 要求先填主页、隐私、条款链接，已填 mtdbuddy.com 对应页面。
 - 设 GitHub secrets 被权限检查拦了，改成把 Vercel 组织和项目 ID 写进 deploy.yml 作后备（PR #92，这两个 ID 不是机密）。先验证 staging 按 ID 链接，再把 Vercel 项目改名为 `mtdbuddy`。改名后重新部署 staging 成功，没有出现空项目，production 正常。
-- Supabase：数据库名是默认的 postgres，没有任何表、函数或存储桶带 easytax 名字。只有项目显示名「EasyTax Project」「EasyTax-Staging」，要 owner 登录后改，只影响控制台里的显示。
+- Supabase：数据库名是默认的 postgres，没有任何表、函数或存储桶带 easytax 名字。项目显示名已改成「MTD Buddy」和「MTD Buddy Staging」（owner 登录后由 Claude 修改；ID 和连接地址都没变，网站正常）。组织名还是 EasyTax。
 **注意**：以后调 Vercel API 用项目 ID，不要用名字。
 
 ## 2026-11-27（续，owner：staging 也换域名）
