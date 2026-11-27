@@ -1,7 +1,8 @@
 name: Deploy
 
 # Preview deploys run automatically on every push to `staging` and re-point
-# staging.easytax.vip at the result. Production is manual only: run this
+# staging.mtdbuddy.com (and the old staging.easytax.vip, which redirects to
+# it) at the result. Production is manual only: run this
 # workflow from the Actions tab with target=production.
 #
 # Production deploys `main` and nothing else. The `guard` step below hard-fails
@@ -108,9 +109,13 @@ jobs:
           url=$(vercel deploy --yes --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
-      - name: Point staging.easytax.vip at this deploy
+      # staging.easytax.vip is aliased too, so the redirect in next.config.ts
+      # (old staging host -> staging.mtdbuddy.com) is served by this deploy.
+      - name: Point staging.mtdbuddy.com and staging.easytax.vip at this deploy
         if: steps.preflight.outputs.ready == 'true'
-        run: vercel alias set "${{ steps.deploy.outputs.url }}" staging.easytax.vip --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+        run: |
+          vercel alias set "${{ steps.deploy.outputs.url }}" staging.mtdbuddy.com --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+          vercel alias set "${{ steps.deploy.outputs.url }}" staging.easytax.vip --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
 
       - name: Summary
         if: steps.preflight.outputs.ready == 'true'
@@ -118,7 +123,7 @@ jobs:
           {
             echo "### Preview deployed"
             echo ""
-            echo "- https://staging.easytax.vip"
+            echo "- https://staging.mtdbuddy.com"
             echo "- ${{ steps.deploy.outputs.url }}"
             echo ""
             echo "Check the preview, then run this workflow again with \`target: production\` to go live."

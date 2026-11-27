@@ -3,8 +3,8 @@
 ## Deployment Rules
 
 **环境说明：**
-- `easytax.vip` — 生产环境，有真实用户。**只从 GitHub `main` 分支部署，没有例外。**
-- `staging.easytax.vip` — 预览/测试环境，跟随 GitHub `staging` 分支（每次 push 自动部署）
+- `mtdbuddy.com` — 生产环境（旧的 easytax.vip 会跳转过来），有真实用户。**只从 GitHub `main` 分支部署，没有例外。**
+- `staging.mtdbuddy.com` — 预览/测试环境（旧的 staging.easytax.vip 会跳转过来），跟随 GitHub `staging` 分支（每次 push 自动部署）
 - 本地代码克隆在 `/tmp/easytax`
 
 **唯一的上线路径：`分支 → PR → main → production`**
@@ -25,7 +25,7 @@
    git push -u origin <分支名>
    ```
 4. （可选）需要在 staging 域名上人工验收时，用 GitHub Actions 的 Deploy workflow，
-   `target=preview`、`ref=<你的分支>`，它会部署预览并把 staging.easytax.vip 指过去。
+   `target=preview`、`ref=<你的分支>`，它会部署预览并把 staging.mtdbuddy.com 指过去。
 5. 开 PR 合并进 `main`。
 6. 从 `main` 部署 production —— 在 Actions 里跑 Deploy workflow，`target=production`、`ref=main`。
    workflow 里有硬性校验：**ref 不是 `main` 就直接失败**，不会部署。
