@@ -17,7 +17,7 @@
 
 ## 2026-11-27（续，owner：要更醒目的 HMRC recognised 徽章）
 **发现**：Developer Hub terms of use 规定「must not use HMRC logos or other crown copyright material and branding」，所以 owner 发来的官方「HMRC Recognised」图标不能用。软件只能说「HMRC recognised」，不能说 approved、accredited 或 certified。
-**已做**：PR #88、#89 已合进 staging `7b8e9f8`。首页 hero 换成我们自己设计的大号徽章（✓ HMRC recognised · Listed on GOV.UK，链接到 finder）；全站「HMRC approved our production access」改成「granted」，7 种语言，日文「認定」改成「認められた」；顶部横幅改成「MTD Buddy is HMRC recognised」。staging 已截图确认。**production 还没上**，等 owner 说发布。
+**已做**：PR #88、#89 已合进 staging `7b8e9f8`。首页 hero 换成我们自己设计的大号徽章（✓ HMRC recognised · Listed on GOV.UK，链接到 finder）；全站「HMRC approved our production access」改成「granted」，7 种语言，日文「認定」改成「認められた」；顶部横幅改成「MTD Buddy is HMRC recognised」。staging 已截图确认。owner 说 "Yes, release"，PR #90 上线 production `3387944`，mtdbuddy.com 已确认：横幅、徽章都在，所有页面都没有「approved our」。
 **长期规则**：以后所有文案只能用「HMRC recognised」，不用 approved、accredited、certified，也不放 HMRC 标志。
 
 ## 2026-11-27（续，owner：网站加 HMRC-recognised 说明）
