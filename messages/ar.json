@@ -36,7 +36,7 @@
       "subtitleEmph": "بدون اشتراك وبدون رسوم لكل إقرار — MTD Buddy مجاني.",
       "badgeFree": "مجاني",
       "badgeNoCard": "بدون بطاقة للتسجيل",
-      "badgeHmrc": "مبني على واجهات HMRC البرمجية",
+      "badgeHmrc": "برنامج معترف به من HMRC",
       "ctaPrimary": "استعد لـ MTD ←",
       "ctaChecker": "تحقق من مواعيد MTD النهائية ←",
       "ctaSecondary": "اطلع على ما نغطيه ←"
@@ -395,7 +395,9 @@
     "disclaimer": "MTD Buddy منتج من Finance Panda Limited. تقدّم الأدوات المجانية معلومات عامة عن القواعد التي نشرتها HMRC وليست استشارة ضريبية. وافقت HMRC على وصولنا إلى بيئة الإنتاج في 11 نوفمبر 2026 للتحديثات الفصلية لـ MTD ITSA وضريبة القيمة المضافة.",
     "notifyHeading": "كن أول من يقدّم إقراره",
     "notifyBlurb": "سنراسلك يوم فتح التقديم عبر MTD — لا شيء غير ذلك، وإلغاء الاشتراك بنقرة واحدة.",
-    "accessibility": "إمكانية الوصول"
+    "accessibility": "إمكانية الوصول",
+    "hmrcRecognised": "MTD Buddy برنامج معترف به من HMRC لنظام Making Tax Digital لضريبة الدخل.",
+    "hmrcListing": "اطّلع على إدراجنا في GOV.UK"
   },
   "a11y": {
     "skipToContent": "انتقل إلى المحتوى الرئيسي",

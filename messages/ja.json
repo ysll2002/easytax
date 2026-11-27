@@ -36,7 +36,7 @@
       "subtitleEmph": "サブスクも申告ごとの手数料もなし —— MTD Buddy は無料です。",
       "badgeFree": "無料",
       "badgeNoCard": "登録にカード不要",
-      "badgeHmrc": "HMRC API 連携",
+      "badgeHmrc": "HMRC 認定ソフトウェア",
       "ctaPrimary": "MTD 対応を始める →",
       "ctaChecker": "MTDの期限を確認する →",
       "ctaSecondary": "対応範囲を見る →"
@@ -395,7 +395,9 @@
     "disclaimer": "MTD Buddy は Finance Panda Limited の製品です。無料ツールは HMRC が公表しているルールの一般的な情報を提供するもので、税務アドバイスではありません。HMRC は 2026年11月11日に、MTD ITSA の四半期更新と VAT について当社の本番アクセスを承認しました。",
     "notifyHeading": "誰よりも早く申告を",
     "notifyBlurb": "MTD 申告が開始された日にメールでお知らせします。それ以外の配信はなく、ワンクリックで解除できます。",
-    "accessibility": "アクセシビリティ"
+    "accessibility": "アクセシビリティ",
+    "hmrcRecognised": "MTD Buddy は所得税の Making Tax Digital に対応した HMRC 認定ソフトウェアです。",
+    "hmrcListing": "GOV.UK の掲載ページを見る"
   },
   "a11y": {
     "skipToContent": "メインコンテンツへスキップ",

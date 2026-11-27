@@ -303,7 +303,7 @@ export default async function MtdSoftware() {
               {[
                 {
                   q: 'Is MTD Buddy recognised by HMRC for MTD ITSA?',
-                  a: 'Yes. HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s. See our HMRC status page for exactly what our access covers.',
+                  a: 'Yes. MTD Buddy is HMRC-recognised software, listed on GOV.UK\'s "Find software that works with Making Tax Digital for Income Tax". HMRC granted Finance Panda Limited production access on 11 November 2026, covering MTD ITSA quarterly updates and MTD VAT returns. One thing to know: you also have to be signed up for Making Tax Digital with HMRC in your own right. Until you are, HMRC will not release your obligations to any software — ours or anyone else\'s. See our HMRC status page for exactly what our access covers.',
                 },
                 {
                   q: 'What does MTD ITSA software actually do?',
