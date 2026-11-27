@@ -15,6 +15,9 @@
 
 ---
 
+## 2026-11-27（续，HMRC 问应用改名）
+SDST（Noman Sheikh，工单 2026-WND365）问：组织名、品牌或产品名是否变了（命名规则要求应用名和组织名一致）。已起草回复（Gmail 草稿 r9199006680861234438）：组织 Finance Panda Limited 不变，产品名 11-27 从 EasyTax 改成 MTD Buddy，请把 production 应用改名为「MTD Buddy」；如果他们要求带组织名，也可以用「MTD Buddy (Finance Panda Limited)」。**待 owner 发**。
+
 ## 2026-11-27（续，owner：全面测试 production 和 staging）
 **结果：两个环境都正常。**
 - Production：30 个公开页面和 sitemap、robots、llms、feed、ics 都返回 200，没有残留 EasyTax 或 approved 字样；easytax.vip、www.*、http 都 308 到 mtdbuddy.com；Google 登录后的 15 个 dashboard 页面正常；records API 和 daily-metrics（key 参数）返回 200；Resend 的重置密码邮件 Delivered；HMRC authorize 接受新回调。
