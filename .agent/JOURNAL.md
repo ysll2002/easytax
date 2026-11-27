@@ -15,6 +15,14 @@
 
 ---
 
+## 2026-11-27（续，owner：全面测试 production 和 staging）
+**结果：两个环境都正常。**
+- Production：30 个公开页面和 sitemap、robots、llms、feed、ics 都返回 200，没有残留 EasyTax 或 approved 字样；easytax.vip、www.*、http 都 308 到 mtdbuddy.com；Google 登录后的 15 个 dashboard 页面正常；records API 和 daily-metrics（key 参数）返回 200；Resend 的重置密码邮件 Delivered；HMRC authorize 接受新回调。
+- Staging：26 个公开页面通过；旧域名跳转正常；测试个人号密码登录正常，30 条记录；**HMRC sandbox tasks 返回 200**；agent 号（需要 accountType=agent）登录正常，客户列表有 1 个客户，sandbox obligations 返回 200。
+- 发现：owner 的 production 账号里存的是 sandbox 测试 NINO GK649364B，所以 production 的 obligations 一直 403（11-27 共 5 次）。这是账号数据问题，不是 bug；页面会给出原因说明。
+- 顺手修了：RUNBOOK 和 .env.local 的 METRICS_URL 改成 mtdbuddy.com。
+- 没测到的：production 真实 HMRC 连接和申报（需要真实 Government Gateway）、Zoho 收信（需要外部发信）。`vercel logs` CLI 拿不到日志（0 行），所以服务端错误日志没有核对。
+
 ## 2026-11-27（续，owner：Google 应用名、Vercel 项目名、Supabase 名称）
 **已做**：
 - Google OAuth 应用名 easytax 改成 MTD Buddy。Google 要求先填主页、隐私、条款链接，已填 mtdbuddy.com 对应页面。

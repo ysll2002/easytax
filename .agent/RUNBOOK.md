@@ -56,7 +56,7 @@ newer_than:1d (from:hmrc.gov.uk OR from:digital.hmrc.gov.uk OR subject:EasyTax O
 ## 4. 指标
 
 ```
-WebFetch GET https://easytax.vip/api/admin/daily-metrics?key=<AGENT_METRICS_KEY>
+WebFetch GET https://mtdbuddy.com/api/admin/daily-metrics?key=<AGENT_METRICS_KEY>
 ```
 
 key 存在 `agent/.env.local`（不进 git）。返回 signups / hmrc_connections / bank_connections / filings / revenue /
