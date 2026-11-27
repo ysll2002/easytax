@@ -40,7 +40,7 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
         Connect HMRC
       </h1>
       <p style={{ color: '#6B6256', marginBottom: '2rem', lineHeight: 1.6 }}>
-        You&apos;ll be redirected to HMRC&apos;s secure website to sign in with your Government Gateway credentials and authorise EasyTax to access your Self Assessment data.
+        You&apos;ll be redirected to HMRC&apos;s secure website to sign in with your Government Gateway credentials and authorise MTD Buddy to access your Self Assessment data.
       </p>
 
       <div className="p-5 rounded-2xl mb-6 space-y-2" style={{ backgroundColor: '#F5EDDC', border: '1px solid #C9963D30' }}>
@@ -66,7 +66,7 @@ export default async function HmrcConnectPage({ searchParams }: { searchParams: 
       </a>
 
       <p className="text-xs text-center mt-4" style={{ color: '#6B6256' }}>
-        Your credentials are entered directly on HMRC&apos;s site — EasyTax never sees your password.
+        Your credentials are entered directly on HMRC&apos;s site — MTD Buddy never sees your password.
       </p>
     </div>
   );

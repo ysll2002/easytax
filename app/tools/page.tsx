@@ -29,10 +29,10 @@ export const metadata: Metadata = {
     'payments on account calculator',
     'tax tools for sole traders',
   ],
-  alternates: { canonical: 'https://easytax.vip/tools' },
+  alternates: { canonical: 'https://mtdbuddy.com/tools' },
   openGraph: {
     type: 'website',
-    url: 'https://easytax.vip/tools',
+    url: 'https://mtdbuddy.com/tools',
     title: 'Free UK Tax Calculators & Tools',
     description:
       'MTD deadline checker, late filing penalty calculator and payments on account calculator. Free, no signup.',
@@ -53,7 +53,7 @@ export default function ToolsPage() {
       '@type': 'ListItem',
       position: i + 1,
       name: t.name,
-      url: `https://easytax.vip${t.href}`,
+      url: `https://mtdbuddy.com${t.href}`,
     })),
   };
 
@@ -61,8 +61,8 @@ export default function ToolsPage() {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'EasyTax', item: 'https://easytax.vip' },
-      { '@type': 'ListItem', position: 2, name: 'Free tax tools', item: 'https://easytax.vip/tools' },
+      { '@type': 'ListItem', position: 1, name: 'MTD Buddy', item: 'https://mtdbuddy.com' },
+      { '@type': 'ListItem', position: 2, name: 'Free tax tools', item: 'https://mtdbuddy.com/tools' },
     ],
   };
 
@@ -185,7 +185,7 @@ export default function ToolsPage() {
               can offer them without an account.
             </p>
             <p>
-              The rest of EasyTax — the filing itself — is free as well. No subscription, no
+              The rest of MTD Buddy — the filing itself — is free as well. No subscription, no
               per-filing fee. HMRC approved our production access on 11 November 2026 for MTD ITSA
               quarterly updates, Self Assessment and VAT returns, so those are open. Corporation
               Tax (CT600) is not something we can file.
@@ -208,7 +208,7 @@ export default function ToolsPage() {
           These tools give general information about HMRC&apos;s published rules. They are not tax
           advice and do not account for individual circumstances. See{' '}
           <Link href="/trust" style={{ color: '#6B6256', textDecoration: 'underline' }}>
-            where EasyTax stands with HMRC
+            where MTD Buddy stands with HMRC
           </Link>
           .
         </p>

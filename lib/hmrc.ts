@@ -69,7 +69,7 @@ export async function getValidToken(userId: string): Promise<string> {
 export async function fraudHeaders(): Promise<Record<string, string>> {
   let deviceData: Record<string, string> = {};
 
-  // Primary source: X-EasyTax-Device-Data request header set by the browser's
+  // Primary source: X-MTD Buddy-Device-Data request header set by the browser's
   // hmrcFetch wrapper. This avoids the earlier cookie-write race — the client
   // awaits collection before firing the request, so the header is always in
   // sync with what the browser collected.
@@ -102,13 +102,13 @@ export async function fraudHeaders(): Promise<Record<string, string>> {
 
   // Gov-Client-Multi-Factor is intentionally omitted. Per HMRC fraud-prevention
   // spec (Send fraud prevention data v3.3, getting-it-right#missing-header-data),
-  // MFA is defined as authentication into *our software*. EasyTax has no in-app
+  // MFA is defined as authentication into *our software*. MTD Buddy has no in-app
   // MFA — the user's HMRC Government Gateway MFA happens during OAuth grant,
   // which HMRC explicitly places out of scope for this header. Sending a
   // placeholder type=OTHER trips the validator's POTENTIALLY_INVALID_HEADER
   // warning, so we omit the header entirely (HMRC ticket 2026-NQM717).
   //
-  // Gov-Vendor-License-IDs is also intentionally omitted. EasyTax does not
+  // Gov-Vendor-License-IDs is also intentionally omitted. MTD Buddy does not
   // issue per-user licences (free to all), so any value we send would be a
   // dummy/hash and HMRC's FPH review explicitly flagged that as prohibited.
   //
@@ -130,9 +130,9 @@ export async function fraudHeaders(): Promise<Record<string, string>> {
     'Gov-Client-Public-IP':             clientIp,
     'Gov-Client-Public-IP-Timestamp':   deviceData.ipTs      ?? '',
     'Gov-Client-Public-Port':           deviceData.port      ?? '',
-    'Gov-Client-User-IDs':              deviceData.userId ? `easytax=${deviceData.userId}` : '',
-    'Gov-Vendor-Product-Name':          'EasyTax',
-    'Gov-Vendor-Version':               'easytax=0.1.0',
+    'Gov-Client-User-IDs':              deviceData.userId ? `mtd-buddy=${deviceData.userId}` : '',
+    'Gov-Vendor-Product-Name':          'MTD%20Buddy', // percent-encoded, per HMRC's fraud prevention spec
+    'Gov-Vendor-Version':               'mtd-buddy=0.1.0',
     'Gov-Vendor-Public-IP':             vendorIp,
     'Gov-Vendor-Forwarded':             clientIp && vendorIp ? `by=${vendorIp}&for=${clientIp}` : '',
   };

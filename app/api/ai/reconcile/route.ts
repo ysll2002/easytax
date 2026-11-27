@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
     `[${t.transaction_id}] ${new Date(t.timestamp).toLocaleDateString('en-GB')} | ${t.description} | ${t.amount >= 0 ? '+' : '-'}£${Math.abs(t.amount).toFixed(2)} | ${t.category}`
   ).join('\n');
 
-  const systemPrompt = `You are a helpful tax assistant embedded in EasyTax, a UK tax filing app for freelancers.
+  const systemPrompt = `You are a helpful tax assistant embedded in MTD Buddy, a UK tax filing app for freelancers.
 
 The user is on the Reconcile page, reviewing their bank transactions. Your job is to help them categorise transactions quickly using natural language.
 

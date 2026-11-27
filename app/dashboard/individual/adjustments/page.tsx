@@ -118,7 +118,7 @@ export default function AdjustmentsPage() {
           }];
         }
         if (stock > 0) {
-          out.stockDividend = { customerReference: `EasyTax-${taxYear}`, grossAmount: stock };
+          out.stockDividend = { customerReference: `MTD Buddy-${taxYear}`, grossAmount: stock };
         }
         return out;
       })(),

@@ -5,18 +5,18 @@ import { getPublishedTopics } from '../_lib/topic-articles';
 import SiteFooter from '@/components/SiteFooter';
 import { pageTitle, metaDescription } from '@/lib/seo-meta';
 
-const BASE = 'https://easytax.vip';
+const BASE = 'https://mtdbuddy.com';
 
 export const metadata: Metadata = {
   title: pageTitle('UK Tax Guides by Topic — VAT, MTD, expenses and allowances'),
   description: metaDescription(
-    'The EasyTax guide archive grouped by subject: Making Tax Digital, VAT, capital allowances, home office expenses, limited companies, landlords, penalties and more. Practical UK tax guidance for sole traders and small companies.'),
+    'The MTD Buddy guide archive grouped by subject: Making Tax Digital, VAT, capital allowances, home office expenses, limited companies, landlords, penalties and more. Practical UK tax guidance for sole traders and small companies.'),
   alternates: { canonical: `${BASE}/tax-tips/topics` },
   openGraph: {
     type: 'website',
     url: `${BASE}/tax-tips/topics`,
     title: 'UK Tax Guides by Topic',
-    description: 'The EasyTax guide archive, grouped by subject.',
+    description: 'The MTD Buddy guide archive, grouped by subject.',
   },
 };
 

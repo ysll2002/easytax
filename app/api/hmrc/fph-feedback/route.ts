@@ -5,7 +5,7 @@ import { getValidToken } from '@/lib/hmrc';
 // HMRC ticket 2026-NQM717 flagged FPH errors specifically on Business Details
 // (MTD). The `validation-feedback` endpoint returns per-endpoint feedback for
 // the last request our software made to each supported API in the past 30
-// days. Query the ones EasyTax actually calls so we can see which headers
+// days. Query the ones MTD Buddy actually calls so we can see which headers
 // HMRC flagged as invalid / missing / potentially invalid.
 const FEEDBACK_APIS = [
   'business-details-mtd',

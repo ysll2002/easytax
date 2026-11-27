@@ -4,7 +4,7 @@
 // reports and the Records page. No secrets or server-only imports here.
 //
 // Records are entered by hand or imported from a CSV bank statement the
-// customer downloads themselves. EasyTax has no AISP permission, so it does
+// customer downloads themselves. MTD Buddy has no AISP permission, so it does
 // not connect to bank accounts.
 
 export type RecordCategory = 'unreviewed' | 'business_income' | 'business_expense' | 'personal';

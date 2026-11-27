@@ -20,8 +20,8 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: 'Security & Trust',
   description:
-    'How EasyTax handles your tax data: what we store, why we never connect to your bank, who runs the company, and exactly what our HMRC production access covers.',
-  alternates: { canonical: 'https://easytax.vip/trust' },
+    'How MTD Buddy handles your tax data: what we store, why we never connect to your bank, who runs the company, and exactly what our HMRC production access covers.',
+  alternates: { canonical: 'https://mtdbuddy.com/trust' },
 };
 
 const display = 'var(--font-display), Playfair Display, Georgia, serif';
@@ -88,7 +88,7 @@ export default function TrustPage() {
               <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Here&apos;s what happens to it.</em>
             </h1>
             <p style={{ color: '#6B6256', fontSize: '1.05rem', lineHeight: 1.65 }}>
-              EasyTax connects to HMRC and, optionally, to your bank. That is a lot to ask of a
+              MTD Buddy connects to HMRC and, optionally, to your bank. That is a lot to ask of a
               company you have not heard of. This page sets out exactly what we store, what we
               cannot do, who we are, and where we currently stand with HMRC — including the parts
               that are not finished.
@@ -110,7 +110,7 @@ export default function TrustPage() {
                 </p>
               </div>
               <p className="text-sm mb-4" style={{ color: '#B8ADA1', lineHeight: 1.7 }}>
-                EasyTax is built directly against HMRC&apos;s Making Tax Digital APIs. On 11 November
+                MTD Buddy is built directly against HMRC&apos;s Making Tax Digital APIs. On 11 November
                 2026 HMRC completed the production approval process that every MTD software vendor
                 must pass before it can send live submissions, and granted us production access for
                 MTD ITSA, Self Assessment and VAT.
@@ -148,11 +148,11 @@ export default function TrustPage() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <Card icon={Lock} title="Your Government Gateway password never reaches us">
-                Connecting HMRC sends you to HMRC&apos;s own sign-in page. You authorise EasyTax
+                Connecting HMRC sends you to HMRC&apos;s own sign-in page. You authorise MTD Buddy
                 there and we receive an access token — never your password.
               </Card>
               <Card icon={Eye} title="We never connect to your bank">
-                EasyTax does not link to your bank account. You import statements you download
+                MTD Buddy does not link to your bank account. You import statements you download
                 yourself, or add records by hand, so we never see your bank login and cannot move
                 money.
               </Card>
@@ -166,13 +166,13 @@ export default function TrustPage() {
                 obligations. It is not used for marketing and not shared with third parties.
               </Card>
               <Card icon={CreditCard} title="Nothing is filed without you">
-                Every submission to HMRC is one you review and approve. EasyTax does not file on
+                Every submission to HMRC is one you review and approve. MTD Buddy does not file on
                 your behalf in the background.
               </Card>
               <Card icon={XCircle} title="You can have it deleted">
                 Under UK GDPR you can ask us to erase your data where we have no legal obligation to
                 keep it. Email{' '}
-                <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a>.
+                <a href="mailto:privacy@mtdbuddy.com" style={{ color: '#A04E1C' }}>privacy@mtdbuddy.com</a>.
               </Card>
             </div>
           </div>
@@ -189,7 +189,7 @@ export default function TrustPage() {
             </div>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA' }}>
               {([
-                { k: 'Legal entity',      v: 'Finance Panda Limited, trading as EasyTax' },
+                { k: 'Legal entity',      v: 'Finance Panda Limited, trading as MTD Buddy' },
                 { k: 'Registered',        v: 'England and Wales' },
                 { k: 'Based',             v: 'London, United Kingdom' },
                 // The reference is shown in full on purpose: it is the one
@@ -215,8 +215,8 @@ export default function TrustPage() {
                     </>
                   ),
                 },
-                { k: 'Privacy questions', v: 'privacy@easytax.vip' },
-                { k: 'Anything else',     v: 'hello@easytax.vip' },
+                { k: 'Privacy questions', v: 'privacy@mtdbuddy.com' },
+                { k: 'Anything else',     v: 'hello@mtdbuddy.com' },
               ] satisfies { k: string; v: React.ReactNode }[]).map(({ k, v }, i) => (
                 <div
                   key={k}
@@ -255,7 +255,7 @@ export default function TrustPage() {
                 What it costs
               </p>
               <p className="text-sm mb-4" style={{ color: '#4A4035', lineHeight: 1.7 }}>
-                Nothing. EasyTax is free to use: no monthly subscription, no per-filing fee, and no
+                Nothing. MTD Buddy is free to use: no monthly subscription, no per-filing fee, and no
                 card required to create an account. There is no paid tier.
               </p>
               <Link

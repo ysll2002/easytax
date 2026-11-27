@@ -9,20 +9,20 @@ import { PRICE_CHIP, PRICE_TABLE_CELL, TYPICAL_ANNUAL_COST } from '@/lib/pricing
 
 export const metadata: Metadata = {
   title: pageTitle('KashFlow Alternative — MTD ITSA Software UK'),
-  description: 'Looking for a KashFlow alternative? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
-  alternates: { canonical: 'https://easytax.vip/kashflow-alternative' },
+  description: 'Looking for a KashFlow alternative? MTD Buddy files MTD ITSA quarterly updates and VAT returns directly to HMRC free — no monthly subscription, no filing fee, no card to sign up.',
+  alternates: { canonical: 'https://mtdbuddy.com/kashflow-alternative' },
   openGraph: {
     title: 'KashFlow Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'KashFlow charges £10–27+VAT/month on subscription. EasyTax files MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee.',
-    url: 'https://easytax.vip/kashflow-alternative',
+    description: 'KashFlow charges £10–27+VAT/month on subscription. MTD Buddy files MTD ITSA quarterly updates and VAT returns free — no subscription, no filing fee.',
+    url: 'https://mtdbuddy.com/kashflow-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'KashFlow Alternative — MTD ITSA Software, Free',
-    description: 'KashFlow charges £120–324+VAT/year. EasyTax charges nothing, with no subscription.',
+    description: 'KashFlow charges £120–324+VAT/year. MTD Buddy charges nothing, with no subscription.',
   },
 };
 
@@ -31,18 +31,18 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; kashflow: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  kashflow: 'From £10+VAT/mo',    note: 'KashFlow charges a monthly subscription; EasyTax charges nothing' },
-  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            kashflow: '£120–324+VAT',        note: 'EasyTax is free however many times you file; KashFlow Starter–Business plans' },
+  { feature: 'Pricing model',                         easytax: PRICE_TABLE_CELL,  kashflow: 'From £10+VAT/mo',    note: 'KashFlow charges a monthly subscription; MTD Buddy charges nothing' },
+  { feature: 'Typical annual cost',                   easytax: TYPICAL_ANNUAL_COST,            kashflow: '£120–324+VAT',        note: 'MTD Buddy is free however many times you file; KashFlow Starter–Business plans' },
   { feature: 'No card to sign up',                    easytax: true,              kashflow: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,              kashflow: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,              kashflow: true, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,              kashflow: true, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,              kashflow: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: false,              kashflow: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,              kashflow: true, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company P&L and Balance Sheet', easytax: false,              kashflow: true, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',             easytax: true,              kashflow: false,                 note: 'EasyTax uses Claude to categorise and reconcile' },
+  { feature: 'AI expense categorisation',             easytax: true,              kashflow: false,                 note: 'MTD Buddy uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,              kashflow: false },
-  { feature: 'Full double-entry bookkeeping',         easytax: false,             kashflow: true,                  note: 'EasyTax focuses on tax filing, not a full ledger' },
-  { feature: 'Built-in invoicing',                    easytax: false,             kashflow: true,                  note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
+  { feature: 'Full double-entry bookkeeping',         easytax: false,             kashflow: true,                  note: 'MTD Buddy focuses on tax filing, not a full ledger' },
+  { feature: 'Built-in invoicing',                    easytax: false,             kashflow: true,                  note: 'MTD Buddy pairs with GrumpyWhales (free) for invoicing' },
   { feature: 'Purchase order management',             easytax: false,             kashflow: true },
   { feature: 'Payroll',                               easytax: false,             kashflow: true,                  note: 'Available in KashFlow PLUS and higher tiers' },
 ];
@@ -61,10 +61,10 @@ export default async function KashFlowAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'KashFlow Alternative — MTD ITSA Software for UK Freelancers',
-    description: 'Side-by-side comparison of EasyTax and KashFlow for UK sole traders and the self-employed. EasyTax files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Side-by-side comparison of MTD Buddy and KashFlow for UK sole traders and the self-employed. MTD Buddy files MTD ITSA quarterly updates and VAT returns free, with no subscription.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/kashflow-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/kashflow-alternative',
   };
 
   return (
@@ -82,10 +82,10 @@ export default async function KashFlowAlternative() {
               <Sparkles size={12} /> The no-subscription KashFlow alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£120–324/year</em> for KashFlow? EasyTax files the same returns for nothing.
+              Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£120–324/year</em> for KashFlow? MTD Buddy files the same returns for nothing.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              KashFlow is solid bookkeeping software — but if you are a UK freelancer or sole trader who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying a monthly subscription for features you will never use. EasyTax covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
+              KashFlow is solid bookkeeping software — but if you are a UK freelancer or sole trader who mainly needs to file <strong style={{ color: '#1C1208' }}>MTD ITSA quarterly updates</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying a monthly subscription for features you will never use. MTD Buddy covers all the same HMRC filings <strong style={{ color: '#4B6A4E' }}>free</strong> — no monthly fee, no filing fee, no card required to start.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -97,7 +97,7 @@ export default async function KashFlowAlternative() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=KashFlow%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=KashFlow%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
               </a>
             </div>
@@ -111,7 +111,7 @@ export default async function KashFlowAlternative() {
               MTD ITSA is now mandatory — do you really need to pay £120–324/year for it?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              From <strong>6 April 2026</strong>, every UK sole trader or landlord with income above <strong>£50,000</strong> must file quarterly updates through MTD-compatible software. The threshold drops to <strong>£30,000</strong> in April 2027. If your main reason for using KashFlow is to stay HMRC-compliant, EasyTax gives you the same compliance at a fraction of the cost.
+              From <strong>6 April 2026</strong>, every UK sole trader or landlord with income above <strong>£50,000</strong> must file quarterly updates through MTD-compatible software. The threshold drops to <strong>£30,000</strong> in April 2027. If your main reason for using KashFlow is to stay HMRC-compliant, MTD Buddy gives you the same compliance at a fraction of the cost.
             </p>
             <div className="grid sm:grid-cols-3 gap-4">
               {[
@@ -133,7 +133,7 @@ export default async function KashFlowAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>KashFlow</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>KashFlow</em> vs MTD Buddy
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
@@ -141,7 +141,7 @@ export default async function KashFlowAlternative() {
                   Feature
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -179,7 +179,7 @@ export default async function KashFlowAlternative() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax wins</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where MTD Buddy wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No subscription — pay only when you actually file with HMRC.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>AI bank reconciliation chat powered by Claude — describe a transaction in plain English and it gets categorised correctly.</span></li>
@@ -199,7 +199,7 @@ export default async function KashFlowAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              If you run a product business, have employees, or need purchase orders and invoicing in the same tool — KashFlow may be worth the subscription. But if you are a <strong>freelancer or sole trader who mainly wants to stay HMRC-compliant without a monthly bill</strong>, EasyTax is the better fit.
+              If you run a product business, have employees, or need purchase orders and invoicing in the same tool — KashFlow may be worth the subscription. But if you are a <strong>freelancer or sole trader who mainly wants to stay HMRC-compliant without a monthly bill</strong>, MTD Buddy is the better fit.
             </p>
           </div>
         </section>
@@ -217,20 +217,20 @@ export default async function KashFlowAlternative() {
                   body: 'In KashFlow: Reports → Export. Download your transactions and records as CSV for your files before cancelling.',
                 },
                 {
-                  title: 'Create your EasyTax account',
+                  title: 'Create your MTD Buddy account',
                   body: 'Sign up with Google or email in under 60 seconds — no card required.',
                 },
                 {
                   title: 'Add your income and expenses',
-                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and MTD Buddy AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'Connect to HMRC',
-                  body: 'Authorise EasyTax with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
+                  body: 'Authorise MTD Buddy with your HMRC Government Gateway credentials. We use the official OAuth flow — we never store your HMRC password.',
                 },
                 {
                   title: 'File your next quarterly update',
-                  body: 'EasyTax submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt.',
+                  body: 'MTD Buddy submits directly to HMRC via the official MTD ITSA API. You get a confirmation receipt.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -256,31 +256,31 @@ export default async function KashFlowAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'How much does EasyTax cost?',
+                  q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription and no charge when you file, however many returns you send. There is no charge to connect HMRC or import your records either.',
                 },
                 {
                   q: 'I use KashFlow for invoicing. What do I do?',
-                  a: "EasyTax doesn't have a built-in invoicing module. We pair with GrumpyWhales — a free UK invoicing tool — for that. Many sole traders run two lightweight free tools rather than one monthly-subscription bundle.",
+                  a: "MTD Buddy doesn't have a built-in invoicing module. We pair with GrumpyWhales — a free UK invoicing tool — for that. Many sole traders run two lightweight free tools rather than one monthly-subscription bundle.",
                 },
                 {
-                  q: 'Does EasyTax handle VAT and CT600 as well as Self Assessment?',
-                  a: 'Partly. EasyTax files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
+                  q: 'Does MTD Buddy handle VAT and CT600 as well as Self Assessment?',
+                  a: 'Partly. MTD Buddy files MTD VAT returns and MTD ITSA quarterly updates directly to HMRC. It does not yet file the year-end Self Assessment return (final declaration), property income or CT600 Corporation Tax. For those, use other HMRC-recognised software from the list on GOV.UK.',
                 },
                 {
                   q: 'What about MTD ITSA — when does it apply to me?',
-                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.',
+                  a: 'From 6 April 2026 if your total self-employment + property income exceeds £50,000. From 6 April 2027 if it exceeds £30,000. MTD Buddy is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in MTD Buddy yet.',
                 },
                 {
                   q: 'Can I import my bank statements?',
-                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.',
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. MTD Buddy does not connect to your bank account.',
                 },
                 {
                   q: 'Is KashFlow being discontinued?',
-                  a: 'KashFlow is actively maintained by IRIS Software Group and is not being discontinued. That said, IRIS has been consolidating products across its portfolio — if you want software that is 100% focused on MTD filing for UK freelancers, EasyTax is built for exactly that use case.',
+                  a: 'KashFlow is actively maintained by IRIS Software Group and is not being discontinued. That said, IRIS has been consolidating products across its portfolio — if you want software that is 100% focused on MTD filing for UK freelancers, MTD Buddy is built for exactly that use case.',
                 },
                 {
-                  q: 'Can I try EasyTax before committing?',
+                  q: 'Can I try MTD Buddy before committing?',
                   a: 'Yes — sign up free with no card required, and there is nothing to pay afterwards either. Import your records, review them, file to HMRC and use the dashboard without spending anything.',
                 },
               ].map((item) => (
@@ -301,7 +301,7 @@ export default async function KashFlowAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop paying a monthly fee just to stay HMRC-compliant.<br />
-              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>EasyTax does it for nothing.</em>
+              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>MTD Buddy does it for nothing.</em>
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
               No card required. Set up in under 5 minutes.
@@ -310,7 +310,7 @@ export default async function KashFlowAlternative() {
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=KashFlow%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=KashFlow%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Ask us a question
               </a>
             </div>

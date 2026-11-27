@@ -30,18 +30,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     // `pageTitle` applies the brand exactly once and drops it when the
     // headline needs the room. Appending it here, as this line used to, put
-    // `| EasyTax | EasyTax` on all 113 articles — the root layout's title
+    // `| MTD Buddy | MTD Buddy` on all 113 articles — the root layout's title
     // template had already added one.
     title: pageTitle(data.title),
     description: metaDescription(data.excerpt),
     // Without this, every article inherited the site-wide canonical pointing
     // at the homepage, telling Google these 109 pages were duplicates of it.
-    alternates: { canonical: `https://easytax.vip/tax-tips/${slug}` },
+    alternates: { canonical: `https://mtdbuddy.com/tax-tips/${slug}` },
     openGraph: {
       type: 'article',
       title: data.title,
       description: data.excerpt,
-      url: `https://easytax.vip/tax-tips/${slug}`,
+      url: `https://mtdbuddy.com/tax-tips/${slug}`,
       publishedTime: data.published_at,
     },
   };
@@ -69,7 +69,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   ]);
 
   // Authorship, review state and method, stated in the markup as well as on
-  // the page. The previous version named "EasyTax" as author with no URL that
+  // the page. The previous version named "MTD Buddy" as author with no URL that
   // explained who or what that was, and repeated publishedAt as dateModified
   // so every article looked untouched since the day a cron emitted it.
   const jsonLdArticle = {
@@ -80,17 +80,17 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     datePublished: article.published_at,
     dateModified: article.reviewed_at ?? article.published_at,
     inLanguage: 'en-GB',
-    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://easytax.vip/tax-tips/${slug}` },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': `https://mtdbuddy.com/tax-tips/${slug}` },
     author: {
       '@type': 'Organization',
-      name: 'EasyTax editorial team',
-      url: 'https://easytax.vip/editorial-standards',
+      name: 'MTD Buddy editorial team',
+      url: 'https://mtdbuddy.com/editorial-standards',
     },
     publisher: {
       '@type': 'Organization',
-      '@id': 'https://easytax.vip/#organization',
+      '@id': 'https://mtdbuddy.com/#organization',
       name: 'Finance Panda Limited',
-      url: 'https://easytax.vip',
+      url: 'https://mtdbuddy.com',
     },
     // Stated only when it is true. An unreviewed article claiming a reviewer
     // would be the worst of both worlds.
@@ -98,8 +98,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       ? {
           reviewedBy: {
             '@type': 'Organization',
-            name: 'EasyTax editorial team',
-            url: 'https://easytax.vip/editorial-standards',
+            name: 'MTD Buddy editorial team',
+            url: 'https://mtdbuddy.com/editorial-standards',
           },
         }
       : {}),
@@ -120,7 +120,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   // search referral this site has ever had landed on one of these pages from a
   // long-tail question query, and until now the page never said which question
   // it was written for — the pipeline knew and threw it away.
-  const pageUrl = `https://easytax.vip/tax-tips/${slug}`;
+  const pageUrl = `https://mtdbuddy.com/tax-tips/${slug}`;
   const question = articleQuestion(article);
   const jsonLdFaq = question
     ? withCommissionedQuestion(faqJsonLd(article.content, pageUrl), question, pageUrl)
@@ -130,9 +130,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home',     item: 'https://easytax.vip' },
-      { '@type': 'ListItem', position: 2, name: 'Tax Tips', item: 'https://easytax.vip/tax-tips' },
-      { '@type': 'ListItem', position: 3, name: article.title, item: `https://easytax.vip/tax-tips/${slug}` },
+      { '@type': 'ListItem', position: 1, name: 'Home',     item: 'https://mtdbuddy.com' },
+      { '@type': 'ListItem', position: 2, name: 'Tax Tips', item: 'https://mtdbuddy.com/tax-tips' },
+      { '@type': 'ListItem', position: 3, name: article.title, item: `https://mtdbuddy.com/tax-tips/${slug}` },
     ],
   };
 

@@ -302,7 +302,7 @@ export default function YearEndClient({ taxYear, setTaxYear, clientId, sandbox, 
             </Part>
             <Part title="Losses and claims" error={overview.losses.error}>
               {overview.losses.notCovered
-                ? <Note>EasyTax covers losses and loss claims from the 2026-27 tax year. If you have losses brought forward or want to claim a loss for {taxYear}, report them through HMRC online services or other compatible software before the final declaration.</Note>
+                ? <Note>MTD Buddy covers losses and loss claims from the 2026-27 tax year. If you have losses brought forward or want to claim a loss for {taxYear}, report them through HMRC online services or other compatible software before the final declaration.</Note>
                 : overview.losses.data
                 ? numbersIn({ losses: (overview.losses.data as Json).losses, claims: (overview.losses.data as Json).claims })
                     .map(([label, value]) => <Row key={label} label={label.charAt(0).toUpperCase() + label.slice(1)} value={gbp(value)} />)
@@ -377,7 +377,7 @@ export default function YearEndClient({ taxYear, setTaxYear, clientId, sandbox, 
           </button>
         </div>
         <p className="text-xs mt-3" style={{ color: '#6B6256', lineHeight: 1.55 }}>
-          EasyTax does not cover capital gains, foreign income other than property, or other income not listed here. If you have any, report it through{' '}
+          MTD Buddy does not cover capital gains, foreign income other than property, or other income not listed here. If you have any, report it through{' '}
           <a href="https://www.gov.uk/log-in-file-self-assessment-tax-return" target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>HMRC online services</a> or{' '}
           <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax"
             target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>other compatible software</a>{' '}

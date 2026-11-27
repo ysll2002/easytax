@@ -1,4 +1,4 @@
-// Agent mode — an EasyTax user acting as an HMRC-registered agent for their
+// Agent mode — an MTD Buddy user acting as an HMRC-registered agent for their
 // clients, through HMRC's Agent Authorisation API (2.0).
 //
 // Flow:
@@ -10,7 +10,7 @@
 //      (POST /agents/{arn}/invitations) using the client's NINO + postcode
 //      (Income Tax) or VRN + VAT registration date (VAT). HMRC returns a link
 //      the client opens to accept, signed in with their own Government Gateway.
-//   3. EasyTax polls the request; once accepted it confirms the relationship
+//   3. MTD Buddy polls the request; once accepted it confirms the relationship
 //      (POST /agents/{arn}/relationships → 204).
 //   4. The agent then files for the client with the same MTD APIs a taxpayer
 //      uses, called with the agent's token and the client's NINO / VRN.

@@ -30,13 +30,13 @@ export type Task = {
   periodKey?: string;
   taxYear?: string;
   // Payments: the amount HMRC says is outstanding ('hmrc'), or a date
-  // reminder with no amount when EasyTax cannot see the account ('reminder').
+  // reminder with no amount when MTD Buddy cannot see the account ('reminder').
   amount?: number;
   source?: 'hmrc' | 'reminder';
 };
 
 // Self Assessment Accounts is used against the live API only once HMRC has
-// approved it for EasyTax (add self-assessment-accounts-api to
+// approved it for MTD Buddy (add self-assessment-accounts-api to
 // HMRC_PRODUCTION_EOY_APIS); until then the dashboard shows date reminders.
 function saAccountsAvailable() {
   if (!IS_HMRC_PRODUCTION) return true;

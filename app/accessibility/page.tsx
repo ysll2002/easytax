@@ -15,8 +15,8 @@ const LAST_REVIEWED = '13 November 2026';
 
 export const metadata: Metadata = {
   title: 'Accessibility statement',
-  description: 'How accessible EasyTax is, known issues, and how to contact us if you have difficulty using the service.',
-  alternates: { canonical: 'https://easytax.vip/accessibility' },
+  description: 'How accessible MTD Buddy is, known issues, and how to contact us if you have difficulty using the service.',
+  alternates: { canonical: 'https://mtdbuddy.com/accessibility' },
 };
 
 export default function AccessibilityStatement() {
@@ -25,7 +25,7 @@ export default function AccessibilityStatement() {
       <header style={{ borderBottom: '1px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-5 flex justify-between items-center">
           <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#A04E1C', textDecoration: 'none' }}>
-            EasyTax
+            MTD Buddy
           </Link>
           <Link href="/" style={{ fontSize: '0.875rem', color: '#4A4035' }}>Back to home</Link>
         </div>
@@ -33,7 +33,7 @@ export default function AccessibilityStatement() {
 
       <main id="main-content" className="flex-grow max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-16 w-full">
         <h1 style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: 'clamp(1.9rem, 5vw, 2.5rem)', fontWeight: 700, color: '#1C1208', marginBottom: '0.5rem' }}>
-          Accessibility statement for EasyTax
+          Accessibility statement for MTD Buddy
         </h1>
         <p style={{ color: '#6B6256', fontSize: '0.875rem', marginBottom: '2.5rem' }}>
           Last reviewed: {LAST_REVIEWED}
@@ -42,11 +42,11 @@ export default function AccessibilityStatement() {
         <div className="space-y-10" style={{ lineHeight: 1.75 }}>
           <section>
             <P>
-              This statement applies to the EasyTax website and web application at <strong>easytax.vip</strong>,
+              This statement applies to the MTD Buddy website and web application at <strong>mtdbuddy.com</strong>,
               including the dashboard used to keep digital records and send Making Tax Digital updates to HMRC.
-              EasyTax is run by Finance Panda Limited.
+              MTD Buddy is run by Finance Panda Limited.
             </P>
-            <P>We want as many people as possible to be able to use EasyTax. For example, you should be able to:</P>
+            <P>We want as many people as possible to be able to use MTD Buddy. For example, you should be able to:</P>
             <UL items={[
               'change colours, contrast levels and fonts using your browser or device settings',
               'zoom in up to 200% without the text spilling off the screen',
@@ -77,7 +77,7 @@ export default function AccessibilityStatement() {
             <P>
               If you need information from this service in a different format, such as large print or plain text,
               or you have difficulty using any part of it, email us at{' '}
-              <a href="mailto:hello@easytax.vip">hello@easytax.vip</a>.
+              <a href="mailto:hello@mtdbuddy.com">hello@mtdbuddy.com</a>.
             </P>
             <P>We will consider your request and get back to you within 5 working days.</P>
           </section>
@@ -87,7 +87,7 @@ export default function AccessibilityStatement() {
             <P>
               We are always looking to improve the accessibility of this service. If you find any problems not listed
               on this page, or think we are not meeting accessibility requirements, email{' '}
-              <a href="mailto:hello@easytax.vip">hello@easytax.vip</a>.
+              <a href="mailto:hello@mtdbuddy.com">hello@mtdbuddy.com</a>.
             </P>
             <P>
               If you are not happy with how we respond to your complaint, you can contact the{' '}
@@ -99,14 +99,14 @@ export default function AccessibilityStatement() {
             <H2>Services from other organisations</H2>
             <P>
               Some steps take you to services that we do not control, so we cannot fix accessibility problems on them:
-              the HMRC sign-in pages used to give EasyTax permission to send updates for you, and Google sign-in.
+              the HMRC sign-in pages used to give MTD Buddy permission to send updates for you, and Google sign-in.
             </P>
           </section>
 
           <section>
             <H2>Technical information about this service&rsquo;s accessibility</H2>
             <P>
-              Finance Panda Limited is committed to making EasyTax accessible, in line with the Web Content
+              Finance Panda Limited is committed to making MTD Buddy accessible, in line with the Web Content
               Accessibility Guidelines (WCAG) version 2.1 AA standard.
             </P>
 

@@ -6,31 +6,31 @@ import { Check, X, ArrowRight } from 'lucide-react';
 import { auth } from '@/auth';
 import SiteFooter from '@/components/SiteFooter';
 
-// Landlords and Making Tax Digital — and, honestly, what EasyTax does and does
-// not do for them. EasyTax does not file property income yet (no Property
+// Landlords and Making Tax Digital — and, honestly, what MTD Buddy does and does
+// not do for them. MTD Buddy does not file property income yet (no Property
 // Business API subscription), so this page says so plainly and points
 // landlords to HMRC's list of software that does. HMRC's Terms of Use ask for
 // an accurate description of the product; this page used to claim SA105
-// property filing, CT600 and the year-end return, none of which EasyTax files.
+// property filing, CT600 and the year-end return, none of which MTD Buddy files.
 
 const GOV_UK_FIND_SOFTWARE = 'https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax';
 
 export const metadata: Metadata = {
-  title: pageTitle('Landlords and Making Tax Digital — What EasyTax Covers'),
-  description: 'Making Tax Digital for Income Tax applies to UK landlords with qualifying income over £50,000. EasyTax does not file property income yet — here is what it does cover, and where landlords can find software that files property income.',
-  alternates: { canonical: 'https://easytax.vip/landlord-tax-software' },
+  title: pageTitle('Landlords and Making Tax Digital — What MTD Buddy Covers'),
+  description: 'Making Tax Digital for Income Tax applies to UK landlords with qualifying income over £50,000. MTD Buddy does not file property income yet — here is what it does cover, and where landlords can find software that files property income.',
+  alternates: { canonical: 'https://mtdbuddy.com/landlord-tax-software' },
   openGraph: {
-    title: 'Landlords and Making Tax Digital — What EasyTax Covers',
-    description: 'EasyTax does not file property income yet. What it covers, and where UK landlords can find MTD software that does.',
-    url: 'https://easytax.vip/landlord-tax-software',
+    title: 'Landlords and Making Tax Digital — What MTD Buddy Covers',
+    description: 'MTD Buddy does not file property income yet. What it covers, and where UK landlords can find MTD software that does.',
+    url: 'https://mtdbuddy.com/landlord-tax-software',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Landlords and Making Tax Digital — What EasyTax Covers',
-    description: 'EasyTax does not file property income yet. What it covers, and where landlords can find software that does.',
+    title: 'Landlords and Making Tax Digital — What MTD Buddy Covers',
+    description: 'MTD Buddy does not file property income yet. What it covers, and where landlords can find software that does.',
   },
 };
 
@@ -56,31 +56,31 @@ export default async function LandlordTaxSoftware() {
       a: 'From 6 April 2026, landlords whose qualifying income (gross property income plus any self-employment income) exceeds £50,000 must keep digital records and send quarterly updates to HMRC through compatible software. The threshold drops to £30,000 from 6 April 2027 and £20,000 from 6 April 2028.',
     },
     {
-      q: 'Can EasyTax file my property income?',
-      a: 'Not yet. EasyTax files MTD ITSA quarterly updates for self-employment income and MTD VAT returns. It does not send quarterly updates for UK or foreign property, and it does not file the SA105 property pages or the year-end return. Use software from HMRC\'s list on GOV.UK that supports property income.',
+      q: 'Can MTD Buddy file my property income?',
+      a: 'Not yet. MTD Buddy files MTD ITSA quarterly updates for self-employment income and MTD VAT returns. It does not send quarterly updates for UK or foreign property, and it does not file the SA105 property pages or the year-end return. Use software from HMRC\'s list on GOV.UK that supports property income.',
     },
     {
-      q: 'I am a landlord and also self-employed. Can I use EasyTax?',
-      a: 'For your self-employment, yes: EasyTax can send those quarterly updates. Your property income still needs software that supports it, and HMRC expects all of your income sources to be covered, so check that the combination of software you choose covers every source.',
+      q: 'I am a landlord and also self-employed. Can I use MTD Buddy?',
+      a: 'For your self-employment, yes: MTD Buddy can send those quarterly updates. Your property income still needs software that supports it, and HMRC expects all of your income sources to be covered, so check that the combination of software you choose covers every source.',
     },
     {
-      q: 'I hold my property in a limited company. Can I use EasyTax?',
-      a: 'Only for VAT, if the company is VAT-registered. EasyTax does not file CT600 Corporation Tax or prepare company accounts.',
+      q: 'I hold my property in a limited company. Can I use MTD Buddy?',
+      a: 'Only for VAT, if the company is VAT-registered. MTD Buddy does not file CT600 Corporation Tax or prepare company accounts.',
     },
     {
-      q: 'Will EasyTax support landlords in future?',
-      a: 'We would like to. Until EasyTax can file property income, this page will say so. If you want to hear when that changes, email hello@easytax.vip.',
+      q: 'Will MTD Buddy support landlords in future?',
+      a: 'We would like to. Until MTD Buddy can file property income, this page will say so. If you want to hear when that changes, email hello@mtdbuddy.com.',
     },
   ];
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: 'Landlords and Making Tax Digital — What EasyTax Covers',
-    description: 'EasyTax does not file property income yet. What it covers for UK landlords, and where to find MTD software that files property income.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    headline: 'Landlords and Making Tax Digital — What MTD Buddy Covers',
+    description: 'MTD Buddy does not file property income yet. What it covers for UK landlords, and where to find MTD software that files property income.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/landlord-tax-software',
+    mainEntityOfPage: 'https://mtdbuddy.com/landlord-tax-software',
   };
 
   const jsonLdFaq = {
@@ -107,17 +107,17 @@ export default async function LandlordTaxSoftware() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
               Landlords and Making Tax Digital.<br />
-              <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>What EasyTax covers — and what it doesn&apos;t yet.</em>
+              <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>What MTD Buddy covers — and what it doesn&apos;t yet.</em>
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              <strong style={{ color: '#1C1208' }}>EasyTax does not file property income yet.</strong> If you are a landlord, you will need software that supports property income for your quarterly updates and year-end return. HMRC keeps a list of compatible software on GOV.UK.
+              <strong style={{ color: '#1C1208' }}>MTD Buddy does not file property income yet.</strong> If you are a landlord, you will need software that supports property income for your quarterly updates and year-end return. HMRC keeps a list of compatible software on GOV.UK.
             </p>
             <div className="flex items-center gap-3 flex-wrap">
               <a href={GOV_UK_FIND_SOFTWARE} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }} rel="noopener">
                 Find software on GOV.UK →
               </a>
-              <a href="mailto:hello@easytax.vip?subject=Landlord%20support" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
-                Tell me when EasyTax supports landlords
+              <a href="mailto:hello@mtdbuddy.com?subject=Landlord%20support" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+                Tell me when MTD Buddy supports landlords
               </a>
             </div>
           </div>
@@ -148,11 +148,11 @@ export default async function LandlordTaxSoftware() {
           </div>
         </section>
 
-        {/* ── What EasyTax covers ── */}
+        {/* ── What MTD Buddy covers ── */}
         <section className="py-16 sm:py-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              What EasyTax does for landlords today
+              What MTD Buddy does for landlords today
             </h2>
             <ul className="space-y-3" style={{ listStyle: 'none', padding: 0 }}>
               {covers.map(c => (
@@ -165,7 +165,7 @@ export default async function LandlordTaxSoftware() {
               ))}
             </ul>
             <p className="text-sm mt-6" style={{ color: '#4A4035' }}>
-              If you also have self-employment income, EasyTax can send those quarterly updates.{' '}
+              If you also have self-employment income, MTD Buddy can send those quarterly updates.{' '}
               <Link href={ctaHref} style={{ color: '#A04E1C', fontWeight: 600 }}>Get started <ArrowRight size={14} className="inline" aria-hidden /></Link>
             </p>
           </div>

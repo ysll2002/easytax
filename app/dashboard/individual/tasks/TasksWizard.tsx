@@ -265,16 +265,16 @@ export default function TasksWizard() {
       </Section>
 
       {/* Step 4: Final Declaration — NOT SUPPORTED (in-year only build).
-          HMRC MTD-ITSA production requirement: because EasyTax does not yet
+          HMRC MTD-ITSA production requirement: because MTD Buddy does not yet
           support end-of-year functionality, this step is disabled and users
           are signposted to the gov.uk compatible-software directory. */}
       <Section icon={<FileCheck size={18} />} title="Step 4 — Final Declaration" done={false} active={false} locked>
         <div className="p-4 rounded-xl" style={{ backgroundColor: '#FFF9F5', border: '1px solid #A04E1C30' }}>
           <p className="text-sm font-semibold mb-2" style={{ color: '#1C1208' }}>
-            End-of-year submission not supported in EasyTax
+            End-of-year submission not supported in MTD Buddy
           </p>
           <p className="text-sm mb-3" style={{ color: '#4A4035', lineHeight: 1.5 }}>
-            EasyTax currently supports in-year quarterly updates only. The Final Declaration
+            MTD Buddy currently supports in-year quarterly updates only. The Final Declaration
             (crystallisation) step at the end of the tax year is <strong>not</strong> available in
             this software. To complete your Final Declaration you will need to use additional
             HMRC-compatible software.

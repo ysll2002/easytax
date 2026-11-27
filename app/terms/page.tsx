@@ -4,8 +4,8 @@ import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'Terms of Service for EasyTax — the Self Assessment and Making Tax Digital filing platform by Finance Panda Limited.',
-  alternates: { canonical: 'https://easytax.vip/terms' },
+  description: 'Terms of Service for MTD Buddy — the Self Assessment and Making Tax Digital filing platform by Finance Panda Limited.',
+  alternates: { canonical: 'https://mtdbuddy.com/terms' },
   robots: { index: false },
 };
 
@@ -17,7 +17,7 @@ export default function Terms() {
       <nav style={{ borderBottom: '1px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
         <div className="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
           <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#A04E1C', textDecoration: 'none' }}>
-            EasyTax
+            MTD Buddy
           </Link>
           <Link href="/" style={{ fontSize: '0.875rem', color: '#6B6256', textDecoration: 'none' }}>← Back to Home</Link>
         </div>
@@ -38,7 +38,7 @@ export default function Terms() {
           <section>
             <H2>1. About These Terms</H2>
             <P>
-              These Terms of Service ("Terms") form a legally binding agreement between you and <strong>Finance Panda Limited</strong>, a company registered in England and Wales, trading as EasyTax ("EasyTax", "we", "us", "our"). By creating an account or using our platform at easytax.vip, you agree to these Terms in full.
+              These Terms of Service ("Terms") form a legally binding agreement between you and <strong>Finance Panda Limited</strong>, a company registered in England and Wales, trading as MTD Buddy ("MTD Buddy", "we", "us", "our"). By creating an account or using our platform at mtdbuddy.com, you agree to these Terms in full.
             </P>
             <P>
               If you do not agree, please do not use the Service. We recommend you read these Terms carefully before proceeding.
@@ -49,7 +49,7 @@ export default function Terms() {
           <section>
             <H2>2. The Service</H2>
             <P>
-              EasyTax is a software platform that helps UK-based sole traders, freelancers, and contractors to:
+              MTD Buddy is a software platform that helps UK-based sole traders, freelancers, and contractors to:
             </P>
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }} className="space-y-1">
               <li>Keep income and expense records, entered by hand or imported from CSV statements downloaded from their bank</li>
@@ -59,14 +59,14 @@ export default function Terms() {
               <li>View their HMRC obligations, calculations, and VAT returns</li>
             </ul>
             <Callout>
-              <strong>Not financial advice.</strong> EasyTax is a tax filing tool, not a regulated financial adviser or chartered accountant. We help you file the return — the accuracy of the underlying data is your responsibility. For complex tax situations, please consult a qualified accountant.
+              <strong>Not financial advice.</strong> MTD Buddy is a tax filing tool, not a regulated financial adviser or chartered accountant. We help you file the return — the accuracy of the underlying data is your responsibility. For complex tax situations, please consult a qualified accountant.
             </Callout>
           </section>
 
           {/* 3 */}
           <section>
             <H2>3. Eligibility</H2>
-            <P>To use EasyTax you must:</P>
+            <P>To use MTD Buddy you must:</P>
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }} className="space-y-1">
               <li>Be at least 18 years old</li>
               <li>Be a UK resident or have UK tax obligations</li>
@@ -79,7 +79,7 @@ export default function Terms() {
           <section>
             <H2>4. Your Account</H2>
             <P>
-              You are responsible for maintaining the confidentiality of your login credentials and for all activity that occurs under your account. Notify us immediately at <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a> if you suspect unauthorised access.
+              You are responsible for maintaining the confidentiality of your login credentials and for all activity that occurs under your account. Notify us immediately at <a href="mailto:support@mtdbuddy.com" style={{ color: '#A04E1C' }}>support@mtdbuddy.com</a> if you suspect unauthorised access.
             </P>
             <P>
               You must provide accurate information when registering. We may suspend or terminate your account if we have reason to believe information you have provided is false or misleading.
@@ -106,7 +106,7 @@ export default function Terms() {
           <section>
             <H2>6. HMRC Connection and Data Access</H2>
             <P>
-              By connecting your Government Gateway account via our OAuth integration, you authorise EasyTax to access your HMRC Self Assessment data and submit returns on your behalf. This authorisation can be revoked at any time from your dashboard or directly via your HMRC online account.
+              By connecting your Government Gateway account via our OAuth integration, you authorise MTD Buddy to access your HMRC Self Assessment data and submit returns on your behalf. This authorisation can be revoked at any time from your dashboard or directly via your HMRC online account.
             </P>
             <P>
               We act strictly on your instruction. We will never submit a return to HMRC without your explicit confirmation.
@@ -117,7 +117,7 @@ export default function Terms() {
           <section>
             <H2>7. Business Records and Bank Statements</H2>
             <P>
-              You can enter income and expense records by hand or import CSV statements that you download from your bank yourself. EasyTax does not connect to your bank account, never asks for your bank login, and cannot initiate payments or move money.
+              You can enter income and expense records by hand or import CSV statements that you download from your bank yourself. MTD Buddy does not connect to your bank account, never asks for your bank login, and cannot initiate payments or move money.
             </P>
             <P>
               You are responsible for checking that your records are complete and correctly categorised before you submit anything to HMRC.
@@ -128,7 +128,7 @@ export default function Terms() {
           <section>
             <H2>8. Fees and Payment</H2>
             <P>
-              EasyTax is <strong>free to use</strong>. There is no subscription charge and no fee for
+              MTD Buddy is <strong>free to use</strong>. There is no subscription charge and no fee for
               submitting a return to HMRC. We do not ask for card or other payment details, and we do
               not take payments.
             </P>
@@ -166,7 +166,7 @@ export default function Terms() {
           <section>
             <H2>10. Intellectual Property</H2>
             <P>
-              All content, software, trademarks, and design elements of EasyTax are owned by Finance Panda Limited or our licensors. You may not reproduce, distribute, or create derivative works without our express written permission.
+              All content, software, trademarks, and design elements of MTD Buddy are owned by Finance Panda Limited or our licensors. You may not reproduce, distribute, or create derivative works without our express written permission.
             </P>
             <P>
               You retain ownership of all data you submit through the Service. You grant us a limited licence to process that data solely to provide the Service to you.
@@ -205,7 +205,7 @@ export default function Terms() {
           <section>
             <H2>13. Termination</H2>
             <P>
-              You may close your account at any time by contacting <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a>. Upon termination, your right to use the Service ceases immediately.
+              You may close your account at any time by contacting <a href="mailto:support@mtdbuddy.com" style={{ color: '#A04E1C' }}>support@mtdbuddy.com</a>. Upon termination, your right to use the Service ceases immediately.
             </P>
             <P>
               We may suspend or terminate your account if you breach these Terms, or if we are required to do so by law. We will give you reasonable notice unless the breach requires immediate action.
@@ -230,15 +230,15 @@ export default function Terms() {
               These Terms are governed by the laws of England and Wales. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts of England and Wales.
             </P>
             <P>
-              Before pursuing legal action, we encourage you to contact us at <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a> so we can attempt to resolve the matter informally.
+              Before pursuing legal action, we encourage you to contact us at <a href="mailto:support@mtdbuddy.com" style={{ color: '#A04E1C' }}>support@mtdbuddy.com</a> so we can attempt to resolve the matter informally.
             </P>
           </section>
 
           {/* 16 */}
           <section>
             <H2>16. Contact Us</H2>
-            <P><strong>Email:</strong> <a href="mailto:support@easytax.vip" style={{ color: '#A04E1C' }}>support@easytax.vip</a></P>
-            <P><strong>Privacy:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a></P>
+            <P><strong>Email:</strong> <a href="mailto:support@mtdbuddy.com" style={{ color: '#A04E1C' }}>support@mtdbuddy.com</a></P>
+            <P><strong>Privacy:</strong> <a href="mailto:privacy@mtdbuddy.com" style={{ color: '#A04E1C' }}>privacy@mtdbuddy.com</a></P>
             <P>Finance Panda Limited, London, United Kingdom.</P>
           </section>
 

@@ -35,7 +35,7 @@ export default function ProfilePage() {
       // Use the server-provided filename when present, fall back to a date-stamped name.
       const cd = res.headers.get('Content-Disposition') ?? '';
       const match = cd.match(/filename="([^"]+)"/);
-      a.download = match?.[1] ?? `easytax-export-${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = match?.[1] ?? `mtdbuddy-export-${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -109,7 +109,7 @@ export default function ProfilePage() {
           Your data
         </h2>
         <p className="text-sm mb-4" style={{ color: '#6B6256' }}>
-          Download a JSON archive of everything EasyTax holds on you — profile, tax IDs, business records, HMRC filings. Your business data is yours to keep and move.
+          Download a JSON archive of everything MTD Buddy holds on you — profile, tax IDs, business records, HMRC filings. Your business data is yours to keep and move.
         </p>
         <button
           type="button"

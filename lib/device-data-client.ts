@@ -66,7 +66,7 @@ async function doCollect(): Promise<DeviceData> {
   };
 
   // Legacy cookie kept as a fallback so any server route hit without the new
-  // X-EasyTax-Device-Data header (e.g. direct curl) still populates what it can.
+  // X-MTD Buddy-Device-Data header (e.g. direct curl) still populates what it can.
   try {
     document.cookie = `hmrc_device=${encodeURIComponent(JSON.stringify({ ...data, userId: '' }))};path=/;max-age=3600;SameSite=Strict`;
   } catch { /* ignore */ }

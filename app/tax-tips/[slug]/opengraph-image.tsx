@@ -3,7 +3,7 @@ import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 import { hasSupabaseEnv } from '../_lib/articles';
 import { selectPublished } from '../_lib/review';
 
-export const alt = 'EasyTax Tax Tips';
+export const alt = 'MTD Buddy Tax Tips';
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 export const revalidate = 3600;
@@ -40,6 +40,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     eyebrow: 'Tax Tips',
     title,
     subtitle: excerpt,
-    footnote: 'easytax.vip/tax-tips',
+    footnote: 'mtdbuddy.com/tax-tips',
   });
 }

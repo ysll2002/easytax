@@ -32,10 +32,28 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/:path*',
-        has: [{ type: 'host', value: 'www.easytax.vip' }],
-        destination: 'https://easytax.vip/:path*',
+        has: [{ type: 'host', value: 'www.mtdbuddy.com' }],
+        destination: 'https://mtdbuddy.com/:path*',
         permanent: true,
       },
+      // The old domain. Until mtdbuddy.com is live, www.easytax.vip keeps
+      // going to easytax.vip. Set REDIRECT_OLD_DOMAIN=1 in Vercel (production)
+      // once mtdbuddy.com serves the site: then every easytax.vip URL
+      // permanently redirects (308, keeps the method) to the same path on
+      // mtdbuddy.com.
+      ...(process.env.REDIRECT_OLD_DOMAIN === '1'
+        ? ['easytax.vip', 'www.easytax.vip'].map((value) => ({
+            source: '/:path*',
+            has: [{ type: 'host' as const, value }],
+            destination: 'https://mtdbuddy.com/:path*',
+            permanent: true,
+          }))
+        : [{
+            source: '/:path*',
+            has: [{ type: 'host' as const, value: 'www.easytax.vip' }],
+            destination: 'https://easytax.vip/:path*',
+            permanent: true,
+          }]),
       {
         source: '/privacy-policy',
         destination: '/privacy',

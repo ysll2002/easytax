@@ -21,7 +21,7 @@ import sitemap from '@/app/sitemap';
 export const INDEXNOW_KEY =
   process.env.INDEXNOW_KEY || '55251a02303938bd113be2863f9c7b6c';
 
-export const INDEXNOW_HOST = 'easytax.vip';
+export const INDEXNOW_HOST = 'mtdbuddy.com';
 
 const ENDPOINT = 'https://api.indexnow.org/indexnow';
 
@@ -52,7 +52,7 @@ export async function publishedUrls(): Promise<string[]> {
  * failing a publish or a cron over — the caller has already done the thing
  * that mattered.
  *
- * No-ops outside production: a preview deployment submitting easytax.vip URLs
+ * No-ops outside production: a preview deployment submitting mtdbuddy.com URLs
  * would be telling search engines that pages changed when they have not, and
  * repeated false signals are how a host gets its submissions ignored.
  */

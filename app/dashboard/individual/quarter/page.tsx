@@ -287,7 +287,7 @@ function QuarterForm() {
             </p>
             <p className="mb-2 text-xs">
               {noRecords
-                ? `There are no records between ${fmtDate(start)} and ${fmtDate(end)} yet. Upload a CSV statement and EasyTax will sort it with AI and fill in the figures.`
+                ? `There are no records between ${fmtDate(start)} and ${fmtDate(end)} yet. Upload a CSV statement and MTD Buddy will sort it with AI and fill in the figures.`
                 : 'You can change any figure below. When you continue, each change is saved to your records as an adjustment, so your records always match what you send to HMRC.'}
             </p>
             <div className="flex items-center gap-2 flex-wrap">
@@ -406,7 +406,7 @@ function QuarterForm() {
                 {yearToDate && (
                   <div className="text-sm mb-3 p-3 rounded-xl" style={{ backgroundColor: '#F5F0E8', color: '#1C1208' }}>
                     <p className="text-xs mb-2" style={{ color: '#4A4035', lineHeight: 1.55 }}>
-                      From the 2025-26 tax year HMRC takes your totals for the year so far, not just this quarter. EasyTax adds up your records from {fmtDate(yearToDate.periodStartDate)} to {fmtDate(yearToDate.periodEndDate)} and sends:
+                      From the 2025-26 tax year HMRC takes your totals for the year so far, not just this quarter. MTD Buddy adds up your records from {fmtDate(yearToDate.periodStartDate)} to {fmtDate(yearToDate.periodEndDate)} and sends:
                     </p>
                     <dl className="space-y-1">
                       <div className="flex justify-between gap-4"><dt>Turnover, year to date</dt><dd style={{ fontWeight: 600 }}>£{yearToDate.turnover.toFixed(2)}</dd></div>

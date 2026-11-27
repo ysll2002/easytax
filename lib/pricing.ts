@@ -1,4 +1,4 @@
-// What EasyTax costs, in one place.
+// What MTD Buddy costs, in one place.
 //
 // Why this file exists. The price has now changed direction twice:
 //
@@ -13,13 +13,13 @@
 // fixed later, by hand, because nothing tied the two together.
 //
 // So: every place where the price appears as a *discrete repeated value* — the
-// chip on each landing page, the EasyTax row of a comparison table, the
+// chip on each landing page, the MTD Buddy row of a comparison table, the
 // typical-annual-cost figure, the schema.org Offer — reads it from here. The
 // next flip is this file plus the prose.
 //
 // Prose is deliberately NOT templated. Thirteen landing pages work the
 // arithmetic through in their own voice ("Paying £228/year for FreeAgent?
-// EasyTax files the same returns for £24 each"), and a sentence that survives
+// MTD Buddy files the same returns for £24 each"), and a sentence that survives
 // having its price substituted by string interpolation is a sentence nobody
 // wanted to read. Those are hand-written and hand-changed. What this file buys
 // is that the machine-readable claims and the repeated UI atoms cannot drift
@@ -45,11 +45,11 @@ export const PRICE_DISPLAY = '£0';
  */
 export const PRICE_CHIP = 'Free — no subscription';
 
-/** The EasyTax cell in a feature-comparison table. Two words at most. */
+/** The MTD Buddy cell in a feature-comparison table. Two words at most. */
 export const PRICE_TABLE_CELL = 'Free';
 
 /**
- * The EasyTax row of a cost-comparison table, where every other row reads
+ * The MTD Buddy row of a cost-comparison table, where every other row reads
  * "£19–£29 / month subscription". Describes the model, not a number.
  */
 export const PRICE_MODEL = 'Free — no subscription, no per-filing fee';
@@ -69,7 +69,7 @@ export const PRICE_CLAUSE = 'free, no subscription';
  * reads as a trial to anyone who has shopped for accounting software.
  */
 export const PRICE_SENTENCE =
-  'EasyTax is free to use — no subscription and no per-filing fee.';
+  'MTD Buddy is free to use — no subscription and no per-filing fee.';
 
 /**
  * The schema.org Offer, shared by the SoftwareApplication node in

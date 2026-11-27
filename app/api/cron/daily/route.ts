@@ -84,7 +84,7 @@ async function fetchJson(url: URL): Promise<unknown> {
  *
  * Runs here rather than only behind `/api/admin/seo-audit` because that
  * endpoint existed for five days without being called once, and in that window
- * 119 of 158 pages were serving a title that said "EasyTax" twice. The summary
+ * 119 of 158 pages were serving a title that said "MTD Buddy" twice. The summary
  * goes into the day's snapshot, so the next round reads it without having to
  * know the endpoint exists.
  *

@@ -8,6 +8,7 @@ import {
   type Recipient,
   type Segment,
 } from '@/lib/reactivation';
+import { MAIL_FROM } from '@/lib/brand';
 
 // The reactivation campaign: 45 accounts, 15 of them HMRC-connected, 0 filings,
 // and not one marketing email ever sent to any of them.
@@ -35,7 +36,7 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
-const FROM = 'EasyTax <hello@easytax.vip>';
+const FROM = MAIL_FROM;
 
 function unauthorised(req: NextRequest): NextResponse | null {
   const expected = process.env.AGENT_METRICS_KEY;
@@ -150,7 +151,7 @@ async function sendOne(
       text: mail.text,
       headers: {
         // Mailbox providers surface this as a one-click unsubscribe button.
-        'List-Unsubscribe': `<${mail.unsubscribeApi}>, <mailto:hello@easytax.vip?subject=unsubscribe>`,
+        'List-Unsubscribe': `<${mail.unsubscribeApi}>, <mailto:hello@mtdbuddy.com?subject=unsubscribe>`,
         'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
       },
     });
@@ -243,7 +244,7 @@ export async function POST(req: NextRequest) {
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const base = 'https://easytax.vip';
+  const base = 'https://mtdbuddy.com';
   const results = [];
   for (const recipient of target.eligible) {
     results.push(await sendOne(resend, recipient, target.campaign, base));

@@ -125,7 +125,7 @@ function TaskCard({ task }: { task: Task }) {
   const st = STATUS_STYLE[task.status];
   const days = daysUntil(task.dueDate);
   const isPayment = task.type.startsWith('payment');
-  // A payment HMRC says is owed gets "Pay £x"; a date reminder (EasyTax
+  // A payment HMRC says is owed gets "Pay £x"; a date reminder (MTD Buddy
   // cannot see the account) only links to the HMRC account to check.
   const owed = isPayment && task.source === 'hmrc';
   const subtitle = taskSubtitle(task, t, locale);

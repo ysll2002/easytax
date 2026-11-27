@@ -32,8 +32,8 @@
       "title1": "MTD ITSA の時代へ。",
       "title2": "HMRC へ四半期申告",
       "title3": "無料で。",
-      "subtitle": "2026年4月から、年収5万ポンドを超える個人事業主は HMRC に四半期ごとの更新を送る必要があります。EasyTax なら数分で完了 — VAT 申告にも対応しています。",
-      "subtitleEmph": "サブスクも申告ごとの手数料もなし —— EasyTax は無料です。",
+      "subtitle": "2026年4月から、年収5万ポンドを超える個人事業主は HMRC に四半期ごとの更新を送る必要があります。MTD Buddy なら数分で完了 — VAT 申告にも対応しています。",
+      "subtitleEmph": "サブスクも申告ごとの手数料もなし —— MTD Buddy は無料です。",
       "badgeFree": "無料",
       "badgeNoCard": "登録にカード不要",
       "badgeHmrc": "HMRC API 連携",
@@ -56,7 +56,7 @@
     "services": {
       "title1": "すべてに対応、",
       "title2": "あなたが誰であれ。",
-      "subtitle": "個人事業主の四半期更新も、事業の VAT 申告も、EasyTax が HMRC に直接提出します。",
+      "subtitle": "個人事業主の四半期更新も、事業の VAT 申告も、MTD Buddy が HMRC に直接提出します。",
       "freelancer": {
         "kicker": "フリーランス・個人事業主向け",
         "title": "個人と自営業",
@@ -80,14 +80,14 @@
         "f3Label": "HMRC の受領確認",
         "f3Desc": "提出のたびに HMRC の確認が返ってくるので、記録として保管できます。",
         "f4Label": "対象外：CT600 と会社の決算書",
-        "f4Desc": "EasyTax は法人税（CT600）の申告や、貸借対照表・損益計算書の作成には対応していません。",
+        "f4Desc": "MTD Buddy は法人税（CT600）の申告や、貸借対照表・損益計算書の作成には対応していません。",
         "cta": "VAT 申告を始める →"
       }
     },
     "how": {
       "title1": "5 分で申告、",
       "title2": "5 時間ではなく。",
-      "body": "HMRC アカウントを連携し、収入と支出を追加します — 銀行の CSV 明細をインポートするか手入力します。EasyTax が AI で分類し、四半期更新または VAT 申告を提出します。",
+      "body": "HMRC アカウントを連携し、収入と支出を追加します — 銀行の CSV 明細をインポートするか手入力します。MTD Buddy が AI で分類し、四半期更新または VAT 申告を提出します。",
       "priceLabel": "無料",
       "priceCaption": "サブスクリプションも申告ごとの手数料もありません。HMRC 接続、記録のインポート、AI 分類、HMRC への申告はすべて無料です。",
       "cta": "申告を始める →",
@@ -101,18 +101,18 @@
     "faq": {
       "title1": "疑問に",
       "title2": "お答えします。",
-      "q1Q": "EasyTax は有限会社に対応していますか？",
-      "q1A": "一部対応しています。EasyTax は個人事業主の MTD ITSA 四半期更新と、VAT 登録事業者（有限会社を含む）の MTD VAT 申告を提出します。法人税（CT600）、会社の決算書、年末の Self Assessment にはまだ対応していません。料金：無料 — 月額料金も申告ごとの手数料もありません。",
+      "q1Q": "MTD Buddy は有限会社に対応していますか？",
+      "q1A": "一部対応しています。MTD Buddy は個人事業主の MTD ITSA 四半期更新と、VAT 登録事業者（有限会社を含む）の MTD VAT 申告を提出します。法人税（CT600）、会社の決算書、年末の Self Assessment にはまだ対応していません。料金：無料 — 月額料金も申告ごとの手数料もありません。",
       "q2Q": "対応している VAT スキームは？",
       "q2A": "Standard、Flat Rate、Annual VAT Accounting に対応し、MTD 対応 API で HMRC へ直接提出します。",
-      "q3Q": "EasyTax で年末の Self Assessment を提出できますか？",
-      "q3A": "まだできません。EasyTax は MTD の四半期更新を提出します。年末の最終申告（final declaration）、年次の SA100 申告、不動産所得はまだ EasyTax では利用できないため、その手続きには HMRC のオンラインサービスか、HMRC が認めた他のソフトウェアをご利用ください。",
+      "q3Q": "MTD Buddy で年末の Self Assessment を提出できますか？",
+      "q3A": "まだできません。MTD Buddy は MTD の四半期更新を提出します。年末の最終申告（final declaration）、年次の SA100 申告、不動産所得はまだ MTD Buddy では利用できないため、その手続きには HMRC のオンラインサービスか、HMRC が認めた他のソフトウェアをご利用ください。",
       "q4Q": "CT600 とは何ですか？必要ですか？",
-      "q4A": "CT600 は、英国のすべての有限会社が毎年 HMRC に提出する法人税申告書です。EasyTax は CT600 を提出しません — HMRC の法人税オンラインサービス、会計士、または他のソフトウェアをご利用ください。",
+      "q4A": "CT600 は、英国のすべての有限会社が毎年 HMRC に提出する法人税申告書です。MTD Buddy は CT600 を提出しません — HMRC の法人税オンラインサービス、会計士、または他のソフトウェアをご利用ください。",
       "q5Q": "HMRC データは安全ですか？",
       "q5A": "認証情報を保存することはありません。暗号化された接続でデータを取得し、すぐに破棄します。",
       "q6Q": "Self Assessment の期限は？",
-      "q6A": "Self Assessment のオンライン申告期限は毎年1月31日です。VAT 申告は各 VAT 期間の終了から1か月と7日後が期限です。EasyTax は HMRC から取得した MTD 四半期更新と VAT の期限を表示します。"
+      "q6A": "Self Assessment のオンライン申告期限は毎年1月31日です。VAT 申告は各 VAT 期間の終了から1か月と7日後が期限です。MTD Buddy は HMRC から取得した MTD 四半期更新と VAT の期限を表示します。"
     },
     "tips": {
       "kicker": "毎日更新",
@@ -160,7 +160,7 @@
   "auth": {
     "login": {
       "title": "おかえりなさい",
-      "subtitle": "EasyTax アカウントにログイン",
+      "subtitle": "MTD Buddy アカウントにログイン",
       "continueGoogle": "Google でログイン",
       "redirecting": "リダイレクト中…",
       "or": "または",
@@ -250,7 +250,7 @@
       "gatewayAuth": "Government Gateway 認証済み",
       "connectedOn": "{date} に接続",
       "reconnect": "再接続",
-      "step2Body": "Government Gateway アカウントを連携すると、EasyTax が税務義務を取得し代理で申告できます。",
+      "step2Body": "Government Gateway アカウントを連携すると、MTD Buddy が税務義務を取得し代理で申告できます。",
       "connectHmrc": "HMRC を連携",
       "step3Locked": "ステップ 1 と 2 を完了して Self Assessment を解放してください。",
       "tasksHeader": "税務タスク · 過去 1 年と今後 12 か月",
@@ -390,9 +390,9 @@
     "aboutUs": "私たちについて",
     "privacy": "プライバシー",
     "terms": "利用規約",
-    "vs": "EasyTax と {name} の比較",
+    "vs": "MTD Buddy と {name} の比較",
     "tagline": "Finance Panda Limited. ロンドン発。",
-    "disclaimer": "EasyTax は Finance Panda Limited の製品です。無料ツールは HMRC が公表しているルールの一般的な情報を提供するもので、税務アドバイスではありません。HMRC は 2026年11月11日に、MTD ITSA の四半期更新と VAT について当社の本番アクセスを承認しました。",
+    "disclaimer": "MTD Buddy は Finance Panda Limited の製品です。無料ツールは HMRC が公表しているルールの一般的な情報を提供するもので、税務アドバイスではありません。HMRC は 2026年11月11日に、MTD ITSA の四半期更新と VAT について当社の本番アクセスを承認しました。",
     "notifyHeading": "誰よりも早く申告を",
     "notifyBlurb": "MTD 申告が開始された日にメールでお知らせします。それ以外の配信はなく、ワンクリックで解除できます。",
     "accessibility": "アクセシビリティ"
@@ -408,7 +408,7 @@
     "tabsLabel": "アカウントの種類",
     "agentLoginTitle": "代理人ログイン",
     "agentLoginSubtitle": "顧客の代わりに申告する会計士・税務代理人向け。",
-    "agentNoAccount": "代理人として EasyTax を初めて使いますか？",
+    "agentNoAccount": "代理人として MTD Buddy を初めて使いますか？",
     "agentCreate": "代理人アカウントを作成",
     "agentRegisterTitle": "代理人アカウントを作成",
     "agentRegisterSubtitle": "顧客の Making Tax Digital 申告を行う会計士・税務代理人向けです。Agent Services Account（ARN）が必要です。",
