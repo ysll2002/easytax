@@ -15,6 +15,12 @@
 
 ---
 
+## 2026-11-27（续，第一批会计所冷邮件已发）
+**已发**：owner 在 Gmail 设好 Send-as（Zoho SMTP smtp.zoho.eu:465），16:55 左右从 **lin@mtdbuddy.com** 发出 10 封（A&C、Reed、EasyAccounts、GM、MTD-B1、Accounting People、Level、Merit、ABM、Accotax）。追踪 CSV 已标 sent。没回复的，**2026-12-04 起最多跟进一次**。4 家暂缓（3 家做房产、Kirk Newsholme 法律形式未知）。
+**注意**：Gmail connector 建的草稿发件人固定是 lilin.gabriel@gmail.com，以后要从 lin@ 发，owner 得在草稿里手动切换发件人。我建的 Accotax 测试草稿已在发出前删掉，没有重复发送。
+**Bob 草稿**：品牌改成 MTD Buddy，加了一句说明改名（保留 owner 加的 Calendly 链接），**待 owner 发**；记得把发件人切成 lin@。
+**下一步**：从 Companies House 名单补联系方式，准备下一批（只发 Ltd/LLP，只用对方公开的邮箱）。
+
 ## 2026-11-27（续，owner：开始给会计所发冷邮件）
 **已做**：确认 10 封会计所草稿一封都没发。它们还是 EasyTax 和 easytax.vip，**不能发**。outreach 模板已改成 MTD Buddy（用「HMRC recognised」的说法，链接 mtdbuddy.com）。
 **已补做**：10 封草稿已按新模板重写（保留每封的个性化开头；年终申报写成 "with HMRC for review"；EasyAccounts 那封删掉了「名字相似」那句），收件人和标题都没变，可以发了。owner 要求突出免费：每封开头后加了一段「The short version: it's free…」，写明个人永久免费、代理目前免费；试点那条写成「如果以后对代理收费，保留创始价」，不承诺代理永久免费，也不写具体价格（模板里有说明）。**还剩**：给 Companies House 名单补下一批联系方式并起草；建议 owner 在 Gmail 设置用 lin@mtdbuddy.com 发信（Send mail as）。
