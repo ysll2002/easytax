@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital が始まりました。",
       "nextUpdate": "次回の四半期申告：{date}。",
-      "status": "HMRC の本番アクセスが承認されました — MTD ITSA の四半期更新と VAT 申告が利用できます。"
+      "status": "MTD Buddy は HMRC に認められたソフトウェアです — MTD ITSA の四半期更新と VAT 申告が利用できます。"
     },
     "hero": {
       "pill": "次回の MTD ITSA 四半期申告：{date}（あと {days} 日）",
@@ -36,10 +36,12 @@
       "subtitleEmph": "サブスクも申告ごとの手数料もなし —— MTD Buddy は無料です。",
       "badgeFree": "無料",
       "badgeNoCard": "登録にカード不要",
-      "badgeHmrc": "HMRC 認定ソフトウェア",
+      "badgeHmrc": "HMRC に認められたソフト",
       "ctaPrimary": "MTD 対応を始める →",
       "ctaChecker": "MTDの期限を確認する →",
-      "ctaSecondary": "対応範囲を見る →"
+      "ctaSecondary": "対応範囲を見る →",
+      "badgeHmrcSub": "GOV.UK 掲載 · 所得税の Making Tax Digital",
+      "badgeHmrcNewTab": "GOV.UK、新しいタブで開きます"
     },
     "trust": {
       "hmrc": "HMRC MTD API",
@@ -392,11 +394,11 @@
     "terms": "利用規約",
     "vs": "MTD Buddy と {name} の比較",
     "tagline": "Finance Panda Limited. ロンドン発。",
-    "disclaimer": "MTD Buddy は Finance Panda Limited の製品です。無料ツールは HMRC が公表しているルールの一般的な情報を提供するもので、税務アドバイスではありません。HMRC は 2026年11月11日に、MTD ITSA の四半期更新と VAT について当社の本番アクセスを承認しました。",
+    "disclaimer": "MTD Buddy は Finance Panda Limited の製品です。無料ツールは HMRC が公表しているルールの一般的な情報を提供するもので、税務アドバイスではありません。HMRC は 2026年11月11日に、MTD ITSA の四半期更新と VAT について当社の本番アクセスを付与しました。",
     "notifyHeading": "誰よりも早く申告を",
     "notifyBlurb": "MTD 申告が開始された日にメールでお知らせします。それ以外の配信はなく、ワンクリックで解除できます。",
     "accessibility": "アクセシビリティ",
-    "hmrcRecognised": "MTD Buddy は所得税の Making Tax Digital に対応した HMRC 認定ソフトウェアです。",
+    "hmrcRecognised": "MTD Buddy は、所得税の Making Tax Digital 向けに HMRC に認められたソフトウェアです。",
     "hmrcListing": "GOV.UK の掲載ページを見る"
   },
   "a11y": {

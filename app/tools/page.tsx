@@ -186,7 +186,7 @@ export default function ToolsPage() {
             </p>
             <p>
               The rest of MTD Buddy — the filing itself — is free as well. No subscription, no
-              per-filing fee. HMRC approved our production access on 11 November 2026 for MTD ITSA
+              per-filing fee. HMRC granted our production access on 11 November 2026 for MTD ITSA
               quarterly updates, Self Assessment and VAT returns, so those are open. Corporation
               Tax (CT600) is not something we can file.
             </p>

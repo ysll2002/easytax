@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital a commencé.",
       "nextUpdate": "Prochaine déclaration trimestrielle : {date}.",
-      "status": "Accès de production approuvé par HMRC : les mises à jour trimestrielles MTD ITSA et les déclarations de TVA sont ouvertes."
+      "status": "MTD Buddy est reconnu par HMRC : les mises à jour trimestrielles MTD ITSA et les déclarations de TVA sont ouvertes."
     },
     "hero": {
       "pill": "Prochaine mise à jour trimestrielle MTD ITSA : {date} — encore {days} jours",
@@ -36,10 +36,12 @@
       "subtitleEmph": "Sans abonnement et sans frais par déclaration — MTD Buddy est gratuit.",
       "badgeFree": "Gratuit",
       "badgeNoCard": "Sans carte à l'inscription",
-      "badgeHmrc": "Logiciel reconnu par HMRC",
+      "badgeHmrc": "Reconnu par HMRC",
       "ctaPrimary": "Préparez-vous au MTD →",
       "ctaChecker": "Vérifier mes échéances MTD →",
-      "ctaSecondary": "Voir ce que nous couvrons →"
+      "ctaSecondary": "Voir ce que nous couvrons →",
+      "badgeHmrcSub": "Référencé sur GOV.UK · Making Tax Digital (impôt sur le revenu)",
+      "badgeHmrcNewTab": "GOV.UK, s'ouvre dans un nouvel onglet"
     },
     "trust": {
       "hmrc": "API MTD de HMRC",
@@ -392,7 +394,7 @@
     "terms": "Conditions",
     "vs": "MTD Buddy face à {name}",
     "tagline": "Finance Panda Limited. Conçu à Londres.",
-    "disclaimer": "MTD Buddy est un produit de Finance Panda Limited. Les outils gratuits donnent des informations générales sur les règles publiées par HMRC et ne constituent pas un conseil fiscal. HMRC a approuvé notre accès de production le 11 novembre 2026 pour les mises à jour trimestrielles MTD ITSA et la TVA.",
+    "disclaimer": "MTD Buddy est un produit de Finance Panda Limited. Les outils gratuits donnent des informations générales sur les règles publiées par HMRC et ne constituent pas un conseil fiscal. HMRC a accordé notre accès de production le 11 novembre 2026 pour les mises à jour trimestrielles MTD ITSA et la TVA.",
     "notifyHeading": "Déclarez en premier",
     "notifyBlurb": "Nous vous écrirons le jour où la déclaration MTD ouvrira — rien d'autre, désinscription en un clic.",
     "accessibility": "Accessibilité",

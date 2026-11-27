@@ -25,7 +25,7 @@
     "announcement": {
       "live": "بدأ نظام Making Tax Digital.",
       "nextUpdate": "الإقرار الربعي التالي: {date}.",
-      "status": "وافقت HMRC على وصولنا إلى بيئة الإنتاج — أصبح تقديم التحديثات الفصلية لـ MTD ITSA وإقرارات ضريبة القيمة المضافة متاحًا."
+      "status": "MTD Buddy معترف به من HMRC — التحديثات الفصلية لـ MTD ITSA وتقديم إقرارات VAT متاحة الآن."
     },
     "hero": {
       "pill": "التحديث الربعي التالي لـ MTD ITSA: {date} — متبقٍ {days} يوماً",
@@ -36,10 +36,12 @@
       "subtitleEmph": "بدون اشتراك وبدون رسوم لكل إقرار — MTD Buddy مجاني.",
       "badgeFree": "مجاني",
       "badgeNoCard": "بدون بطاقة للتسجيل",
-      "badgeHmrc": "برنامج معترف به من HMRC",
+      "badgeHmrc": "معترف به من HMRC",
       "ctaPrimary": "استعد لـ MTD ←",
       "ctaChecker": "تحقق من مواعيد MTD النهائية ←",
-      "ctaSecondary": "اطلع على ما نغطيه ←"
+      "ctaSecondary": "اطلع على ما نغطيه ←",
+      "badgeHmrcSub": "مُدرج في GOV.UK · Making Tax Digital لضريبة الدخل",
+      "badgeHmrcNewTab": "GOV.UK، يفتح في علامة تبويب جديدة"
     },
     "trust": {
       "hmrc": "واجهة HMRC MTD",
@@ -392,7 +394,7 @@
     "terms": "الشروط",
     "vs": "MTD Buddy مقابل {name}",
     "tagline": "Finance Panda Limited. صُمم في لندن.",
-    "disclaimer": "MTD Buddy منتج من Finance Panda Limited. تقدّم الأدوات المجانية معلومات عامة عن القواعد التي نشرتها HMRC وليست استشارة ضريبية. وافقت HMRC على وصولنا إلى بيئة الإنتاج في 11 نوفمبر 2026 للتحديثات الفصلية لـ MTD ITSA وضريبة القيمة المضافة.",
+    "disclaimer": "MTD Buddy منتج من Finance Panda Limited. تقدّم الأدوات المجانية معلومات عامة عن القواعد التي نشرتها HMRC وليست استشارة ضريبية. منحت HMRC وصولنا إلى بيئة الإنتاج في 11 نوفمبر 2026 للتحديثات الفصلية لـ MTD ITSA وضريبة القيمة المضافة.",
     "notifyHeading": "كن أول من يقدّم إقراره",
     "notifyBlurb": "سنراسلك يوم فتح التقديم عبر MTD — لا شيء غير ذلك، وإلغاء الاشتراك بنقرة واحدة.",
     "accessibility": "إمكانية الوصول",
