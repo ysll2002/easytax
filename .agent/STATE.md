@@ -7,7 +7,8 @@
 ## 2026-11-27 改名 MTD Buddy（进行中）
 - owner 批准改名为 MTD Buddy / mtdbuddy.com（Kelly 已同意）。[PR #84](https://github.com/ysll2002/easytax/pull/84) 已合进 **staging `573d293`**，冒烟检查通过；**production（main）还是 EasyTax**。
 - Vercel 项目 `easytax` 已加 mtdbuddy.com、www.mtdbuddy.com（DNS 还没配）；`MAIL_FROM_DOMAIN=easytax.vip`（prod + staging）。
-- 等 owner 做完 `agent/REBRAND_MTDBUDDY_CHECKLIST.md` 第 1–5 步（阿里云 DNS、Resend、ImprovMX、HMRC redirect URI、Google OAuth），再按第 6 步发布。
+- 11-27：阿里云 DNS 已配好（Vercel A/CNAME，mtdbuddy.com 的 HTTPS 已生效但内容仍是旧版）；企业邮箱用 **Zoho Mail EU**（lin@ 管理员，hello@/privacy@/support@ 都是别名），MX/SPF/DKIM 已通过 Zoho 验证。
+- 等 owner 做完 `agent/REBRAND_MTDBUDDY_CHECKLIST.md` 第 2、4、5 步（阿里云 DNS、Resend、ImprovMX、HMRC redirect URI、Google OAuth），再按第 6 步发布。
 - 给 Kelly 的草稿已改写成「改名已完成」，上线后再发。
 
 ## 2026-11-26 流量与注册（GOV.UK finder 11-20 收录后）
