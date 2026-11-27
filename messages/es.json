@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital ya ha comenzado.",
       "nextUpdate": "Próxima declaración trimestral: {date}.",
-      "status": "HMRC ha aprobado nuestro acceso de producción: ya se pueden presentar las actualizaciones trimestrales de MTD ITSA y el IVA."
+      "status": "MTD Buddy está reconocido por HMRC: ya se pueden presentar las actualizaciones trimestrales de MTD ITSA y el IVA."
     },
     "hero": {
       "pill": "Próxima actualización trimestral de MTD ITSA: {date} — faltan {days} días",

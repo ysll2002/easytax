@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital が始まりました。",
       "nextUpdate": "次回の四半期申告：{date}。",
-      "status": "HMRC の本番アクセスが承認されました — MTD ITSA の四半期更新と VAT 申告が利用できます。"
+      "status": "MTD Buddy は HMRC に認められたソフトウェアです — MTD ITSA の四半期更新と VAT 申告が利用できます。"
     },
     "hero": {
       "pill": "次回の MTD ITSA 四半期申告：{date}（あと {days} 日）",

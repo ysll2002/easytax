@@ -25,7 +25,7 @@
     "announcement": {
       "live": "Making Tax Digital가 시작되었습니다.",
       "nextUpdate": "다음 분기 신고: {date}.",
-      "status": "HMRC 운영 환경 접근 승인 완료 — MTD ITSA 분기별 업데이트와 VAT 신고를 이용할 수 있습니다."
+      "status": "MTD Buddy는 HMRC 인정 소프트웨어입니다 — MTD ITSA 분기별 업데이트와 VAT 신고를 이용할 수 있습니다."
     },
     "hero": {
       "pill": "다음 MTD ITSA 분기 신고: {date} — {days}일 남음",

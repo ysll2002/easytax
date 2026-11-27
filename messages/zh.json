@@ -25,7 +25,7 @@
     "announcement": {
       "live": "数字化税务（MTD）已开始。",
       "nextUpdate": "下一次季度申报：{date}。",
-      "status": "HMRC 已批准生产环境接入 —— MTD ITSA 季度更新和 VAT 申报已开放。"
+      "status": "MTD Buddy 已获 HMRC 认可 — MTD ITSA 季度更新和 VAT 申报已开放。"
     },
     "hero": {
       "pill": "下一次 MTD ITSA 季度申报：{date}，还有 {days} 天",

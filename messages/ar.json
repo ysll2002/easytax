@@ -25,7 +25,7 @@
     "announcement": {
       "live": "بدأ نظام Making Tax Digital.",
       "nextUpdate": "الإقرار الربعي التالي: {date}.",
-      "status": "منحت HMRC وصولنا إلى بيئة الإنتاج — أصبح تقديم التحديثات الفصلية لـ MTD ITSA وإقرارات ضريبة القيمة المضافة متاحًا."
+      "status": "MTD Buddy معترف به من HMRC — التحديثات الفصلية لـ MTD ITSA وتقديم إقرارات VAT متاحة الآن."
     },
     "hero": {
       "pill": "التحديث الربعي التالي لـ MTD ITSA: {date} — متبقٍ {days} يوماً",
