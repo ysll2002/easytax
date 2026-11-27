@@ -4,6 +4,12 @@
 
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
+## 2026-11-27 改名 MTD Buddy（进行中）
+- owner 批准改名为 MTD Buddy / mtdbuddy.com（Kelly 已同意）。[PR #84](https://github.com/ysll2002/easytax/pull/84) 已合进 **staging `573d293`**，冒烟检查通过；**production（main）还是 EasyTax**。
+- Vercel 项目 `easytax` 已加 mtdbuddy.com、www.mtdbuddy.com（DNS 还没配）；`MAIL_FROM_DOMAIN=easytax.vip`（prod + staging）。
+- 等 owner 做完 `agent/REBRAND_MTDBUDDY_CHECKLIST.md` 第 1–5 步（阿里云 DNS、Resend、ImprovMX、HMRC redirect URI、Google OAuth），再按第 6 步发布。
+- 给 Kelly 的草稿已改写成「改名已完成」，上线后再发。
+
 ## 2026-11-26 流量与注册（GOV.UK finder 11-20 收录后）
 - 英国真实访问（去爬虫、去 HMRC 回跳）：收录前一周 27 → 收录后一周 36；有效访问 15 → 25；搜索 17 → 19 基本没变，增长在 Direct（finder 链接 rel=noreferrer，点进来显示为 Direct）。
 - **真实自然注册：3 个**（全在 11-24，无来源、落地 /，都连了 HMRC，0 申报）。另有 3 个是 owner 找人注册的，统计必须排除（名单只在本地 memory `easytax-owner-invited-test-signups`，不进 git）。11-21 两个 agent 号是 owner 自测。

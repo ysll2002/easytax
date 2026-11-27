@@ -15,6 +15,12 @@
 
 ---
 
+## 2026-11-27（owner 会话，改名 MTD Buddy）
+**决定**：owner 确认 mtdbuddy.com 是自己的（阿里云，11-24 注册），Kelly 已同意改名 → 全部改成 MTD Buddy / mtdbuddy.com。推翻 11-25 的否决（BACKLOG 和 memory 已更新）。
+**已做**：PR #84（139 个文件：品牌名、域名、7 种语言、邮件；`lib/brand.ts` 的 MAIL_FROM；FPH 头 `MTD%20Buddy`；`REDIRECT_OLD_DOMAIN=1` 时 easytax.vip 308 跳转到新域名）。tsc 和 build 通过，合进 staging `573d293`，冒烟 4 个页面都没有残留 EasyTax。Vercel 加了新域名，设了 MAIL_FROM_DOMAIN。Kelly 草稿改写成「改名已完成」。
+**待 owner**：清单第 1–5 步，然后说「发布」。
+**待办**：生产库 22 篇 tax_articles 含 EasyTax，上线时一起改；staging.easytax.vip 暂不改名。
+
 ## 2026-11-26（owner 会话，流量来源复盘）
 **已做**：GA4 + 自有埋点对比 finder 收录（11-20）前后。去爬虫后英国访问 27 → 36，增长在 Direct；确认 GOV.UK 详情页链接是 `rel="noopener noreferrer"`，所以 finder 流量显示为 Direct。
 **学到**：收录后 6 个注册里 3 个是 owner 找人注册的（owner 11-26 说明），真实自然注册 3 个，都在 11-24、都连了 HMRC、都没申报。排除名单记在本地 memory，不进镜像。
