@@ -36,7 +36,7 @@
       "subtitleEmph": "Sin suscripción y sin coste por declaración — MTD Buddy es gratis.",
       "badgeFree": "Gratis",
       "badgeNoCard": "Sin tarjeta para registrarte",
-      "badgeHmrc": "Basado en las API de HMRC",
+      "badgeHmrc": "Software reconocido por HMRC",
       "ctaPrimary": "Prepárate para MTD →",
       "ctaChecker": "Consultar mis plazos de MTD →",
       "ctaSecondary": "Ver qué cubrimos →"
@@ -395,7 +395,9 @@
     "disclaimer": "MTD Buddy es un producto de Finance Panda Limited. Las herramientas gratuitas ofrecen información general sobre las normas publicadas por HMRC y no constituyen asesoramiento fiscal. HMRC aprobó nuestro acceso de producción el 11 de noviembre de 2026 para las actualizaciones trimestrales de MTD ITSA y el IVA.",
     "notifyHeading": "Presenta el primero",
     "notifyBlurb": "Te escribiremos el día que se abran las declaraciones MTD; nada más, y puedes darte de baja con un clic.",
-    "accessibility": "Accesibilidad"
+    "accessibility": "Accesibilidad",
+    "hmrcRecognised": "MTD Buddy es un software reconocido por HMRC para Making Tax Digital del impuesto sobre la renta.",
+    "hmrcListing": "Ver nuestra ficha en GOV.UK"
   },
   "a11y": {
     "skipToContent": "Saltar al contenido principal",

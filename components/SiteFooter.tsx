@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import NotifyMeForm from './NotifyMeForm';
+import { HMRC_LISTING_URL } from '@/lib/brand';
 
 // One footer for the whole public site.
 //
@@ -174,8 +175,23 @@ export default function SiteFooter({ source = 'footer' }: { source?: string }) {
           className="pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
           style={{ borderTop: '1px solid #2E2418' }}
         >
-          <div style={{ fontFamily: DISPLAY, fontSize: '1.05rem', color: '#A89D90' }}>
-            {t('tagline')}
+          <div>
+            <div style={{ fontFamily: DISPLAY, fontSize: '1.05rem', color: '#A89D90' }}>
+              {t('tagline')}
+            </div>
+            <p className="text-xs mt-2" style={{ color: '#C9BFB2', lineHeight: 1.6 }}>
+              {t('hmrcRecognised')}{' '}
+              <a
+                href={HMRC_LISTING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-[#E8895A]"
+                style={{ color: '#E8C7A8', textDecoration: 'underline', textUnderlineOffset: '3px' }}
+              >
+                {t('hmrcListing')}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            </p>
           </div>
           <p className="text-xs max-w-md md:text-right" style={{ color: '#A89D90', lineHeight: 1.6 }}>
             {t('disclaimer')}
