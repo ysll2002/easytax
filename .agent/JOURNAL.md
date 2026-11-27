@@ -17,7 +17,7 @@
 
 ## 2026-11-27（续，owner：开始给会计所发冷邮件）
 **已做**：确认 10 封会计所草稿一封都没发。它们还是 EasyTax 和 easytax.vip，**不能发**。outreach 模板已改成 MTD Buddy（用「HMRC recognised」的说法，链接 mtdbuddy.com）。
-**已补做**：10 封草稿已按新模板重写（保留每封的个性化开头；年终申报写成 "with HMRC for review"；EasyAccounts 那封删掉了「名字相似」那句），收件人和标题都没变，可以发了。**还剩**：给 Companies House 名单补下一批联系方式并起草；建议 owner 在 Gmail 设置用 lin@mtdbuddy.com 发信（Send mail as）。
+**已补做**：10 封草稿已按新模板重写（保留每封的个性化开头；年终申报写成 "with HMRC for review"；EasyAccounts 那封删掉了「名字相似」那句），收件人和标题都没变，可以发了。owner 要求突出免费：每封开头后加了一段「The short version: it's free…」，写明个人永久免费、代理目前免费；试点那条写成「如果以后对代理收费，保留创始价」，不承诺代理永久免费，也不写具体价格（模板里有说明）。**还剩**：给 Companies House 名单补下一批联系方式并起草；建议 owner 在 Gmail 设置用 lin@mtdbuddy.com 发信（Send mail as）。
 
 ## 2026-11-27（续，HMRC 问应用改名）
 SDST（Noman Sheikh，工单 2026-WND365）问：组织名、品牌或产品名是否变了（命名规则要求应用名和组织名一致）。已起草回复（Gmail 草稿 r9199006680861234438）：组织 Finance Panda Limited 不变，产品名 11-27 从 EasyTax 改成 MTD Buddy，请把 production 应用改名为「MTD Buddy」；如果他们要求带组织名，也可以用「MTD Buddy (Finance Panda Limited)」。**待 owner 发**。
