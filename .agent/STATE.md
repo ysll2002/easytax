@@ -6,7 +6,7 @@
 
 ## 2026-11-27 改名 MTD Buddy ✅ 已上线
 - **Production = main = staging = `3387944`**（2026-11-27 PR #90 发布 #88 大号「HMRC recognised」徽章、全站不再用「approved」，#89 顶部横幅改成「MTD Buddy is HMRC recognised」；owner 授权）。更早一版 `712add7`（2026-11-27 PR #87 发布 #86：首页「HMRC-recognised software」徽章、页脚一行和 FAQ，都链接到 GOV.UK finder，owner 授权）。上一版 `70c4c05`（2026-11-27 owner 说「发布」；PR #85 = #82 filing-window 指标、#83 激活邮件修正、#84 改名 MTD Buddy；无迁移）。
-- 网站是 **https://mtdbuddy.com**。easytax.vip 和 www.* 都 308 跳转到这里（保留路径和参数）。staging 仍是 staging.easytax.vip。
+- 网站是 **https://mtdbuddy.com**。easytax.vip 和 www.* 都 308 跳转到这里（保留路径和参数）。**staging 是 https://staging.mtdbuddy.com**（PR #91，`395b83e`）：staging.easytax.vip 308 跳转过来，deploy.yml 每次把两个域名都指向新部署；preview 的 NEXTAUTH_URL 已改。staging 的 HMRC_REDIRECT_URI 仍是旧域名（会跳转，能用），等 owner 在 HMRC **sandbox** 应用里加上 `https://staging.mtdbuddy.com/api/auth/callback/hmrc` 再改。
 - production 环境变量：`NEXTAUTH_URL=https://mtdbuddy.com`，`HMRC_REDIRECT_URI=https://mtdbuddy.com/api/auth/callback/hmrc`，`REDIRECT_OLD_DOMAIN=1`；`RESEND_API_KEY` 换成新 Resend 账号（lilin.gabriel+mtdbuddy@gmail.com，mtdbuddy.com 已验证）的 key。preview 还剩一个无害的 `MAIL_FROM_DOMAIN=easytax.vip`，因为删除 API 要交互确认。
 - 邮件：收信用 Zoho Mail EU（lin@mtdbuddy.com，别名 hello@、privacy@、support@），发信用 Resend。DNS 在阿里云。
 - 冒烟测试通过：7 个页面都没有 EasyTax 字样；Google 登录端到端能进 dashboard；HMRC authorize 接受了新 redirect URI（没有点继续）；重置密码邮件 Delivered。生产库 22 篇 tax_articles 已改名。
