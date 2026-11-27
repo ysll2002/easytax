@@ -40,12 +40,13 @@ concurrency:
 
 env:
   VERCEL_SCOPE: lilingabriel-5465s-projects
-  # Used only when VERCEL_ORG_ID / VERCEL_PROJECT_ID are not set, to link the
-  # project by name instead. Change this if the Vercel project is named
-  # something other than the repository.
-  VERCEL_PROJECT_NAME: easytax
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # The project is identified by ID, so renaming it in Vercel never breaks
+  # deploys again (linking by name created an empty project on 2026-11-24).
+  # These IDs are not secrets; repo secrets of the same name override them.
+  # VERCEL_PROJECT_NAME is only the fallback when both IDs are missing.
+  VERCEL_PROJECT_NAME: mtdbuddy
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID || 'team_6C63SfWU5eFBmanmcuR74d14' }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID || 'prj_hXqav4IMGSDCZkzdoapLdmGrcq5G' }}
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 jobs:
