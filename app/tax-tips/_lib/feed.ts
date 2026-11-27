@@ -16,10 +16,10 @@ import { botProps } from '@/lib/bot-detection';
 
 export const FEED_LIMIT = 50;
 
-export const FEED_TITLE = 'EasyTax Tax Tips — UK tax guidance for sole traders and landlords';
+export const FEED_TITLE = 'MTD Buddy Tax Tips — UK tax guidance for sole traders and landlords';
 export const FEED_DESCRIPTION =
   'Plain-English answers to the UK tax questions sole traders, landlords and small limited companies actually ask. Making Tax Digital, Self Assessment, expenses, VAT and corporation tax.';
-export const SITE = 'https://easytax.vip';
+export const SITE = 'https://mtdbuddy.com';
 
 /** Most recent published articles, newest first. Empty on a preview build with
  *  no Supabase credentials — an empty feed is a valid feed, and better than a

@@ -136,7 +136,7 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
   };
 
   // A quarter is done once HMRC says it is fulfilled, or once it has been
-  // submitted from EasyTax (HMRC's sandbox does not always update the
+  // submitted from MTD Buddy (HMRC's sandbox does not always update the
   // obligation afterwards, and this stops it being filed twice).
   const filedQuarter = (start: string, end: string) =>
     filings.find(f => f.filing_type === 'quarterly' && f.period_start === start && f.period_end === end);
@@ -148,7 +148,7 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
   const vatAll = obs?.vat?.obligations ?? [];
   const vatTodo = vatAll.filter(o => o.status === 'O').sort((a, b) => a.due.localeCompare(b.due));
   const vatDone = vatAll.filter(o => o.status === 'F').sort((a, b) => b.start.localeCompare(a.start));
-  // Filings made from EasyTax that HMRC did not return as an obligation.
+  // Filings made from MTD Buddy that HMRC did not return as an obligation.
   const otherFilings = filings.filter(f => !(f.filing_type === 'quarterly' && itsaAll.some(o => o.periodStartDate === f.period_start && o.periodEndDate === f.period_end)));
   const anyAuthorised = client.itsa_status === 'authorised' || client.vat_status === 'authorised';
   const todoCount = itsaTodo.length + vatTodo.length;
@@ -237,7 +237,7 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
                   <>
                     <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
                     <span>Income Tax quarterly update · {fmt(o.periodStartDate)} – {fmt(o.periodEndDate)}</span>
-                    <span style={{ color: '#4A4035' }}>{when ? `· submitted ${fmt(when)}` : '· submitted'}{f ? ' from EasyTax' : ''}</span>
+                    <span style={{ color: '#4A4035' }}>{when ? `· submitted ${fmt(when)}` : '· submitted'}{f ? ' from MTD Buddy' : ''}</span>
                   </>
                 );
                 return (
@@ -248,7 +248,7 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
                         <SubmittedFigures f={f} />
                       </details>
                     ) : (
-                      <div className="flex flex-wrap items-center gap-2">{head}<span className="text-xs" style={{ color: '#6B6256' }}>(submitted outside EasyTax — no copy here)</span></div>
+                      <div className="flex flex-wrap items-center gap-2">{head}<span className="text-xs" style={{ color: '#6B6256' }}>(submitted outside MTD Buddy — no copy here)</span></div>
                     )}
                   </li>
                 );
@@ -266,7 +266,7 @@ export default function ClientDetail({ initial, sandbox = false }: { initial: Ag
                     <summary className="flex flex-wrap items-center gap-2 cursor-pointer">
                       <span aria-hidden="true" style={{ color: '#2F5232', fontWeight: 700 }}>✓</span>
                       <span>{f.filing_type === 'quarterly' ? 'Income Tax quarterly update' : f.filing_type} · {f.period_start && f.period_end ? `${fmt(f.period_start)} – ${fmt(f.period_end)}` : f.tax_year}</span>
-                      <span style={{ color: '#4A4035' }}>· submitted {fmt(f.submitted_at)} from EasyTax</span>
+                      <span style={{ color: '#4A4035' }}>· submitted {fmt(f.submitted_at)} from MTD Buddy</span>
                       <SubmissionToggle />
                     </summary>
                     <SubmittedFigures f={f} />

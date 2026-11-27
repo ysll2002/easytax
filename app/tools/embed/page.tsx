@@ -30,10 +30,10 @@ export const metadata: Metadata = {
     'accountant website tools',
     'free tax widget UK',
   ],
-  alternates: { canonical: 'https://easytax.vip/tools/embed' },
+  alternates: { canonical: 'https://mtdbuddy.com/tools/embed' },
   openGraph: {
     type: 'website',
-    url: 'https://easytax.vip/tools/embed',
+    url: 'https://mtdbuddy.com/tools/embed',
     title: 'Free MTD deadline widget for your website',
     description:
       'One line of HTML. Your readers always see the next Making Tax Digital quarterly deadline, without you editing the date four times a year.',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 
 export default function EmbedPage() {
   const status = getMtdStatus();
-  const snippet = deadlineEmbedSnippet('https://easytax.vip');
+  const snippet = deadlineEmbedSnippet('https://mtdbuddy.com');
 
   return (
     <div style={{ backgroundColor: '#F7F3EC', minHeight: '100vh' }}>

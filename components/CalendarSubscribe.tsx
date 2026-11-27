@@ -11,8 +11,8 @@ import { trackClient } from './PageViewTracker';
 // Outlook and Google to treat the URL as a subscription rather than a file.
 
 const FEED_PATH = '/calendar/uk-tax-deadlines.ics';
-const HTTPS_URL = `https://easytax.vip${FEED_PATH}`;
-const WEBCAL_URL = `webcal://easytax.vip${FEED_PATH}`;
+const HTTPS_URL = `https://mtdbuddy.com${FEED_PATH}`;
+const WEBCAL_URL = `webcal://mtdbuddy.com${FEED_PATH}`;
 
 export default function CalendarSubscribe({ placement }: { placement: string }) {
   return (

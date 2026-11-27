@@ -22,12 +22,12 @@ import SiteFooter from '@/components/SiteFooter';
 export const metadata: Metadata = {
   title: pageTitle('Editorial standards — how we write our tax guides'),
   description:
-    'How the EasyTax Tax Tips archive is produced: AI-drafted from HMRC guidance and UK legislation, human-reviewed before publication, corrected when wrong. What we check, what we do not, and how to report an error.',
-  alternates: { canonical: 'https://easytax.vip/editorial-standards' },
+    'How the MTD Buddy Tax Tips archive is produced: AI-drafted from HMRC guidance and UK legislation, human-reviewed before publication, corrected when wrong. What we check, what we do not, and how to report an error.',
+  alternates: { canonical: 'https://mtdbuddy.com/editorial-standards' },
   openGraph: {
     type: 'article',
-    url: 'https://easytax.vip/editorial-standards',
-    title: 'Editorial standards — how EasyTax writes and checks its tax guides',
+    url: 'https://mtdbuddy.com/editorial-standards',
+    title: 'Editorial standards — how MTD Buddy writes and checks its tax guides',
     description:
       'AI-drafted, human-reviewed, corrected when wrong. The full process, including what we have not checked yet.',
   },
@@ -67,15 +67,15 @@ export default function EditorialStandardsPage() {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: 'Editorial standards',
-    url: 'https://easytax.vip/editorial-standards',
+    url: 'https://mtdbuddy.com/editorial-standards',
     description:
-      'How the EasyTax Tax Tips archive is produced, reviewed and corrected.',
+      'How the MTD Buddy Tax Tips archive is produced, reviewed and corrected.',
     inLanguage: 'en-GB',
     publisher: {
       '@type': 'Organization',
-      '@id': 'https://easytax.vip/#organization',
+      '@id': 'https://mtdbuddy.com/#organization',
       name: 'Finance Panda Limited',
-      url: 'https://easytax.vip',
+      url: 'https://mtdbuddy.com',
     },
   };
 
@@ -108,7 +108,7 @@ export default function EditorialStandardsPage() {
           </h1>
 
           <p className="text-lg mb-10" style={{ color: BODY, lineHeight: 1.65 }}>
-            EasyTax publishes a large archive of UK tax guidance. You are about to make decisions
+            MTD Buddy publishes a large archive of UK tax guidance. You are about to make decisions
             about your own money using it, so you should know exactly how it is made — including
             the parts we are not happy with yet.
           </p>
@@ -205,7 +205,7 @@ export default function EditorialStandardsPage() {
               page. We would rather have a smaller archive that is right.
             </P>
             <a
-              href="mailto:hello@easytax.vip?subject=Correction%20to%20an%20EasyTax%20article"
+              href="mailto:hello@mtdbuddy.com?subject=Correction%20to%20an%20MTD Buddy%20article"
               className="inline-flex items-center gap-2 text-sm font-medium"
               style={{
                 color: '#FDFCF8',
@@ -224,7 +224,7 @@ export default function EditorialStandardsPage() {
           <section className="mb-10">
             <H2>Who publishes this</H2>
             <P>
-              EasyTax is a product of <strong style={{ color: INK }}>Finance Panda Limited</strong>,
+              MTD Buddy is a product of <strong style={{ color: INK }}>Finance Panda Limited</strong>,
               a company registered in England and Wales and registered with the Information
               Commissioner&apos;s Office under reference ZA540758. More about what we store, what we
               can and cannot see, and where our HMRC approval currently stands is on the{' '}

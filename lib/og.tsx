@@ -164,14 +164,14 @@ export function renderOgCard(opts: OgCardOptions): ImageResponse {
         >
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
             <div style={{ display: 'flex', fontSize: 36, fontWeight: 700, color: INK }}>
-              EasyTax
+              MTD Buddy
             </div>
             <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>
               MTD ITSA software for the UK
             </div>
           </div>
           <div style={{ display: 'flex', fontSize: 24, color: MUTED }}>
-            {footnote ?? 'easytax.vip'}
+            {footnote ?? 'mtdbuddy.com'}
           </div>
         </div>
       </div>

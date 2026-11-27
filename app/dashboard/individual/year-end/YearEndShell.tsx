@@ -52,7 +52,7 @@ export default function YearEndShell({ clientId, sandbox, declarationAvailable, 
         declarationAvailable
           ? <YearEndClient taxYear={taxYear} setTaxYear={setTaxYear} clientId={clientId} sandbox={sandbox} onOpenWorkspace={() => setTab('data')} />
           : <p className="text-sm max-w-2xl" style={{ color: '#4A4035', lineHeight: 1.6 }}>
-              EasyTax is not yet approved by HMRC for the final declaration. To submit it, use{' '}
+              MTD Buddy is not yet approved by HMRC for the final declaration. To submit it, use{' '}
               <a href="https://www.gov.uk/guidance/find-software-thats-compatible-with-making-tax-digital-for-income-tax" target="_blank" rel="noopener noreferrer" style={{ color: '#A04E1C', textDecoration: 'underline' }}>other compatible software</a>.
             </p>
       ) : (

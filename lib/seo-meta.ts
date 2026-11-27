@@ -3,12 +3,12 @@
 // Why this exists, in numbers. A crawl of all 158 URLs in our own sitemap on
 // 2026-09-14 found:
 //
-//   - 119 pages whose title ended `| EasyTax | EasyTax`
+//   - 119 pages whose title ended `| MTD Buddy | MTD Buddy`
 //   - 150 of 158 titles longer than 60 characters (median 83, longest 105)
 //   - 151 of 158 descriptions longer than 160 characters
 //
 // The doubling is a template collision. `app/layout.tsx` declares
-// `title: { template: '%s | EasyTax' }`, so Next appends the brand to every
+// `title: { template: '%s | MTD Buddy' }`, so Next appends the brand to every
 // page title on the site. Four routes — the article page, the Tax Tips index,
 // its pagination, pricing and the landlord landing page — also appended it by
 // hand. The article route alone is 113 of the 119, because every article in
@@ -27,7 +27,7 @@
 //   1. The final string is built here and handed to Next as `{ absolute }`, so
 //      the template never runs and the doubling cannot come back.
 //   2. The brand suffix is kept only when it fits inside the budget. For a
-//      domain nobody has heard of, `| EasyTax` earns nothing in a results page
+//      domain nobody has heard of, `| MTD Buddy` earns nothing in a results page
 //      and it is the most disposable ten characters in the tag.
 //   3. A title still over budget is LEFT ALONE and reported by the audit as
 //      over budget. Google truncates the display at ~60 characters either way;
@@ -59,21 +59,21 @@ export const TITLE_BUDGET = 60;
 /** Descriptions are given ~160 characters before truncation. */
 export const DESC_BUDGET = 160;
 
-export const BRAND = 'EasyTax';
+export const BRAND = 'MTD Buddy';
 const BRAND_SUFFIX = ` | ${BRAND}`;
 
 const squash = (s: string) => s.replace(/\s+/g, ' ').trim();
 
 /**
  * Strip a brand suffix a caller appended by hand, so passing
- * `"Pricing | EasyTax"` and `"Pricing"` produce the same tag. This is what
+ * `"Pricing | MTD Buddy"` and `"Pricing"` produce the same tag. This is what
  * makes the 119-page defect unrepeatable rather than merely fixed once.
  */
 function stripBrand(s: string): string {
   let out = squash(s);
   // Loop: the defect we are fixing is literally two of these.
   for (;;) {
-    const next = out.replace(/\s*[|–—-]\s*EasyTax\s*$/i, '');
+    const next = out.replace(/\s*[|–—-]\s*MTD Buddy\s*$/i, '');
     if (next === out) return out;
     out = squash(next);
   }

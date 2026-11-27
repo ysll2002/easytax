@@ -262,7 +262,7 @@ export default function RecordsClient({ title, intro, clientId, headingLevel = 1
             <div style={{ ...card, backgroundColor: '#F0EBE1' }}>
               <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>No records yet</p>
               <p className="text-sm" style={{ color: '#4A4035', lineHeight: 1.6 }}>
-                Add your business income and expenses one by one, or download a CSV statement from your bank&apos;s website or app and import it. EasyTax does not connect to your bank account.
+                Add your business income and expenses one by one, or download a CSV statement from your bank&apos;s website or app and import it. MTD Buddy does not connect to your bank account.
               </p>
             </div>
           )

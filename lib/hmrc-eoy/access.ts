@@ -56,7 +56,7 @@ export async function eoyContext(clientIdParam: string | null): Promise<EoyConte
     .select('nino, business_id')
     .eq('user_id', profileId)
     .single();
-  if (!hmrc) throw new EoyError('HMRC_NOT_CONNECTED', 400, 'Connect EasyTax to HMRC first.');
+  if (!hmrc) throw new EoyError('HMRC_NOT_CONNECTED', 400, 'Connect MTD Buddy to HMRC first.');
   const nino = hmrc.nino ?? (IS_HMRC_PRODUCTION ? null : SANDBOX_NINO);
   if (!nino) throw new EoyError('NINO_MISSING', 400, 'Add your National Insurance number in your HMRC settings first.');
 
@@ -89,9 +89,9 @@ export function supportingAgentMay(e: Endpoint): boolean {
   return false;
 }
 
-// Which of these APIs EasyTax may call against the live API. HMRC grants
+// Which of these APIs MTD Buddy may call against the live API. HMRC grants
 // production access per API, after reviewing sandbox testing; until an API is
-// approved for EasyTax's production application, calls to it are refused here
+// approved for MTD Buddy's production application, calls to it are refused here
 // rather than sent. Set HMRC_PRODUCTION_EOY_APIS to a comma-separated list of
 // approved api keys (as in lib/hmrc-eoy/catalog.json) once HMRC approves them.
 // Business Details and Individual Calculations were approved with the in-year

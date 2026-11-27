@@ -10,7 +10,7 @@ export default function SettingsPage() {
         {[
           { title: 'Email notifications', desc: 'Receive reminders before tax deadlines', enabled: true },
           { title: 'Two-factor authentication', desc: 'Add an extra layer of security', enabled: false },
-          { title: 'Data sharing', desc: 'Help improve EasyTax with anonymous usage data', enabled: false },
+          { title: 'Data sharing', desc: 'Help improve MTD Buddy with anonymous usage data', enabled: false },
         ].map(setting => (
           <div key={setting.title} className="flex items-center justify-between p-5 rounded-2xl" style={{ backgroundColor: '#F0EBE1', border: '1px solid #DDD5C8' }}>
             <div>

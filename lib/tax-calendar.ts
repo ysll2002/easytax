@@ -20,7 +20,7 @@ import {
 // deadline checker and the timetable use, so the calendar cannot state a date
 // the rest of the site disagrees with.
 
-const PRODID = '-//Finance Panda Limited//EasyTax UK Tax Deadlines//EN';
+const PRODID = '-//Finance Panda Limited//MTD Buddy UK Tax Deadlines//EN';
 
 /** Fixed creation stamp. A feed whose bytes change on every request defeats
  *  caching and makes some clients re-notify on each refresh. */
@@ -65,25 +65,25 @@ export function taxCalendarEvents(now: Date = new Date(), years = 3): CalendarEv
 
     for (const q of quartersForTaxYear(ty)) {
       events.push({
-        uid: `mtd-${ty}-${q.key}@easytax.vip`,
+        uid: `mtd-${ty}-${q.key}@mtdbuddy.com`,
         date: ymd(q.deadline),
         summary: `MTD quarterly update due (${label} ${q.key})`,
         description:
           `Your Making Tax Digital for Income Tax quarterly update for ${q.periodLabel} must reach HMRC by ${q.deadlineLabel}. ` +
           `Applies to sole traders and landlords with qualifying income above the MTD threshold. ` +
-          `Check whether it applies to you: https://easytax.vip/mtd-deadline-checker`,
+          `Check whether it applies to you: https://mtdbuddy.com/mtd-deadline-checker`,
       });
     }
 
     const final = finalDeclarationFor(ty);
     events.push({
-      uid: `mtd-final-${ty}@easytax.vip`,
+      uid: `mtd-final-${ty}@mtdbuddy.com`,
       date: ymd(final.deadline),
       summary: `MTD final declaration due (${label})`,
       description:
         `The final declaration for the ${label} tax year is due by ${final.deadlineLabel}. ` +
         `It replaces the Self Assessment return for anyone inside Making Tax Digital. ` +
-        `https://easytax.vip/timetable`,
+        `https://mtdbuddy.com/timetable`,
     });
 
     // Self Assessment still runs alongside MTD — for tax years before the
@@ -91,21 +91,21 @@ export function taxCalendarEvents(now: Date = new Date(), years = 3): CalendarEv
     // the calendar wrong for most of the people subscribing to it.
     const janYear = ty + 2;
     events.push({
-      uid: `sa-jan-${ty}@easytax.vip`,
+      uid: `sa-jan-${ty}@mtdbuddy.com`,
       date: `${janYear}0131`,
       summary: `Self Assessment: file and pay (${label})`,
       description:
         `Deadline to file your ${label} online Self Assessment return, pay the balancing payment, ` +
         `and make the first payment on account for ${ty + 1}/${String(ty + 2).slice(-2)}. ` +
-        `Late filing is an immediate £100 penalty. https://easytax.vip/self-assessment-penalty-calculator`,
+        `Late filing is an immediate £100 penalty. https://mtdbuddy.com/self-assessment-penalty-calculator`,
     });
     events.push({
-      uid: `sa-jul-${ty}@easytax.vip`,
+      uid: `sa-jul-${ty}@mtdbuddy.com`,
       date: `${janYear}0731`,
       summary: `Second payment on account due (${label})`,
       description:
         `Deadline for the second payment on account for the ${label} tax year. ` +
-        `Work out what you owe: https://easytax.vip/payments-on-account-calculator`,
+        `Work out what you owe: https://mtdbuddy.com/payments-on-account-calculator`,
     });
   }
 
@@ -156,7 +156,7 @@ export function buildTaxCalendar(now: Date = new Date(), years = 3): string {
     `PRODID:${PRODID}`,
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:UK Tax Deadlines (EasyTax)',
+    'X-WR-CALNAME:UK Tax Deadlines (MTD Buddy)',
     'X-WR-CALDESC:MTD quarterly updates, final declarations and Self Assessment deadlines for UK sole traders and landlords.',
     // Hint to clients how often to re-poll. Deadlines move rarely; a daily
     // refresh is plenty and keeps us off anyone's bandwidth.
@@ -173,7 +173,7 @@ export function buildTaxCalendar(now: Date = new Date(), years = 3): string {
       `DTEND;VALUE=DATE:${addDay(e.date)}`,
       `SUMMARY:${escapeText(e.summary)}`,
       `DESCRIPTION:${escapeText(e.description)}`,
-      'URL:https://easytax.vip/timetable',
+      'URL:https://mtdbuddy.com/timetable',
       'TRANSP:TRANSPARENT',
       // A deadline you learn about on the day is not much use. Seven days is
       // enough to gather the figures; one day is the last call.

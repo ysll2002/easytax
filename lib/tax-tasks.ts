@@ -20,7 +20,7 @@ export function taxYearFor(date: Date): string {
 
 const label = (startYear: number) => `${startYear}-${String(startYear + 1).slice(2)}`;
 
-// Self Assessment payment dates as reminders, for when EasyTax cannot see what
+// Self Assessment payment dates as reminders, for when MTD Buddy cannot see what
 // the customer owes (no HMRC answer from Self Assessment Accounts, or that API
 // not yet approved for the live service). They are never marked overdue or
 // done, and carry no amount: only dates still ahead, within the next 12
@@ -76,7 +76,7 @@ export function paymentTasksFromHmrc(balance: SaBalance | null, now: Date = new 
     out.push({
       id:       `charge-${d.documentId ?? `${type}-${due}`}`,
       type,
-      // The title is EasyTax's own, translated (TasksTimeline). HMRC's
+      // The title is MTD Buddy's own, translated (TasksTimeline). HMRC's
       // description is free text that can be a code or, in the sandbox, a
       // placeholder ("document Description"), so it goes in the detail line.
       title:    '',

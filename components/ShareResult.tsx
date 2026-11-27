@@ -63,7 +63,7 @@ export default function ShareResult({ tool, path, query, summary }: ShareResultP
     }
   };
 
-  const text = `${summary} — worked out on EasyTax`;
+  const text = `${summary} — worked out on MTD Buddy`;
 
   const links: { channel: ShareChannel; label: string; href: () => string; icon: React.ReactNode }[] = [
     {

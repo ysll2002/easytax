@@ -30,7 +30,7 @@ export async function GET(req: Request) {
       home_page_url: `${SITE}/tax-tips`,
       feed_url: `${SITE}/tax-tips/feed.json`,
       language: 'en-GB',
-      authors: [{ name: 'EasyTax editorial team', url: `${SITE}/editorial-standards` }],
+      authors: [{ name: 'MTD Buddy editorial team', url: `${SITE}/editorial-standards` }],
       items: articles.map(a => ({
         id: `${SITE}/tax-tips/${a.slug}`,
         url: `${SITE}/tax-tips/${a.slug}`,

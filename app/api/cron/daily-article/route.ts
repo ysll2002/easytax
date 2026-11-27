@@ -237,7 +237,7 @@ Write the page that answers them, directly and without preamble.
 The "excerpt" field should state the article's central point in ${STANDARD.maxExcerptChars} characters or fewer, plainly enough to stand alone.`;
   }
 
-  const basePrompt = `You are a UK tax expert writing for EasyTax, a platform for UK freelancers, sole traders, and limited companies.
+  const basePrompt = `You are a UK tax expert writing for MTD Buddy, a platform for UK freelancers, sole traders, and limited companies.
 
 Today is ${today}.
 
