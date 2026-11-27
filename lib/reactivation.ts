@@ -249,7 +249,7 @@ export function renderEmail(recipient: Recipient, base = 'https://mtdbuddy.com')
       : `<p style="margin:0 0 16px">${greeting}</p>
          <p style="margin:0 0 16px">You created an MTD Buddy account and never came back. Fair enough. Here is the part that may have changed since.</p>
          <p style="margin:0 0 16px">Making Tax Digital for Income Tax started on 6 April 2026. If your 2024/25 return showed qualifying income over £50,000, you are in it — and since September 2026 HMRC has been signing people up automatically whether or not they asked. ${deadline}</p>
-         <p style="margin:0 0 16px">HMRC approved our production access on 11 November 2026, so filing through MTD Buddy is open. You will need to be signed up for Making Tax Digital with HMRC yourself first. These work either way, free and without an account:</p>
+         <p style="margin:0 0 16px">HMRC granted our production access on 11 November 2026, so filing through MTD Buddy is open. You will need to be signed up for Making Tax Digital with HMRC yourself first. These work either way, free and without an account:</p>
          <ul style="margin:0 0 16px;padding-left:20px">
            <li style="margin:0 0 8px">Are you actually in scope, and when: <a href="${base}/mtd-deadline-checker">${base}/mtd-deadline-checker</a></li>
            <li style="margin:0 0 8px">Every MTD and Self Assessment date, as a calendar feed: <a href="${base}/timetable">${base}/timetable</a></li>

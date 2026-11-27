@@ -36,10 +36,12 @@
       "subtitleEmph": "No subscription, no filing fee — MTD Buddy is free to use.",
       "badgeFree": "Free to use",
       "badgeNoCard": "No card to sign up",
-      "badgeHmrc": "HMRC-recognised software",
+      "badgeHmrc": "HMRC recognised",
       "ctaPrimary": "Get MTD-ready →",
       "ctaChecker": "Check my MTD deadlines →",
-      "ctaSecondary": "See what we cover →"
+      "ctaSecondary": "See what we cover →",
+      "badgeHmrcSub": "Listed on GOV.UK · Making Tax Digital for Income Tax",
+      "badgeHmrcNewTab": "GOV.UK, opens in a new tab"
     },
     "trust": {
       "hmrc": "HMRC MTD API",
@@ -392,7 +394,7 @@
     "terms": "Terms",
     "vs": "MTD Buddy vs {name}",
     "tagline": "Finance Panda Limited. Built in London.",
-    "disclaimer": "MTD Buddy is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC approved our production access on 11 November 2026 for MTD ITSA quarterly updates and VAT.",
+    "disclaimer": "MTD Buddy is a product of Finance Panda Limited. The free tools give general information about HMRC's published rules and are not tax advice. HMRC granted our production access on 11 November 2026 for MTD ITSA quarterly updates and VAT.",
     "notifyHeading": "Be first to file",
     "notifyBlurb": "We will email you the day MTD filing opens — nothing else, unsubscribe in one click.",
     "accessibility": "Accessibility",
