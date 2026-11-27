@@ -9,7 +9,7 @@ import { getArticlesForTopic, getPublishedTopics } from '../../_lib/topic-articl
 import SiteFooter from '@/components/SiteFooter';
 import { pageTitle, metaDescription } from '@/lib/seo-meta';
 
-const BASE = 'https://easytax.vip';
+const BASE = 'https://mtdbuddy.com';
 
 type Params = { topic: string };
 

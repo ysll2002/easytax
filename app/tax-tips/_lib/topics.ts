@@ -1,6 +1,6 @@
 // Topic clusters over the Tax Tips archive — the taxonomy itself.
 //
-// Why this exists: the archive is the only part of easytax.vip that earns
+// Why this exists: the archive is the only part of mtdbuddy.com that earns
 // organic search traffic at all — the entries in the analytics table arrive on
 // article URLs from Google and Bing, never on the commercial landing pages.
 // But 110 articles sitting in a flat, reverse-chronological list have no

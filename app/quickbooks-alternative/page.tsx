@@ -9,20 +9,20 @@ import { PRICE_CHIP, PRICE_TABLE_CELL } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: pageTitle('QuickBooks Alternative UK — MTD ITSA Software'),
-  description: 'Looking for a QuickBooks alternative in the UK? EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC. Free — no monthly subscription, no filing fee.',
-  alternates: { canonical: 'https://easytax.vip/quickbooks-alternative' },
+  description: 'Looking for a QuickBooks alternative in the UK? MTD Buddy files MTD ITSA quarterly updates and VAT returns directly to HMRC. Free — no monthly subscription, no filing fee.',
+  alternates: { canonical: 'https://mtdbuddy.com/quickbooks-alternative' },
   openGraph: {
     title: 'QuickBooks Alternative UK — MTD ITSA + Self Assessment + VAT',
-    description: 'QuickBooks charges £30+/month. EasyTax files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
-    url: 'https://easytax.vip/quickbooks-alternative',
+    description: 'QuickBooks charges £30+/month. MTD Buddy files MTD ITSA quarterly updates and VAT returns to HMRC free — no subscription, no filing fee.',
+    url: 'https://mtdbuddy.com/quickbooks-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'QuickBooks Alternative UK — MTD ITSA Software',
-    description: 'Switch from QuickBooks to EasyTax — file to HMRC free, no monthly fee.',
+    description: 'Switch from QuickBooks to MTD Buddy — file to HMRC free, no monthly fee.',
   },
 };
 
@@ -31,19 +31,19 @@ const display = 'var(--font-display), Playfair Display, Georgia, serif';
 type Row = { feature: string; easytax: string | boolean; qb: string | boolean; note?: string };
 
 const rows: Row[] = [
-  { feature: 'Price',                                 easytax: PRICE_TABLE_CELL,   qb: 'From £14/mo+VAT',        note: 'QuickBooks Simple Start is billed monthly and higher tiers cost more; EasyTax charges nothing' },
-  { feature: 'No monthly subscription',               easytax: true,               qb: false,                    note: 'EasyTax is pay-per-submission, not a recurring fee' },
+  { feature: 'Price',                                 easytax: PRICE_TABLE_CELL,   qb: 'From £14/mo+VAT',        note: 'QuickBooks Simple Start is billed monthly and higher tiers cost more; MTD Buddy charges nothing' },
+  { feature: 'No monthly subscription',               easytax: true,               qb: false,                    note: 'MTD Buddy is pay-per-submission, not a recurring fee' },
   { feature: 'No card required to sign up',           easytax: true,               qb: false },
   { feature: 'MTD ITSA quarterly updates',            easytax: true,               qb: true },
-  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               qb: true, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)', easytax: false,               qb: true, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                    easytax: true,               qb: true },
-  { feature: 'CT600 Corporation Tax filing',          easytax: false,               qb: true, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax filing',          easytax: false,               qb: true, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company P&L and Balance Sheet', easytax: false,               qb: true, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',             easytax: true,               qb: false,                    note: 'EasyTax uses Claude to categorise and reconcile' },
+  { feature: 'AI expense categorisation',             easytax: true,               qb: false,                    note: 'MTD Buddy uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',                easytax: true,               qb: false },
-  { feature: 'Full double-entry bookkeeping',         easytax: false,              qb: true,                     note: 'EasyTax focuses on tax filing, not a full ledger' },
-  { feature: 'Built-in invoicing',                    easytax: false,              qb: true,                     note: 'EasyTax pairs with GrumpyWhales (free) for invoicing' },
-  { feature: 'Payroll',                               easytax: false,              qb: true,                     note: 'Add-on in QuickBooks; not in EasyTax' },
+  { feature: 'Full double-entry bookkeeping',         easytax: false,              qb: true,                     note: 'MTD Buddy focuses on tax filing, not a full ledger' },
+  { feature: 'Built-in invoicing',                    easytax: false,              qb: true,                     note: 'MTD Buddy pairs with GrumpyWhales (free) for invoicing' },
+  { feature: 'Payroll',                               easytax: false,              qb: true,                     note: 'Add-on in QuickBooks; not in MTD Buddy' },
   { feature: 'Inventory management',                  easytax: false,              qb: true },
 ];
 
@@ -61,10 +61,10 @@ export default async function QuickBooksAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'QuickBooks Alternative UK — MTD ITSA Software for UK Sole Traders',
-    description: 'Side-by-side comparison of EasyTax and QuickBooks for UK sole traders and the self-employed.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Side-by-side comparison of MTD Buddy and QuickBooks for UK sole traders and the self-employed.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/quickbooks-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/quickbooks-alternative',
   };
 
   return (
@@ -84,7 +84,7 @@ export default async function QuickBooksAlternative() {
               Paying <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>£14–£38/month</em> for QuickBooks? Switch to free — no subscription, no filing fee.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              QuickBooks is powerful — but if you are a UK sole trader who mainly needs <strong style={{ color: '#1C1208' }}>MTD ITSA filing</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying a monthly fee for features you don&apos;t use. EasyTax is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
+              QuickBooks is powerful — but if you are a UK sole trader who mainly needs <strong style={{ color: '#1C1208' }}>MTD ITSA filing</strong> and <strong style={{ color: '#1C1208' }}>VAT returns</strong>, you are paying a monthly fee for features you don&apos;t use. MTD Buddy is <strong style={{ color: '#A04E1C' }}>free</strong> — no monthly fee and no charge when you file.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -96,7 +96,7 @@ export default async function QuickBooksAlternative() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started — no subscription →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=QuickBooks%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=QuickBooks%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Ask us a question
               </a>
             </div>
@@ -110,7 +110,7 @@ export default async function QuickBooksAlternative() {
               What does QuickBooks actually cost a sole trader?
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              QuickBooks Simple Start starts at around £14/month + VAT. Most sole traders end up on Essentials (£28/month + VAT) for the features they actually need. That&apos;s <strong>£336–£403/year inc. VAT</strong> — before you factor in any add-ons. EasyTax charges nothing. Four quarterly updates and one annual return come to <strong>£0</strong>.
+              QuickBooks Simple Start starts at around £14/month + VAT. Most sole traders end up on Essentials (£28/month + VAT) for the features they actually need. That&apos;s <strong>£336–£403/year inc. VAT</strong> — before you factor in any add-ons. MTD Buddy charges nothing. Four quarterly updates and one annual return come to <strong>£0</strong>.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -119,7 +119,7 @@ export default async function QuickBooksAlternative() {
                 <p className="text-sm" style={{ color: '#4A4035' }}>Monthly subscription regardless of whether you file. Charged even in quiet months.</p>
               </div>
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#4B6A4E' }}>EasyTax</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: '#4B6A4E' }}>MTD Buddy</p>
                 <p className="font-semibold mb-1" style={{ color: '#1C1208' }}>Free</p>
                 <p className="text-sm" style={{ color: '#4A4035' }}>Nothing per month and nothing per filing. Free to connect, free to use the dashboard.</p>
               </div>
@@ -131,13 +131,13 @@ export default async function QuickBooksAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>QuickBooks</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>QuickBooks</em> vs MTD Buddy
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
                 <div className="px-4 sm:px-6 py-4 text-xs font-semibold uppercase tracking-wider" style={{ color: '#6B6256', backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>Feature</div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -174,7 +174,7 @@ export default async function QuickBooksAlternative() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax wins</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where MTD Buddy wins</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Pay only when you file — no monthly commitment.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>AI bank reconciliation chat — describe a transaction in plain English.</span></li>
@@ -194,7 +194,7 @@ export default async function QuickBooksAlternative() {
               </div>
             </div>
             <p className="mt-5 text-sm leading-relaxed" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              QuickBooks earns its subscription if you need invoicing, payroll, inventory, or a full ledger. But if you are a <strong>sole trader who mainly needs to stay HMRC-compliant</strong> — quarterly MTD updates and VAT returns — EasyTax gives you the same compliance at a fraction of the cost.
+              QuickBooks earns its subscription if you need invoicing, payroll, inventory, or a full ledger. But if you are a <strong>sole trader who mainly needs to stay HMRC-compliant</strong> — quarterly MTD updates and VAT returns — MTD Buddy gives you the same compliance at a fraction of the cost.
             </p>
           </div>
         </section>
@@ -206,20 +206,20 @@ export default async function QuickBooksAlternative() {
             <div style={{ borderTop: '1px solid #DDD5C8' }}>
               {[
                 {
-                  q: 'How much does EasyTax cost?',
+                  q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription and no charge when you file. Connecting HMRC and importing your records is free too.',
                 },
                 {
-                  q: 'Can EasyTax replace QuickBooks for a sole trader?',
-                  a: "If you use QuickBooks mainly for MTD ITSA quarterly updates, VAT returns and keeping your income and expense records — yes, EasyTax covers that. It does not file the year-end Self Assessment return yet. If you also rely on QuickBooks for invoicing or payroll, you'd pair EasyTax with a specialist invoicing tool (we recommend GrumpyWhales, which is free) and a payroll tool.",
+                  q: 'Can MTD Buddy replace QuickBooks for a sole trader?',
+                  a: "If you use QuickBooks mainly for MTD ITSA quarterly updates, VAT returns and keeping your income and expense records — yes, MTD Buddy covers that. It does not file the year-end Self Assessment return yet. If you also rely on QuickBooks for invoicing or payroll, you'd pair MTD Buddy with a specialist invoicing tool (we recommend GrumpyWhales, which is free) and a payroll tool.",
                 },
                 {
                   q: 'How do I migrate my QuickBooks data?',
-                  a: "Export your transaction history and reports from QuickBooks Online (Reports → all transactions CSV). Email them to hello@easytax.vip and we'll load them into your account. After that, import CSV statements from your bank or add records by hand.",
+                  a: "Export your transaction history and reports from QuickBooks Online (Reports → all transactions CSV). Email them to hello@mtdbuddy.com and we'll load them into your account. After that, import CSV statements from your bank or add records by hand.",
                 },
                 {
-                  q: 'Does EasyTax support MTD VAT and CT600?',
-                  a: 'EasyTax files MTD VAT returns directly to HMRC. It does not file CT600 Corporation Tax or prepare limited company accounts.',
+                  q: 'Does MTD Buddy support MTD VAT and CT600?',
+                  a: 'MTD Buddy files MTD VAT returns directly to HMRC. It does not file CT600 Corporation Tax or prepare limited company accounts.',
                 },
                 {
                   q: 'When does MTD ITSA become mandatory?',
@@ -250,7 +250,7 @@ export default async function QuickBooksAlternative() {
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started — no subscription →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=QuickBooks%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=QuickBooks%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Ask us a question
               </a>
             </div>

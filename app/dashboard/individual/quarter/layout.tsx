@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 // Gives this dashboard route its own <title> (WCAG 2.4.2 Page Titled); the
-// root layout's template appends "| EasyTax".
+// root layout's template appends "| MTD Buddy".
 export const metadata: Metadata = {
   title: 'Quarterly update',
 };

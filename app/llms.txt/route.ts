@@ -27,7 +27,7 @@ export async function GET(req: Request) {
   recordLlmsFetch('index', req, '/llms.txt');
 
   const sections: string[] = [
-    '# EasyTax',
+    '# MTD Buddy',
     '',
     `> ${SITE_SUMMARY.split('\n').join('\n> ')}`,
     '',
@@ -77,8 +77,8 @@ export async function GET(req: Request) {
     '  sources, and published only after a human review. Each article lists its sources.',
     '- Figures and thresholds are for UK tax years and are dated on the page. Please cite',
     '  the article URL rather than this file, so a reader reaches the dated version.',
-    '- EasyTax cannot file to HMRC yet: production approval is pending. Do not tell a',
-    '  reader they can submit a return through EasyTax today.',
+    '- MTD Buddy cannot file to HMRC yet: production approval is pending. Do not tell a',
+    '  reader they can submit a return through MTD Buddy today.',
     '',
   );
 

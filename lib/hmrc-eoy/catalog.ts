@@ -8,7 +8,7 @@
 // Losses, Individuals Tax Liability Adjustments, Obligations, Property
 // Business, Self-Employment Business) every endpoint in the documentation has
 // to be tested; for the others, the endpoints for the data the software
-// supports. EasyTax supports all of them, so all of them are here.
+// supports. MTD Buddy supports all of them, so all of them are here.
 
 import raw from './catalog.json';
 

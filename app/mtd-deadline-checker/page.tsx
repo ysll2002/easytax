@@ -23,10 +23,10 @@ const BASE: Metadata = {
     'MTD £50,000 threshold',
     'MTD £30,000 threshold',
   ],
-  alternates: { canonical: 'https://easytax.vip/mtd-deadline-checker' },
+  alternates: { canonical: 'https://mtdbuddy.com/mtd-deadline-checker' },
   openGraph: {
     type: 'website',
-    url: 'https://easytax.vip/mtd-deadline-checker',
+    url: 'https://mtdbuddy.com/mtd-deadline-checker',
     title: 'MTD Deadline Checker — am I in Making Tax Digital?',
     description:
       'Enter your income, get your exact MTD for Income Tax start year and every quarterly deadline. Free, no signup.',
@@ -116,11 +116,11 @@ export default async function DeadlineCheckerPage({ searchParams }: { searchPara
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'MTD Deadline Checker',
-    url: 'https://easytax.vip/mtd-deadline-checker',
+    url: 'https://mtdbuddy.com/mtd-deadline-checker',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Any',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
-    provider: { '@type': 'Organization', name: 'EasyTax', url: 'https://easytax.vip' },
+    provider: { '@type': 'Organization', name: 'MTD Buddy', url: 'https://mtdbuddy.com' },
   };
 
   return (
@@ -250,7 +250,7 @@ export default async function DeadlineCheckerPage({ searchParams }: { searchPara
           </a>{' '}
           or speak to an accountant if you are unsure. See{' '}
           <Link href="/trust" style={{ color: '#6B6256', textDecoration: 'underline' }}>
-            where EasyTax stands with HMRC
+            where MTD Buddy stands with HMRC
           </Link>
           .
         </p>

@@ -286,15 +286,15 @@ const LINK_LABELS: Record<string, string> = {
   '/payments-on-account-calculator': 'Work out your payments on account',
   '/timetable': 'See the full MTD and Self Assessment timetable',
   '/tools': 'Try our free tax calculators',
-  '/mtd-software': 'See how EasyTax files your MTD updates',
-  '/self-assessment-software': 'See what EasyTax files for Self Assessment',
-  '/landlord-tax-software': 'See what EasyTax does (and does not yet do) for landlords',
-  '/pricing': 'See EasyTax pricing',
+  '/mtd-software': 'See how MTD Buddy files your MTD updates',
+  '/self-assessment-software': 'See what MTD Buddy files for Self Assessment',
+  '/landlord-tax-software': 'See what MTD Buddy does (and does not yet do) for landlords',
+  '/pricing': 'See MTD Buddy pricing',
 };
 
 /** Anchor text for a target's destination, with a safe generic fallback. */
 export function linkLabelFor(path: string): string {
-  return LINK_LABELS[path] ?? 'Read more on EasyTax';
+  return LINK_LABELS[path] ?? 'Read more on MTD Buddy';
 }
 
 /** Words too common to carry meaning when matching a query against a title. */

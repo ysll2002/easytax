@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   recordLlmsFetch('full', req, '/llms-full.txt');
 
   const header = [
-    '# EasyTax — Tax Tips, full text',
+    '# MTD Buddy — Tax Tips, full text',
     '',
     SITE_SUMMARY,
     '',

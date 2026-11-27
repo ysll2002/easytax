@@ -138,7 +138,7 @@ export async function GET(req: NextRequest) {
 
   if (req.nextUrl.searchParams.get('email') === '1') {
     const sent = await sendInternalNotice(
-      `EasyTax weekly growth review — ${body.summary}`,
+      `MTD Buddy weekly growth review — ${body.summary}`,
       renderEmail(body.summary, targets, movement, baseline?.taken_on ?? null),
     );
     return NextResponse.json({ ...body, emailed: sent });

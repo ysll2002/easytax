@@ -14,7 +14,7 @@ import { CONCURRENCY, analyse, auditPage, crawlWall, mapPool } from '@/lib/seo-a
 //
 // That split is the point. Between 2026-09-09, when this endpoint was written,
 // and 2026-09-14 it was never once called, and in that window it would have
-// found 119 pages whose title said "EasyTax" twice. A check that has to be
+// found 119 pages whose title said "MTD Buddy" twice. A check that has to be
 // remembered is a check that does not run.
 //
 // Fetches its own deployment over HTTP rather than calling the page modules,
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // Audit the deployment this request arrived at, not easytax.vip. Running it
+  // Audit the deployment this request arrived at, not mtdbuddy.com. Running it
   // on a preview and reading production's numbers would be the exact class of
   // mistake the endpoint exists to catch.
   const base = `${req.nextUrl.protocol}//${req.nextUrl.host}`;

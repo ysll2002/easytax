@@ -46,7 +46,7 @@ export default function ArticleProvenance({ publishedAt, reviewedAt, reviewedBy 
         <div className="min-w-0">
           <p className="text-sm" style={{ color: '#4A4035', lineHeight: 1.6, margin: 0 }}>
             <strong style={{ color: '#1C1208' }}>
-              Drafted by EasyTax&apos;s automated research pipeline
+              Drafted by MTD Buddy&apos;s automated research pipeline
             </strong>{' '}
             from HMRC guidance and UK legislation, published by Finance Panda Limited on{' '}
             {formatDate(publishedAt)}.
@@ -55,7 +55,7 @@ export default function ArticleProvenance({ publishedAt, reviewedAt, reviewedBy 
           <p className="text-sm mt-1.5" style={{ color: '#4A4035', lineHeight: 1.6, margin: '0.375rem 0 0' }}>
             {reviewed ? (
               <>
-                Checked before publication by {reviewedBy?.trim() || 'the EasyTax editorial team'} on{' '}
+                Checked before publication by {reviewedBy?.trim() || 'the MTD Buddy editorial team'} on{' '}
                 {formatDate(reviewedAt as string)}.
               </>
             ) : (

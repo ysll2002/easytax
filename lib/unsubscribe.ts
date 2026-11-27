@@ -40,14 +40,14 @@ function query(email: string): string {
 }
 
 /** The link a human clicks. Lands on a page that confirms what happened. */
-export function unsubscribeUrl(email: string, base = 'https://easytax.vip'): string {
+export function unsubscribeUrl(email: string, base = 'https://mtdbuddy.com'): string {
   return `${base}/unsubscribe?${query(email)}`;
 }
 
 /** The URL for the `List-Unsubscribe` header. Mailbox providers POST to this
  *  when the recipient uses their client's own unsubscribe button, so it must
  *  be a route handler rather than a page. */
-export function unsubscribeApiUrl(email: string, base = 'https://easytax.vip'): string {
+export function unsubscribeApiUrl(email: string, base = 'https://mtdbuddy.com'): string {
   return `${base}/api/unsubscribe?${query(email)}`;
 }
 

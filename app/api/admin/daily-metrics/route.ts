@@ -7,7 +7,7 @@ import { existingArticleRun } from '@/lib/editorial-run';
 import { coverage } from '@/lib/search-queries';
 import { filingWindowMetrics } from '@/lib/filing-window';
 
-// Aggregated daily-metrics endpoint used by the EasyTax daily autonomous
+// Aggregated daily-metrics endpoint used by the MTD Buddy daily autonomous
 // agent (runs in Anthropic Cloud, has no direct Supabase credentials).
 // Aggregates-only — never returns PII. Protected by AGENT_METRICS_KEY.
 //
@@ -149,7 +149,7 @@ async function eventCounts(sinceIso: string): Promise<Record<string, number>> {
   const out: Record<string, number> = {};
   for (const row of data ?? []) {
     // Preview and local traffic is stamped by /api/track; exclude it so the
-    // reported funnel reflects easytax.vip only.
+    // reported funnel reflects mtdbuddy.com only.
     const env = (row.props as { env?: string } | null)?.env;
     if (env !== 'production') continue;
     // Crawler hits on static files and our own dashboard fixtures are not
@@ -355,7 +355,7 @@ async function trafficBreakdown(sinceIso: string) {
     if (!referrer) return 'direct';
     try {
       const host = new URL(referrer).hostname.replace(/^www\./, '');
-      return host === 'easytax.vip' ? 'internal' : host;
+      return host === 'mtdbuddy.com' ? 'internal' : host;
     } catch {
       return 'unknown';
     }
@@ -669,7 +669,7 @@ async function editorialState(since7d: string) {
             // query, a run that threw. Null means today's run has not
             // happened yet, or happened before this was recorded.
             last_run: await existingArticleRun().catch(() => null),
-            review_queue_url: 'https://easytax.vip/admin/review?key=…',
+            review_queue_url: 'https://mtdbuddy.com/admin/review?key=…',
             note: queue.note,
           },
     query_coverage: cover
@@ -689,7 +689,7 @@ async function editorialState(since7d: string) {
  * Distribution: did anything of ours end up somewhere else?
  *
  * Every measurement this project has added so far counts what happens *on*
- * easytax.vip. That was the right place to start and it has now told us what
+ * mtdbuddy.com. That was the right place to start and it has now told us what
  * it can: roughly two search-referred visitors a week against 157 pages. The
  * conclusion of the 2026-09-08 round was that the remaining constraint is
  * off-site, and nothing here could see off-site at all.
@@ -1272,7 +1272,7 @@ export async function buildMetricsPayload(): Promise<Record<string, unknown>> {
       growth_snapshots: editorial.growth_snapshots,
 
       // What the site actually serves, crawled page by page. On 2026-09-14 the
-      // first run of this found 119 of 158 pages whose <title> said "EasyTax"
+      // first run of this found 119 of 158 pages whose <title> said "MTD Buddy"
       // twice, on a site five growth rounds had aimed at organic search.
       // `blocking_issues` is the number to watch and zero is achievable.
       seo: await lastSnapshotBlock('seo'),

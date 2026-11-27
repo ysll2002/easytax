@@ -21,20 +21,20 @@ function daysUntilBokioCloses(): number {
 
 export const metadata: Metadata = {
   title: pageTitle('Bokio Alternative — MTD ITSA Software UK'),
-  description: 'Bokio UK closes 7 July 2026. Migrate to EasyTax — MTD ITSA quarterly updates and VAT returns for UK sole traders and the self-employed. Free, no subscription, no card to sign up.',
-  alternates: { canonical: 'https://easytax.vip/bokio-alternative' },
+  description: 'Bokio UK closes 7 July 2026. Migrate to MTD Buddy — MTD ITSA quarterly updates and VAT returns for UK sole traders and the self-employed. Free, no subscription, no card to sign up.',
+  alternates: { canonical: 'https://mtdbuddy.com/bokio-alternative' },
   openGraph: {
     title: 'Bokio Alternative — MTD ITSA + Self Assessment + VAT',
-    description: 'Bokio is closing 7 July 2026. EasyTax is the free, no-subscription MTD-ready alternative for UK sole traders and the self-employed.',
-    url: 'https://easytax.vip/bokio-alternative',
+    description: 'Bokio is closing 7 July 2026. MTD Buddy is the free, no-subscription MTD-ready alternative for UK sole traders and the self-employed.',
+    url: 'https://mtdbuddy.com/bokio-alternative',
     type: 'article',
     locale: 'en_GB',
-    siteName: 'EasyTax',
+    siteName: 'MTD Buddy',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Bokio Alternative — MTD ITSA Software, Free',
-    description: 'Bokio closes 7 July 2026. Migrate to EasyTax — free, no subscription.',
+    description: 'Bokio closes 7 July 2026. Migrate to MTD Buddy — free, no subscription.',
   },
 };
 
@@ -48,14 +48,14 @@ const rows: Row[] = [
   { feature: 'Typical annual cost',                  easytax: TYPICAL_ANNUAL_COST,                 bokio: '£299.40 (£24.95/mo)' },
   { feature: 'No card to sign up',                   easytax: true,                    bokio: false },
   { feature: 'MTD ITSA quarterly updates',           easytax: true,                    bokio: false,                  note: 'Bokio never built MTD ITSA' },
-  { feature: 'Self Assessment (SA100, SA103, SA105)',easytax: false,                    bokio: false, note: 'EasyTax does not file the year-end return yet' },
+  { feature: 'Self Assessment (SA100, SA103, SA105)',easytax: false,                    bokio: false, note: 'MTD Buddy does not file the year-end return yet' },
   { feature: 'MTD VAT submission',                   easytax: true,                    bokio: true },
-  { feature: 'CT600 Corporation Tax filing',         easytax: false,                    bokio: false, note: 'Not supported: CT600 is not part of the MTD APIs EasyTax uses' },
+  { feature: 'CT600 Corporation Tax filing',         easytax: false,                    bokio: false, note: 'Not supported: CT600 is not part of the MTD APIs MTD Buddy uses' },
   { feature: 'Limited company P&L and Balance Sheet',easytax: false,                    bokio: true, note: 'Not offered at the moment' },
-  { feature: 'AI expense categorisation',            easytax: true,                    bokio: false,                  note: 'EasyTax uses Claude to categorise and reconcile' },
+  { feature: 'AI expense categorisation',            easytax: true,                    bokio: false,                  note: 'MTD Buddy uses Claude to categorise and reconcile' },
   { feature: 'AI categorisation chat',               easytax: true,                    bokio: false },
-  { feature: 'Full double-entry bookkeeping',        easytax: false,                   bokio: true,                   note: 'EasyTax focuses on tax filing, not full ledger' },
-  { feature: 'Invoicing built in',                   easytax: false,                   bokio: true,                   note: 'EasyTax pairs with GrumpyWhales (also free) for invoicing' },
+  { feature: 'Full double-entry bookkeeping',        easytax: false,                   bokio: true,                   note: 'MTD Buddy focuses on tax filing, not full ledger' },
+  { feature: 'Invoicing built in',                   easytax: false,                   bokio: true,                   note: 'MTD Buddy pairs with GrumpyWhales (also free) for invoicing' },
 ];
 
 function Cell({ value }: { value: string | boolean }) {
@@ -73,10 +73,10 @@ export default async function BokioAlternative() {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: 'Bokio Alternative — MTD ITSA Software for UK Sole Traders & Ltd Companies',
-    description: 'Bokio UK is closing on 7 July 2026. Side-by-side comparison of EasyTax and Bokio for UK sole traders and the self-employed.',
-    author: { '@type': 'Organization', name: 'EasyTax' },
+    description: 'Bokio UK is closing on 7 July 2026. Side-by-side comparison of MTD Buddy and Bokio for UK sole traders and the self-employed.',
+    author: { '@type': 'Organization', name: 'MTD Buddy' },
     publisher: { '@type': 'Organization', name: 'Finance Panda Limited' },
-    mainEntityOfPage: 'https://easytax.vip/bokio-alternative',
+    mainEntityOfPage: 'https://mtdbuddy.com/bokio-alternative',
   };
 
   return (
@@ -104,10 +104,10 @@ export default async function BokioAlternative() {
               <Sparkles size={12} /> The no-subscription Bokio alternative
             </div>
             <h1 style={{ fontFamily: display, fontSize: 'clamp(2rem, 5vw, 3.25rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.02em', marginBottom: '1.25rem' }}>
-              Bokio is closing on <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to EasyTax in minutes.
+              Bokio is closing on <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>{BOKIO_END_DATE_HUMAN}</em>. Move to MTD Buddy in minutes.
             </h1>
             <p className="text-base sm:text-xl leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. EasyTax files MTD ITSA quarterly updates and VAT returns directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong>, with no monthly subscription and no filing fee — and since April 2026 you are legally required to file quarterly anyway.
+              You are paying <strong style={{ color: '#1C1208' }}>£24.95/month</strong> for a tool that is being switched off. MTD Buddy files MTD ITSA quarterly updates and VAT returns directly to HMRC <strong style={{ color: '#4B6A4E' }}>free</strong>, with no monthly subscription and no filing fee — and since April 2026 you are legally required to file quarterly anyway.
             </p>
             <div className="flex items-center gap-3 flex-wrap mb-6">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: '#4B6A4E', color: '#FDFCF8' }}>{PRICE_CHIP}</span>
@@ -119,7 +119,7 @@ export default async function BokioAlternative() {
               <Link href={ctaHref} className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Start migration →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Bokio%20CSV%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Bokio%20CSV%20migration" className="inline-block px-6 py-3 rounded-full font-medium text-sm" style={{ backgroundColor: '#FDFCF8', color: '#1C1208', border: '1.5px solid #DDD5C8' }}>
                 Email us your Bokio CSV
               </a>
             </div>
@@ -133,7 +133,7 @@ export default async function BokioAlternative() {
               Two deadlines, one move.
             </h2>
             <p className="text-base leading-relaxed mb-6" style={{ color: '#4A4035', maxWidth: '680px' }}>
-              Whichever Bokio alternative you pick, you are not just replacing Bokio. Since <strong>April 2026</strong>, HMRC has required every UK sole trader or landlord earning over <strong>£50,000</strong> to file <strong>quarterly</strong> updates through MTD-compatible software. From April 2027, the threshold drops to £30,000. EasyTax is built for that mandate from day one.
+              Whichever Bokio alternative you pick, you are not just replacing Bokio. Since <strong>April 2026</strong>, HMRC has required every UK sole trader or landlord earning over <strong>£50,000</strong> to file <strong>quarterly</strong> updates through MTD-compatible software. From April 2027, the threshold drops to £30,000. MTD Buddy is built for that mandate from day one.
             </p>
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="p-5 rounded-2xl" style={{ backgroundColor: '#FFFFFF', border: '1px solid #DDD5C8' }}>
@@ -154,7 +154,7 @@ export default async function BokioAlternative() {
         <section className="py-16 sm:py-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
-              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Bokio</em> vs EasyTax
+              Side-by-side: <em style={{ color: '#A04E1C', fontStyle: 'italic' }}>Bokio</em> vs MTD Buddy
             </h2>
             <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid #E8E2DA', backgroundColor: '#FFFFFF' }}>
               <div className="grid grid-cols-[1.6fr_1fr_1fr]">
@@ -163,7 +163,7 @@ export default async function BokioAlternative() {
                   Feature
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#1C1208', borderBottom: '1px solid #E8E2DA' }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>EasyTax</p>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-0.5" style={{ color: '#A89D90' }}>MTD Buddy</p>
                   <p className="text-sm font-bold" style={{ color: '#FDFCF8' }}>{PRICE_TABLE_CELL}</p>
                 </div>
                 <div className="px-4 py-4 text-center" style={{ backgroundColor: '#F8F5F0', borderBottom: '1px solid #E8E2DA' }}>
@@ -206,20 +206,20 @@ export default async function BokioAlternative() {
                   body: 'In Bokio: Settings → Data Export. Download the Clients, Invoices and Transactions CSVs. (Bokio is offering refunds for unused subscription time — worth claiming.)',
                 },
                 {
-                  title: 'Create your EasyTax account',
+                  title: 'Create your MTD Buddy account',
                   body: 'Sign up with Google or email. 60 seconds, no card required.',
                 },
                 {
                   title: 'Email us your CSVs (optional concierge)',
-                  body: 'Send your Bokio CSVs to hello@easytax.vip with the subject "Bokio CSV migration". We load them into your account by hand within one working day. Your invoice number sequence is preserved.',
+                  body: 'Send your Bokio CSVs to hello@mtdbuddy.com with the subject "Bokio CSV migration". We load them into your account by hand within one working day. Your invoice number sequence is preserved.',
                 },
                 {
                   title: 'Add your income and expenses',
-                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and EasyTax AI-categorises them against HMRC allowable expenses.',
+                  body: 'From the dashboard, go to Records. Import a CSV statement downloaded from your bank, or add records by hand, and MTD Buddy AI-categorises them against HMRC allowable expenses.',
                 },
                 {
                   title: 'File your first MTD ITSA quarterly update',
-                  body: 'The quarterly cycle is already running — the first update was due 7 August 2026. EasyTax submits directly to HMRC via the official MTD ITSA API.',
+                  body: 'The quarterly cycle is already running — the first update was due 7 August 2026. MTD Buddy submits directly to HMRC via the official MTD ITSA API.',
                 },
               ].map((step, i) => (
                 <li key={step.title} className="flex gap-4">
@@ -236,7 +236,7 @@ export default async function BokioAlternative() {
           </div>
         </section>
 
-        {/* ── Where EasyTax wins, where Bokio wins ── */}
+        {/* ── Where MTD Buddy wins, where Bokio wins ── */}
         <section className="py-16 sm:py-20" style={{ backgroundColor: '#FDFCF8' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, marginBottom: '1.5rem' }}>
@@ -244,7 +244,7 @@ export default async function BokioAlternative() {
             </h2>
             <div className="grid sm:grid-cols-2 gap-5">
               <div className="p-6 rounded-2xl" style={{ backgroundColor: '#E2EDE2', border: '1px solid #4B6A4E30' }}>
-                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where EasyTax is better</p>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#4B6A4E' }}>Where MTD Buddy is better</p>
                 <ul className="space-y-2 text-sm" style={{ color: '#1C1208' }}>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>No subscription and no per-filing fee. Nothing to pay at all.</span></li>
                   <li className="flex gap-2"><Check size={16} color="#4B6A4E" className="flex-shrink-0 mt-0.5" /><span>Files MTD ITSA quarterly updates and MTD VAT returns directly to HMRC.</span></li>
@@ -277,20 +277,20 @@ export default async function BokioAlternative() {
               {[
                 { q: 'Is Bokio really shutting down in the UK?',
                   a: 'Yes. Bokio has announced it is winding down UK operations on ' + BOKIO_END_DATE_HUMAN + '. Existing customers were notified by email to export their data. Bokio has offered refunds for the unused portion of subscription time — worth claiming before you close the account.' },
-                { q: 'How much does EasyTax cost?',
+                { q: 'How much does MTD Buddy cost?',
                   a: 'Nothing. There is no monthly subscription, no recurring fee and no charge when you file. There is no charge to connect your accounts or use the dashboard either.' },
-                { q: 'Will EasyTax import my Bokio data automatically?',
-                  a: 'There is no Bokio API for migration, so we do it the manual-but-fast way: export your Clients / Invoices / Transactions CSVs from Bokio, email them to hello@easytax.vip, and we load them into your EasyTax account by hand within one working day. A self-serve CSV importer is coming later in 2026.' },
-                { q: 'I am VAT-registered. Does EasyTax file MTD VAT?',
-                  a: 'Yes — EasyTax files MTD VAT returns directly to HMRC. If you are over the £90,000 VAT threshold, this is mandatory.' },
-                { q: 'I run a limited company. Does EasyTax do CT600?',
-                  a: 'No. EasyTax does not file CT600 Corporation Tax or prepare company accounts. For a limited company it files MTD VAT returns only, so you will need other software or an accountant for Corporation Tax and Companies House.' },
+                { q: 'Will MTD Buddy import my Bokio data automatically?',
+                  a: 'There is no Bokio API for migration, so we do it the manual-but-fast way: export your Clients / Invoices / Transactions CSVs from Bokio, email them to hello@mtdbuddy.com, and we load them into your MTD Buddy account by hand within one working day. A self-serve CSV importer is coming later in 2026.' },
+                { q: 'I am VAT-registered. Does MTD Buddy file MTD VAT?',
+                  a: 'Yes — MTD Buddy files MTD VAT returns directly to HMRC. If you are over the £90,000 VAT threshold, this is mandatory.' },
+                { q: 'I run a limited company. Does MTD Buddy do CT600?',
+                  a: 'No. MTD Buddy does not file CT600 Corporation Tax or prepare company accounts. For a limited company it files MTD VAT returns only, so you will need other software or an accountant for Corporation Tax and Companies House.' },
                 { q: 'Can I keep my existing invoice number sequence (e.g. INV-2024-0042)?',
                   a: 'Yes. After we import your invoice history, your next invoice continues the existing sequence rather than restarting. Tell us your preference in the migration email.' },
                 { q: 'What about MTD ITSA — when do I need it?',
-                  a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. EasyTax is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in EasyTax yet.' },
+                  a: 'From 6 April 2026 if your self-employment + property income is over £50,000. From 6 April 2027 if it is over £30,000. MTD Buddy is built on the HMRC MTD API for MTD ITSA quarterly updates. The year-end final declaration is not available in MTD Buddy yet.' },
                 { q: 'Can I import my bank statements?',
-                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. EasyTax does not connect to your bank account.' },
+                  a: 'Yes. Download a CSV statement from your bank\'s website or app — Barclays, Lloyds, HSBC, NatWest, Santander, Nationwide, Monzo, Starling, Revolut, Tide and most others offer one — and import it on the Records page. MTD Buddy does not connect to your bank account.' },
               ].map((item) => (
                 <details key={item.q} className="group py-4" style={{ borderBottom: '1px solid #DDD5C8' }}>
                   <summary className="flex justify-between items-center cursor-pointer list-none font-semibold text-sm" style={{ color: '#1C1208' }}>
@@ -309,7 +309,7 @@ export default async function BokioAlternative() {
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 style={{ fontFamily: display, fontSize: 'clamp(1.75rem, 4vw, 2.75rem)', fontWeight: 700, color: '#FDFCF8', lineHeight: 1.15, marginBottom: '1.25rem' }}>
               Stop watching the Bokio countdown.<br />
-              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>Open an EasyTax account.</em>
+              <em style={{ color: '#E8895A', fontStyle: 'italic' }}>Open an MTD Buddy account.</em>
             </h2>
             <p style={{ color: '#A89D90', fontSize: '1rem', marginBottom: '2rem' }}>
               Move your data when you&apos;re ready. We&apos;ll still be here on 8 July.
@@ -318,7 +318,7 @@ export default async function BokioAlternative() {
               <Link href={ctaHref} className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#A04E1C', color: '#FDFCF8' }}>
                 Get started →
               </Link>
-              <a href="mailto:hello@easytax.vip?subject=Bokio%20CSV%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
+              <a href="mailto:hello@mtdbuddy.com?subject=Bokio%20CSV%20migration" className="inline-block px-10 py-4 rounded-full font-medium" style={{ backgroundColor: '#FDFCF8', color: '#1C1208' }}>
                 Email us your Bokio CSV
               </a>
             </div>

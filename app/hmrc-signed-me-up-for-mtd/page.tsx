@@ -36,7 +36,7 @@ import { quartersForTaxYear, finalDeclarationFor } from '@/lib/mtd-dates';
 
 export const revalidate = 3600;
 
-const CANONICAL = 'https://easytax.vip/hmrc-signed-me-up-for-mtd';
+const CANONICAL = 'https://mtdbuddy.com/hmrc-signed-me-up-for-mtd';
 
 export const metadata: Metadata = {
   title: pageTitle('HMRC signed me up for Making Tax Digital — what now?'),
@@ -327,7 +327,7 @@ export default function HmrcSignedMeUpPage() {
               className="mb-4"
               style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.5rem', fontWeight: 700 }}
             >
-              Where EasyTax fits — honestly
+              Where MTD Buddy fits — honestly
             </h2>
             <ul className="flex flex-col gap-3 mb-6">
               {[

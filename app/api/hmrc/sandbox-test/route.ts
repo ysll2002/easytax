@@ -322,7 +322,7 @@ export async function GET() {
       {
         accept: 'application/vnd.hmrc.2.0+json',
         body: {
-          stockDividend: { customerReference: 'EasyTax-Test-001', grossAmount: 300.00 },
+          stockDividend: { customerReference: 'MTD Buddy-Test-001', grossAmount: 300.00 },
         },
       },
     );
@@ -483,7 +483,7 @@ export async function GET() {
       {
         accept: 'application/vnd.hmrc.2.0+json',
         scenario: 'STATEFUL',
-        body: { accountName: 'EasyTax Test Savings' },
+        body: { accountName: 'MTD Buddy Test Savings' },
       },
     );
     // Sandbox stub sample id used as fallback if STATEFUL response is missing.
@@ -497,7 +497,7 @@ export async function GET() {
       {
         accept: 'application/vnd.hmrc.2.0+json',
         scenario: 'STATEFUL',
-        body: { accountName: 'EasyTax Renamed Savings' },
+        body: { accountName: 'MTD Buddy Renamed Savings' },
       },
     );
     await call(

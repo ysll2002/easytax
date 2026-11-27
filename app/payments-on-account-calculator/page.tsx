@@ -23,10 +23,10 @@ const BASE: Metadata = {
     'reduce payments on account',
     'first self assessment tax bill',
   ],
-  alternates: { canonical: 'https://easytax.vip/payments-on-account-calculator' },
+  alternates: { canonical: 'https://mtdbuddy.com/payments-on-account-calculator' },
   openGraph: {
     type: 'website',
-    url: 'https://easytax.vip/payments-on-account-calculator',
+    url: 'https://mtdbuddy.com/payments-on-account-calculator',
     title: 'Payments on Account Calculator',
     description:
       'What actually leaves your account on 31 January and 31 July, not just the tax you owe. Free, no signup.',
@@ -114,23 +114,23 @@ export default async function PaymentsOnAccountPage({ searchParams }: { searchPa
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: 'Payments on Account Calculator',
-    url: 'https://easytax.vip/payments-on-account-calculator',
+    url: 'https://mtdbuddy.com/payments-on-account-calculator',
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Any',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'GBP' },
-    provider: { '@type': 'Organization', name: 'EasyTax', url: 'https://easytax.vip' },
+    provider: { '@type': 'Organization', name: 'MTD Buddy', url: 'https://mtdbuddy.com' },
   };
 
   const jsonLdBreadcrumb = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Free tax tools', item: 'https://easytax.vip/tools' },
+      { '@type': 'ListItem', position: 1, name: 'Free tax tools', item: 'https://mtdbuddy.com/tools' },
       {
         '@type': 'ListItem',
         position: 2,
         name: 'Payments on account calculator',
-        item: 'https://easytax.vip/payments-on-account-calculator',
+        item: 'https://mtdbuddy.com/payments-on-account-calculator',
       },
     ],
   };
@@ -302,7 +302,7 @@ export default async function PaymentsOnAccountPage({ searchParams }: { searchPa
           </a>{' '}
           or speak to an accountant if you are unsure. See{' '}
           <Link href="/trust" style={{ color: '#6B6256', textDecoration: 'underline' }}>
-            where EasyTax stands with HMRC
+            where MTD Buddy stands with HMRC
           </Link>
           .
         </p>

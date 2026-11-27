@@ -4,8 +4,8 @@ import SiteFooter from '@/components/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'How EasyTax (Finance Panda Limited) collects, uses and protects your personal data under UK GDPR.',
-  alternates: { canonical: 'https://easytax.vip/privacy' },
+  description: 'How MTD Buddy (Finance Panda Limited) collects, uses and protects your personal data under UK GDPR.',
+  alternates: { canonical: 'https://mtdbuddy.com/privacy' },
   robots: { index: false },
 };
 
@@ -17,7 +17,7 @@ export default function Privacy() {
       <nav style={{ borderBottom: '1px solid #E8E2DA', backgroundColor: '#FDFCF8' }}>
         <div className="max-w-4xl mx-auto px-6 py-5 flex justify-between items-center">
           <Link href="/" style={{ fontFamily: 'var(--font-display), Playfair Display, Georgia, serif', fontSize: '1.25rem', fontWeight: 700, color: '#A04E1C', textDecoration: 'none' }}>
-            EasyTax
+            MTD Buddy
           </Link>
           <Link href="/" style={{ fontSize: '0.875rem', color: '#6B6256', textDecoration: 'none' }}>← Back to Home</Link>
         </div>
@@ -38,12 +38,12 @@ export default function Privacy() {
           <section>
             <H2>1. Who We Are</H2>
             <P>
-              Finance Panda Limited, trading as EasyTax ("<strong>EasyTax</strong>", "we", "us", "our") is the data controller responsible for your personal data. We are registered in England and Wales.
+              Finance Panda Limited, trading as MTD Buddy ("<strong>MTD Buddy</strong>", "we", "us", "our") is the data controller responsible for your personal data. We are registered in England and Wales.
             </P>
             <Table rows={[
               ['Company name', 'Finance Panda Limited'],
               ['Registered address', 'London, United Kingdom'],
-              ['Email', 'privacy@easytax.vip'],
+              ['Email', 'privacy@mtdbuddy.com'],
               ['ICO registration', 'ZA540758'],
             ]} />
             <P>
@@ -65,7 +65,7 @@ export default function Privacy() {
             <Legal basis="Contract" detail="Necessary to prepare and submit your Making Tax Digital quarterly updates and VAT returns." />
 
             <H3>2.3 Business Records</H3>
-            <P>Income and expense records you enter by hand or import from CSV bank statements you download yourself: date, description, amount and how you categorise each line. We read only the rows you choose to import. EasyTax does not connect to your bank account.</P>
+            <P>Income and expense records you enter by hand or import from CSV bank statements you download yourself: date, description, amount and how you categorise each line. We read only the rows you choose to import. MTD Buddy does not connect to your bank account.</P>
             <Legal basis="Contract" detail="Necessary to prepare and submit your Making Tax Digital updates and tax returns." />
 
             <H3>2.4 HMRC OAuth Connection</H3>
@@ -121,7 +121,7 @@ export default function Privacy() {
           {/* 4 */}
           <section>
             <H2>4. Your Rights Under UK GDPR</H2>
-            <P>You have the following rights regarding your personal data. To exercise any of them, email <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a>. We will respond within 30 days.</P>
+            <P>You have the following rights regarding your personal data. To exercise any of them, email <a href="mailto:privacy@mtdbuddy.com" style={{ color: '#A04E1C' }}>privacy@mtdbuddy.com</a>. We will respond within 30 days.</P>
             <div className="space-y-3" style={{ marginTop: '1rem' }}>
               {[
                 ['Right of access', 'Request a copy of all personal data we hold about you (Subject Access Request).'],
@@ -174,7 +174,7 @@ export default function Privacy() {
           <section>
             <H2>9. How to Complain</H2>
             <P>
-              If you are unhappy with how we handle your data, please contact us first at <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a>. If you remain unsatisfied, you have the right to lodge a complaint with the UK's supervisory authority:
+              If you are unhappy with how we handle your data, please contact us first at <a href="mailto:privacy@mtdbuddy.com" style={{ color: '#A04E1C' }}>privacy@mtdbuddy.com</a>. If you remain unsatisfied, you have the right to lodge a complaint with the UK's supervisory authority:
             </P>
             <div style={{ padding: '1rem 1.25rem', backgroundColor: '#F0EBE1', borderRadius: '0.75rem', marginTop: '0.75rem', fontSize: '0.9rem' }}>
               <p style={{ fontWeight: 600, color: '#1C1208', marginBottom: '0.25rem' }}>Information Commissioner's Office (ICO)</p>
@@ -187,7 +187,7 @@ export default function Privacy() {
           <section>
             <H2>10. Contact Us</H2>
             <P>For any privacy-related questions or to exercise your rights:</P>
-            <P><strong>Email:</strong> <a href="mailto:privacy@easytax.vip" style={{ color: '#A04E1C' }}>privacy@easytax.vip</a></P>
+            <P><strong>Email:</strong> <a href="mailto:privacy@mtdbuddy.com" style={{ color: '#A04E1C' }}>privacy@mtdbuddy.com</a></P>
             <P>We aim to respond to all requests within <strong>30 days</strong>. For complex requests we may extend this by a further two months, in which case we will notify you.</P>
           </section>
 

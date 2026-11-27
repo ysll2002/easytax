@@ -62,7 +62,7 @@ export default function Expenses() {
           </h1>
           <p style={{ color: '#6B6256' }}>
             {pendingCount > 0
-              ? <>In this example, EasyTax has flagged <strong style={{ color: '#1C1208' }}>{pendingCount}</strong> transactions for review. Approved expenses here total <strong style={{ color: '#1C1208' }}>£{approvedTotal.toFixed(2)}</strong>.</>
+              ? <>In this example, MTD Buddy has flagged <strong style={{ color: '#1C1208' }}>{pendingCount}</strong> transactions for review. Approved expenses here total <strong style={{ color: '#1C1208' }}>£{approvedTotal.toFixed(2)}</strong>.</>
               : 'All transactions reviewed.'}
           </p>
         </div>

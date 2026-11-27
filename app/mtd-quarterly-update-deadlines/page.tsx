@@ -51,7 +51,7 @@ import {
 
 export const revalidate = 3600;
 
-const CANONICAL = 'https://easytax.vip/mtd-quarterly-update-deadlines';
+const CANONICAL = 'https://mtdbuddy.com/mtd-quarterly-update-deadlines';
 
 export const metadata: Metadata = {
   title: pageTitle('MTD Quarterly Update Deadlines 2026/27'),
@@ -179,9 +179,9 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
         url: CANONICAL,
         name: 'MTD quarterly update deadlines 2026/27 and late submission penalties',
         inLanguage: 'en-GB',
-        isPartOf: { '@type': 'WebSite', '@id': 'https://easytax.vip#website' },
+        isPartOf: { '@type': 'WebSite', '@id': 'https://mtdbuddy.com#website' },
         about: { '@type': 'Thing', name: 'Making Tax Digital for Income Tax' },
-        publisher: { '@type': 'Organization', name: 'EasyTax', url: 'https://easytax.vip' },
+        publisher: { '@type': 'Organization', name: 'MTD Buddy', url: 'https://mtdbuddy.com' },
       },
       ...(faqNode ? [faqNode] : []),
     ],
@@ -396,7 +396,7 @@ export default function MtdQuarterlyUpdateDeadlinesPage() {
 
           {/* ── What we can and cannot do today ── */}
           <div className="mt-12 pt-8" style={{ borderTop: `1px solid ${LINE}` }}>
-            <H2>Where EasyTax fits — honestly</H2>
+            <H2>Where MTD Buddy fits — honestly</H2>
             <ul className="flex flex-col gap-3 mb-6">
               {[
                 { ok: true, text: 'Working today, free, no account: the deadline checker, the penalty calculator and the subscribable deadline calendar above.' },

@@ -1,7 +1,7 @@
 import { supabaseAdmin as supabase } from '@/lib/supabase-admin';
 
 // The growth plan's north star (agent/GROWTH_PLAN_10K_FILERS.md, stg-016):
-// how many different people filed with HMRC through EasyTax in the current
+// how many different people filed with HMRC through MTD Buddy in the current
 // filing window.
 //
 // MTD quarterly updates are due on 7 Feb, 7 May, 7 Aug and 7 Nov, so a window

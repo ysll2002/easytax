@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     .setExpirationTime('1h')
     .sign(key());
 
-  const resetUrl = `${process.env.NEXTAUTH_URL ?? 'https://easytax.vip'}/reset-password?token=${token}`;
+  const resetUrl = `${process.env.NEXTAUTH_URL ?? 'https://mtdbuddy.com'}/reset-password?token=${token}`;
 
   sendPasswordResetEmail(email.toLowerCase().trim(), resetUrl).catch(() => {});
 
