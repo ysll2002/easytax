@@ -16,7 +16,7 @@
 ---
 
 ## 2026-11-27（续，owner：网站加 HMRC-recognised 说明）
-**已做**：[PR #86](https://github.com/ysll2002/easytax/pull/86) 已合进 staging `2a4e440`。首页 hero 徽章改成「HMRC-recognised software」，链接到 GOV.UK finder 上的产品页（productId 3725）；页脚加一行说明和链接；/mtd-software 的 FAQ 写明 GOV.UK 收录。7 种语言都改了，没用 HMRC 标志。staging 已检查。**production 还没上**，等 owner 说发布。
+**已做**：[PR #86](https://github.com/ysll2002/easytax/pull/86) 已合进 staging `2a4e440`。首页 hero 徽章改成「HMRC-recognised software」，链接到 GOV.UK finder 上的产品页（productId 3725）；页脚加一行说明和链接；/mtd-software 的 FAQ 写明 GOV.UK 收录。7 种语言都改了，没用 HMRC 标志。staging 已检查。owner 说 "Yes, release" → PR #87 上线 production `712add7`，mtdbuddy.com 已确认显示。
 
 ## 2026-11-27（续，owner 会话：MTD Buddy 上线）
 **已做**：

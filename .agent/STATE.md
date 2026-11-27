@@ -5,7 +5,7 @@
 **最后更新：2026-11-14（PR #34 年终 sandbox）；之前 2026-11-13 下午（owner 实时对话：填好 HMRC Software Choices + WCAG 表。指标仍是 10-10 的快照，没有重拉）**
 
 ## 2026-11-27 改名 MTD Buddy ✅ 已上线
-- **Production = main = staging = `70c4c05`**（2026-11-27 owner 说「发布」；PR #85 = #82 filing-window 指标、#83 激活邮件修正、#84 改名 MTD Buddy；无迁移）。
+- **Production = main = `712add7`**（2026-11-27 PR #87 发布 #86：首页「HMRC-recognised software」徽章、页脚一行和 FAQ，都链接到 GOV.UK finder，owner 授权）。上一版 `70c4c05`（2026-11-27 owner 说「发布」；PR #85 = #82 filing-window 指标、#83 激活邮件修正、#84 改名 MTD Buddy；无迁移）。
 - 网站是 **https://mtdbuddy.com**。easytax.vip 和 www.* 都 308 跳转到这里（保留路径和参数）。staging 仍是 staging.easytax.vip。
 - production 环境变量：`NEXTAUTH_URL=https://mtdbuddy.com`，`HMRC_REDIRECT_URI=https://mtdbuddy.com/api/auth/callback/hmrc`，`REDIRECT_OLD_DOMAIN=1`；`RESEND_API_KEY` 换成新 Resend 账号（lilin.gabriel+mtdbuddy@gmail.com，mtdbuddy.com 已验证）的 key。preview 还剩一个无害的 `MAIL_FROM_DOMAIN=easytax.vip`，因为删除 API 要交互确认。
 - 邮件：收信用 Zoho Mail EU（lin@mtdbuddy.com，别名 hello@、privacy@、support@），发信用 Resend。DNS 在阿里云。
