@@ -19,7 +19,7 @@
 **已做**：
 - 阿里云加 CNAME staging → cname.vercel-dns.com；Vercel 项目加 staging.mtdbuddy.com（分支 staging）；Google OAuth 加 staging 回调；preview 的 NEXTAUTH_URL 改成新域名。
 - PR #91 合进 staging `395b83e`：deploy.yml 同时 alias 两个域名，next.config 把 staging.easytax.vip 308 跳转到新域名。已验证：跳转保留路径和参数，staging.mtdbuddy.com 返回 200，Google 登录能进 dashboard。
-**待 owner**：HMRC sandbox 应用加 staging.mtdbuddy.com 回调，然后 Claude 改 staging 的 HMRC_REDIRECT_URI。
+owner 已在 HMRC sandbox 应用加回调 → Claude 改了 staging 的 HMRC_REDIRECT_URI 并重新部署，sandbox 授权页已接受新回调（没有点继续）。
 
 ## 2026-11-27（续，owner：要更醒目的 HMRC recognised 徽章）
 **发现**：Developer Hub terms of use 规定「must not use HMRC logos or other crown copyright material and branding」，所以 owner 发来的官方「HMRC Recognised」图标不能用。软件只能说「HMRC recognised」，不能说 approved、accredited 或 certified。
