@@ -17,6 +17,7 @@
 
 ## 2026-11-28（社交媒体开号包）
 **今日执行**：owner 要在小红书、LinkedIn、TikTok、Facebook 推 MTD Buddy。写了 `marketing/social-media-kit.md`：每个平台的账号类型、名字/handle、简介、首批内容（小红书 3 篇、LinkedIn 3 帖、TikTok 3 条脚本、Facebook 主页首帖 + 群组回答模板）、UTM、4 周效果标准。规则：只说 HMRC recognised（中文不说批准/官方认证），不出现 HMRC 标志，不说能做年终/房产/连银行，账号身份要写明是创始人，不用小号刷好评。开号要 owner 本人。BACKLOG 新增 stg-017。
+**小红书图片**：`marketing/xiaohongshu/` 下生成前 3 篇笔记的图（1080×1440，共 14 张，`make_images.py` 用本地 Chrome 渲染，可改字重出），标题和正文在 `captions.md`。图上没有 HMRC 标志、网址或微信。小红书由 owner 用手机发（新号用浏览器自动发帖有封号风险）。
 
 ## 2026-11-28（GA4 11-27 尖峰分析）
 **结论**：11-27 约 65 个 new users 大部分不是真实增长。① 约 25–30 个来自数据中心（Boardman/Ashburn/Council Bluffs/Groningen 等），零互动，判断为新域名 mtdbuddy.com 签发证书、上线后触发的扫描器和爬虫；② Dublin 5 个（Windows Chrome，几秒），时间和 10 封冷邮件吻合，很可能是对方邮件安全网关点链接扫描（未证实）；③ London Windows/Mac 一批是我们自己上线测试；④ 改域名后 GA cookie 按域名存，老访客也全算 new user。真实英国访客约 10–15 人，和前几天持平（Leeds 读文章 71 秒、organic UK 4 人）。11-23 的尖峰之前已判为爬虫。
