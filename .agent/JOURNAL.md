@@ -15,6 +15,10 @@
 
 ---
 
+## 2026-11-28（GA4 11-27 尖峰分析）
+**结论**：11-27 约 65 个 new users 大部分不是真实增长。① 约 25–30 个来自数据中心（Boardman/Ashburn/Council Bluffs/Groningen 等），零互动，判断为新域名 mtdbuddy.com 签发证书、上线后触发的扫描器和爬虫；② Dublin 5 个（Windows Chrome，几秒），时间和 10 封冷邮件吻合，很可能是对方邮件安全网关点链接扫描（未证实）；③ London Windows/Mac 一批是我们自己上线测试；④ 改域名后 GA cookie 按域名存，老访客也全算 new user。真实英国访客约 10–15 人，和前几天持平（Leeds 读文章 71 秒、organic UK 4 人）。11-23 的尖峰之前已判为爬虫。
+**建议**：冷邮件链接加 utm（如 utm_source=firm_email），否则会混进 Direct；GA4 设内部流量过滤。
+
 ## 2026-11-28（首页按人群分入口）
 **今日执行**：首页 hero 两个按钮改成「For sole traders」（→ /register，已登录个人 → /dashboard）和「For accounting firms」（→ /agent/register，已登录代理 → /dashboard/agent），各带一行副标题；deadline checker 降为按钮下方的文字链接；原来「Accountant or tax agent? Sign up as an agent」那行删掉。7 种语言都加了。点击埋点：home_hero_individual / home_hero_firm / home_hero_checker_link。PR #93、#94 已合进 staging，staging 桌面端和手机端都检查过。owner 说「Yes, release」后经 PR #95 发布到 production（`4a466f8`，同时带上 #91、#92），mtdbuddy.com 冒烟通过。
 **跟进**：owner 指出不是所有 Self Assessment 用户都是 sole trader，按钮改成「For individuals」，副标题只写现在能做的（MTD 季度更新和 VAT），年终申报上线后再扩大。PR #96 → staging，PR #97 → production（`de5f230`），冒烟通过。
