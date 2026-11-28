@@ -73,7 +73,7 @@ export default function DeadlineScheduleForm({
 
     setState('loading');
     setMessage('');
-    trackClient('schedule_started', { source });
+    trackClient('schedule_requested', { source });
 
     let utm: Record<string, string> = {};
     try {
