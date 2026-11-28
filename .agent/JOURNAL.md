@@ -17,6 +17,7 @@
 
 ## 2026-11-28（首页按人群分入口）
 **今日执行**：首页 hero 两个按钮改成「For sole traders」（→ /register，已登录个人 → /dashboard）和「For accounting firms」（→ /agent/register，已登录代理 → /dashboard/agent），各带一行副标题；deadline checker 降为按钮下方的文字链接；原来「Accountant or tax agent? Sign up as an agent」那行删掉。7 种语言都加了。点击埋点：home_hero_individual / home_hero_firm / home_hero_checker_link。PR #93、#94 已合进 staging，staging 桌面端和手机端都检查过。owner 说「Yes, release」后经 PR #95 发布到 production（`4a466f8`，同时带上 #91、#92），mtdbuddy.com 冒烟通过。
+**跟进**：owner 指出不是所有 Self Assessment 用户都是 sole trader，按钮改成「For individuals」，副标题只写现在能做的（MTD 季度更新和 VAT），年终申报上线后再扩大。PR #96 → staging，PR #97 → production（`de5f230`），冒烟通过。
 
 ## 2026-11-27（续，第一批会计所冷邮件已发）
 **已发**：owner 在 Gmail 设好 Send-as（Zoho SMTP smtp.zoho.eu:465），16:55 左右从 **lin@mtdbuddy.com** 发出 10 封（A&C、Reed、EasyAccounts、GM、MTD-B1、Accounting People、Level、Merit、ABM、Accotax）。追踪 CSV 已标 sent。没回复的，**2026-12-04 起最多跟进一次**。4 家暂缓（3 家做房产、Kirk Newsholme 法律形式未知）。
