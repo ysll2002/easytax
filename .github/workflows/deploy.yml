@@ -1,7 +1,8 @@
 name: Deploy
 
 # Preview deploys run automatically on every push to `staging` and re-point
-# staging.easytax.vip at the result. Production is manual only: run this
+# staging.mtdbuddy.com (and the old staging.easytax.vip, which redirects to
+# it) at the result. Production is manual only: run this
 # workflow from the Actions tab with target=production.
 #
 # Production deploys `main` and nothing else. The `guard` step below hard-fails
@@ -39,12 +40,13 @@ concurrency:
 
 env:
   VERCEL_SCOPE: lilingabriel-5465s-projects
-  # Used only when VERCEL_ORG_ID / VERCEL_PROJECT_ID are not set, to link the
-  # project by name instead. Change this if the Vercel project is named
-  # something other than the repository.
-  VERCEL_PROJECT_NAME: easytax
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # The project is identified by ID, so renaming it in Vercel never breaks
+  # deploys again (linking by name created an empty project on 2026-11-24).
+  # These IDs are not secrets; repo secrets of the same name override them.
+  # VERCEL_PROJECT_NAME is only the fallback when both IDs are missing.
+  VERCEL_PROJECT_NAME: mtdbuddy
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID || 'team_6C63SfWU5eFBmanmcuR74d14' }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID || 'prj_hXqav4IMGSDCZkzdoapLdmGrcq5G' }}
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
 jobs:
@@ -108,9 +110,13 @@ jobs:
           url=$(vercel deploy --yes --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE")
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
-      - name: Point staging.easytax.vip at this deploy
+      # staging.easytax.vip is aliased too, so the redirect in next.config.ts
+      # (old staging host -> staging.mtdbuddy.com) is served by this deploy.
+      - name: Point staging.mtdbuddy.com and staging.easytax.vip at this deploy
         if: steps.preflight.outputs.ready == 'true'
-        run: vercel alias set "${{ steps.deploy.outputs.url }}" staging.easytax.vip --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+        run: |
+          vercel alias set "${{ steps.deploy.outputs.url }}" staging.mtdbuddy.com --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
+          vercel alias set "${{ steps.deploy.outputs.url }}" staging.easytax.vip --token="$VERCEL_TOKEN" --scope "$VERCEL_SCOPE"
 
       - name: Summary
         if: steps.preflight.outputs.ready == 'true'
@@ -118,7 +124,7 @@ jobs:
           {
             echo "### Preview deployed"
             echo ""
-            echo "- https://staging.easytax.vip"
+            echo "- https://staging.mtdbuddy.com"
             echo "- ${{ steps.deploy.outputs.url }}"
             echo ""
             echo "Check the preview, then run this workflow again with \`target: production\` to go live."

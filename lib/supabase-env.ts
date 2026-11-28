@@ -1,7 +1,7 @@
 // Which Supabase project a deployment is allowed to talk to.
 //
 // Production and staging must not share a database. When they did, signing
-// in on staging.easytax.vip with your own account and connecting a *sandbox*
+// in on staging.mtdbuddy.com with your own account and connecting a *sandbox*
 // HMRC test user overwrote your production `hmrc_connections` row with a
 // sandbox token; test registrations sent real welcome emails and were
 // counted as conversions in the production funnel; and the sandbox harness

@@ -190,28 +190,39 @@ export default async function Home() {
                     here. It had 0 production page views in the same window.
                     "See what we cover" is kept, demoted to a text link, so
                     nothing that worked before has been taken away. */}
+                {/* 2026-11-28: the hero splits by audience — one entry for
+                    sole traders, one for accounting firms (firm outreach began
+                    2026-11-27). The deadline checker drops to a text link. */}
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href={ctaHref} className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all" style={{ backgroundColor: '#1C1208', color: '#FDFCF8' }}>
-                    {t('hero.ctaPrimary')}
-                  </Link>
                   <TrackedCta
-                    href="/mtd-deadline-checker"
-                    placement="home_hero_secondary"
-                    className="inline-block px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-medium text-sm text-center transition-all"
-                    style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1px solid #DDD5C8' }}
+                    href={session && !isAgent ? '/dashboard' : '/register'}
+                    placement="home_hero_individual"
+                    className="sm:flex-1 flex flex-col items-center justify-center px-5 py-3 rounded-2xl text-center transition-all"
+                    style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}
                   >
-                    {t('hero.ctaChecker')}
+                    <span className="font-semibold text-sm sm:text-base whitespace-nowrap">{t('hero.ctaIndividual')}</span>
+                    <span className="text-xs mt-0.5" style={{ opacity: 0.8 }}>{t('hero.ctaIndividualSub')}</span>
+                  </TrackedCta>
+                  <TrackedCta
+                    href={isAgent ? '/dashboard/agent' : '/agent/register'}
+                    placement="home_hero_firm"
+                    className="sm:flex-1 flex flex-col items-center justify-center px-5 py-3 rounded-2xl text-center transition-all"
+                    style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1.5px solid #1C1208', textDecoration: 'none' }}
+                  >
+                    <span className="font-semibold text-sm sm:text-base whitespace-nowrap">{t('hero.ctaFirm')}</span>
+                    <span className="text-xs mt-0.5" style={{ color: '#4A4035' }}>{t('hero.ctaFirmSub')}</span>
                   </TrackedCta>
                 </div>
 
-                {!session && (
-                  <p className="mt-4 text-sm" style={{ color: '#4A4035' }}>
-                    {ta('heroAgentText')}{' '}
-                    <Link href="/agent/register" style={{ color: '#A04E1C', fontWeight: 600 }}>
-                      {ta('heroAgentLink')} <ArrowRight size={14} className="inline" aria-hidden />
-                    </Link>
-                  </p>
-                )}
+                <p className="mt-4 text-sm">
+                  <TrackedCta
+                    href="/mtd-deadline-checker"
+                    placement="home_hero_checker_link"
+                    style={{ color: '#A04E1C', fontWeight: 600 }}
+                  >
+                    {t('hero.ctaChecker')}
+                  </TrackedCta>
+                </p>
 
                 <a href="#services" className="inline-block mt-4 text-sm font-medium" style={{ color: '#6B6256', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
                   {t('hero.ctaSecondary')}

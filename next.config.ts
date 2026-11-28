@@ -30,6 +30,13 @@ const nextConfig: NextConfig = {
 
   async redirects() {
     return [
+      // Old staging host: always forwards to the new one (staging only).
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'staging.easytax.vip' }],
+        destination: 'https://staging.mtdbuddy.com/:path*',
+        permanent: true,
+      },
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.mtdbuddy.com' }],
