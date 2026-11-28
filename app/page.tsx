@@ -197,19 +197,19 @@ export default async function Home() {
                   <TrackedCta
                     href={session && !isAgent ? '/dashboard' : '/register'}
                     placement="home_hero_individual"
-                    className="flex flex-col items-center justify-center px-6 sm:px-8 py-3 rounded-2xl text-center transition-all"
+                    className="sm:flex-1 flex flex-col items-center justify-center px-5 py-3 rounded-2xl text-center transition-all"
                     style={{ backgroundColor: '#1C1208', color: '#FDFCF8', textDecoration: 'none' }}
                   >
-                    <span className="font-semibold text-sm sm:text-base">{t('hero.ctaIndividual')}</span>
+                    <span className="font-semibold text-sm sm:text-base whitespace-nowrap">{t('hero.ctaIndividual')}</span>
                     <span className="text-xs mt-0.5" style={{ opacity: 0.8 }}>{t('hero.ctaIndividualSub')}</span>
                   </TrackedCta>
                   <TrackedCta
                     href={isAgent ? '/dashboard/agent' : '/agent/register'}
                     placement="home_hero_firm"
-                    className="flex flex-col items-center justify-center px-6 sm:px-8 py-3 rounded-2xl text-center transition-all"
+                    className="sm:flex-1 flex flex-col items-center justify-center px-5 py-3 rounded-2xl text-center transition-all"
                     style={{ backgroundColor: 'transparent', color: '#1C1208', border: '1.5px solid #1C1208', textDecoration: 'none' }}
                   >
-                    <span className="font-semibold text-sm sm:text-base">{t('hero.ctaFirm')}</span>
+                    <span className="font-semibold text-sm sm:text-base whitespace-nowrap">{t('hero.ctaFirm')}</span>
                     <span className="text-xs mt-0.5" style={{ color: '#4A4035' }}>{t('hero.ctaFirmSub')}</span>
                   </TrackedCta>
                 </div>
